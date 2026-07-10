@@ -1,0 +1,3 @@
+backend/var/*.db
+backend/var/*.db-journal
+backend/.env
