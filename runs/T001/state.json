@@ -1,0 +1,7 @@
+{
+  "ticket_id": "T001",
+  "state": "INIT",
+  "branch": "ticket/T001-configure-local-sqlite-database",
+  "issue_number": 4,
+  "updated_at": "2026-07-10T14:45:53Z"
+}
