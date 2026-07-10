@@ -1,7 +1,7 @@
 {
   "ticket_id": "T027",
-  "state": "PLAN_APPROVED",
+  "state": "IMPLEMENTATION_REVIEW_NEEDED",
   "branch": "ticket/T027-create-provider-signature-asset-support",
   "issue_number": 27,
-  "updated_at": "2026-07-10T15:11:16Z"
+  "updated_at": "2026-07-10T15:13:49Z"
 }
