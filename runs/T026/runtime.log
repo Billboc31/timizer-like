@@ -47,3 +47,5 @@
 [2026-07-10T16:47:45Z] conflict-resolver: running tests
 [2026-07-10T16:47:45Z] conflict-resolver: test-report written: runs/T026/conflict/test-report.md
 [2026-07-10T16:47:45Z] conflict-resolver: staging and committing resolution artifacts
+[2026-07-10T16:47:45Z] conflict-resolver: commit: sha=fc5e861
+[2026-07-10T16:47:45Z] conflict-resolver: git push --force-with-lease origin ticket/T026-create-default-cra-settings
