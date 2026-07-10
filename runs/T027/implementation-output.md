@@ -1,18 +1,17 @@
-## Halt report — T027 (attempt 2)
+## Résumé — attempt 3 : halt confirmé
 
-**STOPPED — no code, config, docs, or state mutated.** The plan has not been revised since attempt 1, so its own auto-halt clause fires again for the same two reasons:
+**STOPPED — no code, config, docs, memory, or state mutated.**
 
-1. The plan still hypothesizes a **Node.js / TypeScript** stack under `src/`, but per `ticket/T009` the backend is **Spring Boot / Java** under `backend/`, and per `ticket/T016` the PDF generator (which will consume this signature asset) lives there — a `src/…/*.ts` loader would be dead code.
-2. There is still **no project to plug into**: no `pom.xml`, no `package.json`, no `src/` on `main`; T009 and T010 are unmerged.
+### Vérifications effectuées
+- `git log --all --oneline -- runs/T027/plan.md` → 1 seul commit (`865a769`). `git diff 865a769 HEAD -- runs/T027/plan.md` → vide. Le plan n'a **pas** été rejoué depuis attempt 1.
+- `git ls-files` → 55 fichiers, tous du scaffolding workflow. Aucun `pom.xml`, `package.json`, `src/`, `backend/`, `frontend/`.
+- Le plan porte lui-même une clause d'auto-arrêt : *"If the actual stack differs, the Coder must stop and re-open the plan rather than silently adapt."*
+- Les deux reviews précédentes concluent unanimement : `IMPLEMENTATION_FIX_REQUIRED` avec re-planification côté **Planner**, pas Coder.
 
-The attempt-1 review itself concluded *"Rien à corriger côté Coder : sa décision d'arrêt est conforme. La balle est chez le Planner."* — the fix owner is the Planner. `git log` confirms no planner step ran between attempt 1 and this retry, and `plan.md` is byte-identical.
+### Fichiers modifiés
+- `runs/T027/implementation-output.md` — rapport de halt attempt 3, ré-escalade explicite.
 
-Silently rewriting the plan into Java on the Coder side would violate the plan's self-arrest clause, `refactor-safety`, and `workflow-discipline`, and risk merge conflicts on `backend/pom.xml` when T009 lands.
+Rien d'autre : pas de code, pas de docs, pas de `.gitignore`, pas de mémoire, pas de `state.json`, pas de `workflow-status.md` (ces derniers ne sont pas Coder-owned).
 
-### Files touched
-
-- `runs/T027/implementation-output.md` — rewritten to record the attempt-2 halt and escalate.
-
-### Escalation
-
-Two consecutive halts on the same unrevised plan. This should route back to the **Planner** (not another Coder retry) to re-issue the plan against the real Spring Boot stack — or explicitly downscope T027 to docs-only deliverables so it can land ahead of T009 — per the attempt-1 review's "Actions demandées" list.
+### Limites & escalade
+Troisième halt consécutif à l'identique — la review d'attempt 2 avait prédit ce résultat mot pour mot. Le bug actif est désormais le **routage workflow** qui renvoie `IMPLEMENTATION_FIX_REQUIRED` → `step: coder` au lieu de `step: planner`. Une **intervention humaine** est requise pour forcer un step Planner sur `plan.md` ; sans ça, tout retry Coder est mécaniquement improductif. Les 8 actions de replan restent celles de `reviews/review-attempt-1.md` §"Actions demandées".
