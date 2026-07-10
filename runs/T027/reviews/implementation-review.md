@@ -1,15 +1,11 @@
-Review written. Summary:
+Review written for T027 attempt 3.
 
-**Decision: `IMPLEMENTATION_FIX_REQUIRED`**
+**Summary:** Third consecutive Coder halt on a byte-identical `plan.md` (still on the single commit `865a769`, no Planner step intercalated). The Coder's halt is correct — it honors the plan's own auto-stop clause and does not silently translate the Node/TS plan into Java for the actual Spring Boot backend. Zero acceptance criteria are met after three attempts.
 
-Second consecutive Coder halt on a byte-identical plan (`plan.md` has never been rejoué — one commit only, `865a769`). The Coder acted correctly again (honors the plan's auto-stop clause; no silent Node→Java translation), but zero acceptance criteria are met.
+**Key escalation vs. review-2:** the routing loop `IMPLEMENTATION_FIX_REQUIRED → step: coder → halt` is now confirmed by three identical reproductions — no longer a prediction. Priority 0 is a new-flavored action: block automatic Coder retries while `plan.md` is byte-identical to `865a769`, force a Planner step, and log the harness routing bug as a separate workflow ticket. Priority 1 remains the 8 replan actions from attempt-1 (Spring Boot layout, T009 dependency, `@ConfigurationProperties`, Maven fixtures, docs, etc.).
 
-Key finding: the workflow routed the retry back to **Coder** instead of **Planner**, contradicting attempt-1's explicit requirement. As long as `plan.md` stays identical, any further Coder retry is mechanically a halt.
+**Files written:**
+- `runs/T027/reviews/review-attempt-3.md` — full structured review
+- `runs/T027/reviews/implementation-review.md` — attempt-3 summary
 
-Files written:
-- `runs/T027/reviews/review-attempt-2.md` — full detailed review
-- `runs/T027/reviews/implementation-review.md` — updated to attempt-2 content
-
-Priorité 1: force a **Planner** step (human intervention likely required to break the routing loop). Priorité 2: the 8 replan actions from attempt-1 remain fully valid and unaddressed.
-
-IMPLEMENTATION_FIX_REQUIRED
+Decision: `IMPLEMENTATION_FIX_REQUIRED`.
