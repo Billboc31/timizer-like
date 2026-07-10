@@ -1,3 +1,11 @@
+# Fix artifact — IMPLEMENTATION_FIX_REQUIRED
+
+- decision: IMPLEMENTATION_FIX_REQUIRED
+- review source: runs/T027/reviews/implementation-review.md
+- generated at: 2026-07-10T15:53:08Z
+
+---
+
 Review-attempt-8 written to `runs/T027/reviews/review-attempt-8.md` and mirrored into `runs/T027/reviews/implementation-review.md`. Decision: `IMPLEMENTATION_FIX_REQUIRED`.
 
 **State (unchanged over 5 Coder halts + 8 reviews):**
