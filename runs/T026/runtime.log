@@ -58,3 +58,10 @@
 [2026-07-10T17:09:29Z] conflict-resolver: running tests
 [2026-07-10T17:09:29Z] conflict-resolver: test-report written: runs/T026/conflict/test-report.md
 [2026-07-10T17:09:29Z] conflict-resolver: staging and committing resolution artifacts
+[2026-07-10T17:09:29Z] conflict-resolver: commit: sha=8034027
+[2026-07-10T17:09:29Z] conflict-resolver: git push --force-with-lease origin ticket/T026-create-default-cra-settings
+[2026-07-10T17:09:31Z] conflict-resolver: push succeeded
+[2026-07-10T17:09:31Z] conflict-resolver: state → CONFLICT_RESOLVED_REVIEW_NEEDED
+[2026-07-10T17:09:31Z] conflict-resolver: done → CONFLICT_RESOLVED_REVIEW_NEEDED
+[2026-07-10T17:13:47Z] human-approval: approve-conflict-resolution — CONFLICT_RESOLVED_REVIEW_NEEDED → TEST_COMPLETE
+[2026-07-10T17:13:47Z] human-approval: refused approve-conflict-resolution — expected CONFLICT_RESOLVED_REVIEW_NEEDED, got 'TEST_COMPLETE'
