@@ -1,11 +1,15 @@
-Review written for T027 attempt 3.
+Review written. Summary of what I found and produced:
 
-**Summary:** Third consecutive Coder halt on a byte-identical `plan.md` (still on the single commit `865a769`, no Planner step intercalated). The Coder's halt is correct — it honors the plan's own auto-stop clause and does not silently translate the Node/TS plan into Java for the actual Spring Boot backend. Zero acceptance criteria are met after three attempts.
+**State audited (Review Attempt 4):**
+- `plan.md` still byte-identical to commit `865a769` — no Planner step has ever been replayed.
+- `implementation-output.md` still reads "attempt 3 halt" — no Coder step has produced new artifacts since review-3.
+- `git diff` vs `main` outside `runs/T027/` is empty — zero application code exists (no `backend/`, no `pom.xml`, no `src/`).
+- Runtime log confirms `step: review` was re-invoked (15:29:41Z) without an intercalated `step: coder` — the loop has tightened into review-on-review.
 
-**Key escalation vs. review-2:** the routing loop `IMPLEMENTATION_FIX_REQUIRED → step: coder → halt` is now confirmed by three identical reproductions — no longer a prediction. Priority 0 is a new-flavored action: block automatic Coder retries while `plan.md` is byte-identical to `865a769`, force a Planner step, and log the harness routing bug as a separate workflow ticket. Priority 1 remains the 8 replan actions from attempt-1 (Spring Boot layout, T009 dependency, `@ConfigurationProperties`, Maven fixtures, docs, etc.).
+**Decision:** `IMPLEMENTATION_FIX_REQUIRED` (only possible verdict — no code exists to approve).
 
 **Files written:**
-- `runs/T027/reviews/review-attempt-3.md` — full structured review
-- `runs/T027/reviews/implementation-review.md` — attempt-3 summary
+- `runs/T027/reviews/review-attempt-4.md` — structured review with P0 (harness routing bug + new sterile-review-loop bug, human intervention required) and P1 (8 unchanged replan actions from review-1).
+- `runs/T027/reviews/implementation-review.md` — updated pointer summary.
 
-Decision: `IMPLEMENTATION_FIX_REQUIRED`.
+**Key escalation vs. review-3:** the loop now fires reviews without a producer step, so the workflow guard against sterile re-invocation is missing — this is filed as a second workflow bug distinct from the earlier `FIX_REQUIRED → coder` misrouting.
