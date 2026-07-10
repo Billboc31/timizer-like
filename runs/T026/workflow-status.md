@@ -28,3 +28,9 @@
 - prev: PLAN_REVIEW_NEEDED
 - step: auto-approve
 - next: PLAN_APPROVED
+
+## 2026-07-10T15:17:34Z
+
+- prev: PLAN_APPROVED
+- step: coder
+- next: IMPLEMENTATION_REVIEW_NEEDED
