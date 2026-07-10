@@ -3,11 +3,11 @@
   "state": "TEST_COMPLETE",
   "branch": "ticket/T026-create-default-cra-settings",
   "issue_number": 26,
-  "updated_at": "2026-07-10T17:13:47Z",
+  "updated_at": "2026-07-10T17:18:03Z",
   "pr_number": 34,
   "pr_synced": true,
   "pre_conflict_state": "TEST_COMPLETE",
-  "conflict_detected_at": "2026-07-10T16:50:13Z",
+  "conflict_detected_at": "2026-07-10T17:14:50Z",
   "conflict_pr_number": 34,
   "conflicted_files": [
     "backend/pom.xml",
