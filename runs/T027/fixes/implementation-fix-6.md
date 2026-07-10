@@ -1,3 +1,11 @@
+# Fix artifact — IMPLEMENTATION_FIX_REQUIRED
+
+- decision: IMPLEMENTATION_FIX_REQUIRED
+- review source: runs/T027/reviews/implementation-review.md
+- generated at: 2026-07-10T15:59:35Z
+
+---
+
 Review-9 is written. Here is the summary the user needs to see.
 
 # PR Review — T027 (attempt 9)
