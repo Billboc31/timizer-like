@@ -1,0 +1,12 @@
+cra:
+  defaults:
+    provider:
+      name: "Provider Name"
+      company: "Provider Company"
+      address: "Provider Address"
+    client:
+      name: "Lyra Network"
+      address: "109 rue de l'Ancienne Poste, 69100 Villeurbanne, France"
+      contact:
+        name: "Client Contact"
+        email: "contact@example.com"
