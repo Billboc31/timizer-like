@@ -1,3 +1,11 @@
+# Fix artifact — IMPLEMENTATION_FIX_REQUIRED
+
+- decision: IMPLEMENTATION_FIX_REQUIRED
+- review source: runs/T027/reviews/implementation-review.md
+- generated at: 2026-07-10T15:47:44Z
+
+---
+
 Review-attempt-7 written to `runs/T027/reviews/review-attempt-7.md`.
 
 **State observed (unchanged since review-6):**
