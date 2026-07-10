@@ -1,27 +1,22 @@
-Verified: the only Coder-owned mutation is `runs/T027/implementation-output.md`. The other entries (`daemon.lock`, `runtime.log`, `fixes/context-*.md`, `prompts/coder-attempt-5.md`) are harness-managed.
+Only Coder-owned mutation is `runs/T027/implementation-output.md`. The rest (`daemon.lock`, `runtime.log`, `fixes/context-*.md`, `prompts/coder-attempt-6.md`) are harness-managed.
 
-## Résumé des changements — attempt 5
+## Résumé des changements
 
-**HALT — no code, config, docs, memory, or state mutated.** Cinquième halt Coder consécutif à l'identique, conforme à la clause d'auto-arrêt explicite du plan (`runs/T027/plan.md:9`).
+**HALT — attempt 6 identique aux attempts 2→5.** Aucun code, config, docs, mémoire ou state applicatif muté. Le plan `865a769` cible un stack Node/TS qui n'existe pas sur la branche (zéro fichier applicatif tracké), et le plan lui-même (ligne 9) exige que le Coder s'arrête plutôt que d'adapter silencieusement.
 
-## Liste des fichiers modifiés
+## Fichiers modifiés
 
-- `runs/T027/implementation-output.md` — rapport de halt #5 (mis à jour depuis le halt #4). Aucun autre fichier applicatif, config, docs, ou mémoire n'a été touché.
+- `runs/T027/implementation-output.md` — rapport de halt #6.
 
-## Vérifications effectuées
+## Vérifications
 
-- `git diff 865a769 HEAD -- runs/T027/plan.md` → vide. Plan jamais rejoué après 4 halts Coder + 7 reviews.
-- `git ls-files | grep -v "^runs/T027" | grep -v "^ai/" ...` → uniquement `runs/.gitkeep`. Zéro code applicatif présent.
-- Absence confirmée de `backend/`, `pom.xml`, `src/`, `package.json`, `assets/`.
-- Review-attempt-7 confirme pour la 5ᵉ fois consécutive : « **Rien à corriger côté Coder** ».
+- `git ls-files | grep -Ev "^(ai|prompts|tickets|docs/ai|runs)/"` → vide.
+- Absence de `backend/`, `src/`, `package.json`, `pom.xml`, `assets/`.
+- `plan.md` inchangé depuis `865a769` (planner checkpoint unique, jamais rejoué).
+- Review-attempt-8 confirme pour la 6ᵉ fois : « Rien à corriger côté Coder ».
 
 ## Limites connues
 
-Le déblocage est **strictement hors périmètre Coder**. La règle du rôle (« ne jamais contourner les contraintes du plan ») et les skills `refactor-safety` / `workflow-discipline` interdisent :
-- toute écriture de code hors du stack cible du plan (Node/TS inexistant sur la branche),
-- tout basculement unilatéral vers docs-only (refusé explicitement par deux reviews antérieures),
-- toute mutation autonome du plan par le Coder (violation `workflow-discipline`).
+Le déblocage est hors périmètre Coder. Escalade P0 renouvelée (7ᵉ répétition depuis review-3) : suspendre le pipeline automatique T027, rejouer manuellement un `step: planner`, trancher explicitement entre « attendre T009 » et « scope docs-only », ouvrir deux bugs harness (mis-routing `IMPLEMENTATION_FIX_REQUIRED` → coder au lieu de planner ; garde-fou anti-boucle stérile absent).
 
-**Escalade P0 maintenue** — 5ᵉ répétition consécutive depuis review-3 : (1) suspendre le pipeline automatique T027, (2) rejouer un `step: planner` sur `plan.md` (ou remplacer manuellement), (3) trancher explicitement dans le plan v2 entre « attendre T009 » et « scope docs-only », (4) ouvrir deux bugs harness distincts (routage `IMPLEMENTATION_FIX_REQUIRED` → Coder au lieu de Planner ; garde-fou anti-boucle stérile absent).
-
-Prédiction déterministe : tout nouveau `step: coder` sur `plan.md @ 865a769` produira un halt #6 identique.
+**Prédiction déterministe** : tout nouveau `step: coder` sur `plan.md @ 865a769` produira un halt #7 identique tant que ni le plan ni le routage harness ne mutent.
