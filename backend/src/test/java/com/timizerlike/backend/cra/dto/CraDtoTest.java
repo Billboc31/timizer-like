@@ -20,10 +20,11 @@ class CraDtoTest {
 
     @Test
     void craDayEntryDtoRoundTrip() {
-        CraDayEntryDto entry = new CraDayEntryDto(15, 0.5);
+        CraDayEntryDto entry = new CraDayEntryDto(15, 0.5, "test note");
 
         assertEquals(15, entry.day());
         assertEquals(0.5, entry.worked());
+        assertEquals("test note", entry.note());
     }
 
     @Test
@@ -40,8 +41,8 @@ class CraDtoTest {
     @Test
     void craDetailsDtoRoundTrip() {
         List<CraDayEntryDto> days = List.of(
-                new CraDayEntryDto(1, 1.0),
-                new CraDayEntryDto(2, 0.5)
+                new CraDayEntryDto(1, 1.0, null),
+                new CraDayEntryDto(2, 0.5, null)
         );
 
         CraDetailsDto details = new CraDetailsDto(7L, 6, 2026, 1.5, CraStatus.VALIDATED, days);
@@ -56,7 +57,7 @@ class CraDtoTest {
 
     @Test
     void craCreateOrUpdateRequestDtoRoundTrip() {
-        List<CraDayEntryDto> days = List.of(new CraDayEntryDto(10, 1.0));
+        List<CraDayEntryDto> days = List.of(new CraDayEntryDto(10, 1.0, null));
 
         CraCreateOrUpdateRequestDto request = new CraCreateOrUpdateRequestDto(11, 2026, days);
 

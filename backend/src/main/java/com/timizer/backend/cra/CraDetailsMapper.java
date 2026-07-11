@@ -17,7 +17,7 @@ public final class CraDetailsMapper {
         List<CraDayEntryDto> dayDtos = new ArrayList<>(entries.size());
         double total = 0.0;
         for (CraDayEntry entry : entries) {
-            dayDtos.add(new CraDayEntryDto(entry.getDate().getDayOfMonth(), entry.getWorkValue()));
+            dayDtos.add(new CraDayEntryDto(entry.getDate().getDayOfMonth(), entry.getWorkValue(), entry.getNote()));
             total += entry.getWorkValue();
         }
         return new CraDetailsDto(

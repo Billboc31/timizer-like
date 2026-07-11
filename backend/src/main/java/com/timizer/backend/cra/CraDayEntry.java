@@ -117,4 +117,11 @@ public class CraDayEntry {
     public void setNote(String note) {
         this.note = note;
     }
+
+    public void updateWorkValue(double workValue) {
+        if (!isAllowedWorkValue(workValue)) {
+            throw new InvalidWorkValueException(workValue);
+        }
+        this.workValue = workValue;
+    }
 }
