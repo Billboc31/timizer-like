@@ -40,7 +40,9 @@ class CraControllerTest {
                 2025,
                 21.0,
                 CraStatus.DRAFT,
-                List.of(new CraDayEntryDto(1, 0.0, null), new CraDayEntryDto(2, 0.0, null))
+                List.of(new CraDayEntryDto(1, 0.0, null), new CraDayEntryDto(2, 0.0, null)),
+                null,
+                null
         );
         when(creationService.createForMonth(2025, 3)).thenReturn(new CraCreationResult(dto, true));
 
@@ -63,7 +65,9 @@ class CraControllerTest {
                 2025,
                 20.0,
                 CraStatus.DRAFT,
-                List.of()
+                List.of(),
+                null,
+                null
         );
         when(creationService.createForMonth(2025, 4)).thenReturn(new CraCreationResult(dto, false));
 

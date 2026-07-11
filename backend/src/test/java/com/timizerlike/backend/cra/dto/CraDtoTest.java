@@ -45,7 +45,7 @@ class CraDtoTest {
                 new CraDayEntryDto(2, 0.5, null)
         );
 
-        CraDetailsDto details = new CraDetailsDto(7L, 6, 2026, 1.5, CraStatus.VALIDATED, days);
+        CraDetailsDto details = new CraDetailsDto(7L, 6, 2026, 1.5, CraStatus.VALIDATED, days, null, null);
 
         assertEquals(7L, details.id());
         assertEquals(6, details.month());
