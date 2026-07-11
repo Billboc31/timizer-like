@@ -3,5 +3,7 @@
   "state": "TEST_COMPLETE",
   "branch": "ticket/T012-create-cra-day-update-api",
   "issue_number": 12,
-  "updated_at": "2026-07-11T14:53:37Z"
+  "updated_at": "2026-07-11T17:01:00Z",
+  "pr_number": 46,
+  "pr_synced": true
 }
