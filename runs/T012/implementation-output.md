@@ -1,14 +1,16 @@
-## Summary
+## Summary — attempt 4
 
-**No code changes.** The T012 base still lacks the `backend/` Spring Boot module the plan depends on, and no operator remediation happened between attempt 2 and this attempt 3 (git log shows only workflow chore commits).
+**No code changes.** The T012 base is unchanged since attempt 3: no `backend/` module, all six prerequisite branches (T009, T002, T003, T004, T005, T007) still unmerged. The plan explicitly prohibits bootstrapping in this ticket, and both prior reviewers confirmed the Coder's refusal is correct — the fix is at the operator level.
 
-**Files modified**: only `runs/T012/implementation-output.md` (updated to record the attempt-3 verification results).
+**Files modified**: only `runs/T012/implementation-output.md`.
 
-**Verifications**:
-- `backend/` absent at worktree root.
-- T009, T007, T002 confirmed non-ancestors of HEAD.
-- Only intervening commits are `chore(T012/workflow)` / `chore(T012): pre-sync auto-commit` — no prerequisite merges.
+**Verifications** (re-run):
+- `ls` worktree root — no `backend/`.
+- `git merge-base --is-ancestor` on all six prereqs — all NOT MERGED.
+- `git diff --stat` vs. bootstrap — 20 files, all under `runs/T012/**`. Zero application code has ever been on this branch.
 
-**Why not bootstrap in-scope**: doing so would recreate the scope of six upstream tickets (T009/T002/T003/T004/T005/T007), violate the plan's explicit "do not silently expand scope" instruction, cross the "Files to modify" guard-rail, and guarantee later merge conflicts. Both the plan and the attempt-1 reviewer assign this remediation to the operator, not the Coder.
+**Loop state**: attempts 1-3 escalated identically; each review re-confirmed the reasoning while returning `IMPLEMENTATION_FIX_REQUIRED`. Attempt 2's review explicitly said "do not relaunch the Coder until prerequisites are merged" — the harness re-launched anyway.
 
-**Escalation**: `IMPLEMENTATION_BLOCKED_UPSTREAM`. Recommended operator action (unchanged from the reviewer's ask): rebase/merge T009 → T002 → T003 → T004 → T005 → T007 into T012's base, then relaunch the Coder on the current plan.
+**Escalation**: `IMPLEMENTATION_BLOCKED_UPSTREAM_PERSISTENT`.
+
+**Required operator action**: halt further Coder retries on T012, then either merge/rebase T009 → T002 → T003 → T004 → T005 → T007 into T012's base (recommended), or return T012 to the Planner to formally re-scope. Full remediation steps documented in `runs/T012/implementation-output.md`.
