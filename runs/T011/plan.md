@@ -1,1 +1,1 @@
-Plan written to `runs/T011/plan.md`. It specifies three concrete changes: a new `CraNotFoundException`, a new `CraRetrievalService`, and two GET endpoints added to `CraController` — reusing the existing `CraDetailsDto`, mapper, and repository methods already in place.
+Plan written to `runs/T011/plan.md`. It defines a new `CraRetrievalService` (reusing the existing repository methods and mapper) and a new `CraRetrievalController` with `GET /api/cras/{id}` and `GET /api/cras/{year}/{month}`, plus corresponding unit tests for both. No existing code needs to be changed.
