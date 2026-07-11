@@ -5,10 +5,14 @@ import java.util.Objects;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.NotNull;
 
@@ -17,7 +21,7 @@ import jakarta.validation.constraints.NotNull;
     name = "cra_day_entry",
     uniqueConstraints = @UniqueConstraint(
         name = "uk_cra_day_entry_month_day",
-        columnNames = {"monthly_cra_id", "date"}
+        columnNames = {"monthly_cra_report_id", "entry_date"}
     )
 )
 public class CraDayEntry {
@@ -30,12 +34,15 @@ public class CraDayEntry {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
-    @Column(name = "monthly_cra_id", nullable = false)
-    private Long monthlyCraId;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "monthly_cra_report_id", nullable = false)
+    private MonthlyCraReport monthlyCraReport;
+
+    @Transient
+    private Long monthlyCraIdOnConstruction;
 
     @NotNull
-    @Column(name = "date", nullable = false)
+    @Column(name = "entry_date", nullable = false)
     private LocalDate date;
 
     @Column(name = "work_value", nullable = false)
@@ -53,7 +60,17 @@ public class CraDayEntry {
         if (!isAllowedWorkValue(workValue)) {
             throw new InvalidWorkValueException(workValue);
         }
-        this.monthlyCraId = monthlyCraId;
+        this.monthlyCraIdOnConstruction = monthlyCraId;
+        this.date = date;
+        this.workValue = workValue;
+        this.note = note;
+    }
+
+    public CraDayEntry(LocalDate date, double workValue, String note) {
+        Objects.requireNonNull(date, "date must not be null");
+        if (!isAllowedWorkValue(workValue)) {
+            throw new InvalidWorkValueException(workValue);
+        }
         this.date = date;
         this.workValue = workValue;
         this.note = note;
@@ -70,8 +87,19 @@ public class CraDayEntry {
         return id;
     }
 
+    public MonthlyCraReport getMonthlyCraReport() {
+        return monthlyCraReport;
+    }
+
+    void setMonthlyCraReport(MonthlyCraReport monthlyCraReport) {
+        this.monthlyCraReport = monthlyCraReport;
+    }
+
     public Long getMonthlyCraId() {
-        return monthlyCraId;
+        if (monthlyCraReport != null) {
+            return monthlyCraReport.getId();
+        }
+        return monthlyCraIdOnConstruction;
     }
 
     public LocalDate getDate() {
