@@ -3,5 +3,16 @@
   "state": "TEST_COMPLETE",
   "branch": "ticket/T004-create-cra-repository",
   "issue_number": 7,
-  "updated_at": "2026-07-11T10:35:25Z"
+  "updated_at": "2026-07-11T13:09:29Z",
+  "pr_number": 42,
+  "pr_synced": true,
+  "pre_conflict_state": "TEST_COMPLETE",
+  "conflict_detected_at": "2026-07-11T10:35:34Z",
+  "conflict_pr_number": 42,
+  "conflicted_files": [
+    "backend/src/main/java/com/timizer/backend/cra/CraDayEntry.java",
+    "backend/src/main/java/com/timizer/backend/cra/MonthlyCraReport.java",
+    "backend/src/main/java/com/timizer/backend/cra/MonthlyCraReportRepository.java",
+    "backend/src/test/java/com/timizer/backend/cra/MonthlyCraReportRepositoryTest.java"
+  ]
 }
