@@ -1,6 +1,7 @@
-`runs/T011/plan.md` has been written with the four required sections:
+The plan is written to `runs/T011/plan.md`. It covers:
 
-- **Objective** — two GET endpoints for CRA retrieval.
-- **Included** — `CraRetrievalService` (2 methods), `CraRetrievalController` (`GET /api/cras/{id}` and `GET /api/cras?month=&year=`), and tests for both; all existing infrastructure reused without modification.
-- **Excluded** — creation, updates, PDF, auth, pagination, any entity/DTO changes.
-- **Acceptance criteria** — HTTP 200/404 behavior, response shape, 8 test cases, and `mvn test` clean.
+- **`CraNotFoundException`** — new runtime exception for the not-found case.
+- **`CraRetrievalService`** — new service with `getById` and `getByMonthAndYear`, reusing the existing repository and mapper.
+- **`CraController`** — two new GET endpoints (`/api/cra/{id}` and `/api/cra/{year}/{month}`) plus a `@ExceptionHandler` mapping `CraNotFoundException` → 404.
+- **`CraControllerTest`** — six new test cases covering happy paths, 404, and input validation.
+- No changes to any existing entity, DTO, repository, or mapper.
