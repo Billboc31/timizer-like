@@ -11,11 +11,15 @@ com/timizerlike/cra/pdf/model/CraPdfClientSignature.class
 com/timizer/backend/cra/MonthlyCraCreationService$CraCreationResult.class
 com/timizer/backend/cra/InvalidWorkValueException.class
 com/timizerlike/cra/pdf/model/CraPdfDocument.class
+com/timizerlike/cra/pdf/CraPdfGenerator.class
+com/timizerlike/backend/cra/web/ValidateCraRequestDto.class
 com/timizer/backend/cra/MonthlyCraReport.class
+com/timizerlike/backend/cra/web/CraValidationController.class
 com/timizer/backend/cra/CraDetailsMapper.class
 com/timizerlike/cra/pdf/model/CraPdfProviderSignature.class
 com/timizer/backend/cra/ValidationStatus.class
 com/timizerlike/backend/cra/dto/CraCreateOrUpdateRequestDto.class
+com/timizerlike/cra/service/CraValidationService.class
 com/timizer/backend/cra/MonthlyCraCreationService.class
 com/timizerlike/cra/TimizerLikeApplication.class
 com/timizer/backend/cra/MonthlyCraReportRepository.class

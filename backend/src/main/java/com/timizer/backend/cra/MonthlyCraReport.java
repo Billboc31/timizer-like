@@ -88,6 +88,9 @@ public class MonthlyCraReport {
     @Column(name = "provider_signature_date")
     private LocalDate providerSignatureDate;
 
+    @Column(name = "validation_date")
+    private LocalDate validationDate;
+
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;
 
@@ -197,6 +200,10 @@ public class MonthlyCraReport {
         return providerSignatureDate;
     }
 
+    public LocalDate getValidationDate() {
+        return validationDate;
+    }
+
     public Instant getCreatedAt() {
         return createdAt;
     }
@@ -231,6 +238,10 @@ public class MonthlyCraReport {
 
     public void setProviderSignatureDate(LocalDate providerSignatureDate) {
         this.providerSignatureDate = providerSignatureDate;
+    }
+
+    public void setValidationDate(LocalDate validationDate) {
+        this.validationDate = validationDate;
     }
 
     public void setClientFirstName(String clientFirstName) {

@@ -1,0 +1,33 @@
+[2026-07-11T15:05:01Z] auto-run start: state=INIT
+[2026-07-11T15:05:01Z] auto-run: running step=planner
+[2026-07-11T15:05:01Z] prompt: resolved=prompts/generic/planner.md source=generic
+[2026-07-11T15:05:01Z] prompt: generic fallback — injecting runs/T013/ticket.md
+[2026-07-11T15:05:01Z] compose: global-context=docs/ai/global-context.md
+[2026-07-11T15:05:01Z] compose: role=ai/roles/planner.md
+[2026-07-11T15:05:01Z] compose: skill=ai/skills/workflow-discipline.md
+[2026-07-11T15:05:01Z] compose: skill=ai/skills/architecture-discipline.md
+[2026-07-11T15:05:01Z] compose: skill=ai/skills/documentation.md
+[2026-07-11T15:05:01Z] compose: task (canonical prompt)
+[2026-07-11T15:05:01Z] snapshot: runtime-prompt=runs/T013/prompts/planner-attempt-1.md
+[2026-07-11T15:08:32Z] auto-run: step=planner done rc=0
+[2026-07-11T15:27:11Z] auto-run start: state=IMPLEMENTATION_APPROVED
+[2026-07-11T15:27:11Z] auto-run: running step=tester
+[2026-07-11T15:27:11Z] prompt: resolved=prompts/generic/tester.md source=generic
+[2026-07-11T15:27:11Z] prompt: generic fallback — injecting runs/T013/ticket.md
+[2026-07-11T15:27:11Z] compose: global-context=docs/ai/global-context.md
+[2026-07-11T15:27:11Z] compose: role=ai/roles/tester.md
+[2026-07-11T15:27:11Z] compose: skill=ai/skills/workflow-discipline.md
+[2026-07-11T15:27:11Z] compose: skill=ai/skills/testing.md
+[2026-07-11T15:27:11Z] compose: skill=ai/skills/debugging.md
+[2026-07-11T15:27:11Z] compose: task (canonical prompt)
+[2026-07-11T15:27:11Z] snapshot: runtime-prompt=runs/T013/prompts/tester-attempt-1.md
+[2026-07-11T15:28:43Z] auto-run: step=tester done rc=0
+[2026-07-11T15:28:43Z] auto-run: transition IMPLEMENTATION_APPROVED → TEST_COMPLETE
+[2026-07-11T15:28:43Z] auto-run: auto-commit triggered (step=tester, include_code=True)
+[2026-07-11T15:28:43Z] commit-checkpoint: unstaged runtime garbage: ['runs/T013/daemon.lock', 'runs/T013/runtime.log', 'runs/T013/workflow-status.md']
+[2026-07-11T15:28:43Z] commit-checkpoint: sha=7818a00 files=29 title='test(T013/workflow): tester — update 29 file(s)'
+[2026-07-11T15:28:43Z] auto-run: auto-push triggered
+[2026-07-11T15:28:43Z] push: tolerating runtime dirty files (not blocking): ['runs/T013/daemon.lock', 'runs/T013/runtime.log', 'runs/T013/workflow-status.md']
+[2026-07-11T15:28:43Z] push: pushing branch=ticket/T013-create-cra-validation-api
+[2026-07-11T15:28:45Z] push: done branch=ticket/T013-create-cra-validation-api
+[2026-07-11T15:28:46Z] auto-run: TEST_COMPLETE — running PR lifecycle

@@ -26,7 +26,9 @@ public final class CraDetailsMapper {
                 report.getYear(),
                 total,
                 mapStatus(report.getStatus()),
-                dayDtos
+                dayDtos,
+                report.getValidationDate(),
+                report.getProviderSignatureDate()
         );
     }
 

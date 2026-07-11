@@ -64,6 +64,7 @@ public class CraDayUpdateService {
             total += e.getWorkValue();
         }
         CraStatus status = cra.getStatus() == ValidationStatus.VALIDATED ? CraStatus.VALIDATED : CraStatus.DRAFT;
-        return new CraDetailsDto(cra.getId(), cra.getMonth(), cra.getYear(), total, status, days);
+        return new CraDetailsDto(cra.getId(), cra.getMonth(), cra.getYear(), total, status, days,
+                cra.getValidationDate(), cra.getProviderSignatureDate());
     }
 }
