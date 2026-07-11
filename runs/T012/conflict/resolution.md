@@ -42,3 +42,30 @@ Decision: **merge both sides** — the log is append-only. The HEAD side contain
 ## Limitations
 
 None. All conflicts were in generated artifacts or workflow metadata, with no ambiguity about the correct resolution.
+
+---
+
+# Conflict Resolution — T012 (Pass 2)
+
+Generated at: 2026-07-11T15:30:00Z
+
+## Context
+
+Second conflict resolution pass. The system detected conflicts in `runs/T016/` files during a second rebase attempt. The actual rebase (`git rebase origin/ai-dev-factory/bootstrap-agent-layout`) revealed two real conflicts:
+
+## Files resolved
+
+### backend/pom.xml
+
+Decision: **T026's version** — The conflict was add/add between T009's bootstrap (3.3.5, `com.timizer`, java 21, web+actuator) and T026's initial scaffold (3.2.5, `com.timizerlike`, java 17, starter+test). Our ORIG_HEAD uses the T026 namespace (`com.timizerlike`, java 17, 3.2.5) as the foundation, with additional dependencies added by later commits. Took T026 version; later T012 commits restore the full dependency set.
+
+### backend/README.md
+
+Decision: **T016's version** — The conflict was add/add between T009's timizer-backend README and T016's timizer-like backend README. Our final working state uses the T016 README describing the CRA PDF generation feature. T009's README described a different codebase direction.
+
+## Post-resolution state
+
+- Rebase completed: 36/36 commits applied cleanly
+- Branch: `ticket/T012-create-cra-day-update-api` — in sync with `origin/ticket/T012-create-cra-day-update-api`
+- PR #46 already merged to `origin/main` (ce6135a T012 — Create CRA day update API)
+- Workflow state: DONE
