@@ -94,3 +94,15 @@
 [2026-07-11T22:17:11Z] compose: task (canonical prompt)
 [2026-07-11T22:17:11Z] snapshot: runtime-prompt=runs/T014/prompts/planner-attempt-8.md
 [2026-07-11T22:20:14Z] auto-run: step=planner done rc=0
+[2026-07-11T22:23:15Z] auto-run start: state=INIT
+[2026-07-11T22:23:15Z] auto-run: running step=planner
+[2026-07-11T22:23:15Z] prompt: resolved=prompts/generic/planner.md source=generic
+[2026-07-11T22:23:15Z] prompt: generic fallback — injecting runs/T014/ticket.md
+[2026-07-11T22:23:15Z] compose: global-context=docs/ai/global-context.md
+[2026-07-11T22:23:15Z] compose: role=ai/roles/planner.md
+[2026-07-11T22:23:15Z] compose: skill=ai/skills/workflow-discipline.md
+[2026-07-11T22:23:15Z] compose: skill=ai/skills/architecture-discipline.md
+[2026-07-11T22:23:15Z] compose: skill=ai/skills/documentation.md
+[2026-07-11T22:23:15Z] compose: task (canonical prompt)
+[2026-07-11T22:23:15Z] snapshot: runtime-prompt=runs/T014/prompts/planner-attempt-9.md
+[2026-07-11T22:30:45Z] auto-run: step=planner done rc=0
