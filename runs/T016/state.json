@@ -1,0 +1,15 @@
+{
+  "ticket_id": "T016",
+  "state": "TEST_COMPLETE",
+  "branch": "ticket/T016-create-cra-pdf-generator",
+  "issue_number": 16,
+  "updated_at": "2026-07-11T14:57:43Z",
+  "pre_conflict_state": "TEST_COMPLETE",
+  "conflict_detected_at": "2026-07-11T14:28:20Z",
+  "conflict_pr_number": 43,
+  "conflicted_files": [
+    "backend/pom.xml",
+    "runs/T004/prompts/conflict-resolver-attempt-1.md",
+    "runs/T004/prompts/conflict-resolver-attempt-2.md"
+  ]
+}

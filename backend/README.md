@@ -1,31 +1,10 @@
-# timizer-backend
+# timizer-like backend
 
-Spring Boot backend for the Timizer application.
+Spring Boot backend for the Timizer-like application.
 
-## Requirements
+## CRA PDF generation
 
-- Java 21 (JDK)
-
-Maven is not required — the Maven Wrapper (`mvnw`) is included.
-
-## Run locally
-
-```bash
-cd backend
-./mvnw spring-boot:run
-```
-
-The application listens on port `8080` by default.
-
-## Health endpoints
-
-- `GET http://localhost:8080/health` — custom endpoint, returns `{"status":"UP"}`.
-- `GET http://localhost:8080/actuator/health` — Spring Boot Actuator, returns `{"status":"UP"}`.
-
-## Build
-
-```bash
-./mvnw -DskipTests package
-```
-
-Produces `target/timizer-backend-0.0.1-SNAPSHOT.jar`.
+CRA reports are rendered to a two-page PDF using [Apache PDFBox](https://pdfbox.apache.org/) `3.0.3`.
+Entry point: `com.timizerlike.cra.pdf.CraPdfGenerator#generate(CraPdfDocument)` returns the encoded
+bytes for the PDF. The class is a plain POJO (no Spring annotations) and can be instantiated and
+called from any future controller or service.
