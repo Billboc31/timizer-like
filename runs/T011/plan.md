@@ -1,1 +1,1 @@
-The plan is written to `runs/T011/plan.md`. It adds two GET endpoints (`/api/cra/{id}` and `/api/cra/{year}/{month}`), a new `CraNotFoundException`, and a new `MonthlyCraRetrievalService` — reusing the existing `CraDetailsMapper` and repository without touching any other layer.
+Plan written to `runs/T011/plan.md`. It calls for two new files (service + controller) and two new test files, reusing the existing `CraDetailsDto`, `CraDetailsMapper`, `MonthlyCraReportRepository`, and `CraNotFoundException` without touching any existing layer.
