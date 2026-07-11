@@ -31,3 +31,8 @@
 [2026-07-11T14:28:11Z] push: pushing branch=ticket/T016-create-cra-pdf-generator
 [2026-07-11T14:28:13Z] push: done branch=ticket/T016-create-cra-pdf-generator
 [2026-07-11T14:28:14Z] auto-run: TEST_COMPLETE — running PR lifecycle
+[2026-07-11T14:57:41Z] conflict-resolver: git rebase origin/main exit=0
+[2026-07-11T14:57:41Z] conflict-resolver: rebase clean — no conflicts
+[2026-07-11T14:57:41Z] conflict-resolver: running tests
+[2026-07-11T14:57:41Z] conflict-resolver: test-report written: runs/T016/conflict/test-report.md
+[2026-07-11T14:57:41Z] conflict-resolver: staging and committing resolution artifacts
