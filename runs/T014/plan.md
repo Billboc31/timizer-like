@@ -1,6 +1,6 @@
-`runs/T014/plan.md` has been rewritten with a valid plan document containing the four required headings. The previous content was an invalid status report; the new plan describes what the Coder must build:
+`runs/T014/plan.md` has been written. The plan covers:
 
-- New `CraHistoryItemDto` with all required fields including nullable `validationDate`
-- Repository query method `findAllByOrderByYearDescMonthDesc()`
-- New `CraHistoryService` and `CraHistoryController` for `GET /api/cras`
-- Service unit test (Mockito) and controller test (`@WebMvcTest`)
+- **`CraSummaryDto`** — add nullable `LocalDate validationDate` (6th field), update its existing round-trip test
+- **`CraHistoryService`** — new `@Transactional(readOnly = true)` service calling `findAllByOrderByYearDescMonthDesc()` and mapping to `CraSummaryDto` via `CraTotalCalculationService`
+- **`CraHistoryController`** — `GET /api/cras` returning `List<CraSummaryDto>`
+- **Two new test classes** — `CraHistoryServiceTest` (Mockito) and `CraHistoryControllerTest` (`@WebMvcTest`)
