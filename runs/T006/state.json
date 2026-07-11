@@ -1,7 +1,7 @@
 {
   "ticket_id": "T006",
-  "state": "INIT",
+  "state": "PLAN_APPROVED",
   "branch": "ticket/T006-create-cra-total-calculation-service",
   "issue_number": 9,
-  "updated_at": "2026-07-10T14:46:15Z"
+  "updated_at": "2026-07-11T13:12:42Z"
 }
