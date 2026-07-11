@@ -3762,14 +3762,11 @@ index 0000000..d2aa141
             <artifactId>spring-boot-starter</artifactId>
         </dependency>
         <dependency>
-<<<<<<< HEAD
-=======
             <groupId>org.apache.pdfbox</groupId>
             <artifactId>pdfbox</artifactId>
             <version>3.0.3</version>
         </dependency>
         <dependency>
->>>>>>> d771026 (feat(T016/workflow): coder — update 8 file(s))
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
@@ -6864,33 +6861,6 @@ index 0000000..44ce507
 package com.timizer.backend.cra;
 
 import java.time.LocalDate;
-<<<<<<< HEAD
-import java.util.Objects;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
-import jakarta.validation.constraints.NotNull;
-
-@Entity
-@Table(
-    name = "cra_day_entry",
-    uniqueConstraints = @UniqueConstraint(
-        name = "uk_cra_day_entry_month_day",
-        columnNames = {"monthly_cra_id", "date"}
-    )
-)
-public class CraDayEntry {
-
-    static final double WORK_VALUE_NONE = 0.0;
-    static final double WORK_VALUE_HALF = 0.5;
-    static final double WORK_VALUE_FULL = 1.0;
-
-=======
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -6906,25 +6876,15 @@ import jakarta.persistence.Table;
 @Table(name = "cra_day_entry")
 public class CraDayEntry {
 
->>>>>>> 31adddd (feat(T004/workflow): coder — update 8 file(s))
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-<<<<<<< HEAD
-    @NotNull
-    @Column(name = "monthly_cra_id", nullable = false)
-    private Long monthlyCraId;
-
-    @NotNull
-    @Column(name = "date", nullable = false)
-=======
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "monthly_cra_report_id", nullable = false)
     private MonthlyCraReport monthlyCraReport;
 
     @Column(name = "entry_date", nullable = false)
->>>>>>> 31adddd (feat(T004/workflow): coder — update 8 file(s))
     private LocalDate date;
 
     @Column(name = "work_value", nullable = false)
@@ -6936,47 +6896,22 @@ public class CraDayEntry {
     protected CraDayEntry() {
     }
 
-<<<<<<< HEAD
-    public CraDayEntry(Long monthlyCraId, LocalDate date, double workValue, String note) {
-        Objects.requireNonNull(monthlyCraId, "monthlyCraId must not be null");
-        Objects.requireNonNull(date, "date must not be null");
-        if (!isAllowedWorkValue(workValue)) {
-            throw new InvalidWorkValueException(workValue);
-        }
-        this.monthlyCraId = monthlyCraId;
-=======
     public CraDayEntry(LocalDate date, double workValue, String note) {
->>>>>>> 31adddd (feat(T004/workflow): coder — update 8 file(s))
         this.date = date;
         this.workValue = workValue;
         this.note = note;
     }
 
-<<<<<<< HEAD
-    private static boolean isAllowedWorkValue(double value) {
-        if (Double.isNaN(value) || Double.isInfinite(value)) {
-            return false;
-        }
-        return value == WORK_VALUE_NONE || value == WORK_VALUE_HALF || value == WORK_VALUE_FULL;
-    }
-
-=======
->>>>>>> 31adddd (feat(T004/workflow): coder — update 8 file(s))
     public Long getId() {
         return id;
     }
 
-<<<<<<< HEAD
-    public Long getMonthlyCraId() {
-        return monthlyCraId;
-=======
     public MonthlyCraReport getMonthlyCraReport() {
         return monthlyCraReport;
     }
 
     void setMonthlyCraReport(MonthlyCraReport monthlyCraReport) {
         this.monthlyCraReport = monthlyCraReport;
->>>>>>> 31adddd (feat(T004/workflow): coder — update 8 file(s))
     }
 
     public LocalDate getDate() {
@@ -6994,8 +6929,6 @@ public class CraDayEntry {
     public void setNote(String note) {
         this.note = note;
     }
-<<<<<<< HEAD
-=======
 
     public void setWorkValue(double workValue) {
         this.workValue = workValue;
@@ -7004,7 +6937,6 @@ public class CraDayEntry {
     public void setDate(LocalDate date) {
         this.date = date;
     }
->>>>>>> 31adddd (feat(T004/workflow): coder — update 8 file(s))
 }
 ```
 
@@ -7015,29 +6947,19 @@ package com.timizer.backend.cra;
 
 import java.time.Instant;
 import java.time.LocalDate;
-<<<<<<< HEAD
-
-=======
 import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
->>>>>>> 31adddd (feat(T004/workflow): coder — update 8 file(s))
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-<<<<<<< HEAD
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-=======
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
->>>>>>> 31adddd (feat(T004/workflow): coder — update 8 file(s))
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
@@ -7117,8 +7039,6 @@ public class MonthlyCraReport {
     @Column(name = "updated_at", nullable = false)
     private Instant updatedAt;
 
-<<<<<<< HEAD
-=======
     @OneToMany(
         mappedBy = "monthlyCraReport",
         cascade = CascadeType.ALL,
@@ -7127,7 +7047,6 @@ public class MonthlyCraReport {
     )
     private List<CraDayEntry> dayEntries = new ArrayList<>();
 
->>>>>>> 31adddd (feat(T004/workflow): coder — update 8 file(s))
     protected MonthlyCraReport() {
     }
 
@@ -7231,8 +7150,6 @@ public class MonthlyCraReport {
         return updatedAt;
     }
 
-<<<<<<< HEAD
-=======
     public List<CraDayEntry> getDayEntries() {
         return dayEntries;
     }
@@ -7253,7 +7170,6 @@ public class MonthlyCraReport {
         entry.setMonthlyCraReport(null);
     }
 
->>>>>>> 31adddd (feat(T004/workflow): coder — update 8 file(s))
     public void setStatus(ValidationStatus status) {
         this.status = status;
     }
@@ -25784,16 +25700,10 @@ index 0000000..7004262
 ### .gitignore
 
 ```
-<<<<<<< HEAD
-backend/var/*.db
-backend/var/*.db-journal
-backend/.env
-=======
 # Provider signature asset — never committed. See docs/provider-signature.md.
 assets/provider-signature.png
 assets/provider-signature.jpg
 assets/provider-signature.jpeg
->>>>>>> 02f00a8 (feat(T027/docs,workflow): coder — update 8 file(s))
 ```
 ```
 ```
@@ -47357,16 +47267,10 @@ index 0000000..7004262
 ### .gitignore
 
 ```
-<<<<<<< HEAD
-backend/var/*.db
-backend/var/*.db-journal
-backend/.env
-=======
 # Provider signature asset — never committed. See docs/provider-signature.md.
 assets/provider-signature.png
 assets/provider-signature.jpg
 assets/provider-signature.jpeg
->>>>>>> 02f00a8 (feat(T027/docs,workflow): coder — update 8 file(s))
 ```
 ```
 ```
