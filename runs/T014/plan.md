@@ -1,6 +1,7 @@
-`runs/T014/plan.md` has been written. The plan covers:
+The plan has been written to `runs/T014/plan.md`. It covers:
 
-- **`CraSummaryDto`** — add nullable `LocalDate validationDate` (6th field), update its existing round-trip test
-- **`CraHistoryService`** — new `@Transactional(readOnly = true)` service calling `findAllByOrderByYearDescMonthDesc()` and mapping to `CraSummaryDto` via `CraTotalCalculationService`
-- **`CraHistoryController`** — `GET /api/cras` returning `List<CraSummaryDto>`
-- **Two new test classes** — `CraHistoryServiceTest` (Mockito) and `CraHistoryControllerTest` (`@WebMvcTest`)
+- **`CraSummaryDto`** — add nullable `LocalDate validationDate` (6th field), mirroring the pattern already in `CraDetailsDto`
+- **`CraHistoryService`** — `@Transactional(readOnly=true)` service calling `findAllByOrderByYearDescMonthDesc()` and mapping to `CraSummaryDto`
+- **`CraHistoryController`** — `GET /api/cras` → `List<CraSummaryDto>`, always 200 (empty array when no records)
+- **Two new test classes** — `CraHistoryServiceTest` (pure Mockito) and `CraHistoryControllerTest` (`@WebMvcTest`)
+- **`CraDtoTest`** update for the new field
