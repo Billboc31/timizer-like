@@ -1,7 +1,7 @@
 {
   "ticket_id": "T015",
-  "state": "PLAN_APPROVED",
+  "state": "IMPLEMENTATION_REVIEW_NEEDED",
   "branch": "ticket/T015-create-pdf-data-model",
   "issue_number": 15,
-  "updated_at": "2026-07-11T10:14:47Z"
+  "updated_at": "2026-07-11T10:19:35Z"
 }
