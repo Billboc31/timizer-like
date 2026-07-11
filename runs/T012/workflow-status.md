@@ -88,3 +88,9 @@
 - prev: IMPLEMENTATION_APPROVED
 - step: tester
 - next: TEST_COMPLETE
+
+## 2026-07-11T17:01:00Z
+
+- prev: CONFLICT_RESOLVING
+- step: conflict-resolver
+- next: TEST_COMPLETE
