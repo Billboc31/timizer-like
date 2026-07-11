@@ -1,8 +1,6 @@
-`runs/T014/plan.md` is written. The plan covers:
+`runs/T014/plan.md` has been rewritten with a valid plan document containing the four required headings. The previous content was an invalid status report; the new plan describes what the Coder must build:
 
-- **`GET /api/cras`** — new controller in `com.timizerlike.backend.cra.web`
-- **`CraHistoryItemDto`** — new DTO with `id`, `month`, `year`, `status`, `totalWorkedDays`, `validationDate`
-- **`CraHistoryService`** — fetches via `MonthlyCraReportRepository.findAllByOrderByYearDescMonthDesc()`, delegates totals to the existing `CraTotalCalculationService`
-- **Repository** — one derived-query method added to `MonthlyCraReportRepository`
-- **Tests** — `@WebMvcTest` for the controller + Mockito unit test for the service
-- Pagination, auth, PDF, frontend, and CRA mutation are all explicitly excluded
+- New `CraHistoryItemDto` with all required fields including nullable `validationDate`
+- Repository query method `findAllByOrderByYearDescMonthDesc()`
+- New `CraHistoryService` and `CraHistoryController` for `GET /api/cras`
+- Service unit test (Mockito) and controller test (`@WebMvcTest`)
