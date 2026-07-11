@@ -18482,15 +18482,18 @@ index 0000000..7004262
 
 ### .gitignore
 
+Archival note: the original conflict block for `.gitignore` on the T027 branch
+combined HEAD (backend var/env entries) with the T027 additions
+(provider-signature assets). It was resolved by keeping both sides. The
+resolved file content is:
+
 ```
-<<<<<<< HEAD
 backend/var/*.db
 backend/var/*.db-journal
 backend/.env
-=======
+
 # Provider signature asset — never committed. See docs/provider-signature.md.
 assets/provider-signature.png
 assets/provider-signature.jpg
 assets/provider-signature.jpeg
->>>>>>> 02f00a8 (feat(T027/docs,workflow): coder — update 8 file(s))
 ```
