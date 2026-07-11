@@ -1,6 +1,8 @@
-The plan has been written to `runs/T014/plan.md`. It covers:
+`runs/T014/plan.md` is written. The plan covers:
 
-- **Objective**: expose `GET /api/cras` returning sorted CRA summaries.
-- **Included**: `CraSummaryDto` update, `CraDetailsMapper.toSummaryDto`, new `CraHistoryService`, new `CraHistoryController`, and two test files.
-- **Excluded**: creation, edition, PDF, frontend, pagination, auth changes.
-- **Acceptance criteria**: HTTP 200, correct JSON fields, descending sort, nullable `validationDate`, no pre-existing test breakage.
+- **`GET /api/cras`** — new controller in `com.timizerlike.backend.cra.web`
+- **`CraHistoryItemDto`** — new DTO with `id`, `month`, `year`, `status`, `totalWorkedDays`, `validationDate`
+- **`CraHistoryService`** — fetches via `MonthlyCraReportRepository.findAllByOrderByYearDescMonthDesc()`, delegates totals to the existing `CraTotalCalculationService`
+- **Repository** — one derived-query method added to `MonthlyCraReportRepository`
+- **Tests** — `@WebMvcTest` for the controller + Mockito unit test for the service
+- Pagination, auth, PDF, frontend, and CRA mutation are all explicitly excluded
