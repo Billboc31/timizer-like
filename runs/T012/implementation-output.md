@@ -1,16 +1,18 @@
-## Summary — attempt 4
+## Summary — attempt 5
 
-**No code changes.** The T012 base is unchanged since attempt 3: no `backend/` module, all six prerequisite branches (T009, T002, T003, T004, T005, T007) still unmerged. The plan explicitly prohibits bootstrapping in this ticket, and both prior reviewers confirmed the Coder's refusal is correct — the fix is at the operator level.
+**IMPLEMENTATION_BLOCKED_UPSTREAM_PERSISTENT** (5th consecutive).
 
 **Files modified**: only `runs/T012/implementation-output.md`.
 
-**Verifications** (re-run):
-- `ls` worktree root — no `backend/`.
-- `git merge-base --is-ancestor` on all six prereqs — all NOT MERGED.
-- `git diff --stat` vs. bootstrap — 20 files, all under `runs/T012/**`. Zero application code has ever been on this branch.
+**Verified state (2026-07-11)**:
+- No `backend/` module in the worktree (only `ai/ docs/ prompts/ runs/ tickets/`).
+- All 6 prerequisite branches (T009, T002, T003, T004, T005, T007) report `NOT MERGED`.
+- 27 files changed vs. base, 100% under `runs/T012/**` — zero application code on this branch.
 
-**Loop state**: attempts 1-3 escalated identically; each review re-confirmed the reasoning while returning `IMPLEMENTATION_FIX_REQUIRED`. Attempt 2's review explicitly said "do not relaunch the Coder until prerequisites are merged" — the harness re-launched anyway.
+**Why no code change**: the plan explicitly forbids silent bootstrapping when the "starting state" assumptions (backend module, entities, DTOs) are false. Implementing anyway would recreate the work of 6 upstream tickets, violating scope and the Coder role's non-negotiables. Four prior reviews confirmed the refusal is correct.
 
-**Escalation**: `IMPLEMENTATION_BLOCKED_UPSTREAM_PERSISTENT`.
+**Required operator action** (unchanged since attempt 2):
+1. Halt Coder retries — the loop is a livelock.
+2. Either merge/rebase T009 → T002 → T003 → T004 → T005 → T007 into T012's base, or return T012 to the Planner for re-scope.
 
-**Required operator action**: halt further Coder retries on T012, then either merge/rebase T009 → T002 → T003 → T004 → T005 → T007 into T012's base (recommended), or return T012 to the Planner to formally re-scope. Full remediation steps documented in `runs/T012/implementation-output.md`.
+Full escalation documented in `runs/T012/implementation-output.md`.
