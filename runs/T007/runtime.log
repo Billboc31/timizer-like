@@ -31,3 +31,8 @@
 [2026-07-11T14:33:18Z] push: pushing branch=ticket/T007-create-cra-creation-api
 [2026-07-11T14:33:20Z] push: done branch=ticket/T007-create-cra-creation-api
 [2026-07-11T14:33:20Z] auto-run: TEST_COMPLETE — running PR lifecycle
+[2026-07-11T14:33:53Z] conflict-resolver: git rebase origin/main exit=0
+[2026-07-11T14:33:53Z] conflict-resolver: rebase clean — no conflicts
+[2026-07-11T14:33:53Z] conflict-resolver: running tests
+[2026-07-11T14:33:53Z] conflict-resolver: test-report written: runs/T007/conflict/test-report.md
+[2026-07-11T14:33:53Z] conflict-resolver: staging and committing resolution artifacts
