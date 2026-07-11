@@ -1,7 +1,7 @@
 {
   "ticket_id": "T011",
-  "state": "INIT",
+  "state": "PLAN_APPROVED",
   "branch": "ticket/T011-create-cra-retrieval-api",
   "issue_number": 11,
-  "updated_at": "2026-07-10T14:47:37Z"
+  "updated_at": "2026-07-11T23:58:30Z"
 }
