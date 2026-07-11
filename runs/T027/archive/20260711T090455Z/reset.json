@@ -1,0 +1,9 @@
+{
+  "operation": "reset_to_planning",
+  "ticket_id": "T027",
+  "requested_by": "operator",
+  "reason": "stale plan / stack mismatch",
+  "previous_state": "IMPLEMENTATION_FIX_REQUIRED",
+  "new_state": "INIT",
+  "created_at": "2026-07-11T09:04:55Z"
+}
