@@ -1,1 +1,6 @@
-Plan written to `runs/T011/plan.md`. It defines a new `CraRetrievalService` (reusing the existing repository methods and mapper) and a new `CraRetrievalController` with `GET /api/cras/{id}` and `GET /api/cras/{year}/{month}`, plus corresponding unit tests for both. No existing code needs to be changed.
+`runs/T011/plan.md` has been written with the four required sections:
+
+- **Objective** — two GET endpoints for CRA retrieval.
+- **Included** — `CraRetrievalService` (2 methods), `CraRetrievalController` (`GET /api/cras/{id}` and `GET /api/cras?month=&year=`), and tests for both; all existing infrastructure reused without modification.
+- **Excluded** — creation, updates, PDF, auth, pagination, any entity/DTO changes.
+- **Acceptance criteria** — HTTP 200/404 behavior, response shape, 8 test cases, and `mvn test` clean.
