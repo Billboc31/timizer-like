@@ -1,1 +1,1 @@
-Plan written to `runs/T011/plan.md`. It calls for two new files (service + controller) and two new test files, reusing the existing `CraDetailsDto`, `CraDetailsMapper`, `MonthlyCraReportRepository`, and `CraNotFoundException` without touching any existing layer.
+Plan written to `runs/T011/plan.md`. It defines two new files (service + controller) and two new test files, reusing the existing `CraDetailsDto`, `CraDetailsMapper`, `MonthlyCraReportRepository`, and `CraNotFoundException` without touching any existing layer.
