@@ -1,0 +1,7 @@
+{
+  "failure_class": "process_failed",
+  "retry_count": 3,
+  "cooldown_until": "2026-07-10T16:21:16Z",
+  "stopped": true,
+  "stop_reason": "process_failed_max_retries"
+}
