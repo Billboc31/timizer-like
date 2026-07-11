@@ -1,7 +1,6 @@
-Plan written to `runs/T014/plan.md`.
+The plan is written to `runs/T014/plan.md`. It covers:
 
-Key decisions:
-- **`CraSummaryDto`** gets a `validationDate` field — it's needed by the ticket and already available on the entity.
-- **No new repository method** — `findAllByOrderByYearDescMonthDesc()` already exists and covers the ordering requirement.
-- **`SIGNED_BY_PROVIDER` → `DRAFT`** mapping is preserved via the existing `CraDetailsMapper.mapStatus()` logic.
-- Two test classes: a `@WebMvcTest` controller test and a plain unit test for the service.
+- **Objective**: `GET /api/cras` returning CRA summaries in reverse-chronological order
+- **Included**: three new production files (`CraSummaryDto`, `CraHistoryService`, `CraHistoryController`) and two test classes, reusing the already-existing `findAllByOrderByYearDescMonthDesc()` repository method and `CraTotalCalculationService`
+- **Excluded**: creation, edition, PDF, pagination, frontend, client signature
+- **Acceptance criteria**: verifiable HTTP/JSON conditions + existing tests must pass
