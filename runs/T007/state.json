@@ -1,7 +1,7 @@
 {
   "ticket_id": "T007",
-  "state": "IMPLEMENTATION_REVIEW_NEEDED",
+  "state": "IMPLEMENTATION_FIX_REQUIRED",
   "branch": "ticket/T007-create-cra-creation-api",
   "issue_number": 10,
-  "updated_at": "2026-07-11T14:04:17Z"
+  "updated_at": "2026-07-11T14:07:05Z"
 }
