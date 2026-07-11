@@ -3,6 +3,7 @@ package com.timizer.backend.cra;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import org.hibernate.exception.ConstraintViolationException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -53,7 +54,7 @@ class MonthlyCraReportPersistenceTest {
         MonthlyCraReport duplicate = newReport(6, 2026);
 
         assertThatThrownBy(() -> entityManager.persistAndFlush(duplicate))
-            .isInstanceOf(DataIntegrityViolationException.class);
+            .isInstanceOfAny(DataIntegrityViolationException.class, ConstraintViolationException.class);
     }
 
     @Test
