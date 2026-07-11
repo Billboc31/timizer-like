@@ -1,0 +1,17 @@
+spring:
+  jpa:
+    properties:
+      hibernate:
+        globally_quoted_identifiers: true
+cra:
+  defaults:
+    provider:
+      name: "Alice Provider"
+      company: "Provider Company"
+      address: "Provider Address"
+    client:
+      name: "Lyra Network"
+      address: "Client Address"
+      contact:
+        name: "Bob Client"
+        email: "bob@example.com"
