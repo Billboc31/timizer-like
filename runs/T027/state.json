@@ -3,5 +3,16 @@
   "state": "TEST_COMPLETE",
   "branch": "ticket/T027-create-provider-signature-asset-support",
   "issue_number": 27,
-  "updated_at": "2026-07-11T09:18:47Z"
+  "updated_at": "2026-07-11T09:56:28Z",
+  "pr_number": 36,
+  "pr_synced": true,
+  "pre_conflict_state": "TEST_COMPLETE",
+  "conflict_detected_at": "2026-07-11T09:18:56Z",
+  "conflict_pr_number": 36,
+  "conflicted_files": [
+    ".gitignore",
+    "assets/.gitkeep",
+    "assets/README.md",
+    "docs/provider-signature.md"
+  ]
 }
