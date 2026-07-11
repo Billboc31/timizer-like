@@ -1,1 +1,1 @@
-The plan is written to `runs/T011/plan.md`. It defines four new files (service, controller, and two test classes) with no changes to existing code, since all dependencies (`MonthlyCraReportRepository`, `CraDetailsDto`, `CraDetailsMapper`, `CraTotalCalculationService`, `CraNotFoundException`, `CraApiExceptionHandler`) are already present in the codebase.
+The plan is written to `runs/T011/plan.md`. It covers four new files (exception, service, exception handler, service test) and two modified files (controller + controller test), with no changes to existing DTOs or mapper.
