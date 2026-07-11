@@ -1,7 +1,6 @@
-Plan written to `runs/T011/plan.md`. It covers:
+The plan is written to `runs/T011/plan.md`. It specifies:
 
-- **2 new GET endpoints** on the existing `CraController`: `GET /api/cra/{id}` and `GET /api/cra/month?month={m}&year={y}`
-- **1 new exception** `CraNotFoundException` with `@ResponseStatus(NOT_FOUND)` — no global handler needed
-- **1 new service** `MonthlyCraRetrievalService` wrapping the two repository lookups
-- **No new DTOs or repository methods** — `CraDetailsDto` and `findById`/`findByMonthAndYear` already exist
-- **Tests** added to the existing `CraControllerTest` and a new `MonthlyCraRetrievalServiceTest`
+- **2 new GET endpoints** in the existing `CraController`: `GET /api/cra/{id}` and `GET /api/cra/month?month=&year=`
+- **1 new exception class** `CraNotFoundException` with `@ResponseStatus(NOT_FOUND)` — no `@ControllerAdvice` needed
+- **No new DTOs or repository methods** — `CraDetailsDto` and `findById`/`findByMonthAndYear` are already in place
+- **4 new tests** added to the existing `CraControllerTest` covering 200 and 404 cases for both endpoints
