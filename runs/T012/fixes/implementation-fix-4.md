@@ -1,3 +1,11 @@
+# Fix artifact — IMPLEMENTATION_FIX_REQUIRED
+
+- decision: IMPLEMENTATION_FIX_REQUIRED
+- review source: runs/T012/reviews/implementation-review.md
+- generated at: 2026-07-11T14:25:36Z
+
+---
+
 # PR Review — T012 (Create CRA day update API), attempt 5
 
 ## Résumé
