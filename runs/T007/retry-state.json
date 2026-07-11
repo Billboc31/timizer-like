@@ -1,7 +1,0 @@
-{
-  "quota_message": "You've hit your limit \u00b7 resets 4pm (Europe/Paris)",
-  "quota_reset_at": "2026-07-11T14:00:00Z",
-  "failure_class": "quota_exceeded",
-  "retry_count": 0,
-  "cooldown_until": "2026-07-11T14:00:00Z"
-}
