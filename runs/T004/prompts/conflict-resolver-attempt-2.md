@@ -21554,15 +21554,12 @@ index 0000000..7004262
 ### .gitignore
 
 ```
-<<<<<<< HEAD
 backend/var/*.db
 backend/var/*.db-journal
 backend/.env
-=======
 # Provider signature asset — never committed. See docs/provider-signature.md.
 assets/provider-signature.png
 assets/provider-signature.jpg
 assets/provider-signature.jpeg
->>>>>>> 02f00a8 (feat(T027/docs,workflow): coder — update 8 file(s))
 ```
 ```
