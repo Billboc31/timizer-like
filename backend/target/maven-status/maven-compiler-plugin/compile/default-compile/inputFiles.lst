@@ -7,6 +7,7 @@
 /Users/pierrebocquet/runtime/timizer-like/worktrees/T012/backend/src/main/java/com/timizer/backend/cra/CraDetailsMapper.java
 /Users/pierrebocquet/runtime/timizer-like/worktrees/T012/backend/src/main/java/com/timizerlike/cra/model/CraMonthlyReport.java
 /Users/pierrebocquet/runtime/timizer-like/worktrees/T012/backend/src/main/java/com/timizer/backend/cra/api/CraController.java
+/Users/pierrebocquet/runtime/timizer-like/worktrees/T012/backend/src/main/java/com/timizer/backend/health/HealthController.java
 /Users/pierrebocquet/runtime/timizer-like/worktrees/T012/backend/src/main/java/com/timizerlike/backend/cra/dto/CraSummaryDto.java
 /Users/pierrebocquet/runtime/timizer-like/worktrees/T012/backend/src/main/java/com/timizerlike/backend/cra/dto/CraDetailsDto.java
 /Users/pierrebocquet/runtime/timizer-like/worktrees/T012/backend/src/main/java/com/timizerlike/cra/service/CraCreationService.java
@@ -20,6 +21,8 @@
 /Users/pierrebocquet/runtime/timizer-like/worktrees/T012/backend/src/main/java/com/timizerlike/backend/cra/dto/CraDayUpdateRequestDto.java
 /Users/pierrebocquet/runtime/timizer-like/worktrees/T012/backend/src/main/java/com/timizerlike/cra/pdf/model/CraPdfSummary.java
 /Users/pierrebocquet/runtime/timizer-like/worktrees/T012/backend/src/main/java/com/timizerlike/backend/cra/web/CraApiExceptionHandler.java
+/Users/pierrebocquet/runtime/timizer-like/worktrees/T012/backend/src/main/java/com/timizerlike/cra/pdf/CraPdfGenerator.java
+/Users/pierrebocquet/runtime/timizer-like/worktrees/T012/backend/src/main/java/com/timizer/backend/TimizerBackendApplication.java
 /Users/pierrebocquet/runtime/timizer-like/worktrees/T012/backend/src/main/java/com/timizerlike/backend/cra/dto/CraStatus.java
 /Users/pierrebocquet/runtime/timizer-like/worktrees/T012/backend/src/main/java/com/timizerlike/cra/TimizerLikeApplication.java
 /Users/pierrebocquet/runtime/timizer-like/worktrees/T012/backend/src/main/java/com/timizerlike/cra/pdf/model/CraPdfClientSignature.java

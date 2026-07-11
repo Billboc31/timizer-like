@@ -7,4 +7,5 @@ com/timizerlike/cra/service/CraCreationServiceTest.class
 com/timizer/backend/cra/CraDayEntryTest.class
 com/timizer/backend/cra/JpaTestConfig.class
 com/timizerlike/backend/cra/dto/CraDtoTest.class
+com/timizerlike/cra/pdf/CraPdfGeneratorTest.class
 com/timizer/backend/cra/MonthlyCraReportPersistenceTest.class
