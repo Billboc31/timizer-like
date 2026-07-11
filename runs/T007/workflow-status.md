@@ -28,3 +28,16 @@
 - prev: PLAN_REVIEW_NEEDED
 - step: auto-approve
 - next: PLAN_APPROVED
+
+## 2026-07-11T14:00:43Z
+
+- prev: PLAN_APPROVED
+- step: coder
+- next: IMPLEMENTATION_FIX_REQUIRED
+- note: BLOCKED on plan precondition — base branch does not contain T002/T003/T004/T005; plan explicitly forbids re-implementation. See runs/T007/implementation-output.md.
+
+## 2026-07-11T14:04:17Z
+
+- prev: PLAN_APPROVED
+- step: coder
+- next: IMPLEMENTATION_REVIEW_NEEDED
