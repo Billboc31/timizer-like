@@ -22,3 +22,24 @@
 [2026-07-11T09:05:26Z] compose: task (canonical prompt)
 [2026-07-11T09:05:26Z] snapshot: runtime-prompt=runs/T027/prompts/planner-attempt-2.md
 [2026-07-11T09:07:39Z] auto-run: step=planner done rc=0
+[2026-07-11T09:15:54Z] auto-run start: state=IMPLEMENTATION_APPROVED
+[2026-07-11T09:15:54Z] auto-run: running step=tester
+[2026-07-11T09:15:54Z] prompt: resolved=prompts/generic/tester.md source=generic
+[2026-07-11T09:15:54Z] prompt: generic fallback — injecting runs/T027/ticket.md
+[2026-07-11T09:15:54Z] compose: global-context=docs/ai/global-context.md
+[2026-07-11T09:15:54Z] compose: role=ai/roles/tester.md
+[2026-07-11T09:15:54Z] compose: skill=ai/skills/workflow-discipline.md
+[2026-07-11T09:15:54Z] compose: skill=ai/skills/testing.md
+[2026-07-11T09:15:54Z] compose: skill=ai/skills/debugging.md
+[2026-07-11T09:15:54Z] compose: task (canonical prompt)
+[2026-07-11T09:15:54Z] snapshot: runtime-prompt=runs/T027/prompts/tester-attempt-1.md
+[2026-07-11T09:18:47Z] auto-run: step=tester done rc=0
+[2026-07-11T09:18:47Z] auto-run: transition IMPLEMENTATION_APPROVED → TEST_COMPLETE
+[2026-07-11T09:18:47Z] auto-run: auto-commit triggered (step=tester, include_code=True)
+[2026-07-11T09:18:47Z] commit-checkpoint: unstaged runtime garbage: ['runs/T027/daemon.lock', 'runs/T027/runtime.log']
+[2026-07-11T09:18:47Z] commit-checkpoint: sha=3eade99 files=4 title='test(T027/workflow): tester — update 4 file(s)'
+[2026-07-11T09:18:47Z] auto-run: auto-push triggered
+[2026-07-11T09:18:47Z] push: tolerating runtime dirty files (not blocking): ['runs/T027/daemon.lock', 'runs/T027/runtime.log']
+[2026-07-11T09:18:47Z] push: pushing branch=ticket/T027-create-provider-signature-asset-support
+[2026-07-11T09:18:49Z] push: done branch=ticket/T027-create-provider-signature-asset-support
+[2026-07-11T09:18:49Z] auto-run: TEST_COMPLETE — running PR lifecycle
