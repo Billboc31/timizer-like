@@ -1,30 +1,26 @@
-# PR Review — T012 (Create CRA day update API), attempt 5
+Review written to `runs/T012/reviews/review-attempt-6.md`.
 
-## Résumé
+---
 
-Cinquième review consécutive dans un état strictement identique aux quatre précédentes. Aucun code applicatif n'a été produit sur `ticket/T012-create-cra-day-update-api` ; aucun critère d'acceptation du ticket n'est vérifiable ; le blocage racine (six branches prérequises non mergées dans la base de T012) n'a toujours pas été levé.
+## PR Review — T012 (Create CRA day update API), attempt 6
 
-## Vérifications effectuées
+**Résumé:** L'implémentation est présente et complète. Le Coder a produit un endpoint `PATCH /api/cras/{craId}/days/{date}` fonctionnel, couvert par 17 tests (11 unitaires + 6 MockMvc), avec tous les critères d'acceptation satisfaits.
 
-- Racine du worktree : `ai/`, `docs/`, `prompts/`, `runs/`, `tickets/`. Aucun `backend/` ni `frontend/`.
-- `git diff 4128616..HEAD --stat` : 28 fichiers, 100 % sous `runs/T012/**`. Zéro Java (prod/test).
-- Prérequis (`git merge-base --is-ancestor`) : T009, T002, T003, T004, T005, T007 → **NOT MERGED**.
-- `implementation-output.md` attempt 5 : escalade `IMPLEMENTATION_BLOCKED_UPSTREAM_PERSISTENT` (5ᵉ occurrence), aucun code revendiqué.
+**Critères d'acceptation — tous satisfaits:**
 
-## Points validés
+1. ✅ Mise à jour du work value via `updateWorkValue()` avec validation domaine
+2. ✅ Mise à jour de la note avec sémantique null=inchangé / ""=effacement, testée
+3. ✅ Rejet des work values invalides → 400 `{"error":"invalid_work_value","value":...}`
+4. ✅ Rejet des CRAs non-DRAFT (VALIDATED et SIGNED_BY_PROVIDER tous deux testés) → 409
+5. ✅ Retour `CraDetailsDto` complet avec toutes les entrées
+6. ✅ Tests existants non cassés (rapports surefire présents)
 
-- Coder conforme au plan (« do not silently expand scope »), à `workflow-discipline`, à `refactor-safety`. Aucun bootstrap silencieux, aucun refactor transversal, aucune fuite, aucune dépendance ajoutée.
+**Observations mineures (non bloquantes):**
 
-## Problèmes détectés
+1. **Mapping lossy dans `buildDto`** (`CraDayUpdateService.java:66`) — `SIGNED_BY_PROVIDER` est rabattu sur `CraStatus.DRAFT` dans la réponse. Inoffensif dans ce flux (statut non-DRAFT rejeté avant), mais trompeur si `buildDto` est réutilisé.
+2. **Comparaison `double ==`** — acceptable car 0.5 est exact en IEEE 754.
+3. **`save(entry)` redondant** — JPA dirty-checking suffirait, mais sans danger.
 
-Bloquants :
+**Décision:** Aucun problème bloquant. Code propre, scope respecté, tests complets.
 
-1. Aucun critère d'acceptation vérifiable (endpoint absent, aucun test, `mvn test` impossible).
-2. Blocage upstream non levé après 4 reviews consécutives demandant l'action opérateur.
-3. Harness ne respecte pas la signalisation `UPSTREAM_PERSISTENT` — livelock reconnu.
-
-## Décision
-
-Fix requis. L'action attendue est opérateur/harness, pas Coder. Détails complets dans `runs/T012/reviews/review-attempt-5.md`.
-
-IMPLEMENTATION_FIX_REQUIRED
+IMPLEMENTATION_APPROVED
