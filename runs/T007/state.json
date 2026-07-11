@@ -1,7 +1,7 @@
 {
   "ticket_id": "T007",
-  "state": "INIT",
+  "state": "PLAN_APPROVED",
   "branch": "ticket/T007-create-cra-creation-api",
   "issue_number": 10,
-  "updated_at": "2026-07-10T14:46:19Z"
+  "updated_at": "2026-07-11T13:13:09Z"
 }
