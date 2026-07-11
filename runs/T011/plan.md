@@ -1,1 +1,1 @@
-The plan is written to `runs/T011/plan.md`. It covers four new files (exception, service, exception handler, service test) and two modified files (controller + controller test), with no changes to existing DTOs or mapper.
+The plan is written to `runs/T011/plan.md`. It adds two GET endpoints (`/api/cra/{id}` and `/api/cra/{year}/{month}`), a new `CraNotFoundException`, and a new `MonthlyCraRetrievalService` — reusing the existing `CraDetailsMapper` and repository without touching any other layer.
