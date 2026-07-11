@@ -1,0 +1,5 @@
+{
+  "failure_class": "quota_exceeded",
+  "retry_count": 1,
+  "cooldown_until": "2026-07-10T20:33:25Z"
+}

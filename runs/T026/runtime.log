@@ -1,0 +1,67 @@
+[2026-07-10T15:08:36Z] auto-run start: state=INIT
+[2026-07-10T15:08:36Z] auto-run: running step=planner
+[2026-07-10T15:08:36Z] prompt: resolved=prompts/generic/planner.md source=generic
+[2026-07-10T15:08:36Z] prompt: generic fallback — injecting runs/T026/ticket.md
+[2026-07-10T15:08:36Z] compose: global-context=docs/ai/global-context.md
+[2026-07-10T15:08:36Z] compose: role=ai/roles/planner.md
+[2026-07-10T15:08:36Z] compose: skill=ai/skills/workflow-discipline.md
+[2026-07-10T15:08:36Z] compose: skill=ai/skills/architecture-discipline.md
+[2026-07-10T15:08:36Z] compose: skill=ai/skills/documentation.md
+[2026-07-10T15:08:36Z] compose: task (canonical prompt)
+[2026-07-10T15:08:36Z] snapshot: runtime-prompt=runs/T026/prompts/planner-attempt-1.md
+[2026-07-10T15:10:14Z] auto-run: step=planner done rc=0
+[2026-07-10T15:25:06Z] auto-run start: state=IMPLEMENTATION_APPROVED
+[2026-07-10T15:25:06Z] auto-run: running step=tester
+[2026-07-10T15:25:06Z] prompt: resolved=prompts/generic/tester.md source=generic
+[2026-07-10T15:25:06Z] prompt: generic fallback — injecting runs/T026/ticket.md
+[2026-07-10T15:25:06Z] compose: global-context=docs/ai/global-context.md
+[2026-07-10T15:25:06Z] compose: role=ai/roles/tester.md
+[2026-07-10T15:25:06Z] compose: skill=ai/skills/workflow-discipline.md
+[2026-07-10T15:25:06Z] compose: skill=ai/skills/testing.md
+[2026-07-10T15:25:06Z] compose: skill=ai/skills/debugging.md
+[2026-07-10T15:25:06Z] compose: task (canonical prompt)
+[2026-07-10T15:25:06Z] snapshot: runtime-prompt=runs/T026/prompts/tester-attempt-1.md
+[2026-07-10T15:31:05Z] auto-run: step=tester done rc=0
+[2026-07-10T15:31:05Z] auto-run: transition IMPLEMENTATION_APPROVED → TEST_COMPLETE
+[2026-07-10T15:31:05Z] auto-run: auto-commit triggered (step=tester, include_code=True)
+[2026-07-10T15:31:06Z] commit-checkpoint: unstaged runtime garbage: ['runs/T026/daemon.lock', 'runs/T026/runtime.log']
+[2026-07-10T15:31:06Z] commit-checkpoint: sha=2e613de files=28 title='test(T026/workflow): tester — update 28 file(s)'
+[2026-07-10T15:31:06Z] auto-run: auto-push triggered
+[2026-07-10T15:31:06Z] push: tolerating runtime dirty files (not blocking): ['runs/T026/daemon.lock', 'runs/T026/runtime.log']
+[2026-07-10T15:31:06Z] push: pushing branch=ticket/T026-create-default-cra-settings
+[2026-07-10T15:31:10Z] push: done branch=ticket/T026-create-default-cra-settings
+[2026-07-10T15:31:10Z] auto-run: TEST_COMPLETE — running PR lifecycle
+[2026-07-10T16:45:37Z] conflict-resolver: git rebase origin/main exit=0
+[2026-07-10T16:45:37Z] conflict-resolver: rebase clean — no conflicts
+[2026-07-10T16:45:37Z] conflict-resolver: running tests
+[2026-07-10T16:45:37Z] conflict-resolver: test-report written: runs/T026/conflict/test-report.md
+[2026-07-10T16:45:37Z] conflict-resolver: staging and committing resolution artifacts
+[2026-07-10T16:45:37Z] conflict-resolver: commit: sha=ce9cb45
+[2026-07-10T16:45:37Z] conflict-resolver: git push --force-with-lease origin ticket/T026-create-default-cra-settings
+[2026-07-10T16:45:39Z] conflict-resolver: push succeeded
+[2026-07-10T16:45:39Z] conflict-resolver: state → CONFLICT_RESOLVED_REVIEW_NEEDED
+[2026-07-10T16:45:39Z] conflict-resolver: done → CONFLICT_RESOLVED_REVIEW_NEEDED
+[2026-07-10T16:46:24Z] human-approval: approve-conflict-resolution — CONFLICT_RESOLVED_REVIEW_NEEDED → TEST_COMPLETE
+[2026-07-10T16:47:45Z] conflict-resolver: git rebase origin/main exit=0
+[2026-07-10T16:47:45Z] conflict-resolver: rebase clean — no conflicts
+[2026-07-10T16:47:45Z] conflict-resolver: running tests
+[2026-07-10T16:47:45Z] conflict-resolver: test-report written: runs/T026/conflict/test-report.md
+[2026-07-10T16:47:45Z] conflict-resolver: staging and committing resolution artifacts
+[2026-07-10T16:47:45Z] conflict-resolver: commit: sha=fc5e861
+[2026-07-10T16:47:45Z] conflict-resolver: git push --force-with-lease origin ticket/T026-create-default-cra-settings
+[2026-07-10T16:47:47Z] conflict-resolver: push succeeded
+[2026-07-10T16:47:47Z] conflict-resolver: state → CONFLICT_RESOLVED_REVIEW_NEEDED
+[2026-07-10T16:47:47Z] conflict-resolver: done → CONFLICT_RESOLVED_REVIEW_NEEDED
+[2026-07-10T16:47:59Z] human-approval: approve-conflict-resolution — CONFLICT_RESOLVED_REVIEW_NEEDED → TEST_COMPLETE
+[2026-07-10T17:09:29Z] conflict-resolver: git rebase origin/main exit=0
+[2026-07-10T17:09:29Z] conflict-resolver: rebase clean — no conflicts
+[2026-07-10T17:09:29Z] conflict-resolver: running tests
+[2026-07-10T17:09:29Z] conflict-resolver: test-report written: runs/T026/conflict/test-report.md
+[2026-07-10T17:09:29Z] conflict-resolver: staging and committing resolution artifacts
+[2026-07-10T17:09:29Z] conflict-resolver: commit: sha=8034027
+[2026-07-10T17:09:29Z] conflict-resolver: git push --force-with-lease origin ticket/T026-create-default-cra-settings
+[2026-07-10T17:09:31Z] conflict-resolver: push succeeded
+[2026-07-10T17:09:31Z] conflict-resolver: state → CONFLICT_RESOLVED_REVIEW_NEEDED
+[2026-07-10T17:09:31Z] conflict-resolver: done → CONFLICT_RESOLVED_REVIEW_NEEDED
+[2026-07-10T17:13:47Z] human-approval: approve-conflict-resolution — CONFLICT_RESOLVED_REVIEW_NEEDED → TEST_COMPLETE
+[2026-07-10T17:13:47Z] human-approval: refused approve-conflict-resolution — expected CONFLICT_RESOLVED_REVIEW_NEEDED, got 'TEST_COMPLETE'

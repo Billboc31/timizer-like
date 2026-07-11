@@ -1,0 +1,8 @@
+backend/var/*.db
+backend/var/*.db-journal
+backend/.env
+
+# Provider signature asset — never committed. See docs/provider-signature.md.
+assets/provider-signature.png
+assets/provider-signature.jpg
+assets/provider-signature.jpeg
