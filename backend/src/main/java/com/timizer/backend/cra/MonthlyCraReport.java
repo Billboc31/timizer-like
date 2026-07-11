@@ -2,14 +2,19 @@ package com.timizer.backend.cra;
 
 import java.time.Instant;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
@@ -88,6 +93,14 @@ public class MonthlyCraReport {
 
     @Column(name = "updated_at", nullable = false)
     private Instant updatedAt;
+
+    @OneToMany(
+        mappedBy = "monthlyCraReport",
+        cascade = CascadeType.ALL,
+        orphanRemoval = true,
+        fetch = FetchType.LAZY
+    )
+    private List<CraDayEntry> dayEntries = new ArrayList<>();
 
     protected MonthlyCraReport() {
     }
@@ -190,6 +203,26 @@ public class MonthlyCraReport {
 
     public Instant getUpdatedAt() {
         return updatedAt;
+    }
+
+    public List<CraDayEntry> getDayEntries() {
+        return dayEntries;
+    }
+
+    public void addDayEntry(CraDayEntry entry) {
+        if (entry == null) {
+            return;
+        }
+        dayEntries.add(entry);
+        entry.setMonthlyCraReport(this);
+    }
+
+    public void removeDayEntry(CraDayEntry entry) {
+        if (entry == null) {
+            return;
+        }
+        dayEntries.remove(entry);
+        entry.setMonthlyCraReport(null);
     }
 
     public void setStatus(ValidationStatus status) {
