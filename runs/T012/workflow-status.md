@@ -94,3 +94,9 @@
 - prev: CONFLICT_RESOLVING
 - step: conflict-resolver
 - next: TEST_COMPLETE
+
+## 2026-07-11T15:03:58Z
+
+- prev: CONFLICT_RESOLVED_REVIEW_NEEDED
+- step: auto-approve-conflict-resolution
+- next: TEST_COMPLETE
