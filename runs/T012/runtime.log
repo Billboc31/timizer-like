@@ -44,3 +44,8 @@
 [2026-07-11T14:54:06Z] compose: task (canonical prompt)
 [2026-07-11T14:54:06Z] conflict-resolver: prompt snapshot: runs/T012/prompts/conflict-resolver-attempt-1.md
 [2026-07-11T14:54:06Z] conflict-resolver: invoking AI resolver pass 1
+[2026-07-11T15:03:51Z] conflict-resolver: git rebase origin/main exit=0
+[2026-07-11T15:03:51Z] conflict-resolver: rebase clean — no conflicts
+[2026-07-11T15:03:51Z] conflict-resolver: running tests
+[2026-07-11T15:03:51Z] conflict-resolver: test-report written: runs/T012/conflict/test-report.md
+[2026-07-11T15:03:51Z] conflict-resolver: staging and committing resolution artifacts
