@@ -1,9 +1,7 @@
 {
   "ticket_id": "T017",
-  "state": "TEST_COMPLETE",
+  "state": "IMPLEMENTATION_APPROVED",
   "branch": "ticket/T017-create-cra-pdf-download-api",
   "issue_number": 17,
-  "updated_at": "2026-07-12T08:10:00Z",
-  "pr_number": 50,
-  "pr_synced": true
+  "updated_at": "2026-07-12T07:56:32Z"
 }

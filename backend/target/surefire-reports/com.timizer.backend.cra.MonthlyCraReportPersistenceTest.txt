@@ -1,4 +1,0 @@
--------------------------------------------------------------------------------
-Test set: com.timizer.backend.cra.MonthlyCraReportPersistenceTest
--------------------------------------------------------------------------------
-Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.393 s -- in com.timizer.backend.cra.MonthlyCraReportPersistenceTest
