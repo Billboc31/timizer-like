@@ -371,3 +371,8 @@
 [2026-07-12T17:31:39Z] push: done branch=ticket/T025-create-cra-history-page
 [2026-07-12T17:31:39Z] auto-run: TEST_COMPLETE — running PR lifecycle
 >>>>>>> 4a85815 (T025: checkpoint [TEST_COMPLETE] — update workflow artifacts)
+[2026-07-12T17:46:59Z] conflict-resolver: git rebase origin/main exit=0
+[2026-07-12T17:46:59Z] conflict-resolver: rebase clean — no conflicts
+[2026-07-12T17:46:59Z] conflict-resolver: running tests
+[2026-07-12T17:46:59Z] conflict-resolver: test-report written: runs/T025/conflict/test-report.md
+[2026-07-12T17:46:59Z] conflict-resolver: staging and committing resolution artifacts
