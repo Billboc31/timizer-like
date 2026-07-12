@@ -127,3 +127,6 @@
 [2026-07-12T11:27:55Z] push: pushing branch=ticket/T019-create-cra-month-selector
 [2026-07-12T11:27:57Z] push: done branch=ticket/T019-create-cra-month-selector
 [2026-07-12T11:27:57Z] auto-run: TEST_COMPLETE — running PR lifecycle
+[2026-07-12T11:51:09Z] conflict-resolver: blocking dirty paths before rebase: ['frontend/node_modules/.package-lock.json', 'frontend/node_modules/.vite/vitest/da39a3ee5e6b4b0d3255bfef95601890afd80709/results.json', 'frontend/node_modules/lru-cache/LICENSE', 'frontend/node_modules/lru-cache/README.md', 'frontend/node_modules/lru-cache/package.json']
+[2026-07-12T11:51:10Z] conflict-resolver: failed to prepare clean tree before rebase — blocking paths: ['frontend/node_modules/.package-lock.json', 'frontend/node_modules/.vite/vitest/da39a3ee5e6b4b0d3255bfef95601890afd80709/results.json', 'frontend/node_modules/lru-cache/LICENSE', 'frontend/node_modules/lru-cache/README.md', 'frontend/node_modules/lru-cache/package.json']
+[2026-07-12T11:51:10Z] conflict-resolver: state → CONFLICT_RESOLUTION_FAILED
