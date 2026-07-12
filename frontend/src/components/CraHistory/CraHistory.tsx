@@ -41,7 +41,9 @@ export function CraHistory({ onOpen }: Props) {
         a.click();
         URL.revokeObjectURL(url);
       })
-      .catch(() => {})
+      .catch((err: unknown) => {
+        setError(err instanceof Error ? err.message : 'Failed to download PDF');
+      })
       .finally(() => { setDownloading(null); });
   };
 

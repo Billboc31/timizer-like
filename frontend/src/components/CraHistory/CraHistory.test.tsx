@@ -91,6 +91,19 @@ describe('CraHistory', () => {
     await waitFor(() => expect(screen.getByText('Download PDF')).toBeInTheDocument());
   });
 
+  it('shows error when PDF download fails', async () => {
+    vi.mocked(craApi.listCras).mockResolvedValue([VALIDATED_CRA]);
+    vi.mocked(craApi.downloadCraPdf).mockRejectedValue(new Error('Download failed'));
+
+    render(<CraHistory onOpen={vi.fn()} />);
+    await waitFor(() => expect(screen.getByText('Download PDF')).toBeInTheDocument());
+    fireEvent.click(screen.getByText('Download PDF'));
+
+    await waitFor(() =>
+      expect(screen.getByRole('alert')).toHaveTextContent('Download failed'),
+    );
+  });
+
   it('triggers PDF download when Download PDF is clicked', async () => {
     const mockBlob = new Blob(['pdf-content'], { type: 'application/pdf' });
     vi.mocked(craApi.listCras).mockResolvedValue([VALIDATED_CRA]);
