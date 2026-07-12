@@ -1,0 +1,144 @@
+[2026-07-12T08:09:33Z] auto-run start: state=INIT
+[2026-07-12T08:09:33Z] auto-run: running step=planner
+[2026-07-12T08:09:33Z] prompt: resolved=prompts/generic/planner.md source=generic
+[2026-07-12T08:09:33Z] prompt: generic fallback — injecting runs/T028/ticket.md
+[2026-07-12T08:09:33Z] compose: global-context=docs/ai/global-context.md
+[2026-07-12T08:09:33Z] compose: role=ai/roles/planner.md
+[2026-07-12T08:09:33Z] compose: skill=ai/skills/workflow-discipline.md
+[2026-07-12T08:09:33Z] compose: skill=ai/skills/architecture-discipline.md
+[2026-07-12T08:09:33Z] compose: skill=ai/skills/documentation.md
+[2026-07-12T08:09:33Z] compose: task (canonical prompt)
+[2026-07-12T08:09:33Z] snapshot: runtime-prompt=runs/T028/prompts/planner-attempt-1.md
+[2026-07-12T08:12:56Z] auto-run: step=planner done rc=0
+[2026-07-12T08:15:43Z] auto-run start: state=INIT
+[2026-07-12T08:15:43Z] auto-run: running step=planner
+[2026-07-12T08:15:43Z] prompt: resolved=prompts/generic/planner.md source=generic
+[2026-07-12T08:15:43Z] prompt: generic fallback — injecting runs/T028/ticket.md
+[2026-07-12T08:15:43Z] compose: global-context=docs/ai/global-context.md
+[2026-07-12T08:15:43Z] compose: role=ai/roles/planner.md
+[2026-07-12T08:15:43Z] compose: skill=ai/skills/workflow-discipline.md
+[2026-07-12T08:15:43Z] compose: skill=ai/skills/architecture-discipline.md
+[2026-07-12T08:15:43Z] compose: skill=ai/skills/documentation.md
+[2026-07-12T08:15:43Z] compose: task (canonical prompt)
+[2026-07-12T08:15:43Z] snapshot: runtime-prompt=runs/T028/prompts/planner-attempt-2.md
+[2026-07-12T08:20:17Z] auto-run: step=planner done rc=0
+[2026-07-12T08:23:03Z] auto-run start: state=INIT
+[2026-07-12T08:23:03Z] auto-run: running step=planner
+[2026-07-12T08:23:03Z] prompt: resolved=prompts/generic/planner.md source=generic
+[2026-07-12T08:23:03Z] prompt: generic fallback — injecting runs/T028/ticket.md
+[2026-07-12T08:23:03Z] compose: global-context=docs/ai/global-context.md
+[2026-07-12T08:23:03Z] compose: role=ai/roles/planner.md
+[2026-07-12T08:23:03Z] compose: skill=ai/skills/workflow-discipline.md
+[2026-07-12T08:23:03Z] compose: skill=ai/skills/architecture-discipline.md
+[2026-07-12T08:23:03Z] compose: skill=ai/skills/documentation.md
+[2026-07-12T08:23:03Z] compose: task (canonical prompt)
+[2026-07-12T08:23:03Z] snapshot: runtime-prompt=runs/T028/prompts/planner-attempt-3.md
+[2026-07-12T08:31:48Z] auto-run: step=planner done rc=0
+[2026-07-12T08:35:17Z] auto-run start: state=INIT
+[2026-07-12T08:35:17Z] auto-run: running step=planner
+[2026-07-12T08:35:17Z] prompt: resolved=prompts/generic/planner.md source=generic
+[2026-07-12T08:35:17Z] prompt: generic fallback — injecting runs/T028/ticket.md
+[2026-07-12T08:35:17Z] compose: global-context=docs/ai/global-context.md
+[2026-07-12T08:35:17Z] compose: role=ai/roles/planner.md
+[2026-07-12T08:35:17Z] compose: skill=ai/skills/workflow-discipline.md
+[2026-07-12T08:35:17Z] compose: skill=ai/skills/architecture-discipline.md
+[2026-07-12T08:35:17Z] compose: skill=ai/skills/documentation.md
+[2026-07-12T08:35:17Z] compose: task (canonical prompt)
+[2026-07-12T08:35:17Z] snapshot: runtime-prompt=runs/T028/prompts/planner-attempt-4.md
+[2026-07-12T08:40:29Z] auto-run: step=planner done rc=0
+[2026-07-12T08:43:43Z] auto-run start: state=INIT
+[2026-07-12T08:43:43Z] auto-run: running step=planner
+[2026-07-12T08:43:43Z] prompt: resolved=prompts/generic/planner.md source=generic
+[2026-07-12T08:43:43Z] prompt: generic fallback — injecting runs/T028/ticket.md
+[2026-07-12T08:43:43Z] compose: global-context=docs/ai/global-context.md
+[2026-07-12T08:43:43Z] compose: role=ai/roles/planner.md
+[2026-07-12T08:43:43Z] compose: skill=ai/skills/workflow-discipline.md
+[2026-07-12T08:43:43Z] compose: skill=ai/skills/architecture-discipline.md
+[2026-07-12T08:43:43Z] compose: skill=ai/skills/documentation.md
+[2026-07-12T08:43:43Z] compose: task (canonical prompt)
+[2026-07-12T08:43:43Z] snapshot: runtime-prompt=runs/T028/prompts/planner-attempt-5.md
+[2026-07-12T08:47:37Z] auto-run: step=planner done rc=0
+[2026-07-12T08:51:04Z] auto-run start: state=INIT
+[2026-07-12T08:51:04Z] auto-run: running step=planner
+[2026-07-12T08:51:04Z] prompt: resolved=prompts/generic/planner.md source=generic
+[2026-07-12T08:51:04Z] prompt: generic fallback — injecting runs/T028/ticket.md
+[2026-07-12T08:51:04Z] compose: global-context=docs/ai/global-context.md
+[2026-07-12T08:51:04Z] compose: role=ai/roles/planner.md
+[2026-07-12T08:51:04Z] compose: skill=ai/skills/workflow-discipline.md
+[2026-07-12T08:51:04Z] compose: skill=ai/skills/architecture-discipline.md
+[2026-07-12T08:51:04Z] compose: skill=ai/skills/documentation.md
+[2026-07-12T08:51:04Z] compose: task (canonical prompt)
+[2026-07-12T08:51:04Z] snapshot: runtime-prompt=runs/T028/prompts/planner-attempt-6.md
+[2026-07-12T08:56:14Z] auto-run: step=planner done rc=0
+[2026-07-12T09:16:34Z] auto-run start: state=IMPLEMENTATION_APPROVED
+[2026-07-12T09:16:34Z] auto-run: running step=tester
+[2026-07-12T09:16:34Z] prompt: resolved=prompts/generic/tester.md source=generic
+[2026-07-12T09:16:34Z] prompt: generic fallback — injecting runs/T028/ticket.md
+[2026-07-12T09:16:34Z] compose: global-context=docs/ai/global-context.md
+[2026-07-12T09:16:34Z] compose: role=ai/roles/tester.md
+[2026-07-12T09:16:34Z] compose: skill=ai/skills/workflow-discipline.md
+[2026-07-12T09:16:34Z] compose: skill=ai/skills/testing.md
+[2026-07-12T09:16:34Z] compose: skill=ai/skills/debugging.md
+[2026-07-12T09:16:34Z] compose: task (canonical prompt)
+[2026-07-12T09:16:34Z] snapshot: runtime-prompt=runs/T028/prompts/tester-attempt-1.md
+[2026-07-12T09:18:13Z] auto-run: step=tester done rc=0
+[2026-07-12T09:18:13Z] auto-run: transition IMPLEMENTATION_APPROVED → TEST_COMPLETE
+[2026-07-12T09:18:13Z] auto-run: auto-commit triggered (step=tester, include_code=True)
+[2026-07-12T09:18:13Z] commit-checkpoint: unstaged runtime garbage: ['runs/T028/daemon.lock', 'runs/T028/runtime.log', 'runs/T028/workflow-status.md']
+[2026-07-12T09:18:13Z] commit-checkpoint: sha=54fe021 files=5 title='test(T028/workflow): tester — update 5 file(s)'
+[2026-07-12T09:18:13Z] auto-run: auto-push triggered
+[2026-07-12T09:18:13Z] push: tolerating runtime dirty files (not blocking): ['runs/T028/daemon.lock', 'runs/T028/runtime.log', 'runs/T028/workflow-status.md']
+[2026-07-12T09:18:13Z] push: pushing branch=ticket/T028-add-backend-integration-tests-for-cra-apis
+[2026-07-12T09:18:15Z] push: done branch=ticket/T028-add-backend-integration-tests-for-cra-apis
+[2026-07-12T09:18:15Z] auto-run: TEST_COMPLETE — running PR lifecycle
+[2026-07-12T09:30:06Z] conflict-resolver: runtime tree still dirty after scrub: runs/T028/conflict/context.md, runs/T028/prompts/conflict-resolver-attempt-1.md
+[2026-07-12T09:30:06Z] conflict-resolver: failed to prepare clean tree before rebase — blocking paths: []
+[2026-07-12T09:30:06Z] conflict-resolver: state → CONFLICT_RESOLUTION_FAILED
+[2026-07-12T09:31:19Z] conflict-resolver: git rebase origin/main exit=0
+[2026-07-12T09:31:19Z] conflict-resolver: rebase clean — no conflicts
+[2026-07-12T09:31:19Z] conflict-resolver: running tests
+[2026-07-12T09:31:19Z] conflict-resolver: test-report written: runs/T028/conflict/test-report.md
+[2026-07-12T09:31:19Z] conflict-resolver: staging and committing resolution artifacts
+[2026-07-12T09:31:19Z] conflict-resolver: commit: sha=df86714
+[2026-07-12T09:31:19Z] conflict-resolver: git push --force-with-lease origin ticket/T028-add-backend-integration-tests-for-cra-apis
+[2026-07-12T09:31:21Z] conflict-resolver: push succeeded
+[2026-07-12T09:31:21Z] conflict-resolver: state → CONFLICT_RESOLVED_REVIEW_NEEDED
+[2026-07-12T09:31:21Z] auto-finalize-conflict: refused — invalid pre_conflict_state='CONFLICT_RESOLVED'
+[2026-07-12T09:31:21Z] conflict-resolver: done → CONFLICT_RESOLVED_REVIEW_NEEDED
+[2026-07-12T09:32:17Z] conflict-resolver: AI resolver pass 1 finished but conflict markers remain in: ['runs/T007/state.json', 'runs/T011/conflict/context.md', 'runs/T011/prompts/conflict-resolver-attempt-1.md', 'runs/T012/conflict/context.md', 'runs/T012/prompts/conflict-resolver-attempt-1.md', 'runs/T014/conflict/context.md', 'runs/T014/prompts/conflict-resolver-attempt-1.md', 'runs/T014/runtime.log', 'runs/T016/conflict/context.md', 'runs/T016/prompts/conflict-resolver-attempt-1.md', 'runs/T016/prompts/conflict-resolver-attempt-2.md', 'runs/T016/prompts/conflict-resolver-attempt-3.md']
+[2026-07-12T09:32:17Z] conflict-resolver: [pass 2/3] start conflicted=['runs/T007/state.json', 'runs/T011/conflict/context.md', 'runs/T011/prompts/conflict-resolver-attempt-1.md', 'runs/T012/conflict/context.md', 'runs/T012/prompts/conflict-resolver-attempt-1.md', 'runs/T014/conflict/context.md', 'runs/T014/prompts/conflict-resolver-attempt-1.md', 'runs/T014/runtime.log', 'runs/T016/conflict/context.md', 'runs/T016/prompts/conflict-resolver-attempt-1.md', 'runs/T016/prompts/conflict-resolver-attempt-2.md', 'runs/T016/prompts/conflict-resolver-attempt-3.md']
+[2026-07-12T09:32:19Z] conflict-resolver: context written: runs/T028/conflict/context.md
+[2026-07-12T09:32:19Z] compose: global-context=docs/ai/global-context.md
+[2026-07-12T09:32:19Z] compose: role=ai/roles/conflict-resolver.md
+[2026-07-12T09:32:19Z] compose: skill=ai/skills/workflow-discipline.md
+[2026-07-12T09:32:19Z] compose: skill=ai/skills/git-discipline.md
+[2026-07-12T09:32:19Z] compose: skill=ai/skills/code-quality.md
+[2026-07-12T09:32:19Z] compose: skill=ai/skills/refactor-safety.md
+[2026-07-12T09:32:19Z] compose: task (canonical prompt)
+[2026-07-12T09:32:19Z] conflict-resolver: prompt snapshot: runs/T028/prompts/conflict-resolver-attempt-1.md
+[2026-07-12T09:32:19Z] conflict-resolver: invoking AI resolver pass 2
+[2026-07-12T09:37:10Z] conflict-resolver: AI resolver pass 2 finished but conflict markers remain in: ['runs/T011/conflict/context.md', 'runs/T011/prompts/conflict-resolver-attempt-1.md', 'runs/T014/conflict/context.md', 'runs/T014/prompts/conflict-resolver-attempt-1.md', 'runs/T016/prompts/conflict-resolver-attempt-3.md']
+[2026-07-12T09:37:10Z] conflict-resolver: [pass 3/3] start conflicted=['runs/T011/conflict/context.md', 'runs/T011/prompts/conflict-resolver-attempt-1.md', 'runs/T014/conflict/context.md', 'runs/T014/prompts/conflict-resolver-attempt-1.md', 'runs/T016/prompts/conflict-resolver-attempt-3.md']
+[2026-07-12T09:37:20Z] conflict-resolver: context written: runs/T028/conflict/context.md
+[2026-07-12T09:37:20Z] compose: global-context=docs/ai/global-context.md
+[2026-07-12T09:37:20Z] compose: role=ai/roles/conflict-resolver.md
+[2026-07-12T09:37:20Z] compose: skill=ai/skills/workflow-discipline.md
+[2026-07-12T09:37:20Z] compose: skill=ai/skills/git-discipline.md
+[2026-07-12T09:37:20Z] compose: skill=ai/skills/code-quality.md
+[2026-07-12T09:37:20Z] compose: skill=ai/skills/refactor-safety.md
+[2026-07-12T09:37:20Z] compose: task (canonical prompt)
+[2026-07-12T09:37:20Z] conflict-resolver: prompt snapshot: runs/T028/prompts/conflict-resolver-attempt-2.md
+[2026-07-12T09:37:20Z] conflict-resolver: invoking AI resolver pass 3
+[2026-07-12T09:42:12Z] conflict-resolver: git rebase origin/main exit=0
+[2026-07-12T09:42:12Z] conflict-resolver: rebase clean — no conflicts
+[2026-07-12T09:42:12Z] conflict-resolver: running tests
+[2026-07-12T09:42:12Z] conflict-resolver: test-report written: runs/T028/conflict/test-report.md
+[2026-07-12T09:42:12Z] conflict-resolver: staging and committing resolution artifacts
+[2026-07-12T09:42:12Z] conflict-resolver: commit: sha=bfff524
+[2026-07-12T09:42:12Z] conflict-resolver: git push --force-with-lease origin ticket/T028-add-backend-integration-tests-for-cra-apis
+[2026-07-12T09:42:13Z] conflict-resolver: push succeeded
+[2026-07-12T09:42:14Z] conflict-resolver: state → CONFLICT_RESOLVED_REVIEW_NEEDED
+[2026-07-12T09:42:14Z] auto-finalize-conflict: gate disabled for project='timizer-like'
+[2026-07-12T09:42:14Z] conflict-resolver: transition CONFLICT_RESOLVED_REVIEW_NEEDED → TEST_COMPLETE (auto, PROJECT_SETTING)
+[2026-07-12T09:42:14Z] auto-run: TEST_COMPLETE — running PR lifecycle
+[2026-07-12T09:42:19Z] conflict-resolver: done → TEST_COMPLETE (auto-finalize)

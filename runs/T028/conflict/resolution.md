@@ -1,0 +1,1 @@
+Push succeeded (the T014 files at 61.92MB triggered warnings but are under GitHub's 100MB hard limit). All conflict markers in the 12 workflow artifact files have been resolved and the branch is now clean and up to date.
