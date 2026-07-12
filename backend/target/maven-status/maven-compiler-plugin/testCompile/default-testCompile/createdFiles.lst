@@ -1,11 +1,11 @@
-com/timizer/backend/cra/JpaTestConfig.class
 com/timizer/backend/cra/MonthlyCraReportTest.class
-com/timizerlike/backend/cra/dto/CraDtoTest.class
 com/timizer/backend/cra/api/CraControllerTest.class
 com/timizerlike/cra/pdf/model/CraPdfDocumentTest.class
 com/timizer/backend/cra/MonthlyCraReportRepositoryTest.class
 com/timizer/backend/cra/MonthlyCraCreationServiceTest.class
 com/timizerlike/cra/service/CraCreationServiceTest.class
-com/timizer/backend/cra/CraTotalCalculationServiceTest.class
 com/timizer/backend/cra/CraDayEntryTest.class
+com/timizer/backend/cra/JpaTestConfig.class
+com/timizerlike/backend/cra/dto/CraDtoTest.class
+com/timizer/backend/cra/CraTotalCalculationServiceTest.class
 com/timizer/backend/cra/MonthlyCraReportPersistenceTest.class
