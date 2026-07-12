@@ -1,6 +1,9 @@
-The plan is written to `runs/T025/plan.md`. Key decisions captured:
+The plan is written to `runs/T025/plan.md`. It covers 5 files:
 
-- **`validationDate` gap fixed**: backend `CraSummaryDto.java` already returns the field; the plan adds it to the frontend TypeScript type in `frontend/src/api/types.ts`.
-- **No router**: history view uses `useState<'selector' | 'history'>` in `App.tsx`, consistent with the pattern established in T019.
-- **PDF gating**: `status === 'VALIDATED'` check (not `validationDate`) as the canonical signal; per-row `downloadingId` prevents double-clicks.
-- **5 files**: one new component (tsx + css + test), one type extension, one App.tsx update.
+1. **`api/types.ts`** — extend `CraSummaryDto` with `validationDate` (already returned by the Java backend, missing from the TS type).
+2. **`CraHistoryPage.tsx`** — new component: fetches `listCras()`, renders a table with period/status/days/validation date/actions, per-row PDF download with blob URL pattern, loading/error/empty states, `onOpen` callback prop.
+3. **`CraHistoryPage.css`** — scoped styles.
+4. **`CraHistoryPage.test.tsx`** — 9 test cases covering all states and interactions.
+5. **`App.tsx`** — `useState<'selector' | 'history'>` for view switching, History and Back buttons.
+
+No router install, no backend changes, no new props on `CraMonthSelector`.
