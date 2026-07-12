@@ -1,1 +1,1 @@
-Plan written to `runs/T011/plan.md`. It calls for two new files (service + controller) and two new test files, reusing the existing repository, mapper, DTOs, and exception handler without modification.
+Plan written to `runs/T011/plan.md`. It adds `CraRetrievalService` and `CraRetrievalController` under the new `/api/cras` pattern, reusing the existing `CraDetailsDto`, `CraDetailsMapper`, `MonthlyCraReportRepository`, and `CraApiExceptionHandler` without modification.
