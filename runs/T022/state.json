@@ -1,7 +1,7 @@
 {
   "ticket_id": "T022",
-  "state": "INIT",
+  "state": "PLAN_APPROVED",
   "branch": "ticket/T022-create-cra-total-summary-panel",
   "issue_number": 22,
-  "updated_at": "2026-07-10T14:49:26Z"
+  "updated_at": "2026-07-12T12:26:22Z"
 }
