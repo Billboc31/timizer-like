@@ -1,33 +1,6 @@
-Implementation complete. Here's a summary:
+All 8 tests pass. Here's what was changed in `CalendarGrid.test.tsx`:
 
----
-
-## T020 — Implementation Summary
-
-### Files created
-
-| File | Purpose |
-|------|---------|
-| `frontend/package.json` | Vite + React + TypeScript + Vitest + RTL setup; `start` alias for `vite` |
-| `frontend/index.html` | Vite entry HTML |
-| `frontend/vite.config.ts` | Vite config with jsdom test environment |
-| `frontend/tsconfig*.json` | TypeScript config (app + node) |
-| `frontend/.env.development` | `VITE_API_BASE_URL=http://localhost:8080` |
-| `frontend/.gitignore` | Excludes `node_modules/`, `dist/` |
-| `frontend/src/types/cra.ts` | `CraDayEntry` and `CraDetails` types per plan |
-| `frontend/src/api/cra.ts` | `fetchCra(year, month)` → `POST /api/cra` |
-| `frontend/src/components/CalendarGrid/CalendarGrid.tsx` | Renders loading/error/empty/grid states; weekend class logic |
-| `frontend/src/components/CalendarGrid/CalendarGrid.css` | Grid layout + `day-cell--weekend` background |
-| `frontend/src/components/CalendarGrid/CalendarGrid.test.tsx` | 7 passing tests (cell count, weekend class, worked values, states) |
-| `frontend/src/App.tsx` | Wires `fetchCra(2026, 7)` on mount → `<CalendarGrid />` |
-| `frontend/src/main.tsx` + `src/index.css` + `src/setupTests.ts` | App bootstrap |
-
-### Verifications
-- `npm test` → **7/7 passing**
-- `npm start` → dev server starts on port 4173, serves HTML correctly
-- Weekend days (Sat/Sun) get `day-cell--weekend` class; weekdays do not
-- Loading, error, and empty states handled
-
-### Notes
-- Used Vite instead of CRA (deprecated) — consistent with the rest of the project. Env var prefix is `VITE_` not `REACT_APP_`.
-- RTL auto-cleanup wasn't firing with vitest globals disabled; added explicit `afterEach(cleanup)` in the test file.
+1. **[BLOCKING fixed]** Worked value test now uses `day: 3, worked: 1` and asserts on `cells[2].querySelector('.day-cell__worked')` — the value `"1"` is now unambiguously from the worked field, not the day number.
+2. **[OBSERVATION fixed]** `afterEach(cleanup)` moved after all imports.
+3. **[OBSERVATION — already correct]** `tsconfig.app.json` already had the correct spelling `noFallthroughCasesInSwitch`; no change needed.
+4. **[OBSERVATION fixed]** Added test `renders 28 cells for February 2026` to cover the "calendar updates when a different CRA month is loaded" acceptance criterion.
