@@ -163,3 +163,6 @@
 [2026-07-12T12:15:04Z] conflict-resolver: pass 7 complete — all 5 flagged files confirmed false positives (prior-ticket context/prompt files with embedded diff markers)
 [2026-07-12T12:15:04Z] conflict-resolver: git rebase completed successfully — all T020 checkpoint vs final-merge conflicts resolved
 [2026-07-12T12:15:04Z] conflict-resolver: reverting state to TEST_COMPLETE (pre_conflict_state restored)
+[2026-07-12T12:25:06Z] conflict-resolver: rebased branch pushed successfully — ticket/T020-create-cra-calendar-grid force-pushed to origin
+[2026-07-12T12:25:06Z] conflict-resolver: large context files removed from git history to comply with GitHub 100MB limit
+[2026-07-12T12:25:06Z] conflict-resolver: state transition CONFLICT_RESOLVING → TEST_COMPLETE complete
