@@ -1,8 +1,6 @@
-The plan has been written to `runs/T022/plan.md`. It covers:
+The plan has been written to `runs/T022/plan.md` with the four required headings (`## Objective`, `## Included`, `## Excluded`, `## Acceptance criteria`).
 
-- **Backend DTO** (`CraDetailsDto.java`): add six provider/client record components.
-- **Backend mapper** (`CraDetailsMapper.java`): populate the new fields from `MonthlyCraReport`.
-- **4 test files**: fix direct `new CraDetailsDto(...)` call sites that will break after the record gains new components.
-- **Frontend API client** (`craClient.js`): `getCra()` and `updateDay()` wrappers over `fetch`.
-- **New component** (`CraSummaryPanel.jsx` + `.css`): renders period, status, total, provider, and client with loading/error/empty states.
-- **`App.jsx` wiring**: fetch on mount, pass state to the panel, expose `handleDayUpdate` callback so the panel's total re-renders automatically when a future CalendarGrid updates a day.
+Key decisions captured in the plan:
+- **Backend**: `CraDetailsDto` needs 6 new provider/client fields; `CraDetailsMapper` populates them; existing test call sites need updating.
+- **Frontend**: No frontend exists yet — the Coder scaffolds a React app under `frontend/`, adds an API client (`craClient.js`), a `CraSummaryPanel` component, and wires it in `App.jsx` with loading/error/total-update state.
+- **Hypothesis flagged**: frontend framework choice (Vite recommended) is left to the Coder since no scaffold exists.
