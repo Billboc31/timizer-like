@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.timizer.backend.cra.CraDayNotFoundException;
 import com.timizer.backend.cra.CraNotFoundException;
+import com.timizer.backend.cra.CraNotValidatedException;
 import com.timizer.backend.cra.CraValidatedException;
 import com.timizer.backend.cra.InvalidWorkValueException;
 
@@ -37,5 +38,11 @@ public class CraApiExceptionHandler {
     public ResponseEntity<Map<String, String>> handleCraDayNotFound() {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(Map.of("error", "cra_day_not_found"));
+    }
+
+    @ExceptionHandler(CraNotValidatedException.class)
+    public ResponseEntity<Map<String, String>> handleCraNotValidated() {
+        return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
+                .body(Map.of("error", "cra_not_validated"));
     }
 }
