@@ -1,8 +1,6 @@
-The plan is written to `runs/T025/plan.md`. It covers:
+The plan has been written to `runs/T025/plan.md`. It covers:
 
-- One new dependency: `react-router-dom` v7
-- A type patch to add `validationDate` to `CraSummaryDto`
-- A new presentational `CraHistoryTable` component with co-located CSS and tests
-- A new `HistoryPage` wiring `listCras()` with loading/error/empty states and PDF download
-- A `CraDetailPage` extracted from the current `App.tsx` to support routing
-- `App.tsx` updated to use `BrowserRouter` with routes `/` → HistoryPage and `/cra/:year/:month` → CraDetailPage
+- **Type fix**: add `validationDate: string | null` to `CraSummaryDto` in `api/types.ts`
+- **New `CraHistoryTable` component** (`.tsx`, `.css`, `.test.tsx`) — purely presentational, receives `cras`, `loading`, `error`, `onOpen`, `onDownload` as props; handles all three UI states
+- **`App.tsx` wiring** — fetches via `listCras()` on mount using the existing `useState`/`useEffect` pattern; implements `onDownload` with `downloadCraPdf()` and a temporary anchor trigger; delegates `onOpen` to the existing CRA detail flow
+- **Excluded**: React Router, backend changes, filters/search, design system work
