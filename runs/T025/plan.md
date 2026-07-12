@@ -1,6 +1,6 @@
-Plan written to `runs/T025/plan.md`. Key decisions:
+The plan is written to `runs/T025/plan.md`. Key decisions captured:
 
-- **`validationDate` gap**: T018 omitted this field from the TypeScript `CraSummaryDto` type; T025 adds it since T014 adds it to the backend DTO and the ticket requires displaying it.
-- **View-state navigation**: no routing library — follows the deferred-routing pattern established in T019, using `useState<'selector' | 'history'>` in `App.tsx`.
-- **PDF download gating**: `status === 'VALIDATED'` check (not `validationDate`) since `CraStatus` is the canonical signal; per-row `downloadingId` state prevents double-clicks.
-- **Dependencies explicit**: `listCras()` and `downloadCraPdf()` are out of scope (T018); `GET /api/cras` backend endpoint is out of scope (T014).
+- **`validationDate` gap fixed**: backend `CraSummaryDto.java` already returns the field; the plan adds it to the frontend TypeScript type in `frontend/src/api/types.ts`.
+- **No router**: history view uses `useState<'selector' | 'history'>` in `App.tsx`, consistent with the pattern established in T019.
+- **PDF gating**: `status === 'VALIDATED'` check (not `validationDate`) as the canonical signal; per-row `downloadingId` prevents double-clicks.
+- **5 files**: one new component (tsx + css + test), one type extension, one App.tsx update.
