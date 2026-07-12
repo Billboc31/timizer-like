@@ -1,7 +1,5 @@
-The plan is written to `runs/T019/plan.md`. It covers:
+Plan written to `runs/T019/plan.md`. Key decisions:
 
-- **Scaffolding** — Vite + React + TypeScript in `frontend/`, dev proxy to backend
-- **API layer** — `frontend/src/api/cra.ts` with `openOrCreateCra()` distinguishing 200 (existing) from 201 (created)
-- **`MonthSelector` component** — month/year selectors, real-time period label, dynamic button label, loading/success/error states
-- **Tests** — Vitest + Testing Library covering all states
-- **4 required headings** in exact order: `Objective`, `Included`, `Excluded`, `Acceptance criteria`
+- **`listCras()` + filter** rather than a dedicated "check by period" endpoint (the API doesn't have one; `listCras()` already exists in T018's client)
+- **`onOpen(cra)` callback prop** for "Open CRA" — no routing library exists yet, so navigation is deferred to the parent and a future ticket
+- **Three files**: new `CraMonthSelector.tsx`, updated `App.jsx`, new Vitest test file
