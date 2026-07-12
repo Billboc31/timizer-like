@@ -1,7 +1,9 @@
 com/timizerlike/cra/pdf/model/CraPdfSignatures.class
+com/timizer/backend/cra/CraTotalCalculationService.class
 com/timizerlike/backend/cra/dto/CraDayEntryDto.class
 com/timizerlike/cra/pdf/model/CraPdfDayType.class
 com/timizer/backend/cra/CraDayEntry.class
+com/timizerlike/backend/cra/web/CraApiExceptionHandler.class
 com/timizer/backend/cra/api/CreateCraRequest.class
 com/timizer/backend/cra/api/CraController.class
 com/timizerlike/backend/cra/dto/CraSummaryDto.class
@@ -28,6 +30,7 @@ com/timizerlike/cra/model/CraMonthlyReport.class
 com/timizerlike/cra/service/CraCreationService.class
 com/timizerlike/cra/config/CraDefaultsProperties$Client.class
 com/timizerlike/cra/pdf/model/package-info.class
+com/timizer/backend/cra/CraNotFoundException.class
 com/timizerlike/cra/pdf/model/CraPdfParty.class
 com/timizerlike/cra/config/CraDefaultsProperties.class
 com/timizerlike/backend/cra/dto/CraDetailsDto.class
