@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="com.timizerlike.backend.cra.web.CraPdfDownloadControllerTest" time="1.103" tests="3" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="com.timizer.backend.cra.MonthlyCraReportPersistenceTest" time="0.774" tests="3" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="26"/>
     <property name="sun.jnu.encoding" value="UTF-8"/>
@@ -66,9 +66,9 @@
     <property name="socksNonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
     <property name="java.class.version" value="70.0"/>
   </properties>
-  <testcase name="returnsHttp422WhenCraNotValidated" classname="com.timizerlike.backend.cra.web.CraPdfDownloadControllerTest" time="0.053">
-    <system-out><![CDATA[09:59:37.529 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.timizerlike.backend.cra.web.CraPdfDownloadControllerTest]: CraPdfDownloadControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-09:59:37.581 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.timizerlike.TimizerlikeTestConfig for test class com.timizerlike.backend.cra.web.CraPdfDownloadControllerTest
+  <testcase name="duplicateMonthAndYearIsRejected" classname="com.timizer.backend.cra.MonthlyCraReportPersistenceTest" time="0.046">
+    <system-out><![CDATA[2026-07-12T09:59:39.247+02:00  INFO 92470 --- [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.timizer.backend.cra.MonthlyCraReportPersistenceTest]: MonthlyCraReportPersistenceTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-12T09:59:39.254+02:00  INFO 92470 --- [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.timizer.backend.cra.JpaTestConfig for test class com.timizer.backend.cra.MonthlyCraReportPersistenceTest
 
   .   ____          _            __ _ _
  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
@@ -78,19 +78,39 @@
  =========|_|==============|___/=/_/_/_/
  :: Spring Boot ::                (v3.2.5)
 
-2026-07-12T09:59:37.711+02:00  INFO 92470 --- [           main] c.t.b.c.w.CraPdfDownloadControllerTest   : Starting CraPdfDownloadControllerTest using Java 26.0.1 with PID 92470 (started by pierrebocquet in /Users/pierrebocquet/runtime/timizer-like/worktrees/T017/backend)
-2026-07-12T09:59:37.712+02:00  INFO 92470 --- [           main] c.t.b.c.w.CraPdfDownloadControllerTest   : No active profile set, falling back to 1 default profile: "default"
-2026-07-12T09:59:38.495+02:00  INFO 92470 --- [           main] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
-2026-07-12T09:59:38.495+02:00  INFO 92470 --- [           main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
-2026-07-12T09:59:38.496+02:00  INFO 92470 --- [           main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 0 ms
-2026-07-12T09:59:38.506+02:00  INFO 92470 --- [           main] c.t.b.c.w.CraPdfDownloadControllerTest   : Started CraPdfDownloadControllerTest in 0.908 seconds (process running for 1.29)
+2026-07-12T09:59:39.264+02:00  INFO 92470 --- [           main] c.t.b.c.MonthlyCraReportPersistenceTest  : Starting MonthlyCraReportPersistenceTest using Java 26.0.1 with PID 92470 (started by pierrebocquet in /Users/pierrebocquet/runtime/timizer-like/worktrees/T017/backend)
+2026-07-12T09:59:39.264+02:00  INFO 92470 --- [           main] c.t.b.c.MonthlyCraReportPersistenceTest  : No active profile set, falling back to 1 default profile: "default"
+2026-07-12T09:59:39.302+02:00  INFO 92470 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-07-12T09:59:39.319+02:00  INFO 92470 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 14 ms. Found 2 JPA repository interfaces.
+2026-07-12T09:59:39.332+02:00  INFO 92470 --- [           main] beddedDataSourceBeanFactoryPostProcessor : Replacing 'dataSource' DataSource bean with embedded version
+2026-07-12T09:59:39.352+02:00  INFO 92470 --- [           main] o.s.j.d.e.EmbeddedDatabaseFactory        : Starting embedded database: url='jdbc:h2:mem:6c35a6b0-545d-47b1-9010-2ba3c7c52059;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=false', username='sa'
+2026-07-12T09:59:39.444+02:00  INFO 92470 --- [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-07-12T09:59:39.466+02:00  INFO 92470 --- [           main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.4.4.Final
+2026-07-12T09:59:39.476+02:00  INFO 92470 --- [           main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-07-12T09:59:39.505+02:00  INFO 92470 --- [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-07-12T09:59:39.804+02:00  INFO 92470 --- [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+Hibernate: drop table if exists "cra_day_entry" cascade 
+Hibernate: drop table if exists "monthly_cra_report" cascade 
+Hibernate: create table "cra_day_entry" ("entry_date" date not null, "work_value" float(53) not null, "id" bigint generated by default as identity, "monthly_cra_report_id" bigint not null, "note" varchar(255), primary key ("id"), constraint uk_cra_day_entry_month_day unique ("monthly_cra_report_id", "entry_date"))
+Hibernate: create table "monthly_cra_report" ("month" integer not null check (("month">=1) and ("month"<=12)), "provider_signature_date" date, "validation_date" date, "year" integer not null check ("year">=2000), "created_at" timestamp(6) with time zone not null, "id" bigint generated by default as identity, "updated_at" timestamp(6) with time zone not null, "client_company" varchar(255) not null, "client_contact_email" varchar(255) not null, "client_contact_phone" varchar(255), "client_first_name" varchar(255) not null, "client_last_name" varchar(255) not null, "provider_company" varchar(255) not null, "provider_first_name" varchar(255) not null, "provider_last_name" varchar(255) not null, "status" varchar(255) not null check ("status" in ('DRAFT','SIGNED_BY_PROVIDER','VALIDATED')), primary key ("id"), constraint uk_monthly_cra_report_period unique ("month", "year"))
+Hibernate: alter table if exists "cra_day_entry" add constraint "FKcop22dfr66u4el2e64f19i57l" foreign key ("monthly_cra_report_id") references "monthly_cra_report"
+2026-07-12T09:59:39.826+02:00  INFO 92470 --- [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-07-12T09:59:39.962+02:00  INFO 92470 --- [           main] c.t.b.c.MonthlyCraReportPersistenceTest  : Started MonthlyCraReportPersistenceTest in 0.707 seconds (process running for 2.745)
+Hibernate: insert into "monthly_cra_report" ("client_company","client_contact_email","client_contact_phone","client_first_name","client_last_name","created_at","month","provider_company","provider_first_name","provider_last_name","provider_signature_date","status","updated_at","validation_date","year","id") values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,default)
+Hibernate: insert into "monthly_cra_report" ("client_company","client_contact_email","client_contact_phone","client_first_name","client_last_name","created_at","month","provider_company","provider_first_name","provider_last_name","provider_signature_date","status","updated_at","validation_date","year","id") values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,default)
+2026-07-12T09:59:40.005+02:00  WARN 92470 --- [           main] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 23505, SQLState: 23505
+2026-07-12T09:59:40.005+02:00 ERROR 92470 --- [           main] o.h.engine.jdbc.spi.SqlExceptionHelper   : Violation d'index unique ou clé primaire: "PUBLIC.UK_MONTHLY_CRA_REPORT_PERIOD_INDEX_D ON PUBLIC.monthly_cra_report(""month"" NULLS FIRST, ""year"" NULLS FIRST) VALUES ( /* key:1 */ 6, 2026)"
+Unique index or primary key violation: "PUBLIC.UK_MONTHLY_CRA_REPORT_PERIOD_INDEX_D ON PUBLIC.monthly_cra_report(""month"" NULLS FIRST, ""year"" NULLS FIRST) VALUES ( /* key:1 */ 6, 2026)"; SQL statement:
+insert into "monthly_cra_report" ("client_company","client_contact_email","client_contact_phone","client_first_name","client_last_name","created_at","month","provider_company","provider_first_name","provider_last_name","provider_signature_date","status","updated_at","validation_date","year","id") values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,default) [23505-224]
 ]]></system-out>
-    <system-err><![CDATA[WARNING: A Java agent has been loaded dynamically (/Users/pierrebocquet/.m2/repository/net/bytebuddy/byte-buddy-agent/1.14.13/byte-buddy-agent-1.14.13.jar)
-WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
-WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
-WARNING: Dynamic loading of agents will be disallowed by default in a future release
-]]></system-err>
   </testcase>
-  <testcase name="returnsHttp404WhenCraNotFound" classname="com.timizerlike.backend.cra.web.CraPdfDownloadControllerTest" time="0.004"/>
-  <testcase name="returnsHttp200WithPdfContentOnSuccess" classname="com.timizerlike.backend.cra.web.CraPdfDownloadControllerTest" time="0.006"/>
+  <testcase name="sameMonthDifferentYearIsAllowed" classname="com.timizer.backend.cra.MonthlyCraReportPersistenceTest" time="0.005">
+    <system-out><![CDATA[Hibernate: insert into "monthly_cra_report" ("client_company","client_contact_email","client_contact_phone","client_first_name","client_last_name","created_at","month","provider_company","provider_first_name","provider_last_name","provider_signature_date","status","updated_at","validation_date","year","id") values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,default)
+Hibernate: insert into "monthly_cra_report" ("client_company","client_contact_email","client_contact_phone","client_first_name","client_last_name","created_at","month","provider_company","provider_first_name","provider_last_name","provider_signature_date","status","updated_at","validation_date","year","id") values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,default)
+]]></system-out>
+  </testcase>
+  <testcase name="persistingValidReportAssignsIdAndTimestamps" classname="com.timizer.backend.cra.MonthlyCraReportPersistenceTest" time="0.003">
+    <system-out><![CDATA[Hibernate: insert into "monthly_cra_report" ("client_company","client_contact_email","client_contact_phone","client_first_name","client_last_name","created_at","month","provider_company","provider_first_name","provider_last_name","provider_signature_date","status","updated_at","validation_date","year","id") values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,default)
+]]></system-out>
+  </testcase>
 </testsuite>

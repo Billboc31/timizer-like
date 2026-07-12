@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="com.timizerlike.backend.cra.web.CraPdfDownloadControllerTest" time="1.103" tests="3" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="com.timizerlike.cra.pdf.model.CraPdfDocumentTest" time="0.005" tests="4" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="26"/>
     <property name="sun.jnu.encoding" value="UTF-8"/>
@@ -66,31 +66,8 @@
     <property name="socksNonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
     <property name="java.class.version" value="70.0"/>
   </properties>
-  <testcase name="returnsHttp422WhenCraNotValidated" classname="com.timizerlike.backend.cra.web.CraPdfDownloadControllerTest" time="0.053">
-    <system-out><![CDATA[09:59:37.529 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.timizerlike.backend.cra.web.CraPdfDownloadControllerTest]: CraPdfDownloadControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-09:59:37.581 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.timizerlike.TimizerlikeTestConfig for test class com.timizerlike.backend.cra.web.CraPdfDownloadControllerTest
-
-  .   ____          _            __ _ _
- /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
-( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
- \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
-  '  |____| .__|_| |_|_| |_\__, | / / / /
- =========|_|==============|___/=/_/_/_/
- :: Spring Boot ::                (v3.2.5)
-
-2026-07-12T09:59:37.711+02:00  INFO 92470 --- [           main] c.t.b.c.w.CraPdfDownloadControllerTest   : Starting CraPdfDownloadControllerTest using Java 26.0.1 with PID 92470 (started by pierrebocquet in /Users/pierrebocquet/runtime/timizer-like/worktrees/T017/backend)
-2026-07-12T09:59:37.712+02:00  INFO 92470 --- [           main] c.t.b.c.w.CraPdfDownloadControllerTest   : No active profile set, falling back to 1 default profile: "default"
-2026-07-12T09:59:38.495+02:00  INFO 92470 --- [           main] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
-2026-07-12T09:59:38.495+02:00  INFO 92470 --- [           main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
-2026-07-12T09:59:38.496+02:00  INFO 92470 --- [           main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 0 ms
-2026-07-12T09:59:38.506+02:00  INFO 92470 --- [           main] c.t.b.c.w.CraPdfDownloadControllerTest   : Started CraPdfDownloadControllerTest in 0.908 seconds (process running for 1.29)
-]]></system-out>
-    <system-err><![CDATA[WARNING: A Java agent has been loaded dynamically (/Users/pierrebocquet/.m2/repository/net/bytebuddy/byte-buddy-agent/1.14.13/byte-buddy-agent-1.14.13.jar)
-WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
-WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
-WARNING: Dynamic loading of agents will be disallowed by default in a future release
-]]></system-err>
-  </testcase>
-  <testcase name="returnsHttp404WhenCraNotFound" classname="com.timizerlike.backend.cra.web.CraPdfDownloadControllerTest" time="0.004"/>
-  <testcase name="returnsHttp200WithPdfContentOnSuccess" classname="com.timizerlike.backend.cra.web.CraPdfDownloadControllerTest" time="0.006"/>
+  <testcase name="page1SummaryCarriesPeriodProviderClientAndTotal" classname="com.timizerlike.cra.pdf.model.CraPdfDocumentTest" time="0.001"/>
+  <testcase name="page2ExposesDayByDayEntriesWithDatesAndWorkedFractions" classname="com.timizerlike.cra.pdf.model.CraPdfDocumentTest" time="0.003"/>
+  <testcase name="constructsValidDocumentFromFixtures" classname="com.timizerlike.cra.pdf.model.CraPdfDocumentTest" time="0.0"/>
+  <testcase name="signaturesAcceptNullClientFieldsForEmptyBlock" classname="com.timizerlike.cra.pdf.model.CraPdfDocumentTest" time="0.001"/>
 </testsuite>
