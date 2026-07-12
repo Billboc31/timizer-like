@@ -2,10 +2,12 @@ package com.timizerlike.backend.cra.dto;
 
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 
 class CraDtoTest {
@@ -28,6 +30,27 @@ class CraDtoTest {
     }
 
     @Test
+    void craSummaryDtoRoundTripWithoutValidationDate() {
+        CraSummaryDto summary = new CraSummaryDto(42L, 3, 2026, 18.5, CraStatus.DRAFT, null);
+
+        assertEquals(42L, summary.id());
+        assertEquals(3, summary.month());
+        assertEquals(2026, summary.year());
+        assertEquals(18.5, summary.totalWorkedDays());
+        assertEquals(CraStatus.DRAFT, summary.status());
+        assertNull(summary.validationDate());
+    }
+
+    @Test
+    void craSummaryDtoRoundTripWithValidationDate() {
+        LocalDate validationDate = LocalDate.of(2026, 6, 30);
+        CraSummaryDto summary = new CraSummaryDto(7L, 6, 2026, 20.0, CraStatus.VALIDATED, validationDate);
+
+        assertEquals(CraStatus.VALIDATED, summary.status());
+        assertEquals(validationDate, summary.validationDate());
+    }
+
+    @Test
     void craDetailsDtoRoundTrip() {
         List<CraDayEntryDto> days = List.of(
                 new CraDayEntryDto(1, 1.0, null),
@@ -42,5 +65,16 @@ class CraDtoTest {
         assertEquals(1.5, details.totalWorkedDays());
         assertEquals(CraStatus.VALIDATED, details.status());
         assertSame(days, details.days());
+    }
+
+    @Test
+    void craCreateOrUpdateRequestDtoRoundTrip() {
+        List<CraDayEntryDto> days = List.of(new CraDayEntryDto(10, 1.0, null));
+
+        CraCreateOrUpdateRequestDto request = new CraCreateOrUpdateRequestDto(11, 2026, days);
+
+        assertEquals(11, request.month());
+        assertEquals(2026, request.year());
+        assertSame(days, request.days());
     }
 }
