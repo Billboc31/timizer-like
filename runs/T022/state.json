@@ -1,7 +1,7 @@
 {
   "ticket_id": "T022",
-  "state": "IMPLEMENTATION_REVIEW_NEEDED",
+  "state": "IMPLEMENTATION_FIX_REQUIRED",
   "branch": "ticket/T022-create-cra-total-summary-panel",
   "issue_number": 22,
-  "updated_at": "2026-07-12T16:03:06Z"
+  "updated_at": "2026-07-12T16:13:06Z"
 }
