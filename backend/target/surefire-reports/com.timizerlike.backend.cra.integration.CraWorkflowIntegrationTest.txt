@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: com.timizerlike.backend.cra.integration.CraWorkflowIntegrationTest
 -------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.268 s -- in com.timizerlike.backend.cra.integration.CraWorkflowIntegrationTest
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.305 s -- in com.timizerlike.backend.cra.integration.CraWorkflowIntegrationTest
