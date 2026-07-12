@@ -1,7 +1,9 @@
-The plan has been written to `runs/T028/plan.md`. Key decisions reflected in the plan:
+The plan has been written to `runs/T028/plan.md`. Here's a summary of the key decisions:
 
-- Three GET endpoints (`/api/cras/{id}`, `/api/cras`, `/api/cras/{id}/pdf`) are missing and included in scope — the integration tests can't cover "retrieve", "history listing", and "PDF download" without them.
-- A `CraPdfExportService` must be created to bridge `MonthlyCraReport` → `CraPdfDocument` → bytes, since `CraPdfGenerator` exists but nothing wires it to a request.
-- The integration test uses `@SpringBootTest` + `@AutoConfigureMockMvc` with the existing H2 in-memory test config, ordered test methods sharing a single `craId` across steps.
-- Total calculation is verified concretely: January 2025 starts at 23.0 worked days; patching Jan 6 (weekday) to 0.5 yields 22.5.
-- PDF verification is limited to status code + `Content-Type` header — pixel-perfect comparison is explicitly excluded.
+**Two missing endpoints must be created** — the acceptance criteria for "history listing" and "PDF download" are untestable without them:
+- `GET /api/cras` → `List<CraSummaryDto>` via `CraHistoryController`, backed by the existing `findAllByOrderByYearDescMonthDesc()` repository query
+- `GET /api/cras/{id}/pdf` → `ResponseEntity<byte[]>` via `CraPdfController`, bridging `MonthlyCraReport` entities to the existing `CraPdfGenerator`
+
+**Integration test** (`CraApiIntegrationTest`) uses `@SpringBootTest` + `@AutoConfigureMockMvc` with H2 in-memory (already on test classpath), with ordered test methods sharing a single `craId` across 7 sequential steps covering the full workflow.
+
+**PDF assertion** is limited to HTTP 200 + `Content-Type: application/pdf` + non-empty body — no pixel-perfect comparison.
