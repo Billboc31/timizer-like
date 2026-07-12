@@ -1,6 +1,6 @@
 The plan has been written to `runs/T020/plan.md`. It covers:
 
-- **Objective**: `CalendarGrid` component displaying all CRA days with weekday labels, work values, and weekend styling
-- **Included**: 4 new files (`calendarUtils.ts`, `calendarUtils.test.ts`, `CalendarGrid.tsx`, `CalendarGrid.css`) + 1 shared types file + 1 modified `App.tsx`; explicit hypothesis that the frontend app is already scaffolded
-- **Excluded**: click cycling, API calls, state management, month selector, backend changes
-- **Acceptance criteria**: all mechanically verifiable — exact day count, `.weekend` class presence, loading/empty states, TypeScript build clean, tests pass
+- **Objective**: `CalendarGrid` component showing day number, weekday label, and work value per day, with visual weekend distinction and loading/empty states.
+- **Included**: 4 files created (`calendarUtils.ts`, its Vitest test, `CalendarGrid.tsx`, `CalendarGrid.css`) + `App.jsx` wired with a hardcoded stub for visual verification. Exact prop shapes and CSS class names are specified.
+- **Excluded**: click cycling, API calls, month selector integration, state management, backend, validation, PDF, history.
+- **Acceptance criteria**: all mechanically verifiable — correct day count, `.weekend` class on weekends only, loading/empty states rendered, TypeScript build clean, Vitest tests pass.
