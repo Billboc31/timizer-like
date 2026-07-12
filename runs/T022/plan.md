@@ -1,7 +1,7 @@
 Plan written to `runs/T022/plan.md`.
 
-Key decisions in the plan:
+Key decisions:
 
-- **Props-driven design**: `CraSummaryPanel` is a pure presentational component receiving `cra: CraDetailsDto | null`, `loading`, and `error` — the total updates automatically when the parent passes a new prop after a day change, no internal state needed.
-- **Risk flagged**: `CraDetailsDto` in `frontend/src/api/types.ts` currently lacks `providerName`, `providerCompany`, and `clientName`. The plan requires verifying those fields exist in the backend API response before extending the frontend type.
-- **Tests**: Vitest + `@testing-library/react` (may need to be added as a dev dependency).
+- **Backend DTO extension required**: `CraDetailsDto.java` and `CraDetailsMapper.java` must be extended with six provider/client fields — they exist on the entity but are currently not mapped or exposed. The frontend `types.ts` mirrors this gap.
+- **Props-driven component**: `CraSummaryPanel` is a pure presentational component (no fetch, no internal state); the total updates automatically when the parent passes an updated `cra` prop.
+- **Testing library gap**: `@testing-library/react` is not in `package.json` yet — the plan includes adding it before writing component tests.
