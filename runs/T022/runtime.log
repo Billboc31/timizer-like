@@ -247,3 +247,6 @@
 [2026-07-12T17:15:08Z] compose: task (canonical prompt)
 [2026-07-12T17:15:08Z] conflict-resolver: prompt snapshot: runs/T022/prompts/conflict-resolver-attempt-4.md
 [2026-07-12T17:15:08Z] conflict-resolver: invoking AI resolver pass 3
+[2026-07-12T17:16:22Z] conflict-resolver: blocking dirty paths before rebase: ['runs/T011/conflict/context.md', 'runs/T011/prompts/conflict-resolver-attempt-1.md', 'runs/T014/conflict/context.md', 'runs/T014/prompts/conflict-resolver-attempt-1.md', 'runs/T016/prompts/conflict-resolver-attempt-3.md']
+[2026-07-12T17:16:22Z] conflict-resolver: failed to prepare clean tree before rebase — blocking paths: ['runs/T011/conflict/context.md', 'runs/T011/prompts/conflict-resolver-attempt-1.md', 'runs/T014/conflict/context.md', 'runs/T014/prompts/conflict-resolver-attempt-1.md', 'runs/T016/prompts/conflict-resolver-attempt-3.md']
+[2026-07-12T17:16:22Z] conflict-resolver: state → CONFLICT_RESOLUTION_FAILED
