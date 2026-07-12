@@ -1,91 +1,58 @@
-Now I have everything. Writing the review.
+I now have a complete picture of the implementation. Writing the review.
 
-# PR Review — T025: Create CRA history page
+---
+
+# PR Review — T025: Create CRA History Page
 
 ## Résumé
 
-L'implémentation couvre les fonctionnalités demandées : page de listing, table avec période/statut/jours travaillés/date de validation, états vide/chargement/erreur, boutons Open et Download PDF conditionnel. La structure de composant, les types TypeScript et les 11 tests unitaires sont globalement solides. Un bug bloquant est identifié dans la gestion des erreurs de téléchargement PDF.
+La quatrième itération de l'implémentation corrige les deux blockers identifiés lors des reviews précédentes. Le composant `CraHistory`, ses styles, ses 11 tests et le câblage `App.tsx` satisfont l'ensemble des 6 critères d'acceptance. Aucun problème bloquant n'est détecté.
+
+---
 
 ## Vérifications effectuées
 
 - Lecture complète de `CraHistory.tsx`, `CraHistory.test.tsx`, `CraHistory.css`
-- Lecture de `api/cra.ts`, `types/cra.ts` (modifications)
-- Lecture de `App.tsx` (wiring navigation)
-- Lecture de `CraMonthSelector.tsx` (impact du changement de type)
-- Vérification du comportement d'App.tsx avant T025 (`git show 1a53524:frontend/src/App.tsx`)
+- Lecture de `api/cra.ts`, `types/cra.ts` (état final)
+- Lecture de `App.tsx`, `CraMonthSelector.tsx` / `.test.tsx`
+- Lecture de `api/types.ts` (fichier parallèle pré-existant)
+- Vérification de l'historique des reviews (tentatives 1 et 3) et des fixes appliqués
+- Vérification scope via `git diff ai-dev-factory/bootstrap-agent-layout...HEAD --name-only`
 - Examen des critères d'acceptance un par un
+
+---
 
 ## Points validés
 
-- **Listing des CRAs** : `listCras()` appelé au montage via `useEffect`, données affichées en table — AC 1 OK
-- **Colonnes requises** : période (MONTH_NAMES + année), statut, worked days, validation date (tiret si null) — AC 2 OK
-- **Bouton Download PDF conditionnel** : rendu uniquement quand `status === 'VALIDATED'` — AC 5 OK
-- **État vide** : message "No CRA records found." — AC 4 OK
-- **État chargement** : "Loading..." — AC 6 partiel (voir problèmes)
-- **Extension `CraSummaryDto`** : `validationDate: string | null` ajouté proprement, propagé dans `CraMonthSelector.tsx:54` avec `?? null` — pas de régression TypeScript
-- **Tests CraMonthSelector** : fixture `JULY_2026` mise à jour avec `validationDate: null` — cohérent
-- **handleOpen dans App.tsx** : comportement console.log pré-existant avant T025 (vérifié sur commit 1a53524), non-régression
-- **Scope** : aucune dérive — backend, PDF generation, calendrier hors périmètre respectés
+**Critères d'acceptance :**
 
-## Problèmes détectés
+1. **AC 1 — Listing des CRAs** : `useEffect` appelle `listCras()` au montage, données affichées dans un `<table>`. ✅
+2. **AC 2 — Colonnes** : Period (`MONTH_NAMES[month-1] year`), Status, Worked Days, Validation Date (tiret si null). ✅
+3. **AC 3 — Bouton Open** : présent sur chaque ligne, appelle `onOpen(cra)` — contract composant respecté. ✅
+4. **AC 4 — Empty state** : `"No CRA records found."` clairement affiché avec classe CSS dédiée. ✅
+5. **AC 5 — Download PDF conditionnel** : bouton rendu uniquement pour `status === 'VALIDATED'`, blob download via `URL.createObjectURL`. ✅
+6. **AC 6 — Loading et error states** : état loading ("Loading..."), erreur de chargement (role="alert", early return), erreur PDF inline (`downloadError` séparé, table préservée). ✅
 
-### 🔴 Bloquant — L'erreur de téléchargement PDF efface la table
+**Fixes des reviews précédentes :**
 
-**Fichier** : `CraHistory.tsx:44-51`
+- **Blocker review 1** (`.catch(() => {})` silencieux) → corrigé avec `setDownloadError()`.
+- **Blocker review 3** (état `error` partagé causait la disparition de la table) → corrigé par état `downloadError` distinct, affiché au-dessus du tableau sans early return. Test `shows error when PDF download fails and keeps table visible` vérifie maintenant que `'June 2026'` et "Download PDF" restent visibles après l'erreur. ✅
+- **Redondance `validationDate`** dans `CraDetailsDto` → supprimée. ✅
 
-Le composant utilise le même état `error` pour les erreurs de chargement initial et les erreurs de téléchargement PDF :
+**Qualité générale :**
 
-```tsx
-// Ligne 44-46 : erreur PDF écrit dans `error`
-.catch((err: unknown) => {
-  setError(err instanceof Error ? err.message : 'Failed to download PDF');
-})
-
-// Ligne 51 : early return qui cache la table
-if (error) return <p className="cra-history__status cra-history__status--error" role="alert">{error}</p>;
-```
-
-**Conséquence** : après un échec de téléchargement PDF, la table disparaît entièrement. L'utilisateur perd la vue historique et doit rafraîchir la page pour retrouver ses CRAs. Aucun moyen de réessayer sans rechargement.
-
-**Le test** (`shows error when PDF download fails`, ligne 94) valide que l'alerte s'affiche mais ne vérifie pas que la table est toujours présente — il couvre le comportement bugué sans le détecter comme tel.
-
-**Fix attendu** : utiliser un état séparé pour les erreurs de téléchargement, affiché en ligne sans early return :
-
-```tsx
-const [downloadError, setDownloadError] = useState<string | null>(null);
-
-// Dans handleDownloadPdf :
-.catch((err: unknown) => {
-  setDownloadError(err instanceof Error ? err.message : 'Failed to download PDF');
-})
-
-// Dans le rendu de la table, ajouter sous le titre ou dans le footer :
-{downloadError && <p role="alert" className="...">{downloadError}</p>}
-```
-
-Le test correspondant doit aussi vérifier que la table est toujours rendue après une erreur PDF.
+- TypeScript strict, pas de `any`, cast JSON limité aux retours d'API.
+- CSS BEM cohérent, structuré.
+- Gestion du state downloading : bouton désactivé + texte "Downloading..." pendant la requête, tracking par id de CRA pour limiter à la ligne concernée.
+- Scope respecté : pas de librairie de routing, pas de backend modifié, pas de PDF generation, pas de CalendarGrid touchée.
 
 ---
 
-### 🟡 Observation (non-bloquant) — `CraDetailsDto` re-déclare `validationDate`
+## Observations non-bloquantes
 
-**Fichier** : `types/cra.ts:27`
+### 1. `a.click()` sans append DOM
 
-```typescript
-export interface CraDetailsDto extends CraSummaryDto {
-  days: CraDayEntry[];
-  validationDate: string | null;  // déjà hérité de CraSummaryDto
-  providerSignatureDate: string | null;
-}
-```
-
-La re-déclaration est redondante (TypeScript l'accepte si le type est identique). Correctif trivial : supprimer la ligne, mais peut être traité dans un ticket de nettoyage.
-
----
-
-### 🟡 Observation (non-bloquant) — PDF download sans append DOM
-
-**Fichier** : `CraHistory.tsx:38-42`
+**Fichier** : `CraHistory.tsx:39-42`
 
 ```tsx
 const a = document.createElement('a');
@@ -94,20 +61,24 @@ a.download = `cra-${cra.year}-${String(cra.month).padStart(2, '0')}.pdf`;
 a.click();
 ```
 
-L'élément `<a>` n'est pas ajouté au DOM avant le click. Ce pattern fonctionne dans les navigateurs modernes et dans jsdom, mais est non-standard. Pas bloquant mais fragile.
+Pattern fonctionnel dans les navigateurs modernes mais non-standard. Déjà noté en review 1, traité comme optionnel. Hors scope.
 
-## Risques éventuels
+### 2. Divergence `api/types.ts` vs `types/cra.ts`
 
-- **AC "User can open a CRA from history"** : `onOpen(cra)` est correctement propagé par `CraHistory`, mais `handleOpen` dans App.tsx effectue uniquement un `console.log`. Ce comportement était identique avant T025 (vérifié sur commit 1a53524) — non-régression introduite par ce ticket. La navigation effective vers la vue CRA est hors scope T025 (pas de CalendarGrid wirée). L'AC est satisfait au niveau du contrat composant, mais pas au niveau utilisateur final. À documenter comme dette connue à combler dans un ticket ultérieur.
+`api/types.ts` contient sa propre définition `CraSummaryDto` sans `validationDate`. `CraHistory` utilise `types/cra.ts` — pas de régression. Dette pré-existante signalée en review 1, hors périmètre T025.
+
+### 3. `handleOpen` dans `App.tsx` — `console.log` uniquement
+
+Comportement identique avant T025 (vérifié en review 3 sur commit 1a53524). L'AC 3 est satisfait au niveau du contrat composant ; la navigation effective vers la vue CalendarGrid est hors scope de ce ticket.
+
+### 4. `MONTH_NAMES` dupliqué entre `CraHistory` et `CraMonthSelector`
+
+Duplication mineure, pas de ticket dédié requis à ce stade, pas de régression.
+
+---
 
 ## Décision
 
-- REQUEST_CHANGES
+Tous les critères d'acceptance sont satisfaits. Les deux blockers des reviews précédentes sont corrigés correctement et couverts par les tests. Aucun problème bloquant détecté.
 
-## Actions demandées
-
-1. **[Bloquant]** Séparer l'état d'erreur de téléchargement PDF de l'état d'erreur de chargement. Utiliser `downloadError` affiché en ligne dans la table sans early return. Mettre à jour le test `shows error when PDF download fails` pour vérifier que la table reste rendue après l'erreur.
-
-2. **[Optionnel]** Supprimer la re-déclaration redondante de `validationDate` dans `CraDetailsDto`.
-
-IMPLEMENTATION_FIX_REQUIRED
+IMPLEMENTATION_APPROVED
