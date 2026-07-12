@@ -1,10 +1,7 @@
-All 40 tests pass (11 in `CraHistory`, up from 10). The jsdom navigation warning is a pre-existing environment noise from `a.click()` — not a test failure.
+All 40 tests pass. Fix summary:
 
-**Changes made:**
+**Files modified:**
+- `frontend/src/components/CraMonthSelector/CraMonthSelector.tsx:54` — added `validationDate: created.validationDate ?? null` to the `summary` object
+- `frontend/src/components/CraMonthSelector/CraMonthSelector.test.tsx:17` — added `validationDate: null` to the `JULY_2026` fixture
 
-| File | Change |
-|------|--------|
-| `frontend/src/components/CraHistory/CraHistory.tsx` | Replaced empty `.catch(() => {})` with one that calls `setError(...)` on PDF download failure |
-| `frontend/src/components/CraHistory/CraHistory.test.tsx` | Added test `'shows error when PDF download fails'` covering the new error path |
-
-The blocking issue from the review is resolved: PDF download errors now surface to the user via the same `role="alert"` error element used for API load failures.
+Both TS2741 blocking errors are resolved. All 40 tests pass. The jsdom navigation warning is pre-existing noise from `a.click()` in the PDF download path.
