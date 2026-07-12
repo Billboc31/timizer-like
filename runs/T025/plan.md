@@ -1,7 +1,7 @@
-Plan written to `runs/T025/plan.md`. Key decisions made:
+The plan has been written to `runs/T025/plan.md`. Key decisions:
 
-- **React Router** must be installed (not yet in `package.json`).
-- **`CraSummaryDto`** needs `validationDate: string | null` added — the backend already returns it but the frontend type is missing it.
-- Three new source files: `HistoryPage.tsx`, `CraHistoryTable.tsx`, `CraHistoryRow.tsx`.
-- Routing wired in `App.jsx` with `/history` and a stub `/cra/:id` (so "Open" links resolve without a 404, but the detail page itself is out of scope).
-- Tests cover loading, error, empty, and populated states, plus PDF action visibility gating on `VALIDATED` status.
+- **React Router** must be installed — needed for the `/history` route and the "open CRA" link per row.
+- **`CraSummaryDto`** gets `validationDate: string | null` added on the frontend side only (backend already returns it).
+- Three new files: `HistoryPage.tsx` (page), `CraHistoryTable.tsx` (table), `CraHistoryRow.tsx` (row with actions).
+- "Open CRA" navigates to a stub `/cra/:id` route — detail page is explicitly excluded.
+- PDF download uses the existing `downloadCraPdf()` + object URL pattern.
