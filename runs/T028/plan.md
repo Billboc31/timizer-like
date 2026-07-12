@@ -1,7 +1,6 @@
 The plan is written to `runs/T028/plan.md`. Key decisions:
 
-- **Three missing GET endpoints** must be added first — `GET /api/cras/{id}`, `GET /api/cras`, and `GET /api/cras/{id}/pdf` — because the integration test workflow requires them
-- **Three new services** back those endpoints (`CraDetailsService`, `CraHistoryService`, `CraPdfDownloadService`), each in the existing `com.timizerlike.cra.service` package
-- **H2 in-memory datasource** added to `src/test/resources/application.yml` — H2 is already on the test classpath
-- **Single `@SpringBootTest` test class** with one `fullWorkflow()` method that flows through all seven steps sequentially using `TestRestTemplate`
-- **PDF test** only asserts HTTP 200 + `Content-Type: application/pdf` + non-empty body (no pixel comparison, signature image field passed as null)
+- **Three missing GET endpoints** (`GET /api/cras/{id}`, `GET /api/cras`, `GET /api/cras/{id}/pdf`) are in scope because the integration test workflow requires them — no endpoint, no integration test.
+- **Single sequential test method** chains all seven steps, asserting after each, so failures are pinpointed to the exact workflow step.
+- **H2 is already on the test classpath** via the existing `src/test/resources/application.yml` — no new configuration needed.
+- **PDF assertion is minimal**: HTTP 200 + `application/pdf` content-type + non-empty body only, no pixel comparison.
