@@ -1,0 +1,1 @@
+Plan written to `runs/T019/plan.md`. It covers the `MonthSelector` component, the `useOpenOrCreateCra` hook, TypeScript types mirroring the existing backend DTOs, a minimal `App.tsx` integration, and unit tests — scoped strictly to the ticket with routing, PDF, and history left out.
