@@ -296,3 +296,6 @@
 [2026-07-12T00:25:05Z] compose: task (canonical prompt)
 [2026-07-12T00:25:05Z] conflict-resolver: prompt snapshot: runs/T011/prompts/conflict-resolver-attempt-2.md
 [2026-07-12T00:25:05Z] conflict-resolver: invoking AI resolver pass 2
+[2026-07-12T00:28:24Z] conflict-resolver: pass 2 complete — resolved conflict markers in runs/T007/state.json, runs/T012/conflict/context.md, runs/T012/prompts/conflict-resolver-attempt-1.md, runs/T016/conflict/context.md, runs/T016/prompts/conflict-resolver-attempt-1.md, runs/T016/prompts/conflict-resolver-attempt-2.md, runs/T016/prompts/conflict-resolver-attempt-3.md
+[2026-07-12T00:28:24Z] conflict-resolver: all conflict markers removed — no passes remaining
+[2026-07-12T00:28:24Z] conflict-resolver: state → CONFLICT_RESOLVED_REVIEW_NEEDED
