@@ -1,6 +1,6 @@
-The plan is written to `runs/T011/plan.md`. It specifies:
+`runs/T011/plan.md` is written. The plan covers:
 
-- **1 new service** `CraRetrievalService` with `getById` and `getByYearAndMonth`, both using the existing repository and `CraDetailsMapper`.
-- **1 new controller** `CraRetrievalController` exposing `GET /api/cras/{id}` and `GET /api/cras/{year}/{month}` in the modern web package, with 404s handled by the existing `CraApiExceptionHandler`.
+- **1 new service** `CraRetrievalService` (`com.timizerlike.cra.service`) with `getById` and `getByYearAndMonth`, both `@Transactional(readOnly = true)`, using the existing `MonthlyCraReportRepository` + `CraDayEntryRepository` and assembling `CraDetailsDto` via the same `buildDto` pattern already in `CraDayUpdateService`.
+- **1 new controller** `CraRetrievalController` (`com.timizerlike.backend.cra.web`) with `GET /api/cras/{id}` and `GET /api/cras/{year}/{month}`, delegating 404s to the existing `CraApiExceptionHandler`.
 - **2 new test files** — a Mockito unit test for the service and a `@WebMvcTest` slice for the controller.
-- All existing DTOs, mappers, exceptions, and the legacy `/api/cra/` controller are left untouched.
+- Everything else (DTOs, repositories, exceptions, legacy controller) is left untouched.
