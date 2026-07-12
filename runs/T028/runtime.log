@@ -91,3 +91,6 @@
 [2026-07-12T09:18:13Z] push: pushing branch=ticket/T028-add-backend-integration-tests-for-cra-apis
 [2026-07-12T09:18:15Z] push: done branch=ticket/T028-add-backend-integration-tests-for-cra-apis
 [2026-07-12T09:18:15Z] auto-run: TEST_COMPLETE — running PR lifecycle
+[2026-07-12T09:30:06Z] conflict-resolver: runtime tree still dirty after scrub: runs/T028/conflict/context.md, runs/T028/prompts/conflict-resolver-attempt-1.md
+[2026-07-12T09:30:06Z] conflict-resolver: failed to prepare clean tree before rebase — blocking paths: []
+[2026-07-12T09:30:06Z] conflict-resolver: state → CONFLICT_RESOLUTION_FAILED
