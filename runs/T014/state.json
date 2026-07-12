@@ -3,7 +3,10 @@
   "state": "TEST_COMPLETE",
   "branch": "ticket/T014-create-cra-history-api",
   "issue_number": 14,
-  "updated_at": "2026-07-12T00:21:15Z",
+  "updated_at": "2026-07-12T00:32:11Z",
   "pr_number": 49,
-  "pr_synced": true
+  "pr_synced": true,
+  "pr_merged": true,
+  "daemon_archived": true,
+  "issue_closed": true
 }
