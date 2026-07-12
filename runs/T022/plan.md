@@ -1,7 +1,12 @@
-Plan written to `runs/T022/plan.md`.
+The plan is written to `runs/T022/plan.md`. Here is a summary of what it covers:
 
-Key decisions:
+**Backend (2 files)**
+- `CraDetailsDto.java` — add 6 provider/client fields (they exist on the entity but aren't exposed)
+- `CraDetailsMapper.java` — map those 6 fields
 
-- **Backend DTO extension required**: `CraDetailsDto.java` and `CraDetailsMapper.java` must be extended with six provider/client fields — they exist on the entity but are currently not mapped or exposed. The frontend `types.ts` mirrors this gap.
-- **Props-driven component**: `CraSummaryPanel` is a pure presentational component (no fetch, no internal state); the total updates automatically when the parent passes an updated `cra` prop.
-- **Testing library gap**: `@testing-library/react` is not in `package.json` yet — the plan includes adding it before writing component tests.
+**Frontend (5 files)**
+- `package.json` — add `@testing-library/react` (missing dep)
+- `api/types.ts` — mirror the 6 new DTO fields
+- `CraSummaryPanel.tsx` — pure presentational component, props-only (`cra`, `loading`, `error`), no fetch/state
+- `CraSummaryPanel.module.css` — plain CSS module (consistent with existing style convention)
+- `CraSummaryPanel.test.tsx` — vitest + testing-library tests for all four states: loading, error, nominal render, reactive total update
