@@ -1,6 +1,8 @@
 The plan has been written to `runs/T022/plan.md`. It covers:
 
-- **Backend**: extend `CraDetailsDto` record with 6 provider/client fields, update `CraDetailsMapper.toDto()` to populate them, fix any tests that construct the DTO directly.
-- **Frontend types**: mirror the same 6 fields in `api/types.ts`.
-- **New component**: `CraSummaryPanel` (`.tsx`, `.css`, `.test.tsx`) with `cra | null`, `loading`, `error` props and 5 test cases.
-- **App.jsx wiring**: lift CRA state to `App`, fetch on mount, render the panel, expose a `handleDayUpdate` callback so the future CalendarGrid can push updated totals through — reactivity is free since `updateDay()` already returns a full `CraDetailsDto`.
+- **Backend DTO** (`CraDetailsDto.java`): add six provider/client record components.
+- **Backend mapper** (`CraDetailsMapper.java`): populate the new fields from `MonthlyCraReport`.
+- **4 test files**: fix direct `new CraDetailsDto(...)` call sites that will break after the record gains new components.
+- **Frontend API client** (`craClient.js`): `getCra()` and `updateDay()` wrappers over `fetch`.
+- **New component** (`CraSummaryPanel.jsx` + `.css`): renders period, status, total, provider, and client with loading/error/empty states.
+- **`App.jsx` wiring**: fetch on mount, pass state to the panel, expose `handleDayUpdate` callback so the panel's total re-renders automatically when a future CalendarGrid updates a day.
