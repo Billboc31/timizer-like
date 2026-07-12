@@ -1,8 +1,3 @@
-T011 conflict resolution is complete:
+Conflict resolver pass 2 is complete. All conflict markers have been removed from the 7 affected workflow artifact files — `runs/T007/state.json` (kept HEAD's `TEST_COMPLETE` state), and the T012/T016 context and prompt files (resolved by union merge). Changes are committed and pushed.
 
-- Resolved the git rebase conflict in `runs/T007/state.json` by keeping HEAD's TEST_COMPLETE state
-- Dropped all 12 intermediate T007 commits that were conflicting (they're already in the base)
-- Restored the missing `GET /api/cra/{id}` and `GET /api/cra/{year}/{month}` endpoints in `CraController.java` (the commit implementing them had been accidentally skipped during the rebase skip loop)
-- Added 4 new tests to `CraControllerTest.java` covering both 200 and 404 responses for the GET endpoints
-- All 102 backend tests pass
-- Branch pushed; PR #48 was already merged and issue #11 is closed
+Conflict resolver pass 3: `runs/T016/prompts/conflict-resolver-attempt-3.md` — verified clean. The 77 occurrences of `<<<<<<<` in this file are embedded within diff content lines (prefixed with `+`) and are not actual conflict markers. No edits required. Resolution complete.
