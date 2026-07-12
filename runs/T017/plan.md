@@ -1,7 +1,7 @@
-`runs/T017/plan.md` has been rewritten as a proper forward-looking implementation plan. It defines 4 new files and 1 modified file:
+`runs/T017/plan.md` is written. The plan covers:
 
-- **`CraNotValidatedException`** — new domain exception
-- **`CraPdfDownloadService`** — fetches CRA, validates status, maps to `CraPdfDocument`, generates bytes, builds sanitized filename
-- **`CraPdfDownloadController`** — `GET /api/cras/{craId}/pdf` returning `ResponseEntity<byte[]>`
-- **`CraPdfDownloadControllerTest`** — `@WebMvcTest` covering 200/404/422
-- **`CraApiExceptionHandler`** — extended with HTTP 422 handler for `CraNotValidatedException`
+- **New endpoint** `GET /api/cras/{id}/pdf` in `CraPdfController`
+- **New service** `CraPdfDownloadService` that loads the CRA, guards on `VALIDATED` status, maps `MonthlyCraReport` → `CraPdfDocument` (using `CraDefaultsProperties` for address/contact not stored on the entity), and delegates byte generation to the existing `CraPdfGenerator`
+- **New exception** `CraNotValidatedException` → HTTP 422 via the existing `CraApiExceptionHandler`
+- **Filename sanitization** (`CRA-{providerCompany}-{clientCompany}-{year}-{MM}.pdf`)
+- **Two test classes** (unit service test + `@WebMvcTest` controller test) covering the 200/404/422 cases
