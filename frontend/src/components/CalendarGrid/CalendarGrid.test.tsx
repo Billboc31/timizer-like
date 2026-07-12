@@ -1,9 +1,9 @@
 import { render, screen, cleanup } from '@testing-library/react';
 import { describe, it, expect, afterEach } from 'vitest';
-
-afterEach(cleanup);
 import { CalendarGrid } from './CalendarGrid';
 import type { CraDetails } from '../../types/cra';
+
+afterEach(cleanup);
 
 const JULY_2026: CraDetails = {
   id: 1,
@@ -18,6 +18,12 @@ describe('CalendarGrid', () => {
   it('renders 31 cells for July 2026', () => {
     render(<CalendarGrid cra={JULY_2026} loading={false} error={null} />);
     expect(screen.getAllByTestId('day-cell')).toHaveLength(31);
+  });
+
+  it('renders 28 cells for February 2026', () => {
+    const FEB_2026: CraDetails = { ...JULY_2026, month: 2, year: 2026 };
+    render(<CalendarGrid cra={FEB_2026} loading={false} error={null} />);
+    expect(screen.getAllByTestId('day-cell')).toHaveLength(28);
   });
 
   it('applies day-cell--weekend to Saturday and Sunday cells only', () => {
@@ -38,11 +44,12 @@ describe('CalendarGrid', () => {
   it('shows the worked value for days present in cra.days', () => {
     const cra: CraDetails = {
       ...JULY_2026,
-      days: [{ day: 1, worked: 1, note: '' }],
+      days: [{ day: 3, worked: 1, note: '' }],
     };
     render(<CalendarGrid cra={cra} loading={false} error={null} />);
     const cells = screen.getAllByTestId('day-cell');
-    expect(cells[0]).toHaveTextContent('1');
+    // Day 3 has worked=1; day number is 3, so "1" unambiguously comes from worked
+    expect(cells[2].querySelector('.day-cell__worked')).toHaveTextContent('1');
   });
 
   it('shows 0 as worked value for days absent from cra.days', () => {
