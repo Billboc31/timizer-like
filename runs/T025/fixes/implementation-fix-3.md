@@ -1,3 +1,11 @@
+# Fix artifact — IMPLEMENTATION_FIX_REQUIRED
+
+- decision: IMPLEMENTATION_FIX_REQUIRED
+- review source: runs/T025/reviews/implementation-review.md
+- generated at: 2026-07-12T17:25:50Z
+
+---
+
 Now I have everything. Writing the review.
 
 # PR Review — T025: Create CRA history page
