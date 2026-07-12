@@ -310,6 +310,7 @@
 [2026-07-12T16:59:13Z] compose: task (canonical prompt)
 [2026-07-12T16:59:13Z] snapshot: runtime-prompt=runs/T025/prompts/planner-attempt-28.md
 [2026-07-12T17:02:33Z] auto-run: step=planner done rc=0
+<<<<<<< HEAD
 [2026-07-12T17:32:17Z] conflict-resolver: git rebase origin/main exit=1
 [2026-07-12T17:32:17Z] conflict-resolver: conflicts detected: ['frontend/src/App.tsx', 'frontend/src/api/cra.ts']
 [2026-07-12T17:32:18Z] conflict-resolver: [pass 1/3] start conflicted=['frontend/src/App.tsx', 'frontend/src/api/cra.ts', 'runs/T011/conflict/context.md', 'runs/T011/prompts/conflict-resolver-attempt-1.md', 'runs/T014/conflict/context.md', 'runs/T014/prompts/conflict-resolver-attempt-1.md', 'runs/T016/prompts/conflict-resolver-attempt-3.md']
@@ -347,3 +348,26 @@
 [2026-07-12T17:39:38Z] conflict-resolver: git fetch origin
 [2026-07-12T17:39:39Z] conflict-resolver: rebase in progress but no unmerged files found
 [2026-07-12T17:39:39Z] conflict-resolver: state → CONFLICT_RESOLUTION_FAILED
+=======
+[2026-07-12T17:31:02Z] auto-run start: state=IMPLEMENTATION_APPROVED
+[2026-07-12T17:31:02Z] auto-run: running step=tester
+[2026-07-12T17:31:02Z] prompt: resolved=prompts/generic/tester.md source=generic
+[2026-07-12T17:31:02Z] prompt: generic fallback — injecting runs/T025/ticket.md
+[2026-07-12T17:31:02Z] compose: global-context=docs/ai/global-context.md
+[2026-07-12T17:31:02Z] compose: role=ai/roles/tester.md
+[2026-07-12T17:31:02Z] compose: skill=ai/skills/workflow-discipline.md
+[2026-07-12T17:31:02Z] compose: skill=ai/skills/testing.md
+[2026-07-12T17:31:02Z] compose: skill=ai/skills/debugging.md
+[2026-07-12T17:31:02Z] compose: task (canonical prompt)
+[2026-07-12T17:31:02Z] snapshot: runtime-prompt=runs/T025/prompts/tester-attempt-1.md
+[2026-07-12T17:31:37Z] auto-run: step=tester done rc=0
+[2026-07-12T17:31:37Z] auto-run: transition IMPLEMENTATION_APPROVED → TEST_COMPLETE
+[2026-07-12T17:31:37Z] auto-run: auto-commit triggered (step=tester, include_code=True)
+[2026-07-12T17:31:37Z] commit-checkpoint: unstaged runtime garbage: ['runs/T025/daemon.lock', 'runs/T025/runtime.log', 'runs/T025/workflow-status.md']
+[2026-07-12T17:31:37Z] commit-checkpoint: sha=59777ba files=3 title='test(T025/workflow): tester — update 3 file(s)'
+[2026-07-12T17:31:37Z] auto-run: auto-push triggered
+[2026-07-12T17:31:37Z] push: tolerating runtime dirty files (not blocking): ['runs/T025/daemon.lock', 'runs/T025/runtime.log', 'runs/T025/workflow-status.md']
+[2026-07-12T17:31:37Z] push: pushing branch=ticket/T025-create-cra-history-page
+[2026-07-12T17:31:39Z] push: done branch=ticket/T025-create-cra-history-page
+[2026-07-12T17:31:39Z] auto-run: TEST_COMPLETE — running PR lifecycle
+>>>>>>> 4a85815 (T025: checkpoint [TEST_COMPLETE] — update workflow artifacts)
