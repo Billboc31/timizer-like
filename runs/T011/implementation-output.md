@@ -1,16 +1,12 @@
-All changes are committed. Here's a summary of what was done:
+Done. Here's a summary of the fix:
 
-**Deleted (20 files):**
-- 4 out-of-scope controllers: `CraDayController`, `CraValidationController`, `CraHistoryController` + their DTO `ValidateCraRequestDto`
-- 4 out-of-scope services: `CraDayUpdateService`, `CraValidationService`, `CraHistoryService`, `MonthlyCraCreationService`
-- 2 out-of-scope repositories: `CraDayEntryRepository`
-- 4 out-of-scope DTOs: `CraDayUpdateRequestDto`, `CraCreateOrUpdateRequestDto`, `CraSummaryDto`, `CreateCraRequest`
-- 7 corresponding test files
+**What was wrong:** Commit `df57fae` deleted 20 files (controllers, services, repository, DTOs, and their tests) that existed on main and were outside T011's scope. It also stripped the POST endpoint from `CraController` and trimmed two test files.
 
-**Modified (4 files):**
-- `CraController.java` — now exposes only `GET /api/cra/{id}` and `GET /api/cra/{year}/{month}`
-- `CraNotFoundException.java` — added `CraNotFoundException(int year, int month)` constructor to replace the previous `null` pass
-- `CraControllerTest.java` — trimmed to the 4 GET-related tests only
-- `CraDtoTest.java` — removed tests for the two deleted DTOs
+**What was restored:**
+- 13 source files: `CraDayController`, `CraValidationController`, `CraHistoryController`, `CraDayUpdateService`, `CraValidationService`, `CraHistoryService`, `MonthlyCraCreationService`, `CraDayEntryRepository`, and 5 DTOs
+- 7 test files: all corresponding controller/service tests
+- `CraController.java`: POST `/api/cra` endpoint restored, two T011 GET endpoints kept alongside it
+- `CraControllerTest.java`: restored to 10 tests (6 POST + 4 GET)
+- `CraDtoTest.java`: restored to 6 tests (including `CraSummaryDto` and `CraCreateOrUpdateRequestDto` tests)
 
-**Result:** 63 tests, 0 failures.
+**Result:** 110 tests, 0 failures. The two T011 GET endpoints are purely additive and coexist cleanly with all restored code.
