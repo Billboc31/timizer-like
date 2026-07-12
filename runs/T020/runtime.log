@@ -10,6 +10,7 @@
 [2026-07-12T09:43:38Z] compose: task (canonical prompt)
 [2026-07-12T09:43:38Z] snapshot: runtime-prompt=runs/T020/prompts/planner-attempt-1.md
 [2026-07-12T09:46:53Z] auto-run: step=planner done rc=0
+<<<<<<< HEAD
 [2026-07-12T09:49:50Z] auto-run start: state=INIT
 [2026-07-12T09:49:50Z] auto-run: running step=planner
 [2026-07-12T09:49:50Z] prompt: resolved=prompts/generic/planner.md source=generic
@@ -103,3 +104,5 @@
 [2026-07-12T11:17:01Z] push: pushing branch=ticket/T020-create-cra-calendar-grid
 [2026-07-12T11:17:03Z] push: done branch=ticket/T020-create-cra-calendar-grid
 [2026-07-12T11:17:03Z] auto-run: TEST_COMPLETE — running PR lifecycle
+=======
+>>>>>>> 1397119 (T020: planner checkpoint)

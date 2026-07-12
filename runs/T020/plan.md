@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ## Objective
 
 Bootstrap the React + TypeScript frontend application and implement a `CalendarGrid` component that displays all days of the selected CRA month, with day number, weekday label, current work value per day, and visual weekend distinction.
@@ -64,3 +65,12 @@ Bootstrap the React + TypeScript frontend application and implement a `CalendarG
 - While data is loading, a loading indicator is visible.
 - If the API call fails, an error message is visible.
 - Changing the hard-coded month in `App.tsx` re-renders the grid with the correct days for the new month.
+=======
+Plan written to `runs/T020/plan.md`. It covers:
+
+- **3 new files**: `calendarUtils.ts` (pure date logic, no library), `CalendarGrid.tsx` (presentational, props-driven), `CalendarGrid.css` (7-column grid, weekend styling)
+- **1 test file**: utility tests for day count, weekend detection, leap years
+- **1 modified file**: `App.jsx` wired with `cra={undefined}` as placeholder
+- **Excluded**: click cycling, API calls, month navigation, DOM component tests (no testing-library installed)
+- **Acceptance criteria**: all verifiable — day count, CSS classes, empty/loading states, prop-driven re-render, `npm test` green
+>>>>>>> 1397119 (T020: planner checkpoint)

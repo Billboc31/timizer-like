@@ -16,9 +16,12 @@
 - HIGH_RISK
 
 ## Notes
+<<<<<<< HEAD
 
 ## 2026-07-12T11:17:01Z
 
 - prev: IMPLEMENTATION_APPROVED
 - step: tester
 - next: TEST_COMPLETE
+=======
+>>>>>>> 1397119 (T020: planner checkpoint)
