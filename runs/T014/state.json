@@ -1,7 +1,9 @@
 {
   "ticket_id": "T014",
-  "state": "PLAN_APPROVED",
+  "state": "TEST_COMPLETE",
   "branch": "ticket/T014-create-cra-history-api",
   "issue_number": 14,
-  "updated_at": "2026-07-11T23:57:41Z"
+  "updated_at": "2026-07-12T00:21:52Z",
+  "pr_number": 49,
+  "pr_synced": true
 }
