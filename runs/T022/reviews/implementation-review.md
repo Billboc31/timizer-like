@@ -1,4 +1,4 @@
-I now have a complete picture. Let me write the review.
+I have a complete picture. Let me write the review.
 
 ---
 
@@ -6,126 +6,95 @@ I now have a complete picture. Let me write the review.
 
 ## Résumé
 
-Coder-attempt-3 a résolu le seul problème bloquant des deux reviews précédentes (`frontend/src/api/cra.ts` absent). Cependant, `App.tsx` importe `CalendarGrid` depuis un chemin qui n'existe pas dans le worktree — ce qui constitue un nouveau bloquant de compilation TypeScript/Vite, distinct du précédent.
+Coder-attempt-4 a résolu le seul problème bloquant de la review précédente : l'import `CalendarGrid` a été retiré de `App.tsx`. L'implémentation couvre tous les critères d'acceptance du ticket et ne présente plus aucun bloquant.
 
 ---
 
 ## Vérifications effectuées
 
-- Lecture des 5 fichiers source frontend, des 5 fichiers backend, des 2 tests de controllers
-- Glob complet de `frontend/src/**/*` — 5 fichiers présents, aucun `CalendarGrid`
-- Vérification dans `git show` que `frontend/src/api/cra.ts` a bien été créé dans coder-attempt-3 (commit `cfc6d1f`)
-- Confirmation que `App.tsx` (commit `4279840`) introduit l'import `CalendarGrid` non résolu
-- Lecture des reviews précédentes (review-attempt-1, implementation-review.md) pour comparaison
-- Vérification que la base branch `ai-dev-factory/bootstrap-agent-layout` ne contient aucun répertoire `frontend/`
+- Lecture de l'ensemble des 10 fichiers source modifiés (5 frontend, 5 backend)
+- Vérification du `git diff` contre `ai-dev-factory/bootstrap-agent-layout` — 10 fichiers source attendus, aucun fichier parasite
+- Confirmation que `App.tsx` n'importe plus `CalendarGrid` (bloquant résolu)
+- Confirmation que `frontend/src/api/cra.ts` est présent et correct (bloquant résolu en coder-attempt-3)
+- Vérification de tous les `data-testid` dans `CraSummaryPanel.tsx` vs assertions dans le test
+- Vérification du constructeur `CraDetailsDto` (14 arguments) dans les 3 tests backend
+- Glob complet de `frontend/src/**/*` — 5 fichiers, aucun import externe non résolu
+- Comparaison avec les reviews précédentes (review-attempt-1, implementation-review.md)
 
 ---
 
 ## Points validés
 
-**Résolu depuis review-attempt-2**
+**Bloquants résolus**
 
-- `frontend/src/api/cra.ts` — présent et correct : appel `fetch('/api/cras?year=…&month=…')`, vérification `res.ok`, re-throw en `Error`, typage retour `Promise<CraDetails>`. Résout le bloquant des deux reviews précédentes.
+- `App.tsx` — CalendarGrid retiré ; n'importe et ne rend que `CraSummaryPanel` ✅
+- `frontend/src/api/cra.ts` — présent, `fetchCra(year, month)` correct, vérification `res.ok`, re-throw en `Error` ✅
 
-**Backend**
+**AC vérifiés**
 
-- `CraDetailsDto` : record Java à 14 champs incluant les 6 nouveaux provider/client, nullable `String` — correct
-- `CraDetailsMapper.toDto()` : mappe les 6 champs via getters, calcul `totalWorkedDays` par sommation — minimal et acceptable (le ticket exclut une logique métier complexe de calcul, pas ce minimum)
-- `CraDtoTest` : test `craDetailsDtoRoundTrip` mis à jour à 14 arguments avec assertions sur les 6 champs provider/client — couverture correcte
-- `CraDayControllerTest` / `CraValidationControllerTest` : constantes `DRAFT_DTO` / `VALIDATED_DTO` mises à jour à 14 arguments, logique de test préservée
+| Critère | Implémentation | Testé |
+|---|---|---|
+| Période affichée | `MONTH_NAMES[month-1] year` → `data-testid="summary-period"` | ✅ |
+| Statut affiché | `cra.status` → `data-testid="summary-status"` | ✅ |
+| Total worked days | `cra.totalWorkedDays` → `data-testid="summary-total"` | ✅ |
+| Provider et client | nom complet provider + company + nom complet client | ✅ |
+| Total mis à jour | composant purement props-driven, testé via `rerender` | ✅ |
+| Loading / error | early returns avec `data-testid="summary-loading"` / `"summary-error"` | ✅ |
 
-**Frontend — composant**
-
-- `CraSummaryPanel.tsx` : composant purement présentationnel (aucun state, aucun `useEffect`), props-driven — réactivité totale garantie par React sans état local
-- Affiche : période (nom de mois + année), statut, total worked days, provider (prénom+nom), provider company, client (prénom+nom)
-- États `loading` / `error` / `cra null` gérés explicitement par early return
+**Frontend — `CraSummaryPanel.tsx`**
+- Composant purement présentationnel — aucun state local, aucun `useEffect`
 - Fallback `'—'` pour noms null via `filter(Boolean).join(' ') || '—'` et `?? '—'`
 - HTML sémantique : `<section aria-label="CRA Summary">`, `<dl>/<dt>/<dd>`, `data-testid` cohérents
 
-- `CraSummaryPanel.test.tsx` : 12 tests couvrant tous les champs, `rerender` pour l'AC réactivité du total, états loading/error/null, dash fallback pour noms nuls et company null — couverture solide
+**Frontend — `CraSummaryPanel.test.tsx`**
+- 13 tests couvrant tous les champs, `rerender` pour l'AC réactivité, états loading/error/null, fallbacks dash, statut VALIDATED
 
-- `types/cra.ts` : interface `CraDetails` à 6 champs optionnels `string | null`, alignée avec le DTO backend
+**Backend**
+- `CraDetailsDto` : record Java à 14 champs, `String` nullable pour les 6 champs provider/client
+- `CraDetailsMapper.toDto()` : mapping complet, calcul `totalWorkedDays` par sommation minimale acceptable
+- `CraDtoTest`, `CraDayControllerTest`, `CraValidationControllerTest` : mis à jour à 14 arguments, logique préservée
 
 ---
 
 ## Problèmes détectés
 
-### 🔴 Bloquant — `CalendarGrid` importé mais inexistant
-
-`App.tsx` ligne 4–5 :
-
-```tsx
-import { CalendarGrid } from './components/CalendarGrid/CalendarGrid';
-…
-<CalendarGrid cra={cra} loading={loading} error={error} />
-```
-
-`frontend/src/components/CalendarGrid/` n'existe pas. Le glob de l'intégralité de `frontend/src/` ne retourne que 5 fichiers, aucun dans un sous-répertoire `CalendarGrid/`. La base branch n'a pas de `frontend/` du tout — ce composant n'a donc jamais existé. TypeScript et Vite échoueront à compiler `App.tsx`.
-
-La "Calendar grid creation" est explicitement hors scope du ticket T022. L'import de `CalendarGrid` dans `App.tsx` est une dérive de scope qui introduit une dépendance cassée.
-
-**Action requise** : retirer l'import `CalendarGrid` et son usage de `App.tsx`. L'app doit rendre uniquement `<CraSummaryPanel>` dans le scope de ce ticket. `CalendarGrid` sera ajouté lorsque son ticket sera implémenté.
-
-```tsx
-// App.tsx — version corrigée
-import { useEffect, useState } from 'react';
-import { fetchCra } from './api/cra';
-import type { CraDetails } from './types/cra';
-import { CraSummaryPanel } from './components/CraSummaryPanel/CraSummaryPanel';
-
-export default function App() {
-  const [cra, setCra] = useState<CraDetails | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    setLoading(true);
-    fetchCra(2026, 7)
-      .then(data => { setCra(data); setLoading(false); })
-      .catch((err: unknown) => {
-        setError(err instanceof Error ? err.message : 'Unknown error');
-        setLoading(false);
-      });
-  }, []);
-
-  return (
-    <div>
-      <h1>CRA — July 2026</h1>
-      <CraSummaryPanel cra={cra} loading={loading} error={error} />
-    </div>
-  );
-}
-```
+Aucun problème bloquant.
 
 ---
 
-### 🟡 Observation — Package Java incohérent (carry-over)
+### 🟡 Observation (carry-over) — Infrastructure frontend absente
 
-`CraDetailsMapper` est déclaré dans `com.timizer.backend.cra` alors que les DTOs sont dans `com.timizerlike.backend.cra.dto`. Les tests importent des exceptions depuis `com.timizer.backend.cra`, ce qui suggère une convention de double-package pré-existante. Acceptable si intentionnel, à vérifier.
+`frontend/` ne contient que `src/`. Aucun `package.json`, `tsconfig.json`, `vite.config.ts`, ni `index.html`. Les tests (vitest, @testing-library/react) ne peuvent pas être installés ni exécutés sans scaffolding. Ce point était déjà flaggé comme risque dans les deux reviews précédentes sans être considéré bloquant — à traiter dès que possible (ticket dédié ou scaffold initial).
 
 ---
 
-### 🟡 Observation — Période hardcodée dans `App.tsx`
+### 🟡 Observation — `clientCompany` non affiché
 
-`fetchCra(2026, 7)` et `<h1>CRA — July 2026</h1>` sont fixes. Hors scope pour ce ticket, à paramétrer lors de l'implémentation du sélecteur de période.
+L'interface `CraDetails` et le DTO exposent `clientCompany`, mais le composant n'affiche que le nom du client (prénom+nom), pas la société cliente. Le ticket dit "provider, provider company, and client" — il ne mentionne pas explicitement "client company". L'asymétrie avec provider company est notable ; à clarifier lors de l'évolution du panel.
+
+---
+
+### 🟡 Observation (carry-over) — Période hardcodée
+
+`fetchCra(2026, 7)` et `<h1>CRA — July 2026</h1>` sont fixes. Hors scope pour ce ticket.
+
+---
+
+### 🟡 Observation (carry-over) — Package Java incohérent
+
+`CraDetailsMapper` est en `com.timizer.backend.cra` ; les DTOs et tests d'exceptions en `com.timizerlike.backend.cra`. Convention apparemment pré-existante dans le projet — acceptable si intentionnelle.
 
 ---
 
 ## Risques éventuels
 
-- **AC "Total updates after a day value change"** : sans `CalendarGrid`, il n'existe aucun mécanisme pour déclencher une mise à jour depuis les saisies de jours. L'AC est vérifiable uniquement via le test unitaire `rerender`. Une fois `CalendarGrid` implémenté (futur ticket), il devra appeler un callback `onUpdate` ou équivalent pour propager les changements dans le state `cra` d'`App.tsx`.
-- **Infrastructure frontend absente** : aucun `package.json`, `tsconfig.json`, `vite.config.ts`, ni `index.html` dans le diff ou le worktree. Les tests ne peuvent pas s'exécuter et l'app ne peut pas se builder sans ces fichiers. À confirmer si ces artefacts sont gérés en dehors du scope du coder (CI bootstrap, image Docker, etc.).
+- Sans `package.json`, les tests frontend ne peuvent pas être exécutés en CI. Aucun pipeline ne pourra valider les 13 tests unitaires sans scaffolding préalable.
+- `clientCompany` dans le DTO mais absent du panel : si le domaine métier l'exige (CRA B2B où la société cliente est importante), ce sera un manque UX.
 
 ---
 
 ## Décision
 
-1 problème bloquant : import `CalendarGrid` non résolu dans `App.tsx`, causant une erreur de compilation TypeScript/Vite.
+Les deux bloquants des reviews précédentes sont résolus. Tous les critères d'acceptance sont couverts au niveau composant. Les observations restantes sont des carry-overs délibérément non-bloquants ou des points hors scope du ticket.
 
-## Action requise
-
-**[Bloquant]** Retirer l'import `{ CalendarGrid }` et le JSX `<CalendarGrid …>` de `App.tsx`. Le scope de ce ticket est limité au panel de résumé — `CalendarGrid` est hors scope et ne peut être importé avant son implémentation.
-
----
-
-IMPLEMENTATION_FIX_REQUIRED
+IMPLEMENTATION_APPROVED
