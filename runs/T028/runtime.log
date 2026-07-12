@@ -94,3 +94,8 @@
 [2026-07-12T09:30:06Z] conflict-resolver: runtime tree still dirty after scrub: runs/T028/conflict/context.md, runs/T028/prompts/conflict-resolver-attempt-1.md
 [2026-07-12T09:30:06Z] conflict-resolver: failed to prepare clean tree before rebase — blocking paths: []
 [2026-07-12T09:30:06Z] conflict-resolver: state → CONFLICT_RESOLUTION_FAILED
+[2026-07-12T09:31:19Z] conflict-resolver: git rebase origin/main exit=0
+[2026-07-12T09:31:19Z] conflict-resolver: rebase clean — no conflicts
+[2026-07-12T09:31:19Z] conflict-resolver: running tests
+[2026-07-12T09:31:19Z] conflict-resolver: test-report written: runs/T028/conflict/test-report.md
+[2026-07-12T09:31:19Z] conflict-resolver: staging and committing resolution artifacts
