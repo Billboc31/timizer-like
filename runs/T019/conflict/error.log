@@ -1,0 +1,1 @@
+[2026-07-12T11:51:10Z] failed to prepare clean tree before rebase — blocking paths: ['frontend/node_modules/.package-lock.json', 'frontend/node_modules/.vite/vitest/da39a3ee5e6b4b0d3255bfef95601890afd80709/results.json', 'frontend/node_modules/lru-cache/LICENSE', 'frontend/node_modules/lru-cache/README.md', 'frontend/node_modules/lru-cache/package.json']

@@ -1,0 +1,9 @@
+{
+  "ticket_id": "T019",
+  "state": "TEST_COMPLETE",
+  "branch": "ticket/T019-create-cra-month-selector",
+  "issue_number": 19,
+  "updated_at": "2026-07-12T13:53:00Z",
+  "pr_number": 54,
+  "pr_synced": true
+}
