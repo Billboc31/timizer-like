@@ -1,7 +1,7 @@
-All 40 tests pass. Fix summary:
+All 40 tests pass, including the renamed/updated `shows error when PDF download fails and keeps table visible` test.
 
-**Files modified:**
-- `frontend/src/components/CraMonthSelector/CraMonthSelector.tsx:54` — added `validationDate: created.validationDate ?? null` to the `summary` object
-- `frontend/src/components/CraMonthSelector/CraMonthSelector.test.tsx:17` — added `validationDate: null` to the `JULY_2026` fixture
+**Changes made:**
 
-Both TS2741 blocking errors are resolved. All 40 tests pass. The jsdom navigation warning is pre-existing noise from `a.click()` in the PDF download path.
+- `CraHistory.tsx` — added `downloadError` state, used it in the PDF `.catch()` instead of `setError`, and rendered it inline above the table (no early return, so the table stays visible)
+- `CraHistory.test.tsx` — updated the PDF error test to also assert `'June 2026'` row and the Download button are still present after the error
+- `types/cra.ts` — removed the redundant `validationDate: string | null` re-declaration from `CraDetailsDto` (already inherited from `CraSummaryDto`)

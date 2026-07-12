@@ -91,7 +91,7 @@ describe('CraHistory', () => {
     await waitFor(() => expect(screen.getByText('Download PDF')).toBeInTheDocument());
   });
 
-  it('shows error when PDF download fails', async () => {
+  it('shows error when PDF download fails and keeps table visible', async () => {
     vi.mocked(craApi.listCras).mockResolvedValue([VALIDATED_CRA]);
     vi.mocked(craApi.downloadCraPdf).mockRejectedValue(new Error('Download failed'));
 
@@ -102,6 +102,8 @@ describe('CraHistory', () => {
     await waitFor(() =>
       expect(screen.getByRole('alert')).toHaveTextContent('Download failed'),
     );
+    expect(screen.getByText('June 2026')).toBeInTheDocument();
+    expect(screen.getByText('Download PDF')).toBeInTheDocument();
   });
 
   it('triggers PDF download when Download PDF is clicked', async () => {

@@ -17,6 +17,7 @@ export function CraHistory({ onOpen }: Props) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [downloading, setDownloading] = useState<number | null>(null);
+  const [downloadError, setDownloadError] = useState<string | null>(null);
 
   useEffect(() => {
     listCras()
@@ -42,7 +43,7 @@ export function CraHistory({ onOpen }: Props) {
         URL.revokeObjectURL(url);
       })
       .catch((err: unknown) => {
-        setError(err instanceof Error ? err.message : 'Failed to download PDF');
+        setDownloadError(err instanceof Error ? err.message : 'Failed to download PDF');
       })
       .finally(() => { setDownloading(null); });
   };
@@ -56,6 +57,9 @@ export function CraHistory({ onOpen }: Props) {
 
   return (
     <div className="cra-history">
+      {downloadError && (
+        <p role="alert" className="cra-history__status cra-history__status--error">{downloadError}</p>
+      )}
       <table className="cra-history__table">
         <thead>
           <tr>
