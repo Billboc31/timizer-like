@@ -1,0 +1,45 @@
+[2026-07-12T08:09:31Z] auto-run start: state=INIT
+[2026-07-12T08:09:31Z] auto-run: running step=planner
+[2026-07-12T08:09:31Z] prompt: resolved=prompts/generic/planner.md source=generic
+[2026-07-12T08:09:31Z] prompt: generic fallback — injecting runs/T018/ticket.md
+[2026-07-12T08:09:31Z] compose: global-context=docs/ai/global-context.md
+[2026-07-12T08:09:31Z] compose: role=ai/roles/planner.md
+[2026-07-12T08:09:31Z] compose: skill=ai/skills/workflow-discipline.md
+[2026-07-12T08:09:31Z] compose: skill=ai/skills/architecture-discipline.md
+[2026-07-12T08:09:31Z] compose: skill=ai/skills/documentation.md
+[2026-07-12T08:09:31Z] compose: task (canonical prompt)
+[2026-07-12T08:09:31Z] snapshot: runtime-prompt=runs/T018/prompts/planner-attempt-1.md
+[2026-07-12T08:12:06Z] auto-run: step=planner done rc=0
+[2026-07-12T08:15:41Z] auto-run start: state=INIT
+[2026-07-12T08:15:41Z] auto-run: running step=planner
+[2026-07-12T08:15:41Z] prompt: resolved=prompts/generic/planner.md source=generic
+[2026-07-12T08:15:41Z] prompt: generic fallback — injecting runs/T018/ticket.md
+[2026-07-12T08:15:41Z] compose: global-context=docs/ai/global-context.md
+[2026-07-12T08:15:41Z] compose: role=ai/roles/planner.md
+[2026-07-12T08:15:41Z] compose: skill=ai/skills/workflow-discipline.md
+[2026-07-12T08:15:41Z] compose: skill=ai/skills/architecture-discipline.md
+[2026-07-12T08:15:41Z] compose: skill=ai/skills/documentation.md
+[2026-07-12T08:15:41Z] compose: task (canonical prompt)
+[2026-07-12T08:15:41Z] snapshot: runtime-prompt=runs/T018/prompts/planner-attempt-2.md
+[2026-07-12T08:19:58Z] auto-run: step=planner done rc=0
+[2026-07-12T08:31:36Z] auto-run start: state=IMPLEMENTATION_APPROVED
+[2026-07-12T08:31:36Z] auto-run: running step=tester
+[2026-07-12T08:31:36Z] prompt: resolved=prompts/generic/tester.md source=generic
+[2026-07-12T08:31:36Z] prompt: generic fallback — injecting runs/T018/ticket.md
+[2026-07-12T08:31:36Z] compose: global-context=docs/ai/global-context.md
+[2026-07-12T08:31:36Z] compose: role=ai/roles/tester.md
+[2026-07-12T08:31:36Z] compose: skill=ai/skills/workflow-discipline.md
+[2026-07-12T08:31:36Z] compose: skill=ai/skills/testing.md
+[2026-07-12T08:31:36Z] compose: skill=ai/skills/debugging.md
+[2026-07-12T08:31:36Z] compose: task (canonical prompt)
+[2026-07-12T08:31:36Z] snapshot: runtime-prompt=runs/T018/prompts/tester-attempt-1.md
+[2026-07-12T08:32:21Z] auto-run: step=tester done rc=0
+[2026-07-12T08:32:21Z] auto-run: transition IMPLEMENTATION_APPROVED → TEST_COMPLETE
+[2026-07-12T08:32:21Z] auto-run: auto-commit triggered (step=tester, include_code=True)
+[2026-07-12T08:32:21Z] commit-checkpoint: unstaged runtime garbage: ['runs/T018/daemon.lock', 'runs/T018/runtime.log', 'runs/T018/workflow-status.md']
+[2026-07-12T08:32:21Z] commit-checkpoint: sha=3bd729d files=3 title='test(T018/workflow): tester — update 3 file(s)'
+[2026-07-12T08:32:21Z] auto-run: auto-push triggered
+[2026-07-12T08:32:21Z] push: tolerating runtime dirty files (not blocking): ['runs/T018/daemon.lock', 'runs/T018/runtime.log', 'runs/T018/workflow-status.md']
+[2026-07-12T08:32:21Z] push: pushing branch=ticket/T018-create-frontend-api-client
+[2026-07-12T08:32:23Z] push: done branch=ticket/T018-create-frontend-api-client
+[2026-07-12T08:32:24Z] auto-run: TEST_COMPLETE — running PR lifecycle
