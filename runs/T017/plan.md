@@ -1,7 +1,9 @@
-`runs/T017/plan.md` is written. The plan covers:
+The plan has been written to `runs/T017/plan.md`. It covers:
 
-- **New endpoint** `GET /api/cras/{id}/pdf` in `CraPdfController`
-- **New service** `CraPdfDownloadService` that loads the CRA, guards on `VALIDATED` status, maps `MonthlyCraReport` → `CraPdfDocument` (using `CraDefaultsProperties` for address/contact not stored on the entity), and delegates byte generation to the existing `CraPdfGenerator`
-- **New exception** `CraNotValidatedException` → HTTP 422 via the existing `CraApiExceptionHandler`
-- **Filename sanitization** (`CRA-{providerCompany}-{clientCompany}-{year}-{MM}.pdf`)
-- **Two test classes** (unit service test + `@WebMvcTest` controller test) covering the 200/404/422 cases
+- **1 new exception**: `CraNotValidatedException` (same package/pattern as existing ones)
+- **2 modified files**: `CraPdfGenerator` (add `@Component`) + `CraApiExceptionHandler` (add 422 handler)
+- **1 new service**: `CraPdfDownloadService` — loads CRA, guards on VALIDATED status, maps entity → `CraPdfDocument`, generates bytes, builds sanitized filename
+- **1 new controller**: `CraPdfDownloadController` — `GET /api/cras/{craId}/pdf` returning `application/pdf` with `Content-Disposition`
+- **2 new test classes**: controller (`@WebMvcTest`) + service (unit with mocks)
+
+One noted assumption: `CraDayEntry` has no weekend/holiday type distinction, so all 0.0 workValue entries map to `NOT_WORKED` in the PDF.
