@@ -113,3 +113,10 @@
     "backend/target/surefire-reports/TEST-com.timizerlike.cra.service.CraCreationServiceOverrideIT.xml"
   ]
 }
+=======
+  "state": "PLAN_APPROVED",
+  "branch": "ticket/T007-create-cra-creation-api",
+  "issue_number": 10,
+  "updated_at": "2026-07-11T13:13:09Z"
+}
+>>>>>>> 4c114e5 (docs(T007/workflow): planner — update 2 file(s))
