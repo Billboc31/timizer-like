@@ -1,7 +1,7 @@
 {
   "ticket_id": "T025",
-  "state": "PLAN_APPROVED",
+  "state": "IMPLEMENTATION_REVIEW_NEEDED",
   "branch": "ticket/T025-create-cra-history-page",
   "issue_number": 25,
-  "updated_at": "2026-07-12T17:02:35Z"
+  "updated_at": "2026-07-12T17:10:04Z"
 }
