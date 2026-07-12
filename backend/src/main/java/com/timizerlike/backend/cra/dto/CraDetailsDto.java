@@ -11,6 +11,12 @@ public record CraDetailsDto(
         CraStatus status,
         List<CraDayEntryDto> days,
         LocalDate validationDate,
-        LocalDate providerSignatureDate
+        LocalDate providerSignatureDate,
+        String providerFirstName,
+        String providerLastName,
+        String providerCompany,
+        String clientFirstName,
+        String clientLastName,
+        String clientCompany
 ) {
 }

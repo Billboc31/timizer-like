@@ -38,7 +38,8 @@ class CraValidationControllerTest {
             1L, 6, 2026, 20.0, CraStatus.VALIDATED,
             List.of(),
             LocalDate.of(2026, 6, 30),
-            LocalDate.of(2026, 6, 30));
+            LocalDate.of(2026, 6, 30),
+            null, null, null, null, null, null);
 
     @Test
     void returnsHttp200WithValidatedDtoOnSuccess() throws Exception {

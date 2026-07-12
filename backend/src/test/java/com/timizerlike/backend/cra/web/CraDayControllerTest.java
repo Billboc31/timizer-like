@@ -40,7 +40,8 @@ class CraDayControllerTest {
 
     private static final CraDetailsDto DRAFT_DTO = new CraDetailsDto(
             1L, 6, 2026, 0.5, CraStatus.DRAFT,
-            List.of(new CraDayEntryDto(15, 0.5, "note")), null, null);
+            List.of(new CraDayEntryDto(15, 0.5, "note")), null, null,
+            null, null, null, null, null, null);
 
     @Test
     void returnsHttp200WithUpdatedDtoOnSuccess() throws Exception {
