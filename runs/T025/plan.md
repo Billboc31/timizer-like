@@ -1,9 +1,5 @@
-The plan is written to `runs/T025/plan.md`. It covers 5 files:
+The plan is written to `runs/T025/plan.md`. It covers 5 files across 3 concerns:
 
-1. **`api/types.ts`** — extend `CraSummaryDto` with `validationDate` (already returned by the Java backend, missing from the TS type).
-2. **`CraHistoryPage.tsx`** — new component: fetches `listCras()`, renders a table with period/status/days/validation date/actions, per-row PDF download with blob URL pattern, loading/error/empty states, `onOpen` callback prop.
-3. **`CraHistoryPage.css`** — scoped styles.
-4. **`CraHistoryPage.test.tsx`** — 9 test cases covering all states and interactions.
-5. **`App.tsx`** — `useState<'selector' | 'history'>` for view switching, History and Back buttons.
-
-No router install, no backend changes, no new props on `CraMonthSelector`.
+1. **`api/types.ts`** — add `validationDate: string | null` to `CraSummaryDto` (field exists in backend response, missing from the TS type).
+2. **`CraHistoryPage.tsx` + `.css` + `.test.tsx`** — new component with table rendering, all states (loading/error/empty/list), Open callback, and conditional Download PDF via blob URL pattern.
+3. **`App.tsx`** — state-based view switching (`'selector' | 'history'`) with History/Back buttons; no router install needed.
