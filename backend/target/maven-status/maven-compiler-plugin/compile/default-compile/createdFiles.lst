@@ -31,6 +31,7 @@ com/timizerlike/backend/cra/dto/CraStatus.class
 com/timizerlike/backend/cra/web/ValidateCraRequestDto.class
 com/timizer/backend/cra/CraDetailsMapper.class
 com/timizerlike/cra/pdf/model/CraPdfProviderSignature.class
+com/timizerlike/backend/cra/web/CraHistoryController.class
 com/timizer/backend/cra/ValidationStatus.class
 com/timizerlike/backend/cra/dto/CraCreateOrUpdateRequestDto.class
 com/timizerlike/cra/TimizerLikeApplication.class
