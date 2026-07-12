@@ -1,1 +1,4 @@
 [2026-07-12T17:35:09Z] AI resolver pass 1 finished but conflict markers remain in: ['runs/T011/conflict/context.md', 'runs/T011/prompts/conflict-resolver-attempt-1.md', 'runs/T014/conflict/context.md', 'runs/T014/prompts/conflict-resolver-attempt-1.md', 'runs/T016/prompts/conflict-resolver-attempt-3.md']
+[2026-07-12T17:37:14Z] rebase in progress but no unmerged files found
+[2026-07-12T17:38:27Z] rebase in progress but no unmerged files found
+[2026-07-12T17:39:39Z] rebase in progress but no unmerged files found

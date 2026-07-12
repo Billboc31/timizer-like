@@ -335,3 +335,15 @@
 [2026-07-12T17:35:09Z] compose: task (canonical prompt)
 [2026-07-12T17:35:09Z] conflict-resolver: prompt snapshot: runs/T025/prompts/conflict-resolver-attempt-2.md
 [2026-07-12T17:35:09Z] conflict-resolver: invoking AI resolver pass 2
+[2026-07-12T17:37:13Z] conflict-resolver: start branch=ticket/T025-create-cra-history-page
+[2026-07-12T17:37:13Z] conflict-resolver: git fetch origin
+[2026-07-12T17:37:14Z] conflict-resolver: rebase in progress but no unmerged files found
+[2026-07-12T17:37:14Z] conflict-resolver: state → CONFLICT_RESOLUTION_FAILED
+[2026-07-12T17:38:25Z] conflict-resolver: start branch=ticket/T025-create-cra-history-page
+[2026-07-12T17:38:25Z] conflict-resolver: git fetch origin
+[2026-07-12T17:38:27Z] conflict-resolver: rebase in progress but no unmerged files found
+[2026-07-12T17:38:27Z] conflict-resolver: state → CONFLICT_RESOLUTION_FAILED
+[2026-07-12T17:39:38Z] conflict-resolver: start branch=ticket/T025-create-cra-history-page
+[2026-07-12T17:39:38Z] conflict-resolver: git fetch origin
+[2026-07-12T17:39:39Z] conflict-resolver: rebase in progress but no unmerged files found
+[2026-07-12T17:39:39Z] conflict-resolver: state → CONFLICT_RESOLUTION_FAILED
