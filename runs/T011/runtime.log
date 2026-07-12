@@ -346,3 +346,15 @@
 [2026-07-12T02:47:00Z] conflict-resolver: state → CONFLICT_RESOLVED_REVIEW_NEEDED
 [2026-07-12T02:47:00Z] auto-finalize-conflict: gate disabled for project='timizer-like'
 [2026-07-12T02:47:00Z] conflict-resolver: transition CONFLICT_RESOLVED_REVIEW_NEEDED → TEST_COMPLETE (auto, PROJECT_SETTING)
+[2026-07-12T05:52:37Z] auto-run start: state=INIT
+[2026-07-12T05:52:37Z] auto-run: running step=planner
+[2026-07-12T05:52:37Z] prompt: resolved=prompts/generic/planner.md source=generic
+[2026-07-12T05:52:37Z] prompt: generic fallback — injecting runs/T011/ticket.md
+[2026-07-12T05:52:37Z] compose: global-context=docs/ai/global-context.md
+[2026-07-12T05:52:37Z] compose: role=ai/roles/planner.md
+[2026-07-12T05:52:37Z] compose: skill=ai/skills/workflow-discipline.md
+[2026-07-12T05:52:37Z] compose: skill=ai/skills/architecture-discipline.md
+[2026-07-12T05:52:37Z] compose: skill=ai/skills/documentation.md
+[2026-07-12T05:52:37Z] compose: task (canonical prompt)
+[2026-07-12T05:52:37Z] snapshot: runtime-prompt=runs/T011/prompts/planner-attempt-22.md
+[2026-07-12T05:55:45Z] auto-run: step=planner done rc=0
