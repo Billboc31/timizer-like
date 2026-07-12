@@ -3,7 +3,10 @@
   "state": "TEST_COMPLETE",
   "branch": "ticket/T022-create-cra-total-summary-panel",
   "issue_number": 22,
-  "updated_at": "2026-07-12T17:20:00Z",
+  "updated_at": "2026-07-12T17:12:28Z",
   "pr_number": 55,
-  "pr_synced": true
+  "pr_synced": true,
+  "pr_merged": true,
+  "daemon_archived": true,
+  "issue_closed": true
 }
