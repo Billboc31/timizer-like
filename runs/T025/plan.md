@@ -1,5 +1,11 @@
-The plan is written to `runs/T025/plan.md`. It covers 5 files across 3 concerns:
+The plan is written to `runs/T025/plan.md`. Here's a summary of what it covers:
 
-1. **`api/types.ts`** — add `validationDate: string | null` to `CraSummaryDto` (already returned by the backend, missing from the TS type).
-2. **`CraHistoryPage/` (3 new files)** — component with all four states (loading/error/empty/list), table with period/status/worked days/validation date, "Open" callback, conditional "Download PDF" via the blob pattern already in `craClient.ts`, and a full test suite.
-3. **`App.tsx`** — minimal `view: 'selector' | 'history'` state toggle with History and Back buttons; no router library needed.
+**5 files touched:**
+
+1. `frontend/src/api/types.ts` — add `validationDate: string | null` to `CraSummaryDto` (backend already returns it, TS type is the only gap).
+2. `frontend/src/components/CraHistory/CraHistory.tsx` — new component with loading/error/empty/table states, "Ouvrir" on every row, "Télécharger PDF" only for `VALIDATED` rows.
+3. `frontend/src/components/CraHistory/CraHistory.css` — BEM styles matching existing conventions.
+4. `frontend/src/components/CraHistory/CraHistory.test.tsx` — Vitest suite covering all four states and both actions.
+5. `frontend/src/App.tsx` — minimal `view: 'selector' | 'history'` toggle with "Historique" / "Retour" buttons; no router library needed.
+
+**Key constraint noted:** `GET /api/cras` and `GET /api/cras/:id/pdf` are already implemented in the backend — no backend work required.
