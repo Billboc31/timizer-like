@@ -1,3 +1,4 @@
+/Users/pierrebocquet/runtime/timizer-like/worktrees/T011/backend/src/test/java/com/timizerlike/backend/cra/web/CraHistoryControllerTest.java
 /Users/pierrebocquet/runtime/timizer-like/worktrees/T011/backend/src/test/java/com/timizerlike/cra/pdf/CraPdfGeneratorTest.java
 /Users/pierrebocquet/runtime/timizer-like/worktrees/T011/backend/src/test/java/com/timizer/backend/cra/MonthlyCraCreationServiceTest.java
 /Users/pierrebocquet/runtime/timizer-like/worktrees/T011/backend/src/test/java/com/timizer/backend/cra/CraDayEntryUpdateWorkValueTest.java
@@ -15,4 +16,5 @@
 /Users/pierrebocquet/runtime/timizer-like/worktrees/T011/backend/src/test/java/com/timizer/backend/cra/MonthlyCraReportTest.java
 /Users/pierrebocquet/runtime/timizer-like/worktrees/T011/backend/src/test/java/com/timizer/backend/cra/MonthlyCraReportPersistenceTest.java
 /Users/pierrebocquet/runtime/timizer-like/worktrees/T011/backend/src/test/java/com/timizerlike/cra/pdf/model/CraPdfDocumentTest.java
+/Users/pierrebocquet/runtime/timizer-like/worktrees/T011/backend/src/test/java/com/timizerlike/cra/service/CraHistoryServiceTest.java
 /Users/pierrebocquet/runtime/timizer-like/worktrees/T011/backend/src/test/java/com/timizer/backend/cra/CraTotalCalculationServiceTest.java

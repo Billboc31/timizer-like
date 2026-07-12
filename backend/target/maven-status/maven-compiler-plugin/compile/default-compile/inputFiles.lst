@@ -18,6 +18,7 @@
 /Users/pierrebocquet/runtime/timizer-like/worktrees/T011/backend/src/main/java/com/timizerlike/cra/service/CraDayUpdateService.java
 /Users/pierrebocquet/runtime/timizer-like/worktrees/T011/backend/src/main/java/com/timizerlike/backend/cra/web/CraDayController.java
 /Users/pierrebocquet/runtime/timizer-like/worktrees/T011/backend/src/main/java/com/timizerlike/cra/pdf/model/package-info.java
+/Users/pierrebocquet/runtime/timizer-like/worktrees/T011/backend/src/main/java/com/timizerlike/backend/cra/web/CraHistoryController.java
 /Users/pierrebocquet/runtime/timizer-like/worktrees/T011/backend/src/main/java/com/timizerlike/cra/pdf/model/CraPdfSignatures.java
 /Users/pierrebocquet/runtime/timizer-like/worktrees/T011/backend/src/main/java/com/timizerlike/cra/pdf/model/CraPdfSummary.java
 /Users/pierrebocquet/runtime/timizer-like/worktrees/T011/backend/src/main/java/com/timizerlike/backend/cra/web/ValidateCraRequestDto.java
@@ -28,6 +29,7 @@
 /Users/pierrebocquet/runtime/timizer-like/worktrees/T011/backend/src/main/java/com/timizerlike/backend/cra/dto/CraCreateOrUpdateRequestDto.java
 /Users/pierrebocquet/runtime/timizer-like/worktrees/T011/backend/src/main/java/com/timizerlike/cra/pdf/CraPdfGenerator.java
 /Users/pierrebocquet/runtime/timizer-like/worktrees/T011/backend/src/main/java/com/timizerlike/cra/pdf/model/CraPdfDayType.java
+/Users/pierrebocquet/runtime/timizer-like/worktrees/T011/backend/src/main/java/com/timizerlike/cra/service/CraHistoryService.java
 /Users/pierrebocquet/runtime/timizer-like/worktrees/T011/backend/src/main/java/com/timizer/backend/cra/CraDayNotFoundException.java
 /Users/pierrebocquet/runtime/timizer-like/worktrees/T011/backend/src/main/java/com/timizerlike/cra/service/CraValidationService.java
 /Users/pierrebocquet/runtime/timizer-like/worktrees/T011/backend/src/main/java/com/timizer/backend/cra/CraValidatedException.java

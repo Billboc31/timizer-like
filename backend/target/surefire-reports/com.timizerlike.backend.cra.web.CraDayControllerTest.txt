@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: com.timizerlike.backend.cra.web.CraDayControllerTest
 -------------------------------------------------------------------------------
-Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.095 s -- in com.timizerlike.backend.cra.web.CraDayControllerTest
+Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.168 s -- in com.timizerlike.backend.cra.web.CraDayControllerTest

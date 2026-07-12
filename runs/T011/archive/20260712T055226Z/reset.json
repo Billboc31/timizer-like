@@ -1,0 +1,9 @@
+{
+  "operation": "reset_to_planning",
+  "ticket_id": "T011",
+  "requested_by": "operator",
+  "reason": "Bug",
+  "previous_state": "CONFLICT_RESOLUTION_FAILED",
+  "new_state": "INIT",
+  "created_at": "2026-07-12T05:52:26Z"
+}
