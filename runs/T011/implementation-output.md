@@ -1,25 +1,16 @@
-All 110 tests pass with no failures. The implementation is already complete and verified.
+All changes are committed. Here's a summary of what was done:
 
-Here is the implementation summary:
+**Deleted (20 files):**
+- 4 out-of-scope controllers: `CraDayController`, `CraValidationController`, `CraHistoryController` + their DTO `ValidateCraRequestDto`
+- 4 out-of-scope services: `CraDayUpdateService`, `CraValidationService`, `CraHistoryService`, `MonthlyCraCreationService`
+- 2 out-of-scope repositories: `CraDayEntryRepository`
+- 4 out-of-scope DTOs: `CraDayUpdateRequestDto`, `CraCreateOrUpdateRequestDto`, `CraSummaryDto`, `CreateCraRequest`
+- 7 corresponding test files
 
-## Summary
+**Modified (4 files):**
+- `CraController.java` — now exposes only `GET /api/cra/{id}` and `GET /api/cra/{year}/{month}`
+- `CraNotFoundException.java` — added `CraNotFoundException(int year, int month)` constructor to replace the previous `null` pass
+- `CraControllerTest.java` — trimmed to the 4 GET-related tests only
+- `CraDtoTest.java` — removed tests for the two deleted DTOs
 
-**No code changes were needed.** The implementation from the previous coder run is already fully in place on the branch, and all tests pass.
-
-## Files created / modified (prior run)
-
-| File | Status |
-|---|---|
-| `backend/src/main/java/com/timizer/backend/cra/api/CraController.java` | **Modified** — added `GET /api/cra/{id}` and `GET /api/cra/{year}/{month}` endpoints delegating to `MonthlyCraReportRepository` + `CraDetailsMapper` |
-| `backend/src/main/java/com/timizer/backend/cra/CraNotFoundException.java` | **Present** — `RuntimeException` for missing CRA records |
-| `backend/src/main/java/com/timizerlike/backend/cra/web/CraApiExceptionHandler.java` | **Present** — maps `CraNotFoundException` → HTTP 404 `{"error":"cra_not_found"}` |
-| `backend/src/test/java/com/timizer/backend/cra/api/CraControllerTest.java` | **Modified** — 4 new test cases covering happy path and not-found for both endpoints |
-
-## Verifications
-
-- `mvn test` → **110 tests, 0 failures, BUILD SUCCESS**
-- All 4 plan acceptance criteria met:
-  - `GET /api/cra/{id}` returns 200 + full `CraDetailsDto` ✓
-  - `GET /api/cra/{year}/{month}` returns 200 + full `CraDetailsDto` ✓
-  - Both return 404 `{"error":"cra_not_found"}` when absent ✓
-  - No regressions in pre-existing tests ✓
+**Result:** 63 tests, 0 failures.
