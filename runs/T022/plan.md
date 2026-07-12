@@ -1,12 +1,4 @@
-The plan is written to `runs/T022/plan.md`. Here is a summary of what it covers:
+The plan is written to `runs/T022/plan.md`. It covers:
 
-**Backend (2 files)**
-- `CraDetailsDto.java` — add 6 provider/client fields (they exist on the entity but aren't exposed)
-- `CraDetailsMapper.java` — map those 6 fields
-
-**Frontend (5 files)**
-- `package.json` — add `@testing-library/react` (missing dep)
-- `api/types.ts` — mirror the 6 new DTO fields
-- `CraSummaryPanel.tsx` — pure presentational component, props-only (`cra`, `loading`, `error`), no fetch/state
-- `CraSummaryPanel.module.css` — plain CSS module (consistent with existing style convention)
-- `CraSummaryPanel.test.tsx` — vitest + testing-library tests for all four states: loading, error, nominal render, reactive total update
+- **Backend (2 files)**: Extend `CraDetailsDto` record with 6 provider/client fields, and update `CraDetailsMapper` to map them — these fields exist on the entity but weren't exposed in the DTO.
+- **Frontend (5 files)**: Add `@testing-library/react` + `jsdom` deps, mirror the 6 new fields in `types.ts`, create the `CraSummaryPanel` component (pure presentational, props-only), a CSS module, and a Vitest test suite with 4 cases covering loading/error/nominal/reactive-total. The per-file `@vitest-environment jsdom` docblock keeps existing API tests unaffected.
