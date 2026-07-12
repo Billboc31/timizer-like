@@ -1,0 +1,50 @@
+.calendar-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 16px;
+}
+
+.day-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  min-width: 64px;
+  background-color: #fff;
+}
+
+.day-cell--weekend {
+  background-color: #f0f0f0;
+  color: #888;
+}
+
+.day-cell__number {
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+.day-cell__weekday {
+  font-size: 0.75rem;
+  color: #666;
+  text-transform: uppercase;
+}
+
+.day-cell__worked {
+  margin-top: 4px;
+  font-size: 0.9rem;
+}
+
+.calendar-loading,
+.calendar-error,
+.calendar-empty {
+  padding: 24px;
+  text-align: center;
+  color: #555;
+}
+
+.calendar-error {
+  color: #c0392b;
+}
