@@ -99,3 +99,21 @@
 [2026-07-12T09:31:19Z] conflict-resolver: running tests
 [2026-07-12T09:31:19Z] conflict-resolver: test-report written: runs/T028/conflict/test-report.md
 [2026-07-12T09:31:19Z] conflict-resolver: staging and committing resolution artifacts
+[2026-07-12T09:31:19Z] conflict-resolver: commit: sha=df86714
+[2026-07-12T09:31:19Z] conflict-resolver: git push --force-with-lease origin ticket/T028-add-backend-integration-tests-for-cra-apis
+[2026-07-12T09:31:21Z] conflict-resolver: push succeeded
+[2026-07-12T09:31:21Z] conflict-resolver: state → CONFLICT_RESOLVED_REVIEW_NEEDED
+[2026-07-12T09:31:21Z] auto-finalize-conflict: refused — invalid pre_conflict_state='CONFLICT_RESOLVED'
+[2026-07-12T09:31:21Z] conflict-resolver: done → CONFLICT_RESOLVED_REVIEW_NEEDED
+[2026-07-12T09:32:17Z] conflict-resolver: AI resolver pass 1 finished but conflict markers remain in: ['runs/T007/state.json', 'runs/T011/conflict/context.md', 'runs/T011/prompts/conflict-resolver-attempt-1.md', 'runs/T012/conflict/context.md', 'runs/T012/prompts/conflict-resolver-attempt-1.md', 'runs/T014/conflict/context.md', 'runs/T014/prompts/conflict-resolver-attempt-1.md', 'runs/T014/runtime.log', 'runs/T016/conflict/context.md', 'runs/T016/prompts/conflict-resolver-attempt-1.md', 'runs/T016/prompts/conflict-resolver-attempt-2.md', 'runs/T016/prompts/conflict-resolver-attempt-3.md']
+[2026-07-12T09:32:17Z] conflict-resolver: [pass 2/3] start conflicted=['runs/T007/state.json', 'runs/T011/conflict/context.md', 'runs/T011/prompts/conflict-resolver-attempt-1.md', 'runs/T012/conflict/context.md', 'runs/T012/prompts/conflict-resolver-attempt-1.md', 'runs/T014/conflict/context.md', 'runs/T014/prompts/conflict-resolver-attempt-1.md', 'runs/T014/runtime.log', 'runs/T016/conflict/context.md', 'runs/T016/prompts/conflict-resolver-attempt-1.md', 'runs/T016/prompts/conflict-resolver-attempt-2.md', 'runs/T016/prompts/conflict-resolver-attempt-3.md']
+[2026-07-12T09:32:19Z] conflict-resolver: context written: runs/T028/conflict/context.md
+[2026-07-12T09:32:19Z] compose: global-context=docs/ai/global-context.md
+[2026-07-12T09:32:19Z] compose: role=ai/roles/conflict-resolver.md
+[2026-07-12T09:32:19Z] compose: skill=ai/skills/workflow-discipline.md
+[2026-07-12T09:32:19Z] compose: skill=ai/skills/git-discipline.md
+[2026-07-12T09:32:19Z] compose: skill=ai/skills/code-quality.md
+[2026-07-12T09:32:19Z] compose: skill=ai/skills/refactor-safety.md
+[2026-07-12T09:32:19Z] compose: task (canonical prompt)
+[2026-07-12T09:32:19Z] conflict-resolver: prompt snapshot: runs/T028/prompts/conflict-resolver-attempt-1.md
+[2026-07-12T09:32:19Z] conflict-resolver: invoking AI resolver pass 2

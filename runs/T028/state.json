@@ -1,9 +1,9 @@
 {
   "ticket_id": "T028",
-  "state": "CONFLICT_RESOLUTION_FAILED",
+  "state": "CONFLICT_RESOLVED_REVIEW_NEEDED",
   "branch": "ticket/T028-add-backend-integration-tests-for-cra-apis",
   "issue_number": 28,
-  "updated_at": "2026-07-12T09:30:06Z",
+  "updated_at": "2026-07-12T09:31:21Z",
   "pr_number": 52,
   "pr_synced": false,
   "pre_conflict_state": "CONFLICT_RESOLVED",
