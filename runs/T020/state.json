@@ -1,7 +1,7 @@
 {
   "ticket_id": "T020",
-  "state": "IMPLEMENTATION_APPROVED",
+  "state": "TEST_COMPLETE",
   "branch": "ticket/T020-create-cra-calendar-grid",
   "issue_number": 20,
-  "updated_at": "2026-07-12T11:15:04Z"
+  "updated_at": "2026-07-12T11:17:01Z"
 }
