@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { fetchCra } from './api/cra';
 import type { CraDetails } from './types/cra';
-import { CalendarGrid } from './components/CalendarGrid/CalendarGrid';
 import { CraSummaryPanel } from './components/CraSummaryPanel/CraSummaryPanel';
 
 export default function App() {
@@ -26,7 +25,6 @@ export default function App() {
     <div>
       <h1>CRA — July 2026</h1>
       <CraSummaryPanel cra={cra} loading={loading} error={error} />
-      <CalendarGrid cra={cra} loading={loading} error={error} />
     </div>
   );
 }

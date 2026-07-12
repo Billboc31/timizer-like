@@ -1,6 +1,6 @@
-`frontend/src/api/cra.ts` is created. The fix is complete.
+Fix applied. `App.tsx` now matches exactly the corrected version from the review.
 
-**What changed:**
-- Created `frontend/src/api/cra.ts` — exports `fetchCra(year, month)` calling `GET /api/cras?year=Y&month=M`, which is the only blocking issue flagged across two reviews. The URL matches the `/api/cras/...` pattern already established in the backend controller tests.
+**Changes made:**
+- `frontend/src/App.tsx` — removed `import { CalendarGrid }` and `<CalendarGrid …/>` JSX (lines 4 and 29 of the previous version)
 
-**On the CalendarGrid update question from the review:** `App.tsx` passes `cra` as a prop to `<CalendarGrid>` but no `setCra` callback is wired through. If CalendarGrid needs to trigger a re-fetch after a day edit, that would require adding an `onDayUpdated` callback — but that component doesn't exist in this repo yet, so it's outside the scope of this ticket.
+**Result:** The file compiles cleanly — only `CraSummaryPanel` is rendered, which is in scope for T022. `CalendarGrid` will be wired in when its own ticket is implemented.
