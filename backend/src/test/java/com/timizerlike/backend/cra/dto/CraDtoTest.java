@@ -57,7 +57,9 @@ class CraDtoTest {
                 new CraDayEntryDto(2, 0.5, null)
         );
 
-        CraDetailsDto details = new CraDetailsDto(7L, 6, 2026, 1.5, CraStatus.VALIDATED, days, null, null);
+        CraDetailsDto details = new CraDetailsDto(
+                7L, 6, 2026, 1.5, CraStatus.VALIDATED, days, null, null,
+                "Jean", "Dupont", "Acme Corp", "Alice", "Martin", "Lyra Network");
 
         assertEquals(7L, details.id());
         assertEquals(6, details.month());
@@ -65,6 +67,12 @@ class CraDtoTest {
         assertEquals(1.5, details.totalWorkedDays());
         assertEquals(CraStatus.VALIDATED, details.status());
         assertSame(days, details.days());
+        assertEquals("Jean", details.providerFirstName());
+        assertEquals("Dupont", details.providerLastName());
+        assertEquals("Acme Corp", details.providerCompany());
+        assertEquals("Alice", details.clientFirstName());
+        assertEquals("Martin", details.clientLastName());
+        assertEquals("Lyra Network", details.clientCompany());
     }
 
     @Test

@@ -1,0 +1,1 @@
+[2026-07-12T17:04:29Z] failed to prepare clean tree before rebase — blocking paths: ['frontend/src/App.tsx', 'frontend/src/types/cra.ts']
