@@ -279,3 +279,15 @@
 [2026-07-12T17:27:30Z] compose: task (canonical prompt)
 [2026-07-12T17:27:30Z] conflict-resolver: prompt snapshot: runs/T022/prompts/conflict-resolver-attempt-3.md
 [2026-07-12T17:27:30Z] conflict-resolver: invoking AI resolver pass 2
+[2026-07-12T17:31:56Z] conflict-resolver: AI resolver pass 2 finished but conflict markers remain in: ['runs/T011/conflict/context.md', 'runs/T011/prompts/conflict-resolver-attempt-1.md', 'runs/T014/conflict/context.md', 'runs/T014/prompts/conflict-resolver-attempt-1.md', 'runs/T016/prompts/conflict-resolver-attempt-3.md']
+[2026-07-12T17:31:56Z] conflict-resolver: [pass 3/3] start conflicted=['runs/T011/conflict/context.md', 'runs/T011/prompts/conflict-resolver-attempt-1.md', 'runs/T014/conflict/context.md', 'runs/T014/prompts/conflict-resolver-attempt-1.md', 'runs/T016/prompts/conflict-resolver-attempt-3.md']
+[2026-07-12T17:31:56Z] conflict-resolver: context written: runs/T022/conflict/context.md
+[2026-07-12T17:31:56Z] compose: global-context=docs/ai/global-context.md
+[2026-07-12T17:31:56Z] compose: role=ai/roles/conflict-resolver.md
+[2026-07-12T17:31:56Z] compose: skill=ai/skills/workflow-discipline.md
+[2026-07-12T17:31:56Z] compose: skill=ai/skills/git-discipline.md
+[2026-07-12T17:31:56Z] compose: skill=ai/skills/code-quality.md
+[2026-07-12T17:31:56Z] compose: skill=ai/skills/refactor-safety.md
+[2026-07-12T17:31:56Z] compose: task (canonical prompt)
+[2026-07-12T17:31:56Z] conflict-resolver: prompt snapshot: runs/T022/prompts/conflict-resolver-attempt-5.md
+[2026-07-12T17:31:56Z] conflict-resolver: invoking AI resolver pass 3
