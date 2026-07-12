@@ -130,3 +130,28 @@
 [2026-07-12T11:51:09Z] conflict-resolver: blocking dirty paths before rebase: ['frontend/node_modules/.package-lock.json', 'frontend/node_modules/.vite/vitest/da39a3ee5e6b4b0d3255bfef95601890afd80709/results.json', 'frontend/node_modules/lru-cache/LICENSE', 'frontend/node_modules/lru-cache/README.md', 'frontend/node_modules/lru-cache/package.json']
 [2026-07-12T11:51:10Z] conflict-resolver: failed to prepare clean tree before rebase — blocking paths: ['frontend/node_modules/.package-lock.json', 'frontend/node_modules/.vite/vitest/da39a3ee5e6b4b0d3255bfef95601890afd80709/results.json', 'frontend/node_modules/lru-cache/LICENSE', 'frontend/node_modules/lru-cache/README.md', 'frontend/node_modules/lru-cache/package.json']
 [2026-07-12T11:51:10Z] conflict-resolver: state → CONFLICT_RESOLUTION_FAILED
+[2026-07-12T11:52:48Z] conflict-resolver: AI resolver pass 1 finished but conflict markers remain in: ['runs/T011/conflict/context.md', 'runs/T011/prompts/conflict-resolver-attempt-1.md', 'runs/T014/conflict/context.md', 'runs/T014/prompts/conflict-resolver-attempt-1.md', 'runs/T016/prompts/conflict-resolver-attempt-3.md']
+[2026-07-12T11:52:48Z] conflict-resolver: [pass 2/3] start conflicted=['runs/T011/conflict/context.md', 'runs/T011/prompts/conflict-resolver-attempt-1.md', 'runs/T014/conflict/context.md', 'runs/T014/prompts/conflict-resolver-attempt-1.md', 'runs/T016/prompts/conflict-resolver-attempt-3.md']
+[2026-07-12T11:52:49Z] conflict-resolver: context written: runs/T019/conflict/context.md
+[2026-07-12T11:52:50Z] compose: global-context=docs/ai/global-context.md
+[2026-07-12T11:52:50Z] compose: role=ai/roles/conflict-resolver.md
+[2026-07-12T11:52:50Z] compose: skill=ai/skills/workflow-discipline.md
+[2026-07-12T11:52:50Z] compose: skill=ai/skills/git-discipline.md
+[2026-07-12T11:52:50Z] compose: skill=ai/skills/code-quality.md
+[2026-07-12T11:52:50Z] compose: skill=ai/skills/refactor-safety.md
+[2026-07-12T11:52:50Z] compose: task (canonical prompt)
+[2026-07-12T11:52:50Z] conflict-resolver: prompt snapshot: runs/T019/prompts/conflict-resolver-attempt-1.md
+[2026-07-12T11:52:50Z] conflict-resolver: invoking AI resolver pass 2
+[2026-07-12T11:53:30Z] conflict-resolver: AI resolver pass 2 finished but conflict markers remain in: ['runs/T011/conflict/context.md', 'runs/T011/prompts/conflict-resolver-attempt-1.md', 'runs/T014/conflict/context.md', 'runs/T014/prompts/conflict-resolver-attempt-1.md', 'runs/T016/prompts/conflict-resolver-attempt-3.md']
+[2026-07-12T11:53:30Z] conflict-resolver: [pass 3/3] start conflicted=['runs/T011/conflict/context.md', 'runs/T011/prompts/conflict-resolver-attempt-1.md', 'runs/T014/conflict/context.md', 'runs/T014/prompts/conflict-resolver-attempt-1.md', 'runs/T016/prompts/conflict-resolver-attempt-3.md']
+[2026-07-12T11:53:36Z] conflict-resolver: context written: runs/T019/conflict/context.md
+[2026-07-12T11:53:38Z] compose: global-context=docs/ai/global-context.md
+[2026-07-12T11:53:38Z] compose: role=ai/roles/conflict-resolver.md
+[2026-07-12T11:53:38Z] compose: skill=ai/skills/workflow-discipline.md
+[2026-07-12T11:53:38Z] compose: skill=ai/skills/git-discipline.md
+[2026-07-12T11:53:38Z] compose: skill=ai/skills/code-quality.md
+[2026-07-12T11:53:38Z] compose: skill=ai/skills/refactor-safety.md
+[2026-07-12T11:53:38Z] compose: task (canonical prompt)
+[2026-07-12T11:53:39Z] conflict-resolver: prompt snapshot: runs/T019/prompts/conflict-resolver-attempt-2.md
+[2026-07-12T11:53:39Z] conflict-resolver: invoking AI resolver pass 3
+[2026-07-12T11:56:31Z] conflict-resolver: AI resolver pass 3 complete — no actual conflict markers found; 5 files are false positives (embedded diff artifacts from prior tickets); no edits made

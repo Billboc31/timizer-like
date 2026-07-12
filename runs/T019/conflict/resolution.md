@@ -1,47 +1,14 @@
-# Conflict Resolution — T019
+All 29 tests pass. The T019 conflict resolution is complete:
 
-Resolved at: 2026-07-12
+- Conflicts in `frontend/src/App.tsx`, `frontend/src/api/cra.ts`, `frontend/src/types/cra.ts` were resolved by taking T019's version (the `CraMonthSelector`-based implementation) — the `HEAD` side was the T010 bootstrap which T019 supersedes.
+- The `node_modules` conflicts were resolved by accepting T019's tracked versions, then the workflow system cleaned them up entirely.
+- The branch is now rebased onto `origin/main` (T020), pushed to GitHub, and PR #54 is open and synced.
+- Workflow state: `TEST_COMPLETE`.
 
-## Summary
+## Pass 3 — False positive detection (2026-07-12T11:53Z)
 
-All 6 conflicted files resolved. 21 tests pass after resolution.
+**Files flagged**: `runs/T011/conflict/context.md`, `runs/T011/prompts/conflict-resolver-attempt-1.md`, `runs/T014/conflict/context.md`, `runs/T014/prompts/conflict-resolver-attempt-1.md`, `runs/T016/prompts/conflict-resolver-attempt-3.md`
 
----
+**Assessment**: These files are run artifacts from prior tickets that embed git diff output. The embedded diffs contain `<<<<<<< ` text (conflict markers from the diffs they document), which triggers the runtime's `_has_conflict_markers()` detection (substring `"<<<<<<< " in file_text`). There are NO actual git conflict markers in these files — `git ls-files -u` returns empty, confirming no unmerged files exist in the index. No edits required.
 
-## Files Resolved
-
-### frontend/.gitignore
-**Decision**: Kept HEAD (main branch) version.  
-**Reason**: HEAD's comprehensive Vite-generated `.gitignore` is a strict superset of T019's minimal version. The `*.local` pattern in HEAD already covers `.env.local` and `.env.*.local` from T019.
-
-### frontend/index.html
-**Decision**: T019's `main.tsx` entry point + HEAD's title "Timizer Like".  
-**Reason**: T019 converted the project from JavaScript to TypeScript (main.jsx → main.tsx). The `.tsx` entry point is required for the new TypeScript codebase. The project title "Timizer Like" from HEAD is preserved as the more descriptive project name. The favicon reference (HEAD) was dropped since T019 intentionally removed it.
-
-### frontend/package.json
-**Decision**: Merged both sides.  
-- `name`: "timizer-frontend" (T019 — more descriptive)
-- `scripts.build`: "tsc -b && vite build" (T019 — correct for TypeScript)
-- `scripts.lint`: "oxlint" (HEAD — retained)
-- `dependencies`: HEAD's newer react 19.2.7
-- `devDependencies`: HEAD's newer versions (vite 8, vitest 4, typescript 7, oxlint, @vitest/coverage-v8) PLUS T019's testing-library packages (@testing-library/react, @testing-library/jest-dom, jsdom) which are required by the ticket's test suite.
-
-**Reason**: HEAD has newer package versions; T019 has the testing infrastructure needed for the CraMonthSelector tests. Both are required for a complete, working codebase.
-
-### frontend/package-lock.json
-**Decision**: Regenerated via `npm install` after resolving package.json.  
-**Reason**: Lock file conflicts are mechanical — regeneration is always correct after resolving the source package.json.
-
-### frontend/src/index.css
-**Decision**: Kept HEAD version (`:root` + `body`).  
-**Reason**: HEAD's version is a superset. The `:root` font-family declaration applies to `body` via CSS cascade, making T019's `font-family: sans-serif` on `body` redundant.
-
-### frontend/tsconfig.json
-**Decision**: Kept T019's references-based config.  
-**Reason**: T019 added `frontend/tsconfig.app.json` and `frontend/tsconfig.node.json` as part of its TypeScript migration. The references-based tsconfig.json is the correct root for this split-config setup. HEAD's single-file tsconfig is superseded.
-
----
-
-## Known Limitations
-
-None. All acceptance criteria from the ticket are met and the full test suite passes.
+**Decision**: Leave all 5 files unchanged. The detection is a false positive caused by embedded diff artifact content. The real source code, tests, and T019 implementation are clean and conflict-free.
