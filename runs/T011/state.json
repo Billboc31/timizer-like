@@ -1,9 +1,9 @@
 {
   "ticket_id": "T011",
-  "state": "IMPLEMENTATION_REVIEW_NEEDED",
+  "state": "IMPLEMENTATION_FIX_REQUIRED",
   "branch": "ticket/T011-create-cra-retrieval-api",
   "issue_number": 11,
-  "updated_at": "2026-07-12T06:51:59Z",
+  "updated_at": "2026-07-12T06:56:26Z",
   "pr_number": 48,
   "pr_synced": true,
   "pre_conflict_state": "TEST_COMPLETE",
