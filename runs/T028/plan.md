@@ -1,6 +1,40 @@
-The plan is written to `runs/T028/plan.md`. Key decisions:
+The plan has been written to `runs/T028/plan.md`. Here is what it contains:
 
-- **Three missing GET endpoints** (`GET /api/cras/{id}`, `GET /api/cras`, `GET /api/cras/{id}/pdf`) are in scope because the integration test workflow requires them — no endpoint, no integration test.
-- **Single sequential test method** chains all seven steps, asserting after each, so failures are pinpointed to the exact workflow step.
-- **H2 is already on the test classpath** via the existing `src/test/resources/application.yml` — no new configuration needed.
-- **PDF assertion is minimal**: HTTP 200 + `application/pdf` content-type + non-empty body only, no pixel comparison.
+---
+
+## Objective
+
+Add `@SpringBootTest` integration tests covering the full CRA backend workflow end-to-end against an H2 in-memory database. Two missing HTTP endpoints — `GET /api/cras` (history listing) and `GET /api/cras/{id}/pdf` (PDF download) — must be created before the tests can exercise them.
+
+## Included
+
+**New production code — 3 files:**
+
+1. `backend/src/main/java/com/timizerlike/backend/cra/web/CraHistoryController.java`
+   - `GET /api/cras` → returns `List<CraDetailsDto>` ordered by year desc, month desc
+
+2. `backend/src/main/java/com/timizerlike/backend/cra/web/CraPdfController.java`
+   - `GET /api/cras/{craId}/pdf` → `ResponseEntity<byte[]>` with `Content-Type: application/pdf`, 404 if not found
+
+3. `backend/src/main/java/com/timizerlike/cra/service/CraPdfAssemblerService.java`
+   - Maps `MonthlyCraReport` to `CraPdfDocument` using the `application.yml` defaults
+
+**New test code — 1 file:**
+
+4. `backend/src/test/java/com/timizerlike/backend/cra/integration/CraWorkflowIntegrationTest.java`
+   - `@SpringBootTest(webEnvironment = RANDOM_PORT)` + `TestRestTemplate`, H2 in-memory
+   - Ordered steps: create → update day → check totals → validate → list history → download PDF
+
+## Excluded
+
+- Frontend tests, client signature tests, pixel-perfect PDF comparison, load testing, authentication tests
+- Refactoring existing `@WebMvcTest` unit tests
+
+## Acceptance criteria
+
+- POST /api/cra → 201, DRAFT status
+- PATCH day → 200, `totalWorkedDays > 0`
+- POST validate → 200, VALIDATED status
+- GET /api/cras → 200, list contains the CRA id
+- GET /api/cras/{id}/pdf → 200, `application/pdf`, non-empty body
+- `mvn test` green (98 existing + new tests), no external services
