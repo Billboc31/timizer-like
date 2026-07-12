@@ -328,3 +328,21 @@
 [2026-07-12T00:45:00Z] conflict-resolver: state → CONFLICT_RESOLVED_REVIEW_NEEDED
 [2026-07-12T00:45:00Z] auto-finalize-conflict: gate disabled for project='timizer-like'
 [2026-07-12T00:45:00Z] conflict-resolver: transition CONFLICT_RESOLVED_REVIEW_NEEDED → TEST_COMPLETE (auto, PROJECT_SETTING)
+[2026-07-12T00:46:06Z] conflict-resolver: AI resolver pass 1 finished but conflict markers remain in: ['runs/T014/conflict/context.md', 'runs/T014/prompts/conflict-resolver-attempt-1.md', 'runs/T014/runtime.log', 'runs/T016/prompts/conflict-resolver-attempt-3.md']
+[2026-07-12T00:46:06Z] conflict-resolver: [pass 2/3] start conflicted=['runs/T014/conflict/context.md', 'runs/T014/prompts/conflict-resolver-attempt-1.md', 'runs/T014/runtime.log', 'runs/T016/prompts/conflict-resolver-attempt-3.md']
+[2026-07-12T00:46:08Z] conflict-resolver: context written: runs/T011/conflict/context.md
+[2026-07-12T00:46:08Z] compose: global-context=docs/ai/global-context.md
+[2026-07-12T00:46:08Z] compose: role=ai/roles/conflict-resolver.md
+[2026-07-12T00:46:08Z] compose: skill=ai/skills/workflow-discipline.md
+[2026-07-12T00:46:08Z] compose: skill=ai/skills/git-discipline.md
+[2026-07-12T00:46:08Z] compose: skill=ai/skills/code-quality.md
+[2026-07-12T00:46:08Z] compose: skill=ai/skills/refactor-safety.md
+[2026-07-12T00:46:08Z] compose: task (canonical prompt)
+[2026-07-12T00:46:08Z] conflict-resolver: prompt snapshot: runs/T011/prompts/conflict-resolver-attempt-3.md
+[2026-07-12T00:46:08Z] conflict-resolver: invoking AI resolver pass 2
+[2026-07-12T02:47:00Z] conflict-resolver: pass 2 complete — resolved conflict markers in runs/T014/conflict/context.md, runs/T014/prompts/conflict-resolver-attempt-1.md, runs/T014/runtime.log (runs/T016/prompts/conflict-resolver-attempt-3.md verified: embedded diff content only)
+[2026-07-12T02:47:00Z] conflict-resolver: resolving remaining markers in runs/T011/conflict/context.md, runs/T011/prompts/conflict-resolver-attempt-1.md, runs/T011/prompts/conflict-resolver-attempt-2.md
+[2026-07-12T02:47:00Z] conflict-resolver: all conflict markers removed — resolution complete
+[2026-07-12T02:47:00Z] conflict-resolver: state → CONFLICT_RESOLVED_REVIEW_NEEDED
+[2026-07-12T02:47:00Z] auto-finalize-conflict: gate disabled for project='timizer-like'
+[2026-07-12T02:47:00Z] conflict-resolver: transition CONFLICT_RESOLVED_REVIEW_NEEDED → TEST_COMPLETE (auto, PROJECT_SETTING)
