@@ -3,7 +3,10 @@
   "state": "TEST_COMPLETE",
   "branch": "ticket/T020-create-cra-calendar-grid",
   "issue_number": 20,
-  "updated_at": "2026-07-12T13:35:00Z",
+  "updated_at": "2026-07-12T11:37:18Z",
   "pr_number": 53,
-  "pr_synced": true
+  "pr_synced": true,
+  "pr_merged": true,
+  "daemon_archived": true,
+  "issue_closed": true
 }

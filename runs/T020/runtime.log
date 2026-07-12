@@ -103,3 +103,16 @@
 [2026-07-12T11:17:01Z] push: pushing branch=ticket/T020-create-cra-calendar-grid
 [2026-07-12T11:17:03Z] push: done branch=ticket/T020-create-cra-calendar-grid
 [2026-07-12T11:17:03Z] auto-run: TEST_COMPLETE — running PR lifecycle
+[2026-07-12T11:34:23Z] conflict-resolver: AI resolver pass 2 finished but conflict markers remain in: ['runs/T011/conflict/context.md', 'runs/T011/prompts/conflict-resolver-attempt-1.md', 'runs/T014/conflict/context.md', 'runs/T014/prompts/conflict-resolver-attempt-1.md', 'runs/T016/prompts/conflict-resolver-attempt-3.md']
+[2026-07-12T11:34:23Z] conflict-resolver: [pass 3/3] start conflicted=['runs/T011/conflict/context.md', 'runs/T011/prompts/conflict-resolver-attempt-1.md', 'runs/T014/conflict/context.md', 'runs/T014/prompts/conflict-resolver-attempt-1.md', 'runs/T016/prompts/conflict-resolver-attempt-3.md']
+[2026-07-12T11:34:24Z] conflict-resolver: context written: runs/T020/conflict/context.md
+[2026-07-12T11:34:25Z] compose: global-context=docs/ai/global-context.md
+[2026-07-12T11:34:25Z] compose: role=ai/roles/conflict-resolver.md
+[2026-07-12T11:34:25Z] compose: skill=ai/skills/workflow-discipline.md
+[2026-07-12T11:34:25Z] compose: skill=ai/skills/git-discipline.md
+[2026-07-12T11:34:25Z] compose: skill=ai/skills/code-quality.md
+[2026-07-12T11:34:25Z] compose: skill=ai/skills/refactor-safety.md
+[2026-07-12T11:34:25Z] compose: task (canonical prompt)
+[2026-07-12T11:34:25Z] conflict-resolver: prompt snapshot: runs/T020/prompts/conflict-resolver-attempt-1.md
+[2026-07-12T11:34:25Z] conflict-resolver: invoking AI resolver pass 3
+[2026-07-12T11:38:36Z] conflict-resolver: all passes complete — resolution done
