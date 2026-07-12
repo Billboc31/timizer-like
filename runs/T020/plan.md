@@ -1,1 +1,1 @@
-The plan is written to `runs/T020/plan.md`. It specifies four new files (`calendarUtils.ts`, its Vitest tests, `CalendarGrid.tsx`, `CalendarGrid.css`) plus a wiring change in `App.jsx`, with all acceptance criteria mechanically verifiable by a coder.
+You've hit your limit · resets 12:50pm (Europe/Paris)
