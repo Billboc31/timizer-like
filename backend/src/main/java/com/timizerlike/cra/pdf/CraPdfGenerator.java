@@ -1,5 +1,7 @@
 package com.timizerlike.cra.pdf;
 
+import org.springframework.stereotype.Component;
+
 import com.timizerlike.cra.pdf.model.CraPdfContact;
 import com.timizerlike.cra.pdf.model.CraPdfDayEntry;
 import com.timizerlike.cra.pdf.model.CraPdfDayType;
@@ -25,6 +27,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
+@Component
 public class CraPdfGenerator {
 
     private static final float MARGIN = 40f;
