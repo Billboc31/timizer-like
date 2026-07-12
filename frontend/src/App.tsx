@@ -1,30 +1,20 @@
-import { useEffect, useState } from 'react';
-import { fetchCra } from './api/cra';
-import type { CraDetails } from './types/cra';
+import { useState } from 'react';
+import { CraMonthSelector } from './components/CraMonthSelector/CraMonthSelector';
 import { CraSummaryPanel } from './components/CraSummaryPanel/CraSummaryPanel';
+import type { CraSummaryDto, CraDetails } from './types/cra';
 
 export default function App() {
   const [cra, setCra] = useState<CraDetails | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    setLoading(true);
-    fetchCra(2026, 7)
-      .then(data => {
-        setCra(data);
-        setLoading(false);
-      })
-      .catch((err: unknown) => {
-        setError(err instanceof Error ? err.message : 'Unknown error');
-        setLoading(false);
-      });
-  }, []);
+  const handleOpen = (summary: CraSummaryDto) => {
+    setCra({ ...summary, days: [] });
+  };
 
   return (
     <div>
-      <h1>CRA — July 2026</h1>
-      <CraSummaryPanel cra={cra} loading={loading} error={error} />
+      <h1>Timizer Like</h1>
+      <CraMonthSelector onOpen={handleOpen} />
+      <CraSummaryPanel cra={cra} loading={false} error={null} />
     </div>
   );
 }
