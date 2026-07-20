@@ -1,8 +1,11 @@
-The plan is written to `runs/T029/plan.md`.
+The plan is written to `runs/T029/plan.md`. Here is what it covers:
 
-**Key decisions:**
+**Context:** Three of the six acceptance criteria are already satisfied by existing tests (`CraMonthSelector.test.tsx` covers month selection; `CalendarGrid.test.tsx` covers calendar day rendering and PDF download). Three are missing — click cycling, total summary, and validated lock / validate button.
 
-- Three acceptance criteria are already covered by existing tests (month selection, calendar day rendering, PDF download) — no changes needed there.
-- Three criteria require extending `CalendarGrid.tsx` before tests can be written: click cycling (`onDayClick` prop + 0→0.5→1→0 handler), total summary (`data-testid="total-worked"` element), and validated lock state (conditional `onClick`).
-- Validate button follows the same pattern as the existing `onDownload` prop (callback injected as prop, local loading/error state, `role="alert"` on rejection).
-- `App.tsx` wiring of the new props to actual API calls is explicitly out of scope — the ticket covers tests, not end-to-end integration.
+**The plan specifies two files to change:**
+
+1. **`CalendarGrid.tsx`** — add `onDayClick` and `onValidate` props, a click handler on day cells that cycles `0→0.5→1→0` (disabled when VALIDATED), a `data-testid="total-worked"` element summing `cra.days[*].worked`, and a "Validate CRA" button visible only for DRAFT CRAs.
+
+2. **`CalendarGrid.test.tsx`** — add 10 new tests in a new `describe` block covering all six acceptance criteria, without touching the 14 existing tests.
+
+`App.tsx` wiring is explicitly excluded — no API calls, no integration work.
