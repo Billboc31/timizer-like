@@ -1,10 +1,6 @@
-Plan written to `runs/T023/plan.md`. Here's a summary of the approach:
+Plan written to `runs/T023/plan.md`. Key decisions:
 
-**Key decision**: validation logic stays inside `CalendarGrid` rather than requiring App.tsx restructuring. CalendarGrid already holds the `cra` object, knows about `isValidated`, and has the `onCraUpdate` callback — adding the validate button there is minimal and self-contained.
-
-**Three changes**:
-1. `CalendarGrid.tsx` — three new local states (`showConfirmDialog`, `validateLoading`, `validateError`), three handlers, and the inline confirm overlay rendered below the day grid.
-2. `CalendarGrid.css` — styles for the button, badge, and overlay.
-3. `CalendarGrid.test.tsx` — 8 new tests covering visibility, confirmation flow, success, and error cases.
-
-The existing `validateCra` client function in `craClient.ts` is reused as-is with `providerSignatureDate` set to today's ISO date.
+- **Scope stays in `CalendarGrid`** — it already owns the CRA object, knows `isValidated`, and has `onCraUpdate`. No App.tsx restructuring needed.
+- **No new dependencies** — inline confirmation overlay using a plain div, no modal library.
+- **`providerSignatureDate` hardcoded** to today's ISO date at call time — the ticket doesn't ask for a user date picker.
+- **8 new tests** covering button visibility, cancel, success, and error paths; all existing tests must still pass.
