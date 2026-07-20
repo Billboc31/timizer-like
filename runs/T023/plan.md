@@ -1,6 +1,6 @@
-Plan written to `runs/T023/plan.md`. Key decisions:
+The plan has been written to `runs/T023/plan.md`. It covers:
 
-- **Two new components**: `ConfirmationDialog` (reusable modal) and `CraValidationBar` (DRAFT button vs. VALIDATED badge + error display), each with CSS and test files.
-- **`App.tsx`** gets the validation state (`showConfirmDialog`, `validating`, `validateError`) and the `handleValidateConfirmed` handler.
-- **`providerSignatureDate`** is auto-set to today's ISO date (client signature UI is out of scope per ticket, but the field is required by the API).
-- No changes needed to `CalendarGrid`, `craClient.ts`, or `CraMonthSelector` — they already handle their respective concerns.
+- **Objective**: lock a DRAFT CRA after user confirmation, reflect VALIDATED status in the UI.
+- **Included**: two new components (`ConfirmationDialog`, `CraValidationBar`) with CSS and tests, plus a minimal update to `App.tsx` to wire the CRA detail view together.
+- **Excluded**: backend, PDF, client signature picker, reopen workflow, auth.
+- **Acceptance criteria**: button → dialog → API call → locked UI, with error handling and no test regressions.
