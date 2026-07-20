@@ -1,12 +1,15 @@
-The plan is written to `runs/T029/plan.md`. Here's what it covers:
+Plan written to `runs/T029/plan.md`. Here's the summary:
 
-**Gap identified from reading the code:** `CalendarGrid.tsx` currently has no click handler, no total summary display, and no VALIDATED cell lock — three of the five untested acceptance criteria require these features to exist before tests can be written.
+**Already covered by existing tests (no changes needed):**
+- Month selection display — `CraMonthSelector.test.tsx`
+- Calendar day rendering — `CalendarGrid.test.tsx`
+- PDF download button availability — `CalendarGrid.test.tsx`
 
-**Already covered (no new tests needed):**
-- Month selection display — `CraMonthSelector.test.tsx` ✓
-- Calendar day rendering — `CalendarGrid.test.tsx` ✓
-- PDF download button availability — `CalendarGrid.test.tsx` ✓
+**Gaps that require both component changes and new tests:**
 
-**Plan scope:**
-1. Extend `CalendarGrid.tsx` with: `onDayClick` prop, local worked state with 0→0.5→1→0 cycling, `data-testid="total-worked"` summary, DRAFT-only click (VALIDATED cells inert)
-2. Add two new `describe` blocks in `CalendarGrid.test.tsx`: one for click cycle (6 cases) and one for total summary (3 cases)
+`CalendarGrid.tsx` currently has no click handlers, no total worked days display, and no validate button. The plan adds:
+1. `onDayUpdate` prop + day-cell click handler cycling `0 → 0.5 → 1 → 0`, with no click attached when `status === 'VALIDATED'`
+2. `onValidate` prop + "Validate" button visible for DRAFT, absent for VALIDATED
+3. `data-testid="total-worked-days"` display synced from internal state after each `onDayUpdate` response
+
+`CalendarGrid.test.tsx` gets three new `describe` blocks covering click cycle (4 cases), total summary (2 cases), and validate action (3 cases), all using `vi.fn()` mocks.
