@@ -1,7 +1,8 @@
-The plan is written to `runs/T023/plan.md`. It covers:
+The plan has been written to `runs/T023/plan.md`. It covers:
 
-- **New `ConfirmDialog` component** — modal with open/cancel/confirm/loading props, CSS, and tests
-- **`CalendarGrid` changes** — Validate button (DRAFT only), validated banner (VALIDATED only), dialog wiring, `validateCra` API call with auto-dated `providerSignatureDate`, loading/error states, new tests
-- **`App.tsx` wiring** — mount `CalendarGrid` when a CRA is selected (currently it's just a `console.log`), add a Back control
-- **Excluded** — backend, PDF, signature date picker, reopen flow, auth, routing
-- **Acceptance criteria** — button visibility, dialog flow, API call arguments, locked state after success, error display, no test regressions
+- **`App.tsx`** — wire the `handleOpen` callback to actual state so `CraView` renders when a CRA is selected
+- **`CraView`** (new) — fetches full CRA details, owns loading/error state, orchestrates the validate API call
+- **`CalendarGrid`** — add `onValidate` prop, "Validate CRA" button (DRAFT only), validated banner (VALIDATED only), error display
+- **`ConfirmValidationDialog`** (new) — native `<dialog>` with a date input, Confirm/Cancel, loading and error states
+- **`types/cra.ts`** — add `validationDate` field to `CraDetails` to align with the API DTO
+- **Tests** for all three new/modified components
