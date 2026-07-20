@@ -1,7 +1,6 @@
-The plan has been written to `runs/T023/plan.md`. It covers:
+Plan written to `runs/T023/plan.md`. It covers:
 
-- A new `CraDetail` component with an inline confirmation flow (no modal library needed).
-- `CalendarGrid` gains a `locked` prop with a `calendar-grid--locked` CSS class.
-- `App.tsx` wired to render `CraDetail` when a CRA is opened.
-- `validateCra` called with `providerSignatureDate: null` (client signature is explicitly out of scope).
-- Tests for every acceptance-criteria branch.
+- **App.tsx** — add `openedCra` state to switch between the list view and detail view
+- **New `CraDetail` component** — fetches CRA details, shows an inline confirmation panel (no external library), calls the existing `validateCra` API, and renders a validated badge on success
+- **CalendarGrid** — gains a `locked` prop that adds a `calendar-grid--locked` CSS class for visual locking
+- **Tests** — `CraDetail.test.tsx` for all acceptance-criteria branches, plus two new cases in `CalendarGrid.test.tsx`
