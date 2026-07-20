@@ -1,7 +1,7 @@
 {
   "ticket_id": "T023",
-  "state": "INIT",
+  "state": "PLAN_APPROVED",
   "branch": "ticket/T023-create-cra-validation-ui",
   "issue_number": 23,
-  "updated_at": "2026-07-10T14:49:30Z"
+  "updated_at": "2026-07-20T12:38:56Z"
 }
