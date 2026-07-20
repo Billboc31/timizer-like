@@ -1,7 +1,11 @@
-Plan written to `runs/T029/plan.md`. It covers three gaps not currently implemented or tested:
+The plan is written to `runs/T029/plan.md`. Here's a summary of the decisions:
 
-1. **Click cycling** — add local `workedMap` state to `CalendarGrid`, cycle `0 → 0.5 → 1 → 0` on cell click.
-2. **Total summary** — render a `data-testid="total-worked-days"` element computed from `workedMap`.
-3. **VALIDATED locked state** — disable clicks and apply `day-cell--locked` class when `cra.status === 'VALIDATED'`.
+**Already covered** (no work needed): month selection display, calendar day rendering, PDF download button — all tested in the existing test suites.
 
-Existing tests (month selection, day rendering, PDF download) are already passing and will remain so. All new tests go into `CalendarGrid.test.tsx`; no new files needed.
+**Three gaps require both code and tests in `CalendarGrid`:**
+
+1. **Click cycling** — add `workedMap` local state, cycle `0 → 0.5 → 1 → 0` on weekday cell click.
+2. **Total summary** — add a `data-testid="total-worked-days"` element summing the map values.
+3. **Validated locked state** — when `status === 'VALIDATED'`, disable clicks and add `day-cell--locked` class.
+
+All new tests go into the existing `CalendarGrid.test.tsx`; no new files are created. The `workedMap` stays local (no API calls) — persisting clicks to the backend is out of scope.
