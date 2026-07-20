@@ -51,6 +51,7 @@ export function CraMonthSelector({ onOpen }: Props) {
           year: created.year,
           totalWorkedDays: created.totalWorkedDays,
           status: created.status,
+          validationDate: created.validationDate ?? null,
         };
         setCras(prev => [...prev, summary]);
         setCreating(false);

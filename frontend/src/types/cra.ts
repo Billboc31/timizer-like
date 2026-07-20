@@ -4,6 +4,7 @@ export interface CraSummaryDto {
   year: number;
   totalWorkedDays: number;
   status: 'DRAFT' | 'VALIDATED';
+  validationDate: string | null;
 }
 
 export interface CraDayEntry {
@@ -29,7 +30,6 @@ export interface CraDetails {
 
 export interface CraDetailsDto extends CraSummaryDto {
   days: CraDayEntry[];
-  validationDate: string | null;
   providerSignatureDate: string | null;
   providerFirstName?: string | null;
   providerLastName?: string | null;

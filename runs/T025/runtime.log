@@ -1,0 +1,26 @@
+[2026-07-20T07:38:40Z] conflict-resolver: git rebase origin/main exit=1
+[2026-07-20T07:38:40Z] conflict-resolver: conflicts detected: ['backend/src/main/java/com/timizerlike/cra/pdf/CraPdfGenerator.java', 'runs/T016/conflict/context.md', 'runs/T016/prompts/conflict-resolver-attempt-1.md', 'runs/T016/prompts/conflict-resolver-attempt-2.md']
+[2026-07-20T07:38:40Z] conflict-resolver: auto-resolving runtime path conflicts: ['runs/T016/conflict/context.md', 'runs/T016/prompts/conflict-resolver-attempt-1.md', 'runs/T016/prompts/conflict-resolver-attempt-2.md']
+[2026-07-20T07:38:40Z] conflict-resolver: [pass 1/3] start conflicted=['backend/src/main/java/com/timizerlike/cra/pdf/CraPdfGenerator.java']
+[2026-07-20T07:38:41Z] conflict-resolver: context written: runs/T025/conflict/context.md
+[2026-07-20T07:38:41Z] compose: global-context=docs/ai/global-context.md
+[2026-07-20T07:38:41Z] compose: role=ai/roles/conflict-resolver.md
+[2026-07-20T07:38:41Z] compose: skill=ai/skills/workflow-discipline.md
+[2026-07-20T07:38:41Z] compose: skill=ai/skills/git-discipline.md
+[2026-07-20T07:38:41Z] compose: skill=ai/skills/code-quality.md
+[2026-07-20T07:38:41Z] compose: skill=ai/skills/refactor-safety.md
+[2026-07-20T07:38:41Z] compose: task (canonical prompt)
+[2026-07-20T07:38:41Z] conflict-resolver: prompt snapshot: runs/T025/prompts/conflict-resolver-attempt-1.md
+[2026-07-20T07:38:41Z] conflict-resolver: invoking AI resolver pass 1
+[2026-07-20T07:56:51Z] conflict-resolver: [pass 1/3] conflicted=['backend/src/main/java/com/timizerlike/cra/pdf/CraPdfGenerator.java'] | staged=['backend/src/main/java/com/timizerlike/cra/pdf/CraPdfGenerator.java'] | unresolved=[] | continue_rc=1 | next_source=[]
+[2026-07-20T07:56:51Z] conflict-resolver: all conflicts resolved after 1 pass(es)
+[2026-07-20T07:56:51Z] conflict-resolver: running tests
+[2026-07-20T07:56:51Z] conflict-resolver: test-report written: runs/T025/conflict/test-report.md
+[2026-07-20T07:56:51Z] conflict-resolver: staging and committing resolution artifacts
+[2026-07-20T07:56:51Z] conflict-resolver: commit: sha=7310823
+[2026-07-20T07:56:51Z] conflict-resolver: git push --force-with-lease origin ticket/T025-create-cra-history-page
+[2026-07-20T07:56:53Z] conflict-resolver: push succeeded
+[2026-07-20T07:56:53Z] conflict-resolver: state → CONFLICT_RESOLVED_REVIEW_NEEDED
+[2026-07-20T07:56:54Z] auto-finalize-conflict: gate disabled for project='timizer-like'
+[2026-07-20T07:56:54Z] conflict-resolver: transition CONFLICT_RESOLVED_REVIEW_NEEDED → TEST_COMPLETE (auto, PROJECT_SETTING)
+[2026-07-20T07:56:54Z] auto-run: TEST_COMPLETE — running PR lifecycle

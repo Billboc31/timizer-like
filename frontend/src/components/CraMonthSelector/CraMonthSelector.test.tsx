@@ -14,6 +14,7 @@ const JULY_2026: CraSummaryDto = {
   year: 2026,
   totalWorkedDays: 20,
   status: 'DRAFT',
+  validationDate: null,
 };
 
 const JULY_2026_DETAILS: CraDetailsDto = {

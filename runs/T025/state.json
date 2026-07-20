@@ -1,0 +1,15 @@
+{
+  "ticket_id": "T025",
+  "state": "TEST_COMPLETE",
+  "branch": "ticket/T025-create-cra-history-page",
+  "issue_number": 25,
+  "updated_at": "2026-07-20T07:56:54Z",
+  "pr_number": 56,
+  "pr_synced": true,
+  "pre_conflict_state": "TEST_COMPLETE",
+  "conflict_detected_at": "2026-07-20T07:38:21Z",
+  "conflict_pr_number": 56,
+  "conflicted_files": [],
+  "error": null,
+  "conflict_error": null
+}

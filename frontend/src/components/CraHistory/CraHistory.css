@@ -1,0 +1,41 @@
+.cra-history {
+  margin-top: 1rem;
+}
+
+.cra-history__table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.cra-history__table th,
+.cra-history__table td {
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.cra-history__table th {
+  font-weight: bold;
+  background-color: #f5f5f5;
+}
+
+.cra-history__row:hover {
+  background-color: #fafafa;
+}
+
+.cra-history__actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.cra-history__status {
+  margin: 1rem 0;
+}
+
+.cra-history__status--error {
+  color: #c00;
+}
+
+.cra-history__status--empty {
+  color: #666;
+}
