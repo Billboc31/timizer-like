@@ -1,8 +1,10 @@
-The plan has been written to `runs/T029/plan.md`. Here's what it covers:
+The plan is written to `runs/T029/plan.md`. Here's a summary of what it covers:
 
-**Already covered by existing tests (no new work):** month selection display, calendar day rendering, PDF download button availability.
+**Existing tests already satisfy** month selection, calendar day rendering, and PDF download visibility — no changes needed there.
 
-**Three gaps that require both component changes and new tests in `CalendarGrid`:**
-1. **Click cycle** — add `workedMap` local state, cycle `0→0.5→1→0` on weekday click (no API call)
-2. **Total summary** — add a `data-testid="total-worked-days"` element summing the local map values
-3. **Validated locked state** — skip click handler and add `day-cell--locked` class when `status === 'VALIDATED'`
+**Three missing behaviours must be added to `CalendarGrid.tsx`** before tests can be written:
+1. **Click-cycle** — local `workedMap` state cycling `0 → 0.5 → 1 → 0` on weekday cells in DRAFT status
+2. **Total summary** — `data-testid="total-worked-days"` element summing `workedMap` values
+3. **Locked state + validate action** — `day-cell--locked` class and disabled click when VALIDATED; "Validate CRA" button shown for DRAFT via a new `onValidate` prop
+
+**New tests in `CalendarGrid.test.tsx`** cover all four gaps: click-cycle progression, live total update, locked state on validation, and validate button visibility.
