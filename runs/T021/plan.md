@@ -1,9 +1,7 @@
-`runs/T021/plan.md` has been written with the four required sections.
+Plan written to `runs/T021/plan.md`. Key decisions:
 
-**Summary of the plan:**
-- **CalendarGrid.tsx** — add `onDayClick`, `savingDays`, `errorDays` props; compute next cycle value (0→1→0.5→0); lock cells when `status === 'VALIDATED'`; apply CSS modifier classes per state.
-- **CalendarGrid.css** — three new modifier classes: `--locked`, `--saving`, `--error`.
-- **Parent page** — own the `handleDayClick` handler: optimistic update, call `craClient.updateDay()`, rollback on error.
-- **CalendarGrid.test.tsx** (new) — 6 automated test cases covering all acceptance criteria.
-
-One explicit assumption is noted: the parent page file path needs to be located by the Coder (likely `App.tsx` or `CraPage.tsx`).
+- **Cycle**: 0 → 1 → 0.5 → 0 as specified in the ticket acceptance criteria.
+- **State**: per-cell saving and error state tracked with a `Set` and `Map` inside `CalendarGrid`; the server response (`CraDetailsDto`) is propagated up via an `onUpdate` callback so `App.tsx` stays the source of truth.
+- **Lock**: `day-cell--locked` applied when `cra.status === 'VALIDATED'`; no API call is made.
+- **No optimistic updates**: calendar reflects only values confirmed by the server, keeping rollback logic unnecessary.
+- The `updateDay` function in `craClient.ts` already exists and needs no changes.
