@@ -1,1 +1,7 @@
-Plan written to `runs/T024/plan.md`. It covers six change points: `apiGetBlobWithMeta` in `httpClient.ts` for filename extraction, updated `downloadCraPdf` return type, a new `CraPage` component with status-gated download button and inline error display, `App.tsx` wiring to render the page on CRA selection, and corresponding tests for all new and changed units.
+Plan written to `runs/T024/plan.md`. It covers five change points:
+
+- **`httpClient.ts`** — new `apiGetBlobWithMeta` that captures the `Content-Disposition` filename alongside the blob.
+- **`craClient.ts`** — `downloadCraPdf` updated to return `{ blob, filename }`.
+- **`CalendarGrid.tsx`** — download button visible for `VALIDATED`, hidden for `DRAFT`; loading and error states inline.
+- **`craClient.test.ts`** — updated to match the new return shape.
+- **`CalendarGrid.test.tsx`** — four new test cases covering visibility, trigger, filename fallback, and error display.
