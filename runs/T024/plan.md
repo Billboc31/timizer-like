@@ -1,8 +1,9 @@
-Plan written to `runs/T024/plan.md`. It covers 6 touch points:
+The plan has been written to `runs/T024/plan.md`. It covers 7 touch points across 5 files (2 new):
 
-- **`httpClient.ts`** — update `apiGetBlob` to parse `Content-Disposition` and return `{ blob, filename | null }`.
-- **`craClient.ts`** — propagate the new return shape from `downloadCraPdf`.
-- **`apiError.ts`** — add `'cra_not_validated'` to the error code union.
-- **`CalendarGrid.tsx`** — download button visible for VALIDATED, hidden for DRAFT, inline error display.
-- **`CalendarGrid.test.tsx`** — four new test cases (visibility, trigger, filename fallback, error display).
-- **`httpClient.test.ts`** — two new test cases for filename extraction.
+- **`apiError.ts`** — add `'cra_not_validated'` to the error code union
+- **`httpClient.ts`** — add `apiGetBlobWithFilename` that parses the `Content-Disposition` header and returns `{ blob, filename | null }`
+- **`craClient.ts`** — update `downloadCraPdf` to use the new function and return `{ blob, filename }`
+- **`CraDownloadButton.tsx`** (new) — hidden for DRAFT, download trigger + inline error for VALIDATED
+- **`CalendarGrid.tsx`** — mount `<CraDownloadButton>` above the day grid
+- **`CraDownloadButton.test.tsx`** (new) — four test cases covering visibility, download trigger, filename fallback, error display
+- **`craClient.test.ts`** — update to expect new return shape
