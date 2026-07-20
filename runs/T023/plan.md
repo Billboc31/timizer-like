@@ -1,7 +1,6 @@
-The plan is written to `runs/T023/plan.md`. Here's what it covers:
+Plan written to `runs/T023/plan.md`. Key decisions:
 
-**New component** — `ValidationModal` (`.tsx`, `.css`, `.test.tsx`) handles the confirmation UX: date input for `providerSignatureDate`, loading/error states, disabled controls during submission.
-
-**Modified** — `CalendarGrid.tsx` gets a "Valider le CRA" button (DRAFT only), a validated banner (VALIDATED only), modal wiring, and a `validating` flag that blocks day-cell clicks during the API call. Tests extended accordingly.
-
-**No changes needed** to the API layer (`validateCra` and `ValidateCraRequest` already exist in `craClient.ts` / `types.ts`), `App.tsx`, or `CraMonthSelector`.
+- **Two new components**: `ConfirmationDialog` (reusable modal) and `CraValidationBar` (DRAFT button vs. VALIDATED badge + error display), each with CSS and test files.
+- **`App.tsx`** gets the validation state (`showConfirmDialog`, `validating`, `validateError`) and the `handleValidateConfirmed` handler.
+- **`providerSignatureDate`** is auto-set to today's ISO date (client signature UI is out of scope per ticket, but the field is required by the API).
+- No changes needed to `CalendarGrid`, `craClient.ts`, or `CraMonthSelector` — they already handle their respective concerns.
