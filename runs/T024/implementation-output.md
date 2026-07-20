@@ -1,17 +1,21 @@
-All done. Here's a summary of the changes:
+All fixes are in place. Here's the complete summary:
 
 ---
 
 **Files modified:**
 
-- **`frontend/src/api/httpClient.ts`** — Added `parseFilenameFromDisposition` (handles both `filename=` plain and `filename*=UTF-8''` encoded forms) and `apiGetBlobWithMeta` which reads the `Content-Disposition` header and returns `{ blob, filename }`.
+- **`frontend/src/components/CalendarGrid/CalendarGrid.tsx`** — Removed out-of-scope day-click cycling code (`handleDayClick`, `savingDays`, `dayErrors`, `onCraUpdate`, `nextWorkValue`). Kept `pad` (used by fallback filename). Fixed DOM attachment: `document.body.appendChild(a)` before `.click()` and `removeChild` after. Download-only feature is clean.
 
-- **`frontend/src/api/craClient.ts`** — `downloadCraPdf` now calls `apiGetBlobWithMeta` and returns `Promise<{ blob: Blob; filename: string | null }>`.
+- **`frontend/src/components/CalendarGrid/CalendarGrid.css`** — Removed `cursor: pointer` and all day-click cycling classes (`.day-cell--locked`, `.day-cell--saving`, `.day-cell--error`, `.day-cell__saving`, `.day-cell__error`). Added `.calendar-download` with flex layout.
 
-- **`frontend/src/api/__tests__/craClient.test.ts`** — Replaced `mockFetchBlobOk` with `mockFetchBlobWithMetaOk` (includes `headers.get` mock); updated `downloadCraPdf` test to assert the `{ blob, filename }` shape; added a second case for absent `Content-Disposition`.
+- **`frontend/src/components/CalendarGrid/CalendarGrid.test.tsx`** — Removed `updateDay` import, `vi.mock('../../api/craClient')`, `mockUpdateDay`, and the entire `CalendarGrid click cycling` describe block (7 tests). Updated anchor test to use a real `<a>` element with a mocked `click` method so `appendChild`/`removeChild` work without error.
 
-- **`frontend/src/components/CalendarGrid/CalendarGrid.tsx`** — Added `onDownload` prop, `downloading`/`downloadError` state, `handleDownload` async function (creates object URL, triggers anchor click, revokes URL, handles errors). Download button rendered only when `isValidated`, disabled during in-flight, with a `role="alert"` error span on failure.
+- **`frontend/package.json`** — Removed `lru-cache@^11.5.2` devDependency.
 
-- **`frontend/src/components/CalendarGrid/CalendarGrid.test.tsx`** — Added `CalendarGrid download` describe block with 5 tests covering: button absent for DRAFT, button present for VALIDATED, anchor triggered on success, error alert on rejection, button disabled during in-flight.
+- **`frontend/package-lock.json`** — Updated automatically via `npm install`.
 
-**Result:** 42 tests pass, 0 failures.
+- **`frontend/node_modules/lru-cache/`** — Previously tracked files deleted by `npm install`.
+
+**Result:** 35 tests pass, 0 failures (down from 42 — exactly the 7 extracted click-cycling tests).
+
+**Scope compliance:** Only download UI functionality remains in this diff. Day-click cycling belongs to a separate ticket.
