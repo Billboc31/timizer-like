@@ -1,6 +1,1 @@
-The plan is written to `runs/T023/plan.md`. It covers:
-
-- **`craClient.ts`** — add `validateCra()` calling `POST /api/cras/{id}/validate`.
-- **`CalendarGrid.tsx`** — validate button (DRAFT only), inline confirmation overlay with cancel/confirm, error display, and locked read-only state when VALIDATED.
-- **Tests** — 8 new cases covering the full happy path, cancel, error, and locked-state rendering.
-- **Excluded** — backend, PDF, signatures, reopen workflow, date picker.
+Plan written to `runs/T023/plan.md`. It targets only `CalendarGrid.tsx`, its CSS, and its test file — `validateCra` in `craClient.ts` already exists so no API change is needed. The confirmation is inline (no modal library), matching the project's existing pattern of inline `role="alert"` error elements. `providerSignatureDate` defaults to today's date automatically to keep the UX simple within ticket scope.
