@@ -1,6 +1,10 @@
-The plan is written to `runs/T023/plan.md`. It covers:
+Plan written to `runs/T023/plan.md`. Here's a summary of the approach:
 
-- **Objective**: confirm-before-lock validation flow added to `CalendarGrid`.
-- **Included**: changes to `CalendarGrid.tsx` (state, dialog, `confirmValidate`), `CalendarGrid.css` (overlay + badge styles), and 8 new test cases in `CalendarGrid.test.tsx`. No new files — the existing `validateCra` client function and locked-cell rendering are reused.
-- **Excluded**: backend, PDF, client signature UI, reopen workflow.
-- **Acceptance criteria**: all verifiable by a reviewer against the running UI and test suite.
+**Key decision**: validation logic stays inside `CalendarGrid` rather than requiring App.tsx restructuring. CalendarGrid already holds the `cra` object, knows about `isValidated`, and has the `onCraUpdate` callback — adding the validate button there is minimal and self-contained.
+
+**Three changes**:
+1. `CalendarGrid.tsx` — three new local states (`showConfirmDialog`, `validateLoading`, `validateError`), three handlers, and the inline confirm overlay rendered below the day grid.
+2. `CalendarGrid.css` — styles for the button, badge, and overlay.
+3. `CalendarGrid.test.tsx` — 8 new tests covering visibility, confirmation flow, success, and error cases.
+
+The existing `validateCra` client function in `craClient.ts` is reused as-is with `providerSignatureDate` set to today's ISO date.
