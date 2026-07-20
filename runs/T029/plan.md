@@ -1,6 +1,7 @@
-The plan is written to `runs/T029/plan.md`. It:
+Plan written to `runs/T029/plan.md`. It covers three gaps not currently implemented or tested:
 
-- **Extends `CalendarGrid.tsx`** with `onDayClick` (cycling 0→0.5→1→0, disabled for VALIDATED), a `totalWorkedDays` display, and an `onValidate` button (DRAFT only).
-- **Adds 9 new test cases** to `CalendarGrid.test.tsx` across three new `describe` blocks: click cycle (4), total summary (2), validate action (3).
-- **Calls out existing coverage** — `CraMonthSelector.test.tsx` already covers month selection, and the existing download suite covers PDF button availability.
-- Explicitly excludes App-level wiring and all out-of-scope items from the ticket.
+1. **Click cycling** — add local `workedMap` state to `CalendarGrid`, cycle `0 → 0.5 → 1 → 0` on cell click.
+2. **Total summary** — render a `data-testid="total-worked-days"` element computed from `workedMap`.
+3. **VALIDATED locked state** — disable clicks and apply `day-cell--locked` class when `cra.status === 'VALIDATED'`.
+
+Existing tests (month selection, day rendering, PDF download) are already passing and will remain so. All new tests go into `CalendarGrid.test.tsx`; no new files needed.
