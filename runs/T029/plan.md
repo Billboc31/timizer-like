@@ -1,10 +1,12 @@
-Plan written to `runs/T029/plan.md`. Here's the summary:
+The plan is written to `runs/T029/plan.md`. Here's what it covers:
 
-**3 components to touch, 4 test files affected:**
+**Gap identified from reading the code:** `CalendarGrid.tsx` currently has no click handler, no total summary display, and no VALIDATED cell lock — three of the five untested acceptance criteria require these features to exist before tests can be written.
 
-- `CalendarGrid.tsx` — add `onDayClick` prop + click cycle logic (0→1→0.5→0) + aria-disabled on VALIDATED cells
-- `CalendarGrid.test.tsx` — add 4 new tests for the click cycle describe block
-- `CraSummaryPanel.tsx` + `CraSummaryPanel.test.tsx` — new component + 2 tests for total worked days display
-- `CraValidation.tsx` + `CraValidation.test.tsx` — new component + 3 tests for Validate button visibility
+**Already covered (no new tests needed):**
+- Month selection display — `CraMonthSelector.test.tsx` ✓
+- Calendar day rendering — `CalendarGrid.test.tsx` ✓
+- PDF download button availability — `CalendarGrid.test.tsx` ✓
 
-Month selection, CRA loading, calendar rendering, and PDF download are already covered by the existing tests on this branch.
+**Plan scope:**
+1. Extend `CalendarGrid.tsx` with: `onDayClick` prop, local worked state with 0→0.5→1→0 cycling, `data-testid="total-worked"` summary, DRAFT-only click (VALIDATED cells inert)
+2. Add two new `describe` blocks in `CalendarGrid.test.tsx`: one for click cycle (6 cases) and one for total summary (3 cases)
