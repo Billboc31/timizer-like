@@ -1,6 +1,1 @@
-`runs/T021/plan.md` is written. The plan covers:
-
-- **1 new file**: `useDayClick.ts` hook — cycle logic, API call, per-cell saving/error state
-- **3 modified files**: `CalendarGrid.tsx` (click wiring + locked gate), `CalendarGrid.css` (4 new modifier classes), `CalendarGrid.test.tsx` (6 new test cases)
-- Two explicit assumptions: `CraDetailsDto`/`CraDetails` type reconciliation is the parent's responsibility; weekends are not locked
-- No optimistic updates, no rollback — API response drives state
+Plan written to `runs/T021/plan.md`. It covers four files to touch — `CalendarGrid.tsx` (add props + click handler + cycle logic + state), `CalendarGrid.css` (four modifier classes), `App.tsx` (pass `craId` and `onDayUpdated`), and `CalendarGrid.test.tsx` (five new test cases) — with explicit exclusions and verifiable acceptance criteria.
