@@ -1,7 +1,7 @@
-Plan written to `runs/T023/plan.md`. Key decisions reflected:
+Plan written to `runs/T023/plan.md`. Key decisions:
 
-- `ConfirmDialog` is a new standalone component (no UI library in the project) with its own CSS and tests
-- The validate button lives in `CalendarGrid.tsx` — only visible when `status === 'DRAFT'`
-- `providerSignatureDate` is auto-set to today's date (ISO `YYYY-MM-DD`) since "Client signature" is explicitly out of scope
-- The existing `day-cell--locked` / `isValidated` infrastructure already handles visual locking — no changes needed there
-- 6 test cases cover the full confirmation flow including cancel, success, and error paths
+- **New `ConfirmDialog` component** — standalone, vanilla CSS, no UI library (matches the project's pattern)
+- **Validate button in `CalendarGrid`** — visible only on DRAFT, hidden on VALIDATED
+- **`providerSignatureDate` auto-set to today** — "Client signature" is explicitly out of scope in the ticket
+- **Local state copy hypothesis** — `CalendarGrid` keeps a local `useState<CraDetailsDto>` to reflect post-validation status without requiring prop changes upstream; flagged explicitly so the Coder can choose option 2 if `CraMonthSelector` needs to reflect VALIDATED in its list
+- **7 test cases** covering button visibility, confirm/cancel, API call args, success locking, and error display
