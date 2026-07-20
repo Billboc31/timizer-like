@@ -1,7 +1,7 @@
 {
   "ticket_id": "T024",
-  "state": "PLAN_APPROVED",
+  "state": "IMPLEMENTATION_REVIEW_NEEDED",
   "branch": "ticket/T024-create-pdf-download-ui",
   "issue_number": 24,
-  "updated_at": "2026-07-20T15:19:57Z"
+  "updated_at": "2026-07-20T15:27:20Z"
 }
