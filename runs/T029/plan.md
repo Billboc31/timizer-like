@@ -1,11 +1,14 @@
-The plan has been written to `runs/T029/plan.md`. Here is a summary of what it specifies:
+Plan written to `runs/T029/plan.md`. Here's what it specifies:
 
-**Gap analysis** — 3 of 6 acceptance criteria are already covered by existing tests (month selection in `CraMonthSelector.test.tsx`, day rendering in `CalendarGrid.test.tsx`, PDF download in `CraHistory.test.tsx`). The other 3 require new work because `CalendarGrid.tsx` currently has no click handling, no total display, and no validated-lock logic.
+**Gap analysis** — 3 of 6 acceptance criteria are already covered by existing tests (month selection by `CraMonthSelector.test.tsx`, day rendering and PDF download by `CalendarGrid.test.tsx`). The other 3 require new work:
+
+- **Click cycle** — `CalendarGrid.tsx` has no onClick on day cells today
+- **Total summary** — `totalWorkedDays` is in the data but not rendered in the UI
+- **Validated locked state** — no click suppression logic exists
 
 **Two files to change:**
 
-1. `CalendarGrid.tsx` — add an optional `onDayClick` prop, local `workedMap` state initialised from `cra.days`, a click handler cycling `0 → 0.5 → 1 → 0`, `aria-disabled="true"` on cells when `status === 'VALIDATED'`, and a `<span data-testid="total-worked">` summing current values.
+1. `CalendarGrid.tsx` — add `onDayClick` prop, local `workedMap` state cycling `0 → 0.5 → 1 → 0`, `aria-disabled` on VALIDATED cells, and a `data-testid="total-worked"` span.
+2. `CalendarGrid.test.tsx` — append a `'CalendarGrid interactions'` describe block with 3 tests covering the cycle, the total update, and the validated lock.
 
-2. `CalendarGrid.test.tsx` — append three test cases: click cycle (three clicks, check 0.5 → 1 → 0), total update (assert `total-worked` increments), and validated lock (cells have `aria-disabled`, clicking does not change state).
-
-**Explicitly excluded:** parent wiring of `onDayClick` in `App.tsx`, `CraSummaryPanel` propagation tests, and anything outside the six stated acceptance criteria.
+**Explicitly excluded:** parent wiring in `App.tsx`, backend calls, and everything outside the six stated acceptance criteria.
