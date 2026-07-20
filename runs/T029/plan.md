@@ -1,11 +1,10 @@
-Plan written to `runs/T029/plan.md`. Here's a summary of the key decisions:
+The plan has been written to `runs/T029/plan.md`. Here's what it covers:
 
-**Three acceptance criteria are already covered** by existing tests: month selection and CRA loading (`CraMonthSelector.test.tsx`), calendar day rendering and PDF download (`CalendarGrid.test.tsx`).
+**Three ACs already satisfied** by existing tests — month selection (`CraMonthSelector.test.tsx`), calendar day rendering, and PDF download button (`CalendarGrid.test.tsx`). No changes needed to those files.
 
-**Three are not yet implemented in the component** and are therefore in scope for both code and tests:
+**Three ACs require work:**
+1. **Click cycle** — `CalendarGrid.tsx` needs an `onDayClick` prop and cycle logic (0 → 0.5 → 1 → 0); three new tests in `CalendarGrid.test.tsx`
+2. **Total summary** — add a `data-testid="total-summary"` element rendering `cra.totalWorkedDays`; two new tests
+3. **Validated locked state** — day clicks are silently ignored when `status === 'VALIDATED'`; one new test
 
-1. **Click-cycle** — `CalendarGrid` has no click handlers; needs `onDayClick` prop + toggle logic (0↔1).
-2. **Total summary** — `totalWorkedDays` is in the data but never rendered; needs a summary element.
-3. **Validate action visibility / locked state** — needs a "Validate CRA" button (DRAFT only) and disabled day clicks for VALIDATED.
-
-**One prerequisite fix** is flagged: `vite.config.js` has `environment: 'node'` which breaks `@testing-library/react`; it must be changed to `jsdom` before any component tests can pass.
+All new tests go into the existing `CalendarGrid.test.tsx` — no new files. The parent component's API wiring for day updates is explicitly excluded.
