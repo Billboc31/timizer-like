@@ -1,1 +1,6 @@
-Plan written to `runs/T023/plan.md`. It creates a new `CraPage` component that owns the validation flow (button → inline confirmation banner → `validateCra` API call → VALIDATED state), wires `App.tsx` to render it when a CRA is opened, and covers seven test cases. No new dependencies — the existing `validateCra` client function and `CalendarGrid` locked-state rendering are reused as-is.
+The plan is written to `runs/T023/plan.md`. It covers:
+
+- **Objective**: confirm-before-lock validation flow added to `CalendarGrid`.
+- **Included**: changes to `CalendarGrid.tsx` (state, dialog, `confirmValidate`), `CalendarGrid.css` (overlay + badge styles), and 8 new test cases in `CalendarGrid.test.tsx`. No new files — the existing `validateCra` client function and locked-cell rendering are reused.
+- **Excluded**: backend, PDF, client signature UI, reopen workflow.
+- **Acceptance criteria**: all verifiable by a reviewer against the running UI and test suite.
