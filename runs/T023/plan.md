@@ -1,11 +1,7 @@
-Plan written to `runs/T023/plan.md`. Here's a summary of the approach:
+Plan written to `runs/T023/plan.md`. Key decisions reflected:
 
-**Core change:** `CalendarGrid.tsx` gains an `onCraValidated` callback prop plus local state for the confirmation flow. No new component file needed — the confirmation area is rendered inline.
-
-**Key design decisions:**
-- `validateCra` and `getCra` already exist in `craClient.ts` — no API client changes needed.
-- Day-cell locking (`isValidated` / `day-cell--locked`) is already implemented — no change needed there either.
-- `ValidateCraRequest.providerSignatureDate` is fulfilled with today's ISO date at confirm time.
-- The parent swaps its `cra` state to the updated DTO returned via `onCraValidated`, which triggers the natural locked re-render.
-
-**6 new test cases** cover: button visibility per status, confirmation flow, cancel, success path, and error display.
+- `ConfirmDialog` is a new standalone component (no UI library in the project) with its own CSS and tests
+- The validate button lives in `CalendarGrid.tsx` — only visible when `status === 'DRAFT'`
+- `providerSignatureDate` is auto-set to today's date (ISO `YYYY-MM-DD`) since "Client signature" is explicitly out of scope
+- The existing `day-cell--locked` / `isValidated` infrastructure already handles visual locking — no changes needed there
+- 6 test cases cover the full confirmation flow including cancel, success, and error paths
