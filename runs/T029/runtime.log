@@ -1,0 +1,369 @@
+[2026-07-20T15:49:34Z] auto-run start: state=INIT
+[2026-07-20T15:49:34Z] auto-run: running step=planner
+[2026-07-20T15:49:34Z] prompt: resolved=prompts/generic/planner.md source=generic
+[2026-07-20T15:49:34Z] prompt: generic fallback — injecting runs/T029/ticket.md
+[2026-07-20T15:49:34Z] compose: global-context=docs/ai/global-context.md
+[2026-07-20T15:49:34Z] compose: role=ai/roles/planner.md
+[2026-07-20T15:49:34Z] compose: skill=ai/skills/workflow-discipline.md
+[2026-07-20T15:49:34Z] compose: skill=ai/skills/architecture-discipline.md
+[2026-07-20T15:49:34Z] compose: skill=ai/skills/documentation.md
+[2026-07-20T15:49:34Z] compose: task (canonical prompt)
+[2026-07-20T15:49:34Z] snapshot: runtime-prompt=runs/T029/prompts/planner-attempt-1.md
+[2026-07-20T15:52:59Z] auto-run: step=planner done rc=0
+[2026-07-20T15:55:58Z] auto-run start: state=INIT
+[2026-07-20T15:55:58Z] auto-run: running step=planner
+[2026-07-20T15:55:58Z] prompt: resolved=prompts/generic/planner.md source=generic
+[2026-07-20T15:55:58Z] prompt: generic fallback — injecting runs/T029/ticket.md
+[2026-07-20T15:55:58Z] compose: global-context=docs/ai/global-context.md
+[2026-07-20T15:55:58Z] compose: role=ai/roles/planner.md
+[2026-07-20T15:55:58Z] compose: skill=ai/skills/workflow-discipline.md
+[2026-07-20T15:55:58Z] compose: skill=ai/skills/architecture-discipline.md
+[2026-07-20T15:55:58Z] compose: skill=ai/skills/documentation.md
+[2026-07-20T15:55:58Z] compose: task (canonical prompt)
+[2026-07-20T15:55:58Z] snapshot: runtime-prompt=runs/T029/prompts/planner-attempt-2.md
+[2026-07-20T16:00:08Z] auto-run: step=planner done rc=0
+[2026-07-20T16:03:38Z] auto-run start: state=INIT
+[2026-07-20T16:03:38Z] auto-run: running step=planner
+[2026-07-20T16:03:38Z] prompt: resolved=prompts/generic/planner.md source=generic
+[2026-07-20T16:03:38Z] prompt: generic fallback — injecting runs/T029/ticket.md
+[2026-07-20T16:03:38Z] compose: global-context=docs/ai/global-context.md
+[2026-07-20T16:03:38Z] compose: role=ai/roles/planner.md
+[2026-07-20T16:03:38Z] compose: skill=ai/skills/workflow-discipline.md
+[2026-07-20T16:03:38Z] compose: skill=ai/skills/architecture-discipline.md
+[2026-07-20T16:03:38Z] compose: skill=ai/skills/documentation.md
+[2026-07-20T16:03:38Z] compose: task (canonical prompt)
+[2026-07-20T16:03:38Z] snapshot: runtime-prompt=runs/T029/prompts/planner-attempt-3.md
+[2026-07-20T16:06:54Z] auto-run: step=planner done rc=0
+[2026-07-20T16:10:01Z] auto-run start: state=INIT
+[2026-07-20T16:10:01Z] auto-run: running step=planner
+[2026-07-20T16:10:01Z] prompt: resolved=prompts/generic/planner.md source=generic
+[2026-07-20T16:10:01Z] prompt: generic fallback — injecting runs/T029/ticket.md
+[2026-07-20T16:10:01Z] compose: global-context=docs/ai/global-context.md
+[2026-07-20T16:10:01Z] compose: role=ai/roles/planner.md
+[2026-07-20T16:10:01Z] compose: skill=ai/skills/workflow-discipline.md
+[2026-07-20T16:10:01Z] compose: skill=ai/skills/architecture-discipline.md
+[2026-07-20T16:10:01Z] compose: skill=ai/skills/documentation.md
+[2026-07-20T16:10:01Z] compose: task (canonical prompt)
+[2026-07-20T16:10:01Z] snapshot: runtime-prompt=runs/T029/prompts/planner-attempt-4.md
+[2026-07-20T16:13:41Z] auto-run: step=planner done rc=0
+[2026-07-20T16:17:37Z] auto-run start: state=INIT
+[2026-07-20T16:17:37Z] auto-run: running step=planner
+[2026-07-20T16:17:37Z] prompt: resolved=prompts/generic/planner.md source=generic
+[2026-07-20T16:17:37Z] prompt: generic fallback — injecting runs/T029/ticket.md
+[2026-07-20T16:17:37Z] compose: global-context=docs/ai/global-context.md
+[2026-07-20T16:17:37Z] compose: role=ai/roles/planner.md
+[2026-07-20T16:17:37Z] compose: skill=ai/skills/workflow-discipline.md
+[2026-07-20T16:17:37Z] compose: skill=ai/skills/architecture-discipline.md
+[2026-07-20T16:17:37Z] compose: skill=ai/skills/documentation.md
+[2026-07-20T16:17:37Z] compose: task (canonical prompt)
+[2026-07-20T16:17:37Z] snapshot: runtime-prompt=runs/T029/prompts/planner-attempt-5.md
+[2026-07-20T16:20:40Z] auto-run: step=planner done rc=0
+[2026-07-20T16:23:57Z] auto-run start: state=INIT
+[2026-07-20T16:23:57Z] auto-run: running step=planner
+[2026-07-20T16:23:57Z] prompt: resolved=prompts/generic/planner.md source=generic
+[2026-07-20T16:23:57Z] prompt: generic fallback — injecting runs/T029/ticket.md
+[2026-07-20T16:23:57Z] compose: global-context=docs/ai/global-context.md
+[2026-07-20T16:23:57Z] compose: role=ai/roles/planner.md
+[2026-07-20T16:23:57Z] compose: skill=ai/skills/workflow-discipline.md
+[2026-07-20T16:23:57Z] compose: skill=ai/skills/architecture-discipline.md
+[2026-07-20T16:23:57Z] compose: skill=ai/skills/documentation.md
+[2026-07-20T16:23:57Z] compose: task (canonical prompt)
+[2026-07-20T16:23:57Z] snapshot: runtime-prompt=runs/T029/prompts/planner-attempt-6.md
+[2026-07-20T16:32:06Z] auto-run: step=planner done rc=0
+[2026-07-20T16:35:16Z] auto-run start: state=INIT
+[2026-07-20T16:35:16Z] auto-run: running step=planner
+[2026-07-20T16:35:16Z] prompt: resolved=prompts/generic/planner.md source=generic
+[2026-07-20T16:35:16Z] prompt: generic fallback — injecting runs/T029/ticket.md
+[2026-07-20T16:35:16Z] compose: global-context=docs/ai/global-context.md
+[2026-07-20T16:35:16Z] compose: role=ai/roles/planner.md
+[2026-07-20T16:35:16Z] compose: skill=ai/skills/workflow-discipline.md
+[2026-07-20T16:35:16Z] compose: skill=ai/skills/architecture-discipline.md
+[2026-07-20T16:35:16Z] compose: skill=ai/skills/documentation.md
+[2026-07-20T16:35:16Z] compose: task (canonical prompt)
+[2026-07-20T16:35:16Z] snapshot: runtime-prompt=runs/T029/prompts/planner-attempt-7.md
+[2026-07-20T16:39:05Z] auto-run: step=planner done rc=0
+[2026-07-20T16:42:48Z] auto-run start: state=INIT
+[2026-07-20T16:42:48Z] auto-run: running step=planner
+[2026-07-20T16:42:48Z] prompt: resolved=prompts/generic/planner.md source=generic
+[2026-07-20T16:42:48Z] prompt: generic fallback — injecting runs/T029/ticket.md
+[2026-07-20T16:42:48Z] compose: global-context=docs/ai/global-context.md
+[2026-07-20T16:42:48Z] compose: role=ai/roles/planner.md
+[2026-07-20T16:42:48Z] compose: skill=ai/skills/workflow-discipline.md
+[2026-07-20T16:42:48Z] compose: skill=ai/skills/architecture-discipline.md
+[2026-07-20T16:42:48Z] compose: skill=ai/skills/documentation.md
+[2026-07-20T16:42:48Z] compose: task (canonical prompt)
+[2026-07-20T16:42:48Z] snapshot: runtime-prompt=runs/T029/prompts/planner-attempt-8.md
+[2026-07-20T16:46:35Z] auto-run: step=planner done rc=0
+[2026-07-20T16:50:23Z] auto-run start: state=INIT
+[2026-07-20T16:50:23Z] auto-run: running step=planner
+[2026-07-20T16:50:23Z] prompt: resolved=prompts/generic/planner.md source=generic
+[2026-07-20T16:50:23Z] prompt: generic fallback — injecting runs/T029/ticket.md
+[2026-07-20T16:50:23Z] compose: global-context=docs/ai/global-context.md
+[2026-07-20T16:50:23Z] compose: role=ai/roles/planner.md
+[2026-07-20T16:50:23Z] compose: skill=ai/skills/workflow-discipline.md
+[2026-07-20T16:50:23Z] compose: skill=ai/skills/architecture-discipline.md
+[2026-07-20T16:50:23Z] compose: skill=ai/skills/documentation.md
+[2026-07-20T16:50:23Z] compose: task (canonical prompt)
+[2026-07-20T16:50:23Z] snapshot: runtime-prompt=runs/T029/prompts/planner-attempt-9.md
+[2026-07-20T16:55:29Z] auto-run: step=planner done rc=0
+[2026-07-20T16:59:17Z] auto-run start: state=INIT
+[2026-07-20T16:59:17Z] auto-run: running step=planner
+[2026-07-20T16:59:17Z] prompt: resolved=prompts/generic/planner.md source=generic
+[2026-07-20T16:59:17Z] prompt: generic fallback — injecting runs/T029/ticket.md
+[2026-07-20T16:59:17Z] compose: global-context=docs/ai/global-context.md
+[2026-07-20T16:59:17Z] compose: role=ai/roles/planner.md
+[2026-07-20T16:59:17Z] compose: skill=ai/skills/workflow-discipline.md
+[2026-07-20T16:59:17Z] compose: skill=ai/skills/architecture-discipline.md
+[2026-07-20T16:59:17Z] compose: skill=ai/skills/documentation.md
+[2026-07-20T16:59:17Z] compose: task (canonical prompt)
+[2026-07-20T16:59:17Z] snapshot: runtime-prompt=runs/T029/prompts/planner-attempt-10.md
+[2026-07-20T17:02:06Z] auto-run: step=planner done rc=0
+[2026-07-20T17:05:43Z] auto-run start: state=INIT
+[2026-07-20T17:05:43Z] auto-run: running step=planner
+[2026-07-20T17:05:43Z] prompt: resolved=prompts/generic/planner.md source=generic
+[2026-07-20T17:05:43Z] prompt: generic fallback — injecting runs/T029/ticket.md
+[2026-07-20T17:05:43Z] compose: global-context=docs/ai/global-context.md
+[2026-07-20T17:05:43Z] compose: role=ai/roles/planner.md
+[2026-07-20T17:05:43Z] compose: skill=ai/skills/workflow-discipline.md
+[2026-07-20T17:05:43Z] compose: skill=ai/skills/architecture-discipline.md
+[2026-07-20T17:05:43Z] compose: skill=ai/skills/documentation.md
+[2026-07-20T17:05:43Z] compose: task (canonical prompt)
+[2026-07-20T17:05:43Z] snapshot: runtime-prompt=runs/T029/prompts/planner-attempt-11.md
+[2026-07-20T17:09:27Z] auto-run: step=planner done rc=0
+[2026-07-20T17:13:21Z] auto-run start: state=INIT
+[2026-07-20T17:13:21Z] auto-run: running step=planner
+[2026-07-20T17:13:21Z] prompt: resolved=prompts/generic/planner.md source=generic
+[2026-07-20T17:13:21Z] prompt: generic fallback — injecting runs/T029/ticket.md
+[2026-07-20T17:13:21Z] compose: global-context=docs/ai/global-context.md
+[2026-07-20T17:13:21Z] compose: role=ai/roles/planner.md
+[2026-07-20T17:13:21Z] compose: skill=ai/skills/workflow-discipline.md
+[2026-07-20T17:13:21Z] compose: skill=ai/skills/architecture-discipline.md
+[2026-07-20T17:13:21Z] compose: skill=ai/skills/documentation.md
+[2026-07-20T17:13:21Z] compose: task (canonical prompt)
+[2026-07-20T17:13:21Z] snapshot: runtime-prompt=runs/T029/prompts/planner-attempt-12.md
+[2026-07-20T17:16:06Z] auto-run: step=planner done rc=0
+[2026-07-20T17:19:44Z] auto-run start: state=INIT
+[2026-07-20T17:19:44Z] auto-run: running step=planner
+[2026-07-20T17:19:44Z] prompt: resolved=prompts/generic/planner.md source=generic
+[2026-07-20T17:19:44Z] prompt: generic fallback — injecting runs/T029/ticket.md
+[2026-07-20T17:19:44Z] compose: global-context=docs/ai/global-context.md
+[2026-07-20T17:19:44Z] compose: role=ai/roles/planner.md
+[2026-07-20T17:19:44Z] compose: skill=ai/skills/workflow-discipline.md
+[2026-07-20T17:19:44Z] compose: skill=ai/skills/architecture-discipline.md
+[2026-07-20T17:19:44Z] compose: skill=ai/skills/documentation.md
+[2026-07-20T17:19:44Z] compose: task (canonical prompt)
+[2026-07-20T17:19:44Z] snapshot: runtime-prompt=runs/T029/prompts/planner-attempt-13.md
+[2026-07-20T17:22:58Z] auto-run: step=planner done rc=0
+[2026-07-20T17:26:05Z] auto-run start: state=INIT
+[2026-07-20T17:26:05Z] auto-run: running step=planner
+[2026-07-20T17:26:05Z] prompt: resolved=prompts/generic/planner.md source=generic
+[2026-07-20T17:26:05Z] prompt: generic fallback — injecting runs/T029/ticket.md
+[2026-07-20T17:26:05Z] compose: global-context=docs/ai/global-context.md
+[2026-07-20T17:26:05Z] compose: role=ai/roles/planner.md
+[2026-07-20T17:26:05Z] compose: skill=ai/skills/workflow-discipline.md
+[2026-07-20T17:26:05Z] compose: skill=ai/skills/architecture-discipline.md
+[2026-07-20T17:26:05Z] compose: skill=ai/skills/documentation.md
+[2026-07-20T17:26:05Z] compose: task (canonical prompt)
+[2026-07-20T17:26:05Z] snapshot: runtime-prompt=runs/T029/prompts/planner-attempt-14.md
+[2026-07-20T17:29:04Z] auto-run: step=planner done rc=0
+[2026-07-20T17:32:26Z] auto-run start: state=INIT
+[2026-07-20T17:32:26Z] auto-run: running step=planner
+[2026-07-20T17:32:26Z] prompt: resolved=prompts/generic/planner.md source=generic
+[2026-07-20T17:32:26Z] prompt: generic fallback — injecting runs/T029/ticket.md
+[2026-07-20T17:32:26Z] compose: global-context=docs/ai/global-context.md
+[2026-07-20T17:32:26Z] compose: role=ai/roles/planner.md
+[2026-07-20T17:32:26Z] compose: skill=ai/skills/workflow-discipline.md
+[2026-07-20T17:32:26Z] compose: skill=ai/skills/architecture-discipline.md
+[2026-07-20T17:32:26Z] compose: skill=ai/skills/documentation.md
+[2026-07-20T17:32:26Z] compose: task (canonical prompt)
+[2026-07-20T17:32:26Z] snapshot: runtime-prompt=runs/T029/prompts/planner-attempt-15.md
+[2026-07-20T17:35:33Z] auto-run: step=planner done rc=0
+[2026-07-20T17:38:43Z] auto-run start: state=INIT
+[2026-07-20T17:38:43Z] auto-run: running step=planner
+[2026-07-20T17:38:43Z] prompt: resolved=prompts/generic/planner.md source=generic
+[2026-07-20T17:38:43Z] prompt: generic fallback — injecting runs/T029/ticket.md
+[2026-07-20T17:38:43Z] compose: global-context=docs/ai/global-context.md
+[2026-07-20T17:38:43Z] compose: role=ai/roles/planner.md
+[2026-07-20T17:38:43Z] compose: skill=ai/skills/workflow-discipline.md
+[2026-07-20T17:38:43Z] compose: skill=ai/skills/architecture-discipline.md
+[2026-07-20T17:38:43Z] compose: skill=ai/skills/documentation.md
+[2026-07-20T17:38:43Z] compose: task (canonical prompt)
+[2026-07-20T17:38:43Z] snapshot: runtime-prompt=runs/T029/prompts/planner-attempt-16.md
+[2026-07-20T17:43:42Z] auto-run: step=planner done rc=0
+[2026-07-20T17:47:30Z] auto-run start: state=INIT
+[2026-07-20T17:47:30Z] auto-run: running step=planner
+[2026-07-20T17:47:30Z] prompt: resolved=prompts/generic/planner.md source=generic
+[2026-07-20T17:47:30Z] prompt: generic fallback — injecting runs/T029/ticket.md
+[2026-07-20T17:47:30Z] compose: global-context=docs/ai/global-context.md
+[2026-07-20T17:47:30Z] compose: role=ai/roles/planner.md
+[2026-07-20T17:47:30Z] compose: skill=ai/skills/workflow-discipline.md
+[2026-07-20T17:47:30Z] compose: skill=ai/skills/architecture-discipline.md
+[2026-07-20T17:47:30Z] compose: skill=ai/skills/documentation.md
+[2026-07-20T17:47:30Z] compose: task (canonical prompt)
+[2026-07-20T17:47:30Z] snapshot: runtime-prompt=runs/T029/prompts/planner-attempt-17.md
+[2026-07-20T17:50:58Z] auto-run: step=planner done rc=0
+[2026-07-20T17:53:46Z] auto-run start: state=INIT
+[2026-07-20T17:53:46Z] auto-run: running step=planner
+[2026-07-20T17:53:46Z] prompt: resolved=prompts/generic/planner.md source=generic
+[2026-07-20T17:53:46Z] prompt: generic fallback — injecting runs/T029/ticket.md
+[2026-07-20T17:53:46Z] compose: global-context=docs/ai/global-context.md
+[2026-07-20T17:53:46Z] compose: role=ai/roles/planner.md
+[2026-07-20T17:53:46Z] compose: skill=ai/skills/workflow-discipline.md
+[2026-07-20T17:53:46Z] compose: skill=ai/skills/architecture-discipline.md
+[2026-07-20T17:53:46Z] compose: skill=ai/skills/documentation.md
+[2026-07-20T17:53:46Z] compose: task (canonical prompt)
+[2026-07-20T17:53:46Z] snapshot: runtime-prompt=runs/T029/prompts/planner-attempt-18.md
+[2026-07-20T17:57:19Z] auto-run: step=planner done rc=0
+[2026-07-20T18:01:17Z] auto-run start: state=INIT
+[2026-07-20T18:01:17Z] auto-run: running step=planner
+[2026-07-20T18:01:17Z] prompt: resolved=prompts/generic/planner.md source=generic
+[2026-07-20T18:01:17Z] prompt: generic fallback — injecting runs/T029/ticket.md
+[2026-07-20T18:01:17Z] compose: global-context=docs/ai/global-context.md
+[2026-07-20T18:01:17Z] compose: role=ai/roles/planner.md
+[2026-07-20T18:01:17Z] compose: skill=ai/skills/workflow-discipline.md
+[2026-07-20T18:01:17Z] compose: skill=ai/skills/architecture-discipline.md
+[2026-07-20T18:01:17Z] compose: skill=ai/skills/documentation.md
+[2026-07-20T18:01:17Z] compose: task (canonical prompt)
+[2026-07-20T18:01:17Z] snapshot: runtime-prompt=runs/T029/prompts/planner-attempt-19.md
+[2026-07-20T18:05:29Z] auto-run: step=planner done rc=0
+[2026-07-20T18:08:56Z] auto-run start: state=INIT
+[2026-07-20T18:08:56Z] auto-run: running step=planner
+[2026-07-20T18:08:56Z] prompt: resolved=prompts/generic/planner.md source=generic
+[2026-07-20T18:08:56Z] prompt: generic fallback — injecting runs/T029/ticket.md
+[2026-07-20T18:08:56Z] compose: global-context=docs/ai/global-context.md
+[2026-07-20T18:08:56Z] compose: role=ai/roles/planner.md
+[2026-07-20T18:08:56Z] compose: skill=ai/skills/workflow-discipline.md
+[2026-07-20T18:08:56Z] compose: skill=ai/skills/architecture-discipline.md
+[2026-07-20T18:08:56Z] compose: skill=ai/skills/documentation.md
+[2026-07-20T18:08:56Z] compose: task (canonical prompt)
+[2026-07-20T18:08:56Z] snapshot: runtime-prompt=runs/T029/prompts/planner-attempt-20.md
+[2026-07-20T18:13:09Z] auto-run: step=planner done rc=0
+[2026-07-20T18:16:32Z] auto-run start: state=INIT
+[2026-07-20T18:16:32Z] auto-run: running step=planner
+[2026-07-20T18:16:32Z] prompt: resolved=prompts/generic/planner.md source=generic
+[2026-07-20T18:16:32Z] prompt: generic fallback — injecting runs/T029/ticket.md
+[2026-07-20T18:16:32Z] compose: global-context=docs/ai/global-context.md
+[2026-07-20T18:16:32Z] compose: role=ai/roles/planner.md
+[2026-07-20T18:16:32Z] compose: skill=ai/skills/workflow-discipline.md
+[2026-07-20T18:16:32Z] compose: skill=ai/skills/architecture-discipline.md
+[2026-07-20T18:16:32Z] compose: skill=ai/skills/documentation.md
+[2026-07-20T18:16:32Z] compose: task (canonical prompt)
+[2026-07-20T18:16:32Z] snapshot: runtime-prompt=runs/T029/prompts/planner-attempt-21.md
+[2026-07-20T18:19:24Z] auto-run: step=planner done rc=0
+[2026-07-20T18:22:53Z] auto-run start: state=INIT
+[2026-07-20T18:22:53Z] auto-run: running step=planner
+[2026-07-20T18:22:53Z] prompt: resolved=prompts/generic/planner.md source=generic
+[2026-07-20T18:22:53Z] prompt: generic fallback — injecting runs/T029/ticket.md
+[2026-07-20T18:22:53Z] compose: global-context=docs/ai/global-context.md
+[2026-07-20T18:22:53Z] compose: role=ai/roles/planner.md
+[2026-07-20T18:22:53Z] compose: skill=ai/skills/workflow-discipline.md
+[2026-07-20T18:22:53Z] compose: skill=ai/skills/architecture-discipline.md
+[2026-07-20T18:22:53Z] compose: skill=ai/skills/documentation.md
+[2026-07-20T18:22:53Z] compose: task (canonical prompt)
+[2026-07-20T18:22:53Z] snapshot: runtime-prompt=runs/T029/prompts/planner-attempt-22.md
+[2026-07-20T18:26:28Z] auto-run: step=planner done rc=0
+[2026-07-20T18:30:30Z] auto-run start: state=INIT
+[2026-07-20T18:30:30Z] auto-run: running step=planner
+[2026-07-20T18:30:30Z] prompt: resolved=prompts/generic/planner.md source=generic
+[2026-07-20T18:30:30Z] prompt: generic fallback — injecting runs/T029/ticket.md
+[2026-07-20T18:30:30Z] compose: global-context=docs/ai/global-context.md
+[2026-07-20T18:30:30Z] compose: role=ai/roles/planner.md
+[2026-07-20T18:30:30Z] compose: skill=ai/skills/workflow-discipline.md
+[2026-07-20T18:30:30Z] compose: skill=ai/skills/architecture-discipline.md
+[2026-07-20T18:30:30Z] compose: skill=ai/skills/documentation.md
+[2026-07-20T18:30:30Z] compose: task (canonical prompt)
+[2026-07-20T18:30:30Z] snapshot: runtime-prompt=runs/T029/prompts/planner-attempt-23.md
+[2026-07-20T18:34:00Z] auto-run: step=planner done rc=0
+[2026-07-20T18:36:50Z] auto-run start: state=INIT
+[2026-07-20T18:36:50Z] auto-run: running step=planner
+[2026-07-20T18:36:50Z] prompt: resolved=prompts/generic/planner.md source=generic
+[2026-07-20T18:36:50Z] prompt: generic fallback — injecting runs/T029/ticket.md
+[2026-07-20T18:36:50Z] compose: global-context=docs/ai/global-context.md
+[2026-07-20T18:36:50Z] compose: role=ai/roles/planner.md
+[2026-07-20T18:36:50Z] compose: skill=ai/skills/workflow-discipline.md
+[2026-07-20T18:36:50Z] compose: skill=ai/skills/architecture-discipline.md
+[2026-07-20T18:36:50Z] compose: skill=ai/skills/documentation.md
+[2026-07-20T18:36:50Z] compose: task (canonical prompt)
+[2026-07-20T18:36:50Z] snapshot: runtime-prompt=runs/T029/prompts/planner-attempt-24.md
+[2026-07-20T18:41:20Z] auto-run: step=planner done rc=0
+[2026-07-20T18:44:28Z] auto-run start: state=INIT
+[2026-07-20T18:44:28Z] auto-run: running step=planner
+[2026-07-20T18:44:28Z] prompt: resolved=prompts/generic/planner.md source=generic
+[2026-07-20T18:44:28Z] prompt: generic fallback — injecting runs/T029/ticket.md
+[2026-07-20T18:44:28Z] compose: global-context=docs/ai/global-context.md
+[2026-07-20T18:44:28Z] compose: role=ai/roles/planner.md
+[2026-07-20T18:44:28Z] compose: skill=ai/skills/workflow-discipline.md
+[2026-07-20T18:44:28Z] compose: skill=ai/skills/architecture-discipline.md
+[2026-07-20T18:44:28Z] compose: skill=ai/skills/documentation.md
+[2026-07-20T18:44:28Z] compose: task (canonical prompt)
+[2026-07-20T18:44:28Z] snapshot: runtime-prompt=runs/T029/prompts/planner-attempt-25.md
+[2026-07-20T18:48:58Z] auto-run: step=planner done rc=0
+[2026-07-20T18:52:03Z] auto-run start: state=INIT
+[2026-07-20T18:52:03Z] auto-run: running step=planner
+[2026-07-20T18:52:03Z] prompt: resolved=prompts/generic/planner.md source=generic
+[2026-07-20T18:52:03Z] prompt: generic fallback — injecting runs/T029/ticket.md
+[2026-07-20T18:52:03Z] compose: global-context=docs/ai/global-context.md
+[2026-07-20T18:52:03Z] compose: role=ai/roles/planner.md
+[2026-07-20T18:52:03Z] compose: skill=ai/skills/workflow-discipline.md
+[2026-07-20T18:52:03Z] compose: skill=ai/skills/architecture-discipline.md
+[2026-07-20T18:52:03Z] compose: skill=ai/skills/documentation.md
+[2026-07-20T18:52:03Z] compose: task (canonical prompt)
+[2026-07-20T18:52:03Z] snapshot: runtime-prompt=runs/T029/prompts/planner-attempt-26.md
+[2026-07-20T18:56:23Z] auto-run: step=planner done rc=0
+[2026-07-20T18:59:36Z] auto-run start: state=INIT
+[2026-07-20T18:59:36Z] auto-run: running step=planner
+[2026-07-20T18:59:36Z] prompt: resolved=prompts/generic/planner.md source=generic
+[2026-07-20T18:59:36Z] prompt: generic fallback — injecting runs/T029/ticket.md
+[2026-07-20T18:59:36Z] compose: global-context=docs/ai/global-context.md
+[2026-07-20T18:59:36Z] compose: role=ai/roles/planner.md
+[2026-07-20T18:59:36Z] compose: skill=ai/skills/workflow-discipline.md
+[2026-07-20T18:59:36Z] compose: skill=ai/skills/architecture-discipline.md
+[2026-07-20T18:59:36Z] compose: skill=ai/skills/documentation.md
+[2026-07-20T18:59:36Z] compose: task (canonical prompt)
+[2026-07-20T18:59:36Z] snapshot: runtime-prompt=runs/T029/prompts/planner-attempt-27.md
+[2026-07-20T19:03:02Z] auto-run: step=planner done rc=0
+[2026-07-20T19:05:54Z] auto-run start: state=INIT
+[2026-07-20T19:05:54Z] auto-run: running step=planner
+[2026-07-20T19:05:54Z] prompt: resolved=prompts/generic/planner.md source=generic
+[2026-07-20T19:05:54Z] prompt: generic fallback — injecting runs/T029/ticket.md
+[2026-07-20T19:05:54Z] compose: global-context=docs/ai/global-context.md
+[2026-07-20T19:05:54Z] compose: role=ai/roles/planner.md
+[2026-07-20T19:05:54Z] compose: skill=ai/skills/workflow-discipline.md
+[2026-07-20T19:05:54Z] compose: skill=ai/skills/architecture-discipline.md
+[2026-07-20T19:05:54Z] compose: skill=ai/skills/documentation.md
+[2026-07-20T19:05:54Z] compose: task (canonical prompt)
+[2026-07-20T19:05:54Z] snapshot: runtime-prompt=runs/T029/prompts/planner-attempt-28.md
+[2026-07-20T19:08:27Z] auto-run: step=planner done rc=0
+[2026-07-20T19:12:11Z] auto-run start: state=INIT
+[2026-07-20T19:12:11Z] auto-run: running step=planner
+[2026-07-20T19:12:11Z] prompt: resolved=prompts/generic/planner.md source=generic
+[2026-07-20T19:12:11Z] prompt: generic fallback — injecting runs/T029/ticket.md
+[2026-07-20T19:12:11Z] compose: global-context=docs/ai/global-context.md
+[2026-07-20T19:12:11Z] compose: role=ai/roles/planner.md
+[2026-07-20T19:12:11Z] compose: skill=ai/skills/workflow-discipline.md
+[2026-07-20T19:12:11Z] compose: skill=ai/skills/architecture-discipline.md
+[2026-07-20T19:12:11Z] compose: skill=ai/skills/documentation.md
+[2026-07-20T19:12:11Z] compose: task (canonical prompt)
+[2026-07-20T19:12:11Z] snapshot: runtime-prompt=runs/T029/prompts/planner-attempt-29.md
+[2026-07-20T19:16:19Z] auto-run: step=planner done rc=0
+[2026-07-20T19:32:24Z] auto-run start: state=IMPLEMENTATION_APPROVED
+[2026-07-20T19:32:24Z] auto-run: running step=tester
+[2026-07-20T19:32:24Z] prompt: resolved=prompts/generic/tester.md source=generic
+[2026-07-20T19:32:24Z] prompt: generic fallback — injecting runs/T029/ticket.md
+[2026-07-20T19:32:24Z] compose: global-context=docs/ai/global-context.md
+[2026-07-20T19:32:24Z] compose: role=ai/roles/tester.md
+[2026-07-20T19:32:24Z] compose: skill=ai/skills/workflow-discipline.md
+[2026-07-20T19:32:24Z] compose: skill=ai/skills/testing.md
+[2026-07-20T19:32:24Z] compose: skill=ai/skills/debugging.md
+[2026-07-20T19:32:24Z] compose: task (canonical prompt)
+[2026-07-20T19:32:24Z] snapshot: runtime-prompt=runs/T029/prompts/tester-attempt-1.md
+[2026-07-20T19:36:03Z] auto-run: step=tester done rc=0
+[2026-07-20T19:36:03Z] auto-run: transition IMPLEMENTATION_APPROVED → TEST_COMPLETE
+[2026-07-20T19:36:03Z] auto-run: auto-commit triggered (step=tester, include_code=True)
+[2026-07-20T19:36:03Z] commit-checkpoint: unstaged runtime garbage: ['runs/T029/daemon.lock', 'runs/T029/runtime.log', 'runs/T029/workflow-status.md']
+[2026-07-20T19:36:03Z] commit-checkpoint: sha=3656e8e files=3 title='test(T029/workflow): tester — update 3 file(s)'
+[2026-07-20T19:36:03Z] auto-run: auto-push triggered
+[2026-07-20T19:36:03Z] push: tolerating runtime dirty files (not blocking): ['runs/T029/daemon.lock', 'runs/T029/runtime.log', 'runs/T029/workflow-status.md']
+[2026-07-20T19:36:03Z] push: pushing branch=ticket/T029-add-frontend-tests-for-cra-workflow
+[2026-07-20T19:36:05Z] push: done branch=ticket/T029-add-frontend-tests-for-cra-workflow
+[2026-07-20T19:36:05Z] auto-run: TEST_COMPLETE — running PR lifecycle
