@@ -1,10 +1,9 @@
-The plan has been written to `runs/T029/plan.md`. Here's what it covers:
+The plan is written to `runs/T029/plan.md`. Here's what it specifies:
 
-**Three ACs already satisfied** by existing tests — month selection (`CraMonthSelector.test.tsx`), calendar day rendering, and PDF download button (`CalendarGrid.test.tsx`). No changes needed to those files.
+**Gap analysis**: 3 of 6 acceptance criteria are already covered by existing tests (month selection in `CraMonthSelector.test.tsx`, day rendering and PDF download in `CalendarGrid.test.tsx`). The remaining 3 require new work:
 
-**Three ACs require work:**
-1. **Click cycle** — `CalendarGrid.tsx` needs an `onDayClick` prop and cycle logic (0 → 0.5 → 1 → 0); three new tests in `CalendarGrid.test.tsx`
-2. **Total summary** — add a `data-testid="total-summary"` element rendering `cra.totalWorkedDays`; two new tests
-3. **Validated locked state** — day clicks are silently ignored when `status === 'VALIDATED'`; one new test
+1. **Click cycle** — `CalendarGrid.tsx` needs an `onDayClick` prop + cycle logic (0 → 0.5 → 1 → 0 per click), then 1 test case.
+2. **Total summary** — add a `data-testid="total-worked"` element, then 2 test cases (initial render + update on click).
+3. **Validated locked state** — day cells get `aria-disabled="true"` and no `onClick` when `status === 'VALIDATED'`, then 1 test case.
 
-All new tests go into the existing `CalendarGrid.test.tsx` — no new files. The parent component's API wiring for day updates is explicitly excluded.
+All new tests go into the existing `CalendarGrid.test.tsx`. The parent component wiring for `onDayClick` is explicitly out of scope.
