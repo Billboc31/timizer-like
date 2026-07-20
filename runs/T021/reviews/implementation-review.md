@@ -1,90 +1,64 @@
-Now I have everything needed to write the review.
+I have all the information needed. Here is the review.
 
 ---
 
-# PR Review — T021: Create calendar day click cycle
+# PR Review — T021: Create calendar day click cycle (attempt 2)
 
 ## Résumé
 
-L'implémentation couvre correctement le périmètre du ticket : cycle 0→1→0.5→0 sur les cellules jour, persistence via `PATCH /api/cras/{id}/days/{date}`, états visuel saving/error, et verrouillage des CRA validés. Trois fichiers modifiés, scope parfaitement contenu.
-
-Un problème de type safety bloquant est présent sur la prop `onCraUpdate`.
+L'implémentation est complète et correcte. Le problème bloquant de la review 1 (cast `as unknown as CraDetails`) a été corrigé de façon minimale et précise. Les 36 tests passent. Aucun nouveau problème n'est détecté.
 
 ---
 
 ## Vérifications effectuées
 
-- Lecture du composant `CalendarGrid.tsx` (110 lignes)
-- Lecture des styles `CalendarGrid.css`
-- Lecture des tests `CalendarGrid.test.tsx` (159 lignes)
-- Vérification de l'interface `CraDetails` (`types/cra.ts`) vs `CraDetailsDto` (`api/types.ts`)
-- Vérification des usages de `CalendarGrid` dans le reste du projet
-- Vérification de la signature de `updateDay` dans `craClient.ts`
+- Lecture de `CalendarGrid.tsx` (112 lignes) — version corrigée
+- Lecture de `CalendarGrid.css`
+- Lecture de `CalendarGrid.test.tsx` (159 lignes)
+- Vérification de `api/types.ts` (`CraDetailsDto`, `CraDayEntryDto`)
+- Vérification de `types/cra.ts` (`CraDetails`, `CraDayEntry`)
+- Vérification de `api/craClient.ts` (signature `updateDay`)
+- Exécution de `npm test -- --run` : **36/36 tests verts**
+- Diff complet depuis la branche base (`git diff HEAD`)
+
+---
+
+## Vérification du fix demandé
+
+| Élément | Attendu | Observé |
+|---|---|---|
+| Import | `import type { CraDetailsDto } from '../../api/types'` | ✅ ligne 4 |
+| Prop type | `onCraUpdate?: (updated: CraDetailsDto) => void` | ✅ ligne 23 |
+| Appel callback | `onCraUpdate?.(result)` sans cast | ✅ ligne 57 |
+
+Le cast `as unknown as CraDetails` est supprimé. Le contrat de type de la prop publique est désormais honnête : `updateDay` retourne `Promise<CraDetailsDto>` (avec `note: string | null`), et c'est exactement ce que la prop déclare.
 
 ---
 
 ## Points validés
 
-- **Cycle de valeurs correct** : `nextWorkValue` implémente bien 0→1→0.5→0 (`CalendarGrid.tsx:8-12`)
-- **Persistance API** : chaque clic appelle `updateDay(craId, isoDate, { workValue: next })` (`CalendarGrid.tsx:50`)
-- **Format ISO** : date construite avec zero-padding (`${cra.year}-${pad(cra.month)}-${pad(day)}`) — correct
-- **Calcul jours/mois** : `new Date(cra.year, cra.month, 0).getDate()` — trick correct pour mois 1-indexé
-- **Concurrence** : guard `if (savingDays.has(day)) return` empêche les double-clics (`CalendarGrid.tsx:40`)
-- **État saving** : classe `day-cell--saving` + `pointer-events: none` pendant l'inflight
-- **État erreur** : classe `day-cell--error` + message texte affiché, effacé au prochain clic
-- **Verrouillage VALIDATED** : pas de `onClick` attaché + classe `day-cell--locked` (`CalendarGrid.tsx:98`)
-- **Tests complets** : 7 nouveaux cas couvrant tous les critères d'acceptance
-- **Scope respecté** : aucun changement backend, aucune régression sur layouts ou autres features
+- **Cycle de valeurs** : `nextWorkValue` implémente 0→1→0.5→0 (`CalendarGrid.tsx:9-13`)
+- **Persistance API** : chaque clic appelle `updateDay(cra.id, isoDate, { workValue: next })` (`CalendarGrid.tsx:51`)
+- **Format ISO** : zero-padding correct (`${cra.year}-${pad(cra.month)}-${pad(day)}`)
+- **Calcul jours/mois** : `new Date(cra.year, cra.month, 0).getDate()` — trick 1-indexé correct (`CalendarGrid.tsx:69`)
+- **Guard double-clic** : `if (savingDays.has(day)) return` (`CalendarGrid.tsx:41`)
+- **État saving** : classe `day-cell--saving` + `pointer-events: none` en CSS
+- **État erreur** : classe `day-cell--error` + message visible, effacé au prochain clic
+- **Verrouillage VALIDATED** : `onClick={isValidated ? undefined : ...}` + classe `day-cell--locked` (`CalendarGrid.tsx:99`)
+- **Tests** : 7 nouveaux cas couvrant tous les critères d'acceptance, 29 existants préservés
+- **Scope** : aucun changement backend, aucune régression autres composants
 
 ---
 
-## Problèmes détectés
+## Observations mineures (non bloquantes)
 
-### [BLOQUANT] Cast `as unknown as CraDetails` — type safety brisée
-
-**Fichier** : `CalendarGrid.tsx:56`
-
-```typescript
-onCraUpdate?.(result as unknown as CraDetails);
-```
-
-`updateDay` retourne `Promise<CraDetailsDto>` (de `api/types.ts`) où `CraDayEntryDto.note` est `string | null`. La prop `onCraUpdate` est typée `(updated: CraDetails) => void` où `CraDayEntry.note` est `string`. Le cast double `as unknown as` supprime toute vérification TypeScript et garantit silencieusement un contrat de type incorrect au callsite.
-
-Un futur parent appelant `onCraUpdate` recevra un objet où `day.note` peut être `null`, alors que le type déclare `string` — risque de crash runtime si du code fait `.toLowerCase()` ou autre opération string sur `note`.
-
-**Correction attendue** (minimaliste) :
-
-```typescript
-// CalendarGrid.tsx — changer la Props interface
-import type { CraDetailsDto } from '../../api/types';
-
-interface Props {
-  cra: CraDetails | null;
-  loading: boolean;
-  error: string | null;
-  onCraUpdate?: (updated: CraDetailsDto) => void;  // ← DTO réel
-}
-
-// puis ligne 56 :
-onCraUpdate?.(result);  // plus de cast nécessaire
-```
-
----
-
-## Risques éventuels
-
-- **Mineure** : test de verrouillage VALIDATED (`CalendarGrid.test.tsx:155`) utilise `setTimeout(r, 50)` comme fence — fragile si la machine est lente. Remplacer par `await new Promise<void>(r => setTimeout(r, 50)); expect(mockUpdateDay).not.toHaveBeenCalled()` est suffisant mais un `waitFor(() => ..., { timeout: 50 })` serait plus idiomatique. Non bloquant pour ce ticket.
-- **Mineure** : `handleDayClick` défini à l'intérieur du composant, re-créé à chaque render. Acceptable pour un MVP sans profiling de perf.
-- **Constat** : `CalendarGrid` n'est pas encore intégré dans `App.tsx`. Le problème de type n'a donc aucun impact runtime actuellement, mais doit être corrigé avant l'intégration.
+- `setTimeout(r, 50)` comme fence dans le test VALIDATED (`CalendarGrid.test.tsx:155`) — légèrement fragile sur machine lente. Un `waitFor` serait plus idiomatique mais le comportement testé (absence d'appel) reste fiable en pratique.
+- Les mocks Vitest utilisent `as never` pour contourner la vérification de type sur la valeur retournée. Pattern standard et acceptable dans les tests.
 
 ---
 
 ## Décision
 
-Le ticket est bien implémenté dans son ensemble. Un seul point bloque : le cast `as unknown as CraDetails` viole le contrat de type de la prop publique `onCraUpdate` et doit être corrigé avant approbation. La correction est triviale (changer le type de la prop, supprimer le cast).
+Le fix est minimal, précis, et résout exactement le problème signalé. Toutes les critères d'acceptance du ticket sont couverts par le code et les tests. Aucun problème bloquant résiduel.
 
-## Actions demandées
-
-1. Dans `CalendarGrid.tsx` : importer `CraDetailsDto` depuis `../../api/types` et typer `onCraUpdate?: (updated: CraDetailsDto) => void` — supprimer le `as unknown as CraDetails`.
-
-IMPLEMENTATION_FIX_REQUIRED
+IMPLEMENTATION_APPROVED
