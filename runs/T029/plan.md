@@ -1,11 +1,9 @@
-The plan has been written to `runs/T029/plan.md`.
+Plan written to `runs/T029/plan.md`. Here's what it covers:
 
-**What the plan covers:**
+**3 existing tests already satisfy 3 of 6 criteria** (month selection display, calendar day rendering, PDF download visibility) — no changes needed there.
 
-The exploration confirmed that 3 of the 6 ticket acceptance criteria are already covered by existing tests (month selection, calendar day rendering, PDF download button visibility). The three gaps requiring new work are:
+**3 gaps require minimal additions to `CalendarGrid.tsx` + 5 new test cases in `CalendarGrid.test.tsx`:**
 
-1. **Click cycle** — CalendarGrid has no `onDayClick` prop and day cells are plain `<div>`s.
-2. **Total summary** — `totalWorkedDays` exists in the type but is never rendered.
-3. **Validated locked state** — `isValidated` only gates the download button, not day interaction.
-
-The plan proposes minimal changes to `CalendarGrid.tsx` (add `onDayClick` prop, render `totalWorkedDays`, conditionally wire clicks) and five new test cases appended to the existing `CalendarGrid.test.tsx`. No other files need to change.
+1. **Click cycle** — add `onDayClick?(day, nextValue)` prop + click handler on day cells (disabled for VALIDATED status)
+2. **Total summary** — render `cra.totalWorkedDays` in a `data-testid="total-summary"` element
+3. **Validated locked state** — verify `onDayClick` is not invoked when status is `VALIDATED`
