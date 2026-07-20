@@ -1,9 +1,7 @@
-The plan has been written to `runs/T024/plan.md`. It covers five touch points across the frontend:
+`runs/T024/plan.md` has been written with the four required sections. The plan covers five files:
 
-- **`httpClient.ts`** — new `apiGetBlobWithName` that parses `Content-Disposition` and returns `{ blob, filename | null }`
-- **`craClient.ts`** — new `downloadCraPdfFile` using the above; existing `downloadCraPdf` untouched
-- **`CalendarGrid.tsx`** — download button rendered below the grid only when `isValidated`, with in-flight disabled state and inline error display
-- **`CalendarGrid.test.tsx`** — five new tests covering visibility, success path, in-flight state, and error display
-- **`craClient.test.ts`** — two new cases for `downloadCraPdfFile` testing header parsing
-
-`App.tsx` and `CraMonthSelector` are explicitly out of scope.
+- **`httpClient.ts`** — new `apiGetBlobWithFilename` that parses `Content-Disposition` and returns `{ blob, filename | null }`
+- **`craClient.ts`** — `downloadCraPdf` updated to return `{ blob, filename | null }`
+- **`CalendarGrid.tsx`** — download button rendered only for VALIDATED status, with in-flight state and inline error alert
+- **`craClient.test.ts`** — updated mock + two new cases for filename extraction
+- **`CalendarGrid.test.tsx`** — six new cases covering visibility, success path, in-flight state, and error display
