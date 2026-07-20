@@ -1,7 +1,12 @@
-Plan written to `runs/T021/plan.md`. Key decisions:
+The plan is written to `runs/T021/plan.md`. Here's a summary of what it specifies:
 
-- **Cycle**: 0 → 1 → 0.5 → 0 as specified in the ticket acceptance criteria.
-- **State**: per-cell saving and error state tracked with a `Set` and `Map` inside `CalendarGrid`; the server response (`CraDetailsDto`) is propagated up via an `onUpdate` callback so `App.tsx` stays the source of truth.
-- **Lock**: `day-cell--locked` applied when `cra.status === 'VALIDATED'`; no API call is made.
-- **No optimistic updates**: calendar reflects only values confirmed by the server, keeping rollback logic unnecessary.
-- The `updateDay` function in `craClient.ts` already exists and needs no changes.
+**3 files to modify** (no new files):
+- `CalendarGrid.tsx` — add `onUpdate` prop, `savingDays`/`errorDays` state, `WORK_CYCLE` constant, `handleDayClick` async handler, and CSS modifier classes on each cell.
+- `CalendarGrid.css` — add `.day-cell--saving`, `.day-cell--error`, `.day-cell--locked` styles.
+- `CalendarGrid.test.tsx` — 8 new test cases covering the full cycle, saving state, error state, locked state, and double-click guard.
+
+**Key decisions captured:**
+- No optimistic updates — displayed value changes only after the server responds.
+- Cycle array `[0, 1, 0.5]` drives rotation via index mod.
+- `onUpdate` receives the raw `CraDetailsDto` from the API; type mapping is the parent's responsibility.
+- Double-click guard via `savingDays.has(day)` check.
