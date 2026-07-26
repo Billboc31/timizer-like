@@ -1,7 +1,9 @@
 The plan is written to `runs/T031/plan.md`. It covers:
 
-- **Backend** — multi-stage `Dockerfile` (Maven → JRE 17), `application-prod.yml` with Actuator health, SQLite path and CORS via env vars.
-- **Frontend** — multi-stage `Dockerfile` (Vite → Nginx), `nginx.conf` proxying `/api/` to the backend so both share one origin.
-- **Orchestration** — `docker-compose.yml` with two named volumes (`timizer-db` for SQLite, `timizer-assets` for the provider signature) and `.env.example` listing every required variable.
-- **Docs** — `docs/deployment.md` covering first-deploy, update, and verification steps.
-- **Key clarification** — PDFs are generated on demand from DB records, so SQLite volume persistence satisfies both the data and PDF criteria without a separate PDF volume.
+- **Backend Dockerfile** — multi-stage Maven → JRE 17 build; SQLite and signature paths via env vars; Actuator health endpoint wired in `application-prod.yml`.
+- **Frontend Dockerfile** — multi-stage Vite build → Nginx; `VITE_API_BASE_URL` injected as a build arg; nginx proxies `/api/` to the backend so SPA and API share one origin.
+- **docker-compose.yml** — two services with named volumes `timizer-db` (SQLite persistence) and `timizer-assets` (provider signature persistence).
+- **.env.example** — all required production variables, never committed.
+- **docs/deployment.md** — first-deploy, update, and verification steps with the health-check URL.
+
+PDFs are generated on demand from DB records, so the SQLite volume covers both data and PDF regeneration — no separate PDF volume needed.
