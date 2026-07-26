@@ -1,6 +1,6 @@
 import type { CraDetails, CraSummaryDto, CraDetailsDto } from '../types/cra';
 
-const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL as string | undefined) ?? 'http://localhost:8080';
+const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL as string | undefined) ?? '';
 
 export async function fetchCra(year: number, month: number): Promise<CraDetails> {
   const res = await fetch(`${API_BASE_URL}/api/cras?year=${year}&month=${month}`);
