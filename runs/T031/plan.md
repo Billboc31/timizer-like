@@ -1,7 +1,7 @@
-The plan has been written to `runs/T031/plan.md`. It covers:
+The plan is written to `runs/T031/plan.md`. It covers:
 
-- **Approach**: Docker Compose on a Linux VPS — two services (`frontend` nginx + `backend` Spring Boot), with nginx proxying `/api/` to the backend to eliminate CORS issues entirely.
-- **New files**: `backend/Dockerfile`, `frontend/Dockerfile`, `frontend/nginx.conf`, `docker-compose.yml`, `.env.prod.example`, `docs/deployment.md`, and a minimal `HealthController`.
-- **One bug fix**: `httpClient.ts` uses `process.env.REACT_APP_API_BASE_URL` but Vite requires `import.meta.env.VITE_API_BASE_URL` — corrected in the plan.
-- **Persistence**: SQLite via named Docker volume; provider signature via host bind-mount under `./data/assets/`.
-- **Secrets**: all production values live in `.env.prod` (git-ignored); `.env.prod.example` is committed as the template.
+- **Objective**: Docker Compose on a Linux VPS, two services (Spring Boot backend + nginx frontend), public URL documented.
+- **Included**: `backend/Dockerfile`, `frontend/Dockerfile`, `nginx.conf`, `docker-compose.yml`, `.env.prod.example`, `docs/deployment.md`, a new `HealthController`, and a fix to `frontend/.env.production` so `VITE_API_BASE_URL` doesn't hard-code `localhost:8080` in production.
+- **Persistence**: SQLite via named Docker volume, provider signature via host bind-mount; a conditional note for PDFs (stream vs. disk — Coder must verify).
+- **Excluded**: TLS/HTTPS, CI/CD, scaling, monitoring, client signature workflow.
+- **Acceptance criteria**: mirrors the ticket exactly with verifiable checks (health endpoint, CORS, data survival after restart, no secrets in git, end-to-end CRA workflow).
