@@ -1,7 +1,7 @@
 {
   "ticket_id": "T031",
-  "state": "INIT",
+  "state": "PLAN_APPROVED",
   "branch": "ticket/T031-deploy-the-application",
   "issue_number": 61,
-  "updated_at": "2026-07-24T15:16:23Z"
+  "updated_at": "2026-07-26T23:47:40Z"
 }
