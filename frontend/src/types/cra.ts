@@ -1,3 +1,4 @@
+import type { CraSummaryDto } from '../api/types';
 export type { CraSummaryDto } from '../api/types';
 
 export interface CraDayEntry {
