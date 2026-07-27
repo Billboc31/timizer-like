@@ -1,7 +1,7 @@
-Plan written to `runs/T032/plan.md`. Three files change:
+The plan is written to `runs/T032/plan.md`. It covers three files:
 
-1. **`frontend/vite.config.ts`** — add `server: { host: '0.0.0.0', port: 5173, strictPort: true }` to the existing `defineConfig`.
-2. **`README.md`** — extend the "Run the frontend" section with Tailscale/LAN IP discovery commands and the `http://<IP>:5173` URL pattern.
-3. **`docs/local-development.md`** — extend section 5 with the same remote-access instructions and a note about `strictPort` failing clearly on port conflict.
+- `frontend/vite.config.ts` — add `server: { host: '0.0.0.0', port: 5173, strictPort: true }`.
+- `README.md` (root) — document IP-discovery commands and the `http://<IP>:5173` URL.
+- `frontend/README.md` — align the stated dev server URL with the new binding.
 
 Everything else (backend, HTTPS, firewall, Tailscale ACLs, production) is explicitly excluded.
