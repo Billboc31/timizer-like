@@ -111,3 +111,12 @@
     width: 100%;
   }
 }
+
+.cra-validation__success {
+  color: #15803d;
+  background-color: #dcfce7;
+  border: 1px solid #86efac;
+  border-radius: 4px;
+  padding: 8px 12px;
+  font-size: 0.875rem;
+}

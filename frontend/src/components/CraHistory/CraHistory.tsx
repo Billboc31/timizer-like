@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { listCras, downloadCraPdf } from '../../api/cra';
+import { listCras, downloadCraPdf } from '../../api/craClient';
+import { getErrorMessage } from '../../api/errorMessages';
 import type { CraSummaryDto } from '../../types/cra';
 import './CraHistory.css';
 
@@ -43,7 +44,9 @@ export function CraHistory({ onOpen }: Props) {
   const [downloading, setDownloading] = useState<number | null>(null);
   const [downloadError, setDownloadError] = useState<string | null>(null);
 
-  useEffect(() => {
+  const loadCras = () => {
+    setLoading(true);
+    setError(null);
     listCras()
       .then(data => {
         const sorted = [...data].sort((a, b) =>
@@ -53,9 +56,13 @@ export function CraHistory({ onOpen }: Props) {
         setLoading(false);
       })
       .catch((err: unknown) => {
-        setError(err instanceof Error ? err.message : 'Failed to load CRA history');
+        setError(getErrorMessage(err));
         setLoading(false);
       });
+  };
+
+  useEffect(() => {
+    loadCras();
   }, []);
 
   const handleDownloadPdf = (cra: CraSummaryDto) => {
@@ -71,7 +78,7 @@ export function CraHistory({ onOpen }: Props) {
         URL.revokeObjectURL(url);
       })
       .catch((err: unknown) => {
-        setDownloadError(err instanceof Error ? err.message : 'Failed to download PDF');
+        setDownloadError(getErrorMessage(err));
       })
       .finally(() => { setDownloading(null); });
   };
@@ -80,9 +87,12 @@ export function CraHistory({ onOpen }: Props) {
 
   if (error) {
     return (
-      <div role="alert" className="cra-history__error">
-        <span className="cra-history__error-icon" aria-hidden="true">⚠</span>
-        <span>{error}</span>
+      <div>
+        <div role="alert" className="cra-history__error">
+          <span className="cra-history__error-icon" aria-hidden="true">⚠</span>
+          <span>{error}</span>
+        </div>
+        <button onClick={loadCras}>Réessayer</button>
       </div>
     );
   }
@@ -133,6 +143,7 @@ export function CraHistory({ onOpen }: Props) {
                 <button
                   className="cra-history__btn"
                   onClick={() => { onOpen(cra); }}
+                  disabled={isDownloading}
                   aria-label={`Open CRA for ${period}`}
                 >
                   Open

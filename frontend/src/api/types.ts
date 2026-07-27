@@ -23,6 +23,7 @@ export interface CraSummaryDto {
   year: number;
   totalWorkedDays: number;
   status: CraStatus;
+  validationDate: string | null;
 }
 
 export interface CraDayUpdateRequest {

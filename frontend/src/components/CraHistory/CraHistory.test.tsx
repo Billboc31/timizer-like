@@ -1,10 +1,10 @@
 import { render, screen, waitFor, fireEvent, cleanup } from '@testing-library/react';
 import { describe, it, expect, vi, afterEach } from 'vitest';
 import { CraHistory } from './CraHistory';
-import * as craApi from '../../api/cra';
+import * as craApi from '../../api/craClient';
 import type { CraSummaryDto } from '../../types/cra';
 
-vi.mock('../../api/cra');
+vi.mock('../../api/craClient');
 
 afterEach(cleanup);
 
@@ -42,11 +42,24 @@ describe('CraHistory', () => {
     expect(screen.getByRole('list', { name: /loading/i })).toBeInTheDocument();
   });
 
-  it('renders error banner when listCras fails', async () => {
+  it('renders error with retry button when listCras fails', async () => {
     vi.mocked(craApi.listCras).mockRejectedValue(new Error('Network error'));
     render(<CraHistory onOpen={vi.fn()} />);
     await waitFor(() =>
-      expect(screen.getByRole('alert')).toHaveTextContent('Network error'),
+      expect(screen.getByRole('alert')).toHaveTextContent('Une erreur est survenue. Veuillez réessayer.'),
+    );
+    expect(screen.getByRole('button', { name: 'Réessayer' })).toBeInTheDocument();
+  });
+
+  it('retries list load when Réessayer is clicked', async () => {
+    vi.mocked(craApi.listCras)
+      .mockRejectedValueOnce(new Error('Network error'))
+      .mockResolvedValueOnce([]);
+    render(<CraHistory onOpen={vi.fn()} />);
+    await waitFor(() => expect(screen.getByRole('button', { name: 'Réessayer' })).toBeInTheDocument());
+    fireEvent.click(screen.getByRole('button', { name: 'Réessayer' }));
+    await waitFor(() =>
+      expect(screen.getByText('No CRA records found.')).toBeInTheDocument(),
     );
   });
 
@@ -148,6 +161,18 @@ describe('CraHistory', () => {
     );
   });
 
+  it('disables Open and Download PDF buttons while PDF is downloading', async () => {
+    vi.mocked(craApi.listCras).mockResolvedValue([VALIDATED_CRA]);
+    vi.mocked(craApi.downloadCraPdf).mockReturnValue(new Promise(() => {}));
+    render(<CraHistory onOpen={vi.fn()} />);
+    await waitFor(() =>
+      expect(screen.getByRole('button', { name: 'Download PDF for June 2026' })).toBeInTheDocument(),
+    );
+    fireEvent.click(screen.getByRole('button', { name: 'Download PDF for June 2026' }));
+    await waitFor(() => expect(screen.getByText('Downloading…')).toBeDisabled());
+    expect(screen.getByRole('button', { name: 'Open CRA for June 2026' })).toBeDisabled();
+  });
+
   it('shows error banner when PDF download fails and keeps list visible', async () => {
     vi.mocked(craApi.listCras).mockResolvedValue([VALIDATED_CRA]);
     vi.mocked(craApi.downloadCraPdf).mockRejectedValue(new Error('Download failed'));
@@ -157,7 +182,7 @@ describe('CraHistory', () => {
     fireEvent.click(screen.getByText('Download PDF'));
 
     await waitFor(() =>
-      expect(screen.getByRole('alert')).toHaveTextContent('Download failed'),
+      expect(screen.getByRole('alert')).toHaveTextContent('Une erreur est survenue. Veuillez réessayer.'),
     );
     expect(screen.getByText('June 2026')).toBeInTheDocument();
     expect(screen.getByText('Download PDF')).toBeInTheDocument();

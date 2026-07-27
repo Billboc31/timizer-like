@@ -68,6 +68,20 @@ describe('CalendarGrid', () => {
     expect(screen.getByText('Network error')).toBeInTheDocument();
   });
 
+  it('shows retry button when error and onRetry provided', () => {
+    const onRetry = vi.fn();
+    render(<CalendarGrid cra={null} loading={false} error="Network error" onRetry={onRetry} />);
+    const btn = screen.getByRole('button', { name: 'Réessayer' });
+    expect(btn).toBeInTheDocument();
+    fireEvent.click(btn);
+    expect(onRetry).toHaveBeenCalledOnce();
+  });
+
+  it('does not show retry button when error but no onRetry', () => {
+    render(<CalendarGrid cra={null} loading={false} error="Network error" />);
+    expect(screen.queryByRole('button', { name: 'Réessayer' })).not.toBeInTheDocument();
+  });
+
   it('renders an empty state when cra is null and not loading', () => {
     render(<CalendarGrid cra={null} loading={false} error={null} />);
     expect(screen.getByText('No CRA data available.')).toBeInTheDocument();
@@ -166,5 +180,49 @@ describe('CalendarGrid', () => {
     const cells = screen.getAllByTestId('day-cell');
     expect(cells[1]).toHaveClass('day-cell--disabled');
     expect(cells[1]).toHaveAttribute('tabindex', '-1');
+  });
+
+  // Loading state for individual day update
+  it('adds day-cell--updating class and shows … when updatingDay matches', () => {
+    const onDayClick = vi.fn();
+    render(
+      <CalendarGrid
+        cra={JULY_2026}
+        loading={false}
+        error={null}
+        onDayClick={onDayClick}
+        updatingDay={2}
+      />,
+    );
+    const cells = screen.getAllByTestId('day-cell');
+    expect(cells[1]).toHaveClass('day-cell--updating');
+    expect(cells[1].querySelector('.day-cell__worked')).toHaveTextContent('…');
+  });
+
+  it('clicking an updating cell does not call onDayClick', () => {
+    const onDayClick = vi.fn();
+    render(
+      <CalendarGrid
+        cra={JULY_2026}
+        loading={false}
+        error={null}
+        onDayClick={onDayClick}
+        updatingDay={2}
+      />,
+    );
+    fireEvent.click(screen.getAllByTestId('day-cell')[1]);
+    expect(onDayClick).not.toHaveBeenCalled();
+  });
+
+  it('renders dayUpdateError as role="alert" below the grid', () => {
+    render(
+      <CalendarGrid
+        cra={JULY_2026}
+        loading={false}
+        error={null}
+        dayUpdateError="La valeur saisie n'est pas valide."
+      />,
+    );
+    expect(screen.getByRole('alert')).toHaveTextContent("La valeur saisie n'est pas valide.");
   });
 });
