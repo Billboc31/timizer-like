@@ -1,7 +1,7 @@
 {
   "ticket_id": "T042",
-  "state": "INIT",
+  "state": "PLAN_APPROVED",
   "branch": "ticket/T042-add-frontend-component-tests-for-calendar-and-vali",
   "issue_number": 74,
-  "updated_at": "2026-07-27T16:11:39Z"
+  "updated_at": "2026-07-27T20:43:40Z"
 }
