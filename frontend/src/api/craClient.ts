@@ -28,11 +28,11 @@ export function validateCra(craId: number, body: ValidateCraRequest): Promise<Cr
 }
 
 // NOTE: backend endpoint GET /api/cras is pending implementation
-export function listCras(): Promise<CraSummaryDto[]> {
-  return apiGet<CraSummaryDto[]>('/api/cras');
+export function listCras(options?: { signal?: AbortSignal }): Promise<CraSummaryDto[]> {
+  return apiGet<CraSummaryDto[]>('/api/cras', options);
 }
 
 // NOTE: backend endpoint GET /api/cras/:id/pdf is pending implementation
-export function downloadCraPdf(craId: number): Promise<Blob> {
-  return apiGetBlob(`/api/cras/${craId}/pdf`);
+export function downloadCraPdf(craId: number, options?: { signal?: AbortSignal }): Promise<Blob> {
+  return apiGetBlob(`/api/cras/${craId}/pdf`, options);
 }

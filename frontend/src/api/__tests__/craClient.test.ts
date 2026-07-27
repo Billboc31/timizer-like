@@ -75,7 +75,7 @@ describe('getCra', () => {
     mockFetchOk(mockCraDetails);
     const result = await getCra(1);
     expect(result).toEqual(mockCraDetails);
-    expect(vi.mocked(fetch)).toHaveBeenCalledWith('/api/cras/1');
+    expect(vi.mocked(fetch)).toHaveBeenCalledWith('/api/cras/1', undefined);
   });
 });
 
@@ -108,7 +108,7 @@ describe('listCras', () => {
     mockFetchOk(mockSummaries);
     const result = await listCras();
     expect(result).toEqual(mockSummaries);
-    expect(vi.mocked(fetch)).toHaveBeenCalledWith('/api/cras');
+    expect(vi.mocked(fetch)).toHaveBeenCalledWith('/api/cras', undefined);
   });
 });
 
@@ -117,7 +117,7 @@ describe('downloadCraPdf', () => {
     mockFetchBlobOk();
     const result = await downloadCraPdf(1);
     expect(result).toBeInstanceOf(Blob);
-    expect(vi.mocked(fetch)).toHaveBeenCalledWith('/api/cras/1/pdf');
+    expect(vi.mocked(fetch)).toHaveBeenCalledWith('/api/cras/1/pdf', undefined);
   });
 });
 

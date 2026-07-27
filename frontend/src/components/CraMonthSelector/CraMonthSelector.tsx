@@ -23,22 +23,25 @@ export function CraMonthSelector({ onOpen }: Props) {
   const [createError, setCreateError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
-  const loadCras = () => {
+  const loadCras = (signal?: AbortSignal) => {
     setLoading(true);
     setError(null);
-    listCras()
+    listCras({ signal })
       .then(data => {
         setCras(data);
         setLoading(false);
       })
       .catch((err: unknown) => {
+        if (err instanceof DOMException && err.name === 'AbortError') return;
         setError(getErrorMessage(err));
         setLoading(false);
       });
   };
 
   useEffect(() => {
-    loadCras();
+    const controller = new AbortController();
+    loadCras(controller.signal);
+    return () => { controller.abort(); };
   }, []);
 
   const existingCra = cras.find(c => c.month === selectedMonth && c.year === selectedYear) ?? null;
