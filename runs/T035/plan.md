@@ -1,7 +1,7 @@
-Plan written to `runs/T035/plan.md`. Summary of the approach:
+Plan written to `runs/T035/plan.md`. Key decisions made from codebase exploration:
 
-- **New `AppShell` component** (`AppShell.tsx` + `AppShell.css`) — header with brand, `<nav>` with two `<button>` items, `<main>` with max-width constraint. No React Router needed since the app uses state-based navigation.
-- **`App.tsx` refactored** — wrapped in `AppShell`, inline `<h1>` and `<nav>` removed, a `<h1>` page title added to each view branch.
-- **CSS custom properties** added to `index.css` for the shell palette.
-- **Mobile at 320 px** covered via `flex-wrap` on nav and no fixed widths in the content area.
-- **Keyboard access** via native `<button>` elements (already focusable) and `:focus-visible` ring styles.
+- **No routing library** — the app uses `useState`-based view switching; a router adds zero value for two views and would be scope creep.
+- **New `AppShell` component** — a header with brand + `Nav`, a constrained `<main>`. Two new files (`AppShell.tsx`, `Nav.tsx`) plus one CSS file, keeping the component-per-folder convention.
+- **`App.tsx` slim-down** — removes the inline `<h1>` and `<nav>`, delegates them to `AppShell`.
+- **`index.css` global reset** — `box-sizing: border-box` and `overflow-x: hidden` to guarantee no horizontal scroll at 320 px.
+- **Plain CSS only** — matches the existing styling approach; no new framework dependency.
