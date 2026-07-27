@@ -1,12 +1,16 @@
-import { render, screen, waitFor, fireEvent, cleanup } from '@testing-library/react';
+import { render, screen, waitFor, fireEvent, cleanup, act } from '@testing-library/react';
 import { describe, it, expect, vi, afterEach } from 'vitest';
 import { CraMonthSelector } from './CraMonthSelector';
-import * as craApi from '../../api/cra';
-import type { CraSummaryDto, CraDetailsDto } from '../../types/cra';
+import * as craApi from '../../api/craClient';
+import type { CraSummaryDto } from '../../types/cra';
+import type { CraDetailsDto } from '../../api/types';
 
-vi.mock('../../api/cra');
+vi.mock('../../api/craClient');
 
-afterEach(cleanup);
+afterEach(() => {
+  cleanup();
+  vi.useRealTimers();
+});
 
 const JULY_2026: CraSummaryDto = {
   id: 1,
@@ -18,10 +22,14 @@ const JULY_2026: CraSummaryDto = {
 };
 
 const JULY_2026_DETAILS: CraDetailsDto = {
-  ...JULY_2026,
-  days: [],
+  id: 1,
+  month: 7,
+  year: 2026,
+  totalWorkedDays: 20,
+  status: 'DRAFT',
   validationDate: null,
   providerSignatureDate: null,
+  days: [],
 };
 
 describe('CraMonthSelector', () => {
@@ -31,12 +39,23 @@ describe('CraMonthSelector', () => {
     expect(screen.getByText('Loading...')).toBeInTheDocument();
   });
 
-  it('renders error when listCras fails', async () => {
+  it('renders error with retry button when listCras fails', async () => {
     vi.mocked(craApi.listCras).mockRejectedValue(new Error('Network error'));
     render(<CraMonthSelector onOpen={vi.fn()} />);
     await waitFor(() =>
-      expect(screen.getByRole('alert')).toHaveTextContent('Network error'),
+      expect(screen.getByRole('alert')).toHaveTextContent('Une erreur est survenue. Veuillez réessayer.'),
     );
+    expect(screen.getByRole('button', { name: 'Réessayer' })).toBeInTheDocument();
+  });
+
+  it('retries list load when Réessayer is clicked', async () => {
+    vi.mocked(craApi.listCras)
+      .mockRejectedValueOnce(new Error('Network error'))
+      .mockResolvedValueOnce([]);
+    render(<CraMonthSelector onOpen={vi.fn()} />);
+    await waitFor(() => expect(screen.getByRole('button', { name: 'Réessayer' })).toBeInTheDocument());
+    fireEvent.click(screen.getByRole('button', { name: 'Réessayer' }));
+    await waitFor(() => expect(screen.getByLabelText('Month')).toBeInTheDocument());
   });
 
   it('renders month select and year input after loading', async () => {
@@ -72,16 +91,22 @@ describe('CraMonthSelector', () => {
     expect(onOpen).toHaveBeenCalledWith(JULY_2026);
   });
 
-  it('calls createCra then onOpen when "Create CRA" is clicked', async () => {
+  it('shows success message then calls onOpen after create', async () => {
+    vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
     const onOpen = vi.fn();
     vi.mocked(craApi.listCras).mockResolvedValue([]);
     vi.mocked(craApi.createCra).mockResolvedValue(JULY_2026_DETAILS);
     render(<CraMonthSelector onOpen={onOpen} />);
-    await waitFor(() => expect(screen.getByText('Create CRA')).toBeInTheDocument());
+    await act(async () => {}); // flush listCras promise → form rendered
     fireEvent.click(screen.getByText('Create CRA'));
-    await waitFor(() => expect(onOpen).toHaveBeenCalled());
-    expect(craApi.createCra).toHaveBeenCalled();
+    await act(async () => {}); // flush createCra promise → success state
+    expect(screen.getByText('CRA créé avec succès.')).toBeInTheDocument();
+    expect(onOpen).not.toHaveBeenCalled();
+    // Button is disabled during success delay (label may be "Open CRA" since CRA was added to list)
+    expect(screen.getByRole('button', { name: /CRA$/ })).toBeDisabled();
+    act(() => { vi.advanceTimersByTime(3000); });
     expect(onOpen).toHaveBeenCalledWith(expect.objectContaining({ id: 1, month: 7, year: 2026 }));
+    expect(craApi.createCra).toHaveBeenCalled();
   });
 
   it('shows create error and re-enables button on failure', async () => {
@@ -91,7 +116,7 @@ describe('CraMonthSelector', () => {
     await waitFor(() => expect(screen.getByText('Create CRA')).toBeInTheDocument());
     fireEvent.click(screen.getByText('Create CRA'));
     await waitFor(() =>
-      expect(screen.getByRole('alert')).toHaveTextContent('Server error'),
+      expect(screen.getByRole('alert')).toHaveTextContent('Une erreur est survenue. Veuillez réessayer.'),
     );
     expect(screen.getByText('Create CRA')).not.toBeDisabled();
   });

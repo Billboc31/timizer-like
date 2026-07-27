@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { listCras, createCra } from '../../api/cra';
+import { listCras, createCra } from '../../api/craClient';
+import { getErrorMessage } from '../../api/errorMessages';
 import type { CraSummaryDto } from '../../types/cra';
 
 const MONTH_NAMES = [
@@ -20,17 +21,24 @@ export function CraMonthSelector({ onOpen }: Props) {
   const [error, setError] = useState<string | null>(null);
   const [creating, setCreating] = useState(false);
   const [createError, setCreateError] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
-  useEffect(() => {
+  const loadCras = () => {
+    setLoading(true);
+    setError(null);
     listCras()
       .then(data => {
         setCras(data);
         setLoading(false);
       })
       .catch((err: unknown) => {
-        setError(err instanceof Error ? err.message : 'Failed to load CRAs');
+        setError(getErrorMessage(err));
         setLoading(false);
       });
+  };
+
+  useEffect(() => {
+    loadCras();
   }, []);
 
   const existingCra = cras.find(c => c.month === selectedMonth && c.year === selectedYear) ?? null;
@@ -54,17 +62,28 @@ export function CraMonthSelector({ onOpen }: Props) {
           validationDate: created.validationDate ?? null,
         };
         setCras(prev => [...prev, summary]);
-        setCreating(false);
-        onOpen(summary);
+        setSuccessMessage('CRA créé avec succès.');
+        setTimeout(() => {
+          setSuccessMessage(null);
+          setCreating(false);
+          onOpen(summary);
+        }, 3000);
       })
       .catch((err: unknown) => {
-        setCreateError(err instanceof Error ? err.message : 'Failed to create CRA');
+        setCreateError(getErrorMessage(err));
         setCreating(false);
       });
   };
 
   if (loading) return <p>Loading...</p>;
-  if (error) return <p role="alert">{error}</p>;
+  if (error) {
+    return (
+      <div>
+        <p role="alert">{error}</p>
+        <button onClick={loadCras}>Réessayer</button>
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -91,10 +110,11 @@ export function CraMonthSelector({ onOpen }: Props) {
           onChange={e => setSelectedYear(Number(e.target.value))}
         />
       </div>
-      <button onClick={handleAction} disabled={creating}>
+      <button onClick={handleAction} disabled={creating || !!successMessage}>
         {existingCra ? 'Open CRA' : 'Create CRA'}
       </button>
-      {creating && <p>Creating...</p>}
+      {creating && !successMessage && <p>Creating...</p>}
+      {successMessage && <p role="status">{successMessage}</p>}
       {createError && <p role="alert">{createError}</p>}
     </div>
   );

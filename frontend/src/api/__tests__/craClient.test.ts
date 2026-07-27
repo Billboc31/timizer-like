@@ -15,7 +15,7 @@ const mockCraDetails: CraDetailsDto = {
 };
 
 const mockSummaries: CraSummaryDto[] = [
-  { id: 1, month: 7, year: 2026, totalWorkedDays: 20, status: 'DRAFT' },
+  { id: 1, month: 7, year: 2026, totalWorkedDays: 20, status: 'DRAFT', validationDate: null },
 ];
 
 function mockFetchOk(body: unknown): void {

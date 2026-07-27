@@ -1,4 +1,4 @@
-import { render, screen, fireEvent, cleanup, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent, cleanup, waitFor, act } from '@testing-library/react';
 import { describe, it, expect, vi, afterEach } from 'vitest';
 import { CraValidation } from './CraValidation';
 import { validateCra } from '../../api/craClient';
@@ -14,6 +14,7 @@ const mockValidateCra = vi.mocked(validateCra);
 afterEach(() => {
   cleanup();
   vi.resetAllMocks();
+  vi.useRealTimers();
 });
 
 const DRAFT_CRA: CraDetails = {
@@ -71,13 +72,18 @@ describe('CraValidation', () => {
     expect(mockValidateCra).not.toHaveBeenCalled();
   });
 
-  it('clicking confirmer calls validateCra then onValidated with the result', async () => {
+  it('shows success message then calls onValidated after delay', async () => {
+    vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
     mockValidateCra.mockResolvedValueOnce(VALIDATED_DTO);
     const onValidated = vi.fn();
     render(<CraValidation cra={DRAFT_CRA} onValidated={onValidated} />);
     fireEvent.click(screen.getByRole('button', { name: /valider le cra/i }));
     fireEvent.click(screen.getByRole('button', { name: /confirmer/i }));
-    await waitFor(() => expect(onValidated).toHaveBeenCalledWith(VALIDATED_DTO));
+    await act(async () => {}); // flush validateCra promise → success state
+    expect(screen.getByText('CRA validé avec succès.')).toBeInTheDocument();
+    expect(onValidated).not.toHaveBeenCalled();
+    act(() => { vi.advanceTimersByTime(2000); });
+    expect(onValidated).toHaveBeenCalledWith(VALIDATED_DTO);
     expect(mockValidateCra).toHaveBeenCalledWith(
       1,
       expect.objectContaining({ providerSignatureDate: expect.any(String) }),

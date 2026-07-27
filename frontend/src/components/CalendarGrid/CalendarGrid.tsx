@@ -52,15 +52,23 @@ interface Props {
   cra: CraDetails | null;
   loading: boolean;
   error: string | null;
+  onRetry?: () => void;
   onDayClick?: (day: number, newValue: 0 | 0.5 | 1) => void;
+  updatingDay?: number | null;
+  dayUpdateError?: string | null;
 }
 
-export function CalendarGrid({ cra, loading, error, onDayClick }: Props) {
+export function CalendarGrid({ cra, loading, error, onRetry, onDayClick, updatingDay, dayUpdateError }: Props) {
   if (loading) {
     return <div className="calendar-loading">Loading...</div>;
   }
   if (error) {
-    return <div className="calendar-error">{error}</div>;
+    return (
+      <div className="calendar-error">
+        <p>{error}</p>
+        {onRetry && <button onClick={onRetry}>Réessayer</button>}
+      </div>
+    );
   }
   if (!cra) {
     return <div className="calendar-empty">No CRA data available.</div>;
@@ -73,62 +81,69 @@ export function CalendarGrid({ cra, loading, error, onDayClick }: Props) {
   const firstColOffset = toEuropeanDay(new Date(cra.year, cra.month - 1, 1).getDay());
 
   return (
-    <div className="calendar-wrapper">
-      <h2 className="calendar-header">{MONTH_NAMES[cra.month - 1]} {cra.year}</h2>
-      <div className="calendar-grid">
-        {WEEKDAY_HEADERS.map(h => (
-          <div key={h} className="calendar-grid__weekday-header" aria-hidden="true">{h}</div>
-        ))}
-        {Array.from({ length: daysInMonth }, (_, i) => {
-          const day = i + 1;
-          const jsDay = new Date(cra.year, cra.month - 1, day).getDay();
-          const europeanDay = toEuropeanDay(jsDay);
-          const isWeekend = jsDay === 0 || jsDay === 6;
-          const worked = dayMap.get(day)?.worked ?? 0;
+    <>
+      <div className="calendar-wrapper">
+        <h2 className="calendar-header">{MONTH_NAMES[cra.month - 1]} {cra.year}</h2>
+        <div className="calendar-grid">
+          {WEEKDAY_HEADERS.map(h => (
+            <div key={h} className="calendar-grid__weekday-header" aria-hidden="true">{h}</div>
+          ))}
+          {Array.from({ length: daysInMonth }, (_, i) => {
+            const day = i + 1;
+            const jsDay = new Date(cra.year, cra.month - 1, day).getDay();
+            const europeanDay = toEuropeanDay(jsDay);
+            const isWeekend = jsDay === 0 || jsDay === 6;
+            const worked = dayMap.get(day)?.worked ?? 0;
+            const isUpdating = day === updatingDay;
 
-          const stateClass = isWeekend
-            ? 'day-cell--weekend'
-            : worked === 1
-              ? 'day-cell--worked'
-              : worked === 0.5
-                ? 'day-cell--half'
-                : 'day-cell--rest';
+            const stateClass = isWeekend
+              ? 'day-cell--weekend'
+              : worked === 1
+                ? 'day-cell--worked'
+                : worked === 0.5
+                  ? 'day-cell--half'
+                  : 'day-cell--rest';
 
-          const interactive = !isValidated && !isWeekend;
+            const interactive = !isValidated && !isWeekend;
 
-          const handleClick = () => {
-            if (interactive) {
-              onDayClick!(day, nextWorkValue(worked));
-            }
-          };
+            const handleClick = () => {
+              if (interactive && !isUpdating) {
+                onDayClick!(day, nextWorkValue(worked));
+              }
+            };
 
-          const handleKeyDown = (e: React.KeyboardEvent) => {
-            if ((e.key === 'Enter' || e.key === ' ') && interactive) {
-              e.preventDefault();
-              onDayClick!(day, nextWorkValue(worked));
-            }
-          };
+            const handleKeyDown = (e: React.KeyboardEvent) => {
+              if ((e.key === 'Enter' || e.key === ' ') && interactive && !isUpdating) {
+                e.preventDefault();
+                onDayClick!(day, nextWorkValue(worked));
+              }
+            };
 
-          return (
-            <div
-              key={day}
-              className={`day-cell ${stateClass}${isValidated ? ' day-cell--disabled' : ''}`}
-              data-testid="day-cell"
-              role={interactive ? 'button' : undefined}
-              tabIndex={interactive ? 0 : -1}
-              aria-label={`${WEEKDAY_FULL[europeanDay]} ${day} — ${stateLabel(worked)}`}
-              style={day === 1 ? { gridColumn: firstColOffset + 1 } : undefined}
-              onClick={handleClick}
-              onKeyDown={handleKeyDown}
-            >
-              <span className="day-cell__number">{day}</span>
-              <span className="day-cell__weekday">{WEEKDAY_HEADERS[europeanDay]}</span>
-              {!isWeekend && <span className="day-cell__worked">{worked}</span>}
-            </div>
-          );
-        })}
+            return (
+              <div
+                key={day}
+                className={`day-cell ${stateClass}${isValidated ? ' day-cell--disabled' : ''}${isUpdating ? ' day-cell--updating' : ''}`}
+                data-testid="day-cell"
+                role={interactive ? 'button' : undefined}
+                tabIndex={interactive ? 0 : -1}
+                aria-label={`${WEEKDAY_FULL[europeanDay]} ${day} — ${stateLabel(worked)}`}
+                aria-disabled={isUpdating || undefined}
+                style={day === 1 ? { gridColumn: firstColOffset + 1 } : undefined}
+                onClick={handleClick}
+                onKeyDown={handleKeyDown}
+              >
+                <span className="day-cell__number">{day}</span>
+                <span className="day-cell__weekday">{WEEKDAY_HEADERS[europeanDay]}</span>
+                {!isWeekend && <span className="day-cell__worked">{isUpdating ? '…' : worked}</span>}
+              </div>
+            );
+          })}
+        </div>
+        <CalendarLegend />
       </div>
-      <CalendarLegend />
-    </div>
+      {dayUpdateError && (
+        <p role="alert" className="calendar-grid__day-update-error">{dayUpdateError}</p>
+      )}
+    </>
   );
 }

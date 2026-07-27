@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react';
 import './CraValidation.css';
 import { validateCra } from '../../api/craClient';
-import { isApiError } from '../../api/apiError';
+import { getErrorMessage } from '../../api/errorMessages';
 import type { CraDetails } from '../../types/cra';
 import type { CraDetailsDto } from '../../api/types';
 
@@ -10,7 +10,7 @@ interface Props {
   onValidated: (updated: CraDetailsDto) => void;
 }
 
-type UIState = 'idle' | 'confirming' | 'loading';
+type UIState = 'idle' | 'confirming' | 'loading' | 'success';
 
 export function CraValidation({ cra, onValidated }: Props) {
   const [uiState, setUiState] = useState<UIState>('idle');
@@ -37,17 +37,26 @@ export function CraValidation({ cra, onValidated }: Props) {
     try {
       const today = new Date().toISOString().slice(0, 10);
       const updated = await validateCra(cra.id, { providerSignatureDate: today });
+      setUiState('success');
       dialogRef.current?.close();
-      onValidated(updated);
+      setTimeout(() => {
+        onValidated(updated);
+      }, 2000);
     } catch (e) {
-      const msg =
-        isApiError(e) && e.code !== 'unknown_error'
-          ? e.message
-          : 'Une erreur est survenue. Veuillez réessayer.';
-      setError(msg);
+      setError(getErrorMessage(e));
       setUiState('confirming');
     }
   };
+
+  if (uiState === 'success') {
+    return (
+      <div className="cra-validation">
+        <p className="cra-validation__success" role="status">
+          CRA validé avec succès.
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="cra-validation">

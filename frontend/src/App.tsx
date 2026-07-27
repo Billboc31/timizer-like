@@ -5,7 +5,8 @@ import { CraSummaryPanel } from './components/CraSummaryPanel/CraSummaryPanel';
 import { CraHistory } from './components/CraHistory/CraHistory';
 import { CraValidation } from './components/CraValidation/CraValidation';
 import { AppShell } from './components/AppShell/AppShell';
-import { updateDay } from './api/craClient';
+import { getCra, updateDay } from './api/craClient';
+import { getErrorMessage } from './api/errorMessages';
 import type { CraSummaryDto, CraDetails } from './types/cra';
 import type { CraDetailsDto } from './api/types';
 
@@ -25,20 +26,50 @@ type View = 'selector' | 'history';
 export default function App() {
   const [view, setView] = useState<View>('selector');
   const [cra, setCra] = useState<CraDetails | null>(null);
+  const [craLoading, setCraLoading] = useState(false);
+  const [craError, setCraError] = useState<string | null>(null);
+  const [lastCraId, setLastCraId] = useState<number | null>(null);
+  const [updatingDay, setUpdatingDay] = useState<number | null>(null);
+  const [dayUpdateError, setDayUpdateError] = useState<string | null>(null);
+
+  const loadCra = (id: number) => {
+    setCraLoading(true);
+    setCraError(null);
+    setCra(null);
+    getCra(id)
+      .then(dto => {
+        setCra(dtoToDetails(dto));
+        setCraLoading(false);
+      })
+      .catch(err => {
+        setCraError(getErrorMessage(err));
+        setCraLoading(false);
+      });
+  };
 
   const handleOpen = (summary: CraSummaryDto) => {
-    setCra({ ...summary, days: [] });
+    setLastCraId(summary.id);
+    loadCra(summary.id);
   };
 
   const handleCraValidated = (updated: CraDetailsDto) => {
     setCra(dtoToDetails(updated));
   };
 
-  const handleDayClick = async (day: number, newValue: 0 | 0.5 | 1) => {
+  const handleDayClick = (day: number, newValue: 0 | 0.5 | 1) => {
     if (!cra) return;
-    const dateStr = `${cra.year}-${String(cra.month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-    const updated = await updateDay(cra.id, dateStr, { workValue: newValue });
-    setCra(dtoToDetails(updated));
+    setUpdatingDay(day);
+    setDayUpdateError(null);
+    const isoDate = `${cra.year}-${String(cra.month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+    updateDay(cra.id, isoDate, { workValue: newValue })
+      .then(dto => {
+        setCra(dtoToDetails(dto));
+        setUpdatingDay(null);
+      })
+      .catch(err => {
+        setDayUpdateError(getErrorMessage(err));
+        setUpdatingDay(null);
+      });
   };
 
   return (
@@ -48,12 +79,15 @@ export default function App() {
       ) : (
         <CraHistory onOpen={handleOpen} />
       )}
-      <CraSummaryPanel cra={cra} loading={false} error={null} />
+      <CraSummaryPanel cra={cra} loading={craLoading} error={craError} />
       <CalendarGrid
         cra={cra}
-        loading={false}
-        error={null}
+        loading={craLoading}
+        error={craError}
+        onRetry={lastCraId !== null ? () => loadCra(lastCraId) : undefined}
         onDayClick={cra?.status !== 'VALIDATED' ? handleDayClick : undefined}
+        updatingDay={updatingDay}
+        dayUpdateError={dayUpdateError}
       />
       <CraValidation cra={cra} onValidated={handleCraValidated} />
     </AppShell>
