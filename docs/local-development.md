@@ -175,7 +175,41 @@ To run a single test file:
 npm test -- --watchAll=false path/to/file.test.tsx
 ```
 
-## 10. Known limitations
+## 10. End-to-end tests
+
+End-to-end tests use [Playwright](https://playwright.dev/) and cover the
+complete monthly CRA workflow at the browser level.
+
+The test suite mocks the backend API at the network layer, so **no running
+backend is required** for the E2E tests to pass.
+
+First-time setup — install Playwright's browser binaries (Chromium only):
+
+```
+cd frontend
+npm install
+npx playwright install chromium
+```
+
+Run the full E2E suite:
+
+```
+cd frontend
+npm run test:e2e
+```
+
+Playwright automatically starts the Vite dev server before the tests run and
+stops it afterwards. To open Playwright's interactive UI mode:
+
+```
+cd frontend
+npm run test:e2e:ui
+```
+
+Test files live under `frontend/e2e/`. The Playwright configuration is at
+`frontend/playwright.config.ts`.
+
+## 11. Known limitations
 
 The following topics are intentionally out of scope for this document and are
 tracked by their own tickets:

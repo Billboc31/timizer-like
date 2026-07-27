@@ -48,6 +48,14 @@ function CalendarLegend() {
   );
 }
 
+type WorkedValue = 0 | 0.5 | 1;
+
+function cycleWorked(current: number): WorkedValue {
+  if (current === 0) return 1;
+  if (current === 1) return 0.5;
+  return 0;
+}
+
 interface Props {
   cra: CraDetails | null;
   loading: boolean;
