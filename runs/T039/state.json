@@ -1,7 +1,7 @@
 {
   "ticket_id": "T039",
-  "state": "INIT",
+  "state": "PLAN_APPROVED",
   "branch": "ticket/T039-redesign-the-cra-history-page",
   "issue_number": 71,
-  "updated_at": "2026-07-27T16:10:01Z"
+  "updated_at": "2026-07-27T16:58:24Z"
 }
