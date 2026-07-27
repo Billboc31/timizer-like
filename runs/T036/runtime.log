@@ -31,3 +31,8 @@
 [2026-07-27T17:13:59Z] push: pushing branch=ticket/T036-redesign-the-monthly-cra-calendar-for-clarity-and
 [2026-07-27T17:14:01Z] push: done branch=ticket/T036-redesign-the-monthly-cra-calendar-for-clarity-and
 [2026-07-27T17:14:02Z] auto-run: TEST_COMPLETE — running PR lifecycle
+[2026-07-27T18:12:26Z] conflict-resolver: [pass 1/3] conflicted=['frontend/src/App.tsx', 'frontend/src/components/CalendarGrid/CalendarGrid.css'] | staged=['frontend/src/App.tsx', 'frontend/src/components/CalendarGrid/CalendarGrid.css'] | unresolved=[] | continue_rc=1 | next_source=[]
+[2026-07-27T18:12:26Z] conflict-resolver: all conflicts resolved after 1 pass(es)
+[2026-07-27T18:12:26Z] conflict-resolver: running tests
+[2026-07-27T18:12:26Z] conflict-resolver: test-report written: runs/T036/conflict/test-report.md
+[2026-07-27T18:12:26Z] conflict-resolver: staging and committing resolution artifacts
