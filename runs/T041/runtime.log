@@ -31,3 +31,8 @@
 [2026-07-27T23:25:43Z] push: pushing branch=ticket/T041-add-end-to-end-tests-for-the-complete-monthly-cra
 [2026-07-27T23:25:45Z] push: done branch=ticket/T041-add-end-to-end-tests-for-the-complete-monthly-cra
 [2026-07-27T23:25:45Z] auto-run: TEST_COMPLETE — running PR lifecycle
+[2026-07-27T23:28:51Z] conflict-resolver: [pass 1/3] conflicted=['frontend/src/App.tsx', 'frontend/src/components/CalendarGrid/CalendarGrid.tsx'] | staged=['frontend/src/App.tsx', 'frontend/src/components/CalendarGrid/CalendarGrid.tsx'] | unresolved=[] | continue_rc=0
+[2026-07-27T23:28:51Z] conflict-resolver: all conflicts resolved after 1 pass(es)
+[2026-07-27T23:28:51Z] conflict-resolver: running tests
+[2026-07-27T23:28:51Z] conflict-resolver: test-report written: runs/T041/conflict/test-report.md
+[2026-07-27T23:28:51Z] conflict-resolver: staging and committing resolution artifacts
