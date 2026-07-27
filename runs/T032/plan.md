@@ -1,5 +1,5 @@
-The plan has been written to `runs/T032/plan.md`. It targets three files:
+The plan is written to `runs/T032/plan.md`. It covers three files:
 
-1. **`frontend/vite.config.ts`** — add `server: { host: '0.0.0.0', port: 5173, strictPort: true }` to bind on all interfaces and enforce the port (failing clearly if 5173 is taken).
-2. **`README.md`** — add instructions for finding the Tailscale/LAN IP and the external URL.
-3. **`frontend/README.md`** — update the localhost-only reference to mention external access.
+- **`frontend/vite.config.ts`** — add `server: { host: '0.0.0.0', port: 5173, strictPort: true }` alongside the existing `test` block.
+- **`frontend/README.md`** — replace the localhost-only note with both the local and external URLs plus a command to find the host IP.
+- **`README.md`** — extend the "Run the frontend" section to reference external access.
