@@ -1,0 +1,1 @@
+Plan written to `runs/T032/plan.md`. Two files change: `frontend/vite.config.ts` gets `host: true`, `port: 5173`, `strictPort: true` under `server`; `README.md` gets corrected dev command and remote-access URL instructions.
