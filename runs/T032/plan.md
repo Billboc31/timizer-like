@@ -1,1 +1,1 @@
-Plan written to `runs/T032/plan.md`. Two files change: `frontend/vite.config.ts` gets `host: true`, `port: 5173`, `strictPort: true` under `server`; `README.md` gets corrected dev command and remote-access URL instructions.
+Plan written to `runs/T032/plan.md`. Three files change: `frontend/vite.config.ts` gets the `server` block, `frontend/README.md` gets a remote-access subsection, and root `README.md` gets the corrected dev command plus a pointer to the frontend docs.
