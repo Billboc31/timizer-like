@@ -22,7 +22,7 @@ export function CraSummaryPanel({ cra, loading, error }: Props) {
   }
   if (error) {
     return (
-      <div className="cra-summary-panel__error" data-testid="summary-error">
+      <div className="cra-summary-panel__error" data-testid="summary-error" role="alert">
         Error: {error}
       </div>
     );

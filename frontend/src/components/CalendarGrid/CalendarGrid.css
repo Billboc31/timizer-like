@@ -1,5 +1,8 @@
-.calendar-wrapper {
+.calendar-grid-wrapper {
+  overflow-x: auto;
+  width: 100%;
   padding: 16px;
+  box-sizing: border-box;
 }
 
 .calendar-header {
@@ -37,6 +40,7 @@
   user-select: none;
   background-color: #fff;
   transition: background-color 0.1s, transform 0.08s;
+  box-sizing: border-box;
 }
 
 /* State modifiers */
@@ -59,9 +63,9 @@
 }
 
 .day-cell--weekend {
-  background-color: #f5f5f5;
+  background-color: #f0f0f0;
   border-color: #ddd;
-  color: #999;
+  color: #555;
   cursor: default;
 }
 
