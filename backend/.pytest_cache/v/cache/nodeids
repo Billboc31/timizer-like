@@ -1,0 +1,5 @@
+[
+  "tests/test_db.py::test_engine_connects_to_sqlite",
+  "tests/test_db.py::test_settings_default_database_url",
+  "tests/test_health.py::test_health_returns_ok"
+]

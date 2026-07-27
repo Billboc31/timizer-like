@@ -238,3 +238,24 @@
 [2026-07-26T23:40:37Z] compose: task (canonical prompt)
 [2026-07-26T23:40:37Z] snapshot: runtime-prompt=runs/T031/prompts/planner-attempt-20.md
 [2026-07-26T23:47:38Z] auto-run: step=planner done rc=0
+[2026-07-27T00:01:45Z] auto-run start: state=IMPLEMENTATION_APPROVED
+[2026-07-27T00:01:45Z] auto-run: running step=tester
+[2026-07-27T00:01:45Z] prompt: resolved=prompts/generic/tester.md source=generic
+[2026-07-27T00:01:45Z] prompt: generic fallback — injecting runs/T031/ticket.md
+[2026-07-27T00:01:45Z] compose: global-context=docs/ai/global-context.md
+[2026-07-27T00:01:45Z] compose: role=ai/roles/tester.md
+[2026-07-27T00:01:45Z] compose: skill=ai/skills/workflow-discipline.md
+[2026-07-27T00:01:45Z] compose: skill=ai/skills/testing.md
+[2026-07-27T00:01:45Z] compose: skill=ai/skills/debugging.md
+[2026-07-27T00:01:45Z] compose: task (canonical prompt)
+[2026-07-27T00:01:45Z] snapshot: runtime-prompt=runs/T031/prompts/tester-attempt-1.md
+[2026-07-27T00:06:03Z] auto-run: step=tester done rc=0
+[2026-07-27T00:06:03Z] auto-run: transition IMPLEMENTATION_APPROVED → TEST_COMPLETE
+[2026-07-27T00:06:03Z] auto-run: auto-commit triggered (step=tester, include_code=True)
+[2026-07-27T00:06:04Z] commit-checkpoint: unstaged runtime garbage: ['backend/timizer_backend.egg-info/PKG-INFO', 'backend/timizer_backend.egg-info/SOURCES.txt', 'backend/timizer_backend.egg-info/dependency_links.txt', 'backend/timizer_backend.egg-info/requires.txt', 'backend/timizer_backend.egg-info/top_level.txt', 'runs/T031/daemon.lock', 'runs/T031/runtime.log', 'runs/T031/workflow-status.md']
+[2026-07-27T00:06:04Z] commit-checkpoint: sha=7405ade files=22 title='test(T031/workflow): tester — update 22 file(s)'
+[2026-07-27T00:06:04Z] auto-run: auto-push triggered
+[2026-07-27T00:06:04Z] push: tolerating runtime dirty files (not blocking): ['runs/T031/daemon.lock', 'runs/T031/runtime.log', 'runs/T031/workflow-status.md', 'backend/timizer_backend.egg-info/']
+[2026-07-27T00:06:04Z] push: pushing branch=ticket/T031-deploy-the-application
+[2026-07-27T00:06:06Z] push: done branch=ticket/T031-deploy-the-application
+[2026-07-27T00:06:06Z] auto-run: TEST_COMPLETE — running PR lifecycle
