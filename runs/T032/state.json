@@ -1,7 +1,7 @@
 {
   "ticket_id": "T032",
-  "state": "IMPLEMENTATION_REVIEW_NEEDED",
+  "state": "IMPLEMENTATION_APPROVED",
   "branch": "ticket/T032-allow-frontend-access-from-tailscale-and-local-net",
   "issue_number": 63,
-  "updated_at": "2026-07-27T15:31:22Z"
+  "updated_at": "2026-07-27T15:34:10Z"
 }
