@@ -46,3 +46,27 @@ npm run build
 ```
 
 The production bundle is written to `dist/`.
+
+## Visual regression tests
+
+Playwright screenshot tests cover the main CRA screen (desktop + mobile), history page, and representative loading/error states.
+
+Install Playwright's Chromium browser once after `npm install`:
+
+```bash
+npx playwright install chromium
+```
+
+Run the visual suite (requires the dev server; Playwright starts it automatically):
+
+```bash
+npm run test:visual
+```
+
+Update committed baselines after an intentional visual change:
+
+```bash
+npm run test:visual:update
+```
+
+Snapshots are stored in `e2e/__snapshots__/` and must be committed to the repository.
