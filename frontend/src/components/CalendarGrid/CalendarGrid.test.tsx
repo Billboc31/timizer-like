@@ -1,5 +1,5 @@
-import { render, screen, cleanup } from '@testing-library/react';
-import { describe, it, expect, afterEach } from 'vitest';
+import { render, screen, cleanup, fireEvent } from '@testing-library/react';
+import { describe, it, expect, afterEach, vi } from 'vitest';
 import { CalendarGrid } from './CalendarGrid';
 import type { CraDetails } from '../../types/cra';
 
@@ -71,5 +71,100 @@ describe('CalendarGrid', () => {
   it('renders an empty state when cra is null and not loading', () => {
     render(<CalendarGrid cra={null} loading={false} error={null} />);
     expect(screen.getByText('No CRA data available.')).toBeInTheDocument();
+  });
+
+  // Header
+  it('renders a header with the month and year', () => {
+    render(<CalendarGrid cra={JULY_2026} loading={false} error={null} />);
+    expect(screen.getByText('July 2026')).toBeInTheDocument();
+  });
+
+  // Legend
+  it('renders legend with all state labels', () => {
+    render(<CalendarGrid cra={JULY_2026} loading={false} error={null} />);
+    expect(screen.getByText('Worked')).toBeInTheDocument();
+    expect(screen.getByText('Half-day')).toBeInTheDocument();
+    expect(screen.getByText('Not worked')).toBeInTheDocument();
+    expect(screen.getByText('Weekend')).toBeInTheDocument();
+  });
+
+  // Click cycle
+  it('clicking an unworked weekday cell calls onDayClick(day, 1)', () => {
+    const onDayClick = vi.fn();
+    render(<CalendarGrid cra={JULY_2026} loading={false} error={null} onDayClick={onDayClick} />);
+    // Day 2 is Thursday (not a weekend)
+    fireEvent.click(screen.getAllByTestId('day-cell')[1]);
+    expect(onDayClick).toHaveBeenCalledWith(2, 1);
+  });
+
+  it('cycles worked value 0 → 1 → 0.5 → 0 on successive clicks', () => {
+    const onDayClick = vi.fn();
+    const { rerender } = render(
+      <CalendarGrid cra={JULY_2026} loading={false} error={null} onDayClick={onDayClick} />,
+    );
+    const getCell2 = () => screen.getAllByTestId('day-cell')[1];
+
+    fireEvent.click(getCell2());
+    expect(onDayClick).toHaveBeenLastCalledWith(2, 1);
+
+    rerender(
+      <CalendarGrid
+        cra={{ ...JULY_2026, days: [{ day: 2, worked: 1, note: '' }] }}
+        loading={false}
+        error={null}
+        onDayClick={onDayClick}
+      />,
+    );
+    fireEvent.click(getCell2());
+    expect(onDayClick).toHaveBeenLastCalledWith(2, 0.5);
+
+    rerender(
+      <CalendarGrid
+        cra={{ ...JULY_2026, days: [{ day: 2, worked: 0.5, note: '' }] }}
+        loading={false}
+        error={null}
+        onDayClick={onDayClick}
+      />,
+    );
+    fireEvent.click(getCell2());
+    expect(onDayClick).toHaveBeenLastCalledWith(2, 0);
+  });
+
+  // Keyboard
+  it('pressing Enter on an interactive cell calls onDayClick', () => {
+    const onDayClick = vi.fn();
+    render(<CalendarGrid cra={JULY_2026} loading={false} error={null} onDayClick={onDayClick} />);
+    fireEvent.keyDown(screen.getAllByTestId('day-cell')[1], { key: 'Enter' });
+    expect(onDayClick).toHaveBeenCalledWith(2, 1);
+  });
+
+  it('pressing Space on an interactive cell calls onDayClick', () => {
+    const onDayClick = vi.fn();
+    render(<CalendarGrid cra={JULY_2026} loading={false} error={null} onDayClick={onDayClick} />);
+    fireEvent.keyDown(screen.getAllByTestId('day-cell')[1], { key: ' ' });
+    expect(onDayClick).toHaveBeenCalledWith(2, 1);
+  });
+
+  // Weekends
+  it('clicking a weekend cell does not call onDayClick even when handler is provided', () => {
+    const onDayClick = vi.fn();
+    render(<CalendarGrid cra={JULY_2026} loading={false} error={null} onDayClick={onDayClick} />);
+    // Day 5 is Sunday (weekend)
+    fireEvent.click(screen.getAllByTestId('day-cell')[4]);
+    expect(onDayClick).not.toHaveBeenCalled();
+  });
+
+  it('clicking weekend cells when onDayClick is absent does not throw', () => {
+    render(<CalendarGrid cra={JULY_2026} loading={false} error={null} />);
+    expect(() => fireEvent.click(screen.getAllByTestId('day-cell')[4])).not.toThrow();
+  });
+
+  // Disabled (validated CRA)
+  it('cells carry day-cell--disabled and tabIndex=-1 when onDayClick is absent', () => {
+    const VALIDATED_CRA: CraDetails = { ...JULY_2026, status: 'VALIDATED' };
+    render(<CalendarGrid cra={VALIDATED_CRA} loading={false} error={null} />);
+    const cells = screen.getAllByTestId('day-cell');
+    expect(cells[1]).toHaveClass('day-cell--disabled');
+    expect(cells[1]).toHaveAttribute('tabindex', '-1');
   });
 });
