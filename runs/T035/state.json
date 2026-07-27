@@ -1,7 +1,7 @@
 {
   "ticket_id": "T035",
-  "state": "INIT",
+  "state": "PLAN_APPROVED",
   "branch": "ticket/T035-redesign-the-application-shell-and-navigation",
   "issue_number": 67,
-  "updated_at": "2026-07-27T16:08:17Z"
+  "updated_at": "2026-07-27T16:41:24Z"
 }
