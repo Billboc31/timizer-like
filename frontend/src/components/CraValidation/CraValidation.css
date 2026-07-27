@@ -2,6 +2,11 @@
   padding: var(--space-4);
 }
 
+.cra-validation__dialog {
+  max-width: min(90vw, 480px);
+  box-sizing: border-box;
+}
+
 .cra-validation__button {
   display: block;
   width: 100%;

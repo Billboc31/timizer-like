@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { listCras, createCra } from '../../api/craClient';
 import { getErrorMessage } from '../../api/errorMessages';
 import type { CraSummaryDto } from '../../types/cra';
+import './CraMonthSelector.css';
 
 const MONTH_NAMES = [
   'January', 'February', 'March', 'April', 'May', 'June',
@@ -89,33 +90,35 @@ export function CraMonthSelector({ onOpen }: Props) {
   }
 
   return (
-    <div>
+    <div className="cra-month-selector">
       <h2>{periodLabel}</h2>
-      <div>
-        <label htmlFor="month-select">Month</label>
-        <select
-          id="month-select"
-          value={selectedMonth}
-          onChange={e => setSelectedMonth(Number(e.target.value))}
-        >
-          {MONTH_NAMES.map((name, i) => (
-            <option key={name} value={i + 1}>{name}</option>
-          ))}
-        </select>
+      <div className="cra-month-selector__controls">
+        <div className="cra-month-selector__field">
+          <label htmlFor="month-select">Month</label>
+          <select
+            id="month-select"
+            value={selectedMonth}
+            onChange={e => setSelectedMonth(Number(e.target.value))}
+          >
+            {MONTH_NAMES.map((name, i) => (
+              <option key={name} value={i + 1}>{name}</option>
+            ))}
+          </select>
+        </div>
+        <div className="cra-month-selector__field">
+          <label htmlFor="year-input">Year</label>
+          <input
+            id="year-input"
+            type="number"
+            value={selectedYear}
+            min={2000}
+            onChange={e => setSelectedYear(Number(e.target.value))}
+          />
+        </div>
+        <button onClick={handleAction} disabled={creating}>
+          {existingCra ? 'Open CRA' : 'Create CRA'}
+        </button>
       </div>
-      <div>
-        <label htmlFor="year-input">Year</label>
-        <input
-          id="year-input"
-          type="number"
-          value={selectedYear}
-          min={2000}
-          onChange={e => setSelectedYear(Number(e.target.value))}
-        />
-      </div>
-      <button onClick={handleAction} disabled={creating || !!successMessage}>
-        {existingCra ? 'Open CRA' : 'Create CRA'}
-      </button>
       {creating && !successMessage && <p>Creating...</p>}
       {successMessage && <p role="status">{successMessage}</p>}
       {createError && <p role="alert">{createError}</p>}

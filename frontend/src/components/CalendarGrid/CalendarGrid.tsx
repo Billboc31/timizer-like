@@ -82,7 +82,7 @@ export function CalendarGrid({ cra, loading, error, onRetry, onDayClick, updatin
 
   return (
     <>
-      <div className="calendar-wrapper">
+      <div className="calendar-grid-wrapper">
         <h2 className="calendar-header">{MONTH_NAMES[cra.month - 1]} {cra.year}</h2>
         <div className="calendar-grid">
           {WEEKDAY_HEADERS.map(h => (
