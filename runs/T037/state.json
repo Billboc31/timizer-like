@@ -1,7 +1,31 @@
 {
   "ticket_id": "T037",
-  "state": "PLAN_APPROVED",
+  "state": "TEST_COMPLETE",
   "branch": "ticket/T037-add-robust-loading-empty-success-and-error-states",
   "issue_number": 69,
-  "updated_at": "2026-07-27T17:00:20Z"
+  "updated_at": "2026-07-27T20:06:50Z",
+  "pr_number": 84,
+  "pr_synced": true,
+  "pre_conflict_state": "TEST_COMPLETE",
+  "conflict_detected_at": "2026-07-27T18:19:57Z",
+  "conflict_pr_number": 84,
+  "conflicted_files": [
+    "frontend/node_modules/.vite/vitest/da39a3ee5e6b4b0d3255bfef95601890afd80709/results.json",
+    "frontend/src/App.tsx",
+    "frontend/src/api/__tests__/craClient.test.ts",
+    "frontend/src/api/errorMessages.test.ts",
+    "frontend/src/api/errorMessages.ts",
+    "frontend/src/api/types.ts",
+    "frontend/src/components/CalendarGrid/CalendarGrid.css",
+    "frontend/src/components/CalendarGrid/CalendarGrid.test.tsx",
+    "frontend/src/components/CalendarGrid/CalendarGrid.tsx",
+    "frontend/src/components/CraHistory/CraHistory.test.tsx",
+    "frontend/src/components/CraHistory/CraHistory.tsx",
+    "frontend/src/components/CraMonthSelector/CraMonthSelector.test.tsx",
+    "frontend/src/components/CraMonthSelector/CraMonthSelector.tsx",
+    "frontend/src/components/CraValidation/CraValidation.css",
+    "frontend/src/components/CraValidation/CraValidation.test.tsx",
+    "frontend/src/components/CraValidation/CraValidation.tsx",
+    "prompts/generic/planner.md"
+  ]
 }
