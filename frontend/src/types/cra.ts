@@ -1,11 +1,4 @@
-export interface CraSummaryDto {
-  id: number;
-  month: number;
-  year: number;
-  totalWorkedDays: number;
-  status: 'DRAFT' | 'VALIDATED';
-  validationDate: string | null;
-}
+export type { CraSummaryDto } from '../api/types';
 
 export interface CraDayEntry {
   day: number;

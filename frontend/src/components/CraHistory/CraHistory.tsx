@@ -44,10 +44,10 @@ export function CraHistory({ onOpen }: Props) {
   const [downloading, setDownloading] = useState<number | null>(null);
   const [downloadError, setDownloadError] = useState<string | null>(null);
 
-  const loadCras = () => {
+  const loadCras = (signal?: AbortSignal) => {
     setLoading(true);
     setError(null);
-    listCras()
+    listCras({ signal })
       .then(data => {
         const sorted = [...data].sort((a, b) =>
           b.year !== a.year ? b.year - a.year : b.month - a.month,
@@ -56,13 +56,16 @@ export function CraHistory({ onOpen }: Props) {
         setLoading(false);
       })
       .catch((err: unknown) => {
+        if (err instanceof DOMException && err.name === 'AbortError') return;
         setError(getErrorMessage(err));
         setLoading(false);
       });
   };
 
   useEffect(() => {
-    loadCras();
+    const controller = new AbortController();
+    loadCras(controller.signal);
+    return () => { controller.abort(); };
   }, []);
 
   const handleDownloadPdf = (cra: CraSummaryDto) => {

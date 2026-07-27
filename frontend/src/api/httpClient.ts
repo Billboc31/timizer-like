@@ -1,6 +1,6 @@
 import { ApiError, type ApiErrorCode } from './apiError';
 
-const BASE_URL = (typeof process !== 'undefined' && process.env?.REACT_APP_API_BASE_URL) || '';
+const BASE_URL = (import.meta.env.VITE_API_BASE_URL as string | undefined) ?? '';
 
 function toApiErrorCode(raw: unknown): ApiErrorCode {
   const known: ApiErrorCode[] = [
@@ -28,11 +28,12 @@ async function handleResponse<T>(res: Response): Promise<T> {
   throw new ApiError(toApiErrorCode(body['error']), res.status, body);
 }
 
-export async function apiGet<T>(path: string): Promise<T> {
+export async function apiGet<T>(path: string, options?: { signal?: AbortSignal }): Promise<T> {
   let res: Response;
   try {
-    res = await fetch(`${BASE_URL}${path}`);
+    res = await fetch(`${BASE_URL}${path}`, options?.signal ? { signal: options.signal } : undefined);
   } catch (err) {
+    if (err instanceof DOMException && err.name === 'AbortError') throw err;
     throw new ApiError('network_error', null, err);
   }
   return handleResponse<T>(res);
@@ -66,11 +67,12 @@ export async function apiPatch<T>(path: string, body: unknown): Promise<T> {
   return handleResponse<T>(res);
 }
 
-export async function apiGetBlob(path: string): Promise<Blob> {
+export async function apiGetBlob(path: string, options?: { signal?: AbortSignal }): Promise<Blob> {
   let res: Response;
   try {
-    res = await fetch(`${BASE_URL}${path}`);
+    res = await fetch(`${BASE_URL}${path}`, options?.signal ? { signal: options.signal } : undefined);
   } catch (err) {
+    if (err instanceof DOMException && err.name === 'AbortError') throw err;
     throw new ApiError('network_error', null, err);
   }
   if (!res.ok) {
