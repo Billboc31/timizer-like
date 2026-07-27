@@ -1,1 +1,0 @@
-Plan written to `runs/T033/plan.md`. It covers the audit scope (all routes, all defect fields, console/network capture), the single output artifact (`docs/frontend-audit.md`), and mechanically verifiable acceptance criteria — with no source files touched.
