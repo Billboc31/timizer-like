@@ -1,7 +1,7 @@
 {
   "ticket_id": "T041",
-  "state": "INIT",
+  "state": "PLAN_APPROVED",
   "branch": "ticket/T041-add-end-to-end-tests-for-the-complete-monthly-cra",
   "issue_number": 73,
-  "updated_at": "2026-07-27T16:11:32Z"
+  "updated_at": "2026-07-27T20:43:17Z"
 }
