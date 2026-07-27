@@ -73,15 +73,32 @@ The frontend is a React application (T010). From the repository root:
 ```
 cd frontend
 npm install
-npm start
+npm run dev
 ```
 
 `npm install` is required on the first run and whenever dependencies change.
-`npm start` launches the development server on its default port.
+`npm run dev` launches the Vite development server on port 5173, bound to all
+network interfaces. The app is accessible at:
+
+- locally: `http://localhost:5173`
+- from another device on Tailscale or the LAN: `http://<IP>:5173`
+
+To find the host IP:
+
+```bash
+# Tailscale
+tailscale ip -4
+
+# LAN (macOS / Linux)
+ifconfig | grep 'inet ' | grep -v 127
+```
+
+The server uses `strictPort: true`, so if port 5173 is already in use startup
+fails immediately rather than silently switching ports. Your OS firewall must
+allow inbound TCP on port 5173 for remote devices to connect.
 
 If the backend is not reachable at its default URL, point the frontend at the
-backend by setting the standard React environment variable
-`REACT_APP_API_BASE_URL` before running `npm start`.
+backend by setting `VITE_API_BASE_URL` before running `npm run dev`.
 
 ## 6. SQLite configuration
 
