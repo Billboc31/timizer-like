@@ -1,7 +1,7 @@
 {
   "ticket_id": "T037",
-  "state": "INIT",
+  "state": "PLAN_APPROVED",
   "branch": "ticket/T037-add-robust-loading-empty-success-and-error-states",
   "issue_number": 69,
-  "updated_at": "2026-07-27T16:09:47Z"
+  "updated_at": "2026-07-27T17:00:20Z"
 }
