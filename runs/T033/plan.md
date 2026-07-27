@@ -1,1 +1,1 @@
-Plan written to `runs/T033/plan.md`. It covers the full inspection scope (all routes, console errors, network failures, accessibility), specifies the exact output artifact (`docs/audit/T033-frontend-defects.md`), and keeps all fixes and redesigns explicitly out of scope.
+The plan is written to `runs/T033/plan.md`. It covers all required sections with concrete, verifiable criteria — full route checklist, seven-field defect format, console/network error sections, severity ordering — and keeps fixes, redesigns, and backend changes explicitly out of scope.
