@@ -1,8 +1,0 @@
-header {
-  padding: var(--space-4);
-  border-bottom: var(--border-width) solid var(--border-color);
-}
-
-main {
-  padding: var(--space-4);
-}

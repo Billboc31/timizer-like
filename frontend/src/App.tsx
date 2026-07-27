@@ -4,6 +4,7 @@ import { CalendarGrid } from './components/CalendarGrid/CalendarGrid';
 import { CraSummaryPanel } from './components/CraSummaryPanel/CraSummaryPanel';
 import { CraHistory } from './components/CraHistory/CraHistory';
 import { CraValidation } from './components/CraValidation/CraValidation';
+import { AppShell } from './components/AppShell/AppShell';
 import type { CraSummaryDto, CraDetails } from './types/cra';
 import type { CraDetailsDto } from './api/types';
 
@@ -33,12 +34,7 @@ export default function App() {
   };
 
   return (
-    <div>
-      <h1>Timizer Like</h1>
-      <nav>
-        <button onClick={() => { setView('selector'); }}>New CRA</button>
-        <button onClick={() => { setView('history'); }}>History</button>
-      </nav>
+    <AppShell activeView={view} onNavigate={setView}>
       {view === 'selector' ? (
         <CraMonthSelector onOpen={handleOpen} />
       ) : (
@@ -47,6 +43,6 @@ export default function App() {
       <CraSummaryPanel cra={cra} loading={false} error={null} />
       <CalendarGrid cra={cra} loading={false} error={null} />
       <CraValidation cra={cra} onValidated={handleCraValidated} />
-    </div>
+    </AppShell>
   );
 }
