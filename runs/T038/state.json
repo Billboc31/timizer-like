@@ -1,7 +1,23 @@
 {
   "ticket_id": "T038",
-  "state": "PLAN_APPROVED",
+  "state": "TEST_COMPLETE",
   "branch": "ticket/T038-redesign-the-cra-summary-and-monthly-validation-pa",
   "issue_number": 70,
-  "updated_at": "2026-07-27T17:00:14Z"
+  "updated_at": "2026-07-27T18:12:31Z",
+  "pr_number": 83,
+  "pr_synced": true,
+  "pre_conflict_state": "TEST_COMPLETE",
+  "conflict_detected_at": "2026-07-27T17:15:26Z",
+  "conflict_pr_number": 83,
+  "conflicted_files": [
+    "frontend/node_modules/.vite/vitest/da39a3ee5e6b4b0d3255bfef95601890afd80709/results.json",
+    "frontend/src/components/CraSummaryPanel/CraSummaryPanel.css",
+    "frontend/src/components/CraSummaryPanel/CraSummaryPanel.test.tsx",
+    "frontend/src/components/CraSummaryPanel/CraSummaryPanel.tsx",
+    "frontend/src/components/CraValidation/CraValidation.css",
+    "frontend/src/components/CraValidation/CraValidation.test.tsx",
+    "frontend/src/components/CraValidation/CraValidation.tsx",
+    "frontend/src/setupTests.ts",
+    "prompts/generic/planner.md"
+  ]
 }
