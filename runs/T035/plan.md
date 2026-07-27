@@ -1,7 +1,7 @@
-Plan written to `runs/T035/plan.md`. Key decisions made from codebase exploration:
+Plan written to `runs/T035/plan.md`. Key decisions:
 
-- **No routing library** — the app uses `useState`-based view switching; a router adds zero value for two views and would be scope creep.
-- **New `AppShell` component** — a header with brand + `Nav`, a constrained `<main>`. Two new files (`AppShell.tsx`, `Nav.tsx`) plus one CSS file, keeping the component-per-folder convention.
-- **`App.tsx` slim-down** — removes the inline `<h1>` and `<nav>`, delegates them to `AppShell`.
-- **`index.css` global reset** — `box-sizing: border-box` and `overflow-x: hidden` to guarantee no horizontal scroll at 320 px.
-- **Plain CSS only** — matches the existing styling approach; no new framework dependency.
+- **No router** — two views don't warrant introducing a routing library; `useState` stays.
+- **New `AppShell` component** — `AppShell.tsx` + `AppShell.css` follow the existing component-per-folder convention; `App.tsx` just wraps its children in it.
+- **Active state** — CSS class `.nav__link--active` plus `aria-current="page"` covers both visual distinctness and keyboard/screen-reader accessibility.
+- **320 px safety** — global `box-sizing: border-box` in `index.css` + fluid widths in AppShell.css; no `overflow-x` clipping that hides content.
+- **Dead CSS removed** — `App.css` currently references `header`/`main` selectors that never matched anything (the JSX used `<div>`); those rules will be deleted.
