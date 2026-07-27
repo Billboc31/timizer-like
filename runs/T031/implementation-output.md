@@ -1,0 +1,1 @@
+Fix applied. `frontend/src/api/cra.ts:3` now falls back to `''` instead of `'http://localhost:8080'`, so all CRA API calls use same-origin relative URLs that route through the nginx proxy in production — matching the behavior of `httpClient.ts`.

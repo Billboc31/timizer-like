@@ -1,6 +1,10 @@
 backend/var/*.db
 backend/var/*.db-journal
+
 backend/.env
+
+# Production environment — contains secrets, never committed.
+.env.production
 
 # Provider signature asset — never committed. See docs/provider-signature.md.
 assets/provider-signature.png
