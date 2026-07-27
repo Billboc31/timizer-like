@@ -5,6 +5,7 @@ import { CraSummaryPanel } from './components/CraSummaryPanel/CraSummaryPanel';
 import { CraHistory } from './components/CraHistory/CraHistory';
 import { CraValidation } from './components/CraValidation/CraValidation';
 import { AppShell } from './components/AppShell/AppShell';
+import { updateDay } from './api/craClient';
 import type { CraSummaryDto, CraDetails } from './types/cra';
 import type { CraDetailsDto } from './api/types';
 
@@ -33,6 +34,13 @@ export default function App() {
     setCra(dtoToDetails(updated));
   };
 
+  const handleDayClick = async (day: number, newValue: 0 | 0.5 | 1) => {
+    if (!cra) return;
+    const dateStr = `${cra.year}-${String(cra.month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+    const updated = await updateDay(cra.id, dateStr, { workValue: newValue });
+    setCra(dtoToDetails(updated));
+  };
+
   return (
     <AppShell activeView={view} onNavigate={setView}>
       {view === 'selector' ? (
@@ -41,7 +49,12 @@ export default function App() {
         <CraHistory onOpen={handleOpen} />
       )}
       <CraSummaryPanel cra={cra} loading={false} error={null} />
-      <CalendarGrid cra={cra} loading={false} error={null} />
+      <CalendarGrid
+        cra={cra}
+        loading={false}
+        error={null}
+        onDayClick={cra?.status !== 'VALIDATED' ? handleDayClick : undefined}
+      />
       <CraValidation cra={cra} onValidated={handleCraValidated} />
     </AppShell>
   );
