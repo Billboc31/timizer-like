@@ -1,0 +1,19 @@
+{
+  "ticket_id": "T039",
+  "state": "TEST_COMPLETE",
+  "branch": "ticket/T039-redesign-the-cra-history-page",
+  "issue_number": 71,
+  "updated_at": "2026-07-27T18:12:36Z",
+  "pr_number": 81,
+  "pr_synced": true,
+  "pre_conflict_state": "TEST_COMPLETE",
+  "conflict_detected_at": "2026-07-27T17:09:43Z",
+  "conflict_pr_number": 81,
+  "conflicted_files": [
+    "frontend/node_modules/.vite/vitest/da39a3ee5e6b4b0d3255bfef95601890afd80709/results.json",
+    "frontend/src/components/CraHistory/CraHistory.css",
+    "frontend/src/components/CraHistory/CraHistory.test.tsx",
+    "frontend/src/components/CraHistory/CraHistory.tsx",
+    "prompts/generic/planner.md"
+  ]
+}

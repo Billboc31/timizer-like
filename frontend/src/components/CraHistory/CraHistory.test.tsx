@@ -26,14 +26,23 @@ const VALIDATED_CRA: CraSummaryDto = {
   validationDate: '2026-07-01',
 };
 
+const OLDER_CRA: CraSummaryDto = {
+  id: 3,
+  month: 5,
+  year: 2026,
+  totalWorkedDays: 18,
+  status: 'DRAFT',
+  validationDate: null,
+};
+
 describe('CraHistory', () => {
-  it('renders loading indicator while fetching', () => {
+  it('renders loading skeleton while fetching', () => {
     vi.mocked(craApi.listCras).mockReturnValue(new Promise(() => {}));
     render(<CraHistory onOpen={vi.fn()} />);
-    expect(screen.getByText('Loading...')).toBeInTheDocument();
+    expect(screen.getByRole('list', { name: /loading/i })).toBeInTheDocument();
   });
 
-  it('renders error when listCras fails', async () => {
+  it('renders error banner when listCras fails', async () => {
     vi.mocked(craApi.listCras).mockRejectedValue(new Error('Network error'));
     render(<CraHistory onOpen={vi.fn()} />);
     await waitFor(() =>
@@ -49,7 +58,7 @@ describe('CraHistory', () => {
     );
   });
 
-  it('renders CRA rows with period, status, and worked days', async () => {
+  it('renders CRA cards with period, status, and worked days', async () => {
     vi.mocked(craApi.listCras).mockResolvedValue([DRAFT_CRA]);
     render(<CraHistory onOpen={vi.fn()} />);
     await waitFor(() => expect(screen.getByText('July 2026')).toBeInTheDocument());
@@ -91,7 +100,55 @@ describe('CraHistory', () => {
     await waitFor(() => expect(screen.getByText('Download PDF')).toBeInTheDocument());
   });
 
-  it('shows error when PDF download fails and keeps table visible', async () => {
+  it('shows VALIDATED badge with distinct class', async () => {
+    vi.mocked(craApi.listCras).mockResolvedValue([VALIDATED_CRA]);
+    render(<CraHistory onOpen={vi.fn()} />);
+    await waitFor(() => {
+      const badge = screen.getByText('VALIDATED');
+      expect(badge).toHaveClass('cra-history__badge--validated');
+    });
+  });
+
+  it('shows DRAFT badge with distinct class', async () => {
+    vi.mocked(craApi.listCras).mockResolvedValue([DRAFT_CRA]);
+    render(<CraHistory onOpen={vi.fn()} />);
+    await waitFor(() => {
+      const badge = screen.getByText('DRAFT');
+      expect(badge).toHaveClass('cra-history__badge--draft');
+    });
+  });
+
+  it('sorts CRAs newest first', async () => {
+    vi.mocked(craApi.listCras).mockResolvedValue([OLDER_CRA, VALIDATED_CRA, DRAFT_CRA]);
+    render(<CraHistory onOpen={vi.fn()} />);
+    await waitFor(() => expect(screen.getByText('July 2026')).toBeInTheDocument());
+    const cards = screen.getAllByRole('listitem');
+    expect(cards[0]).toHaveTextContent('July 2026');
+    expect(cards[1]).toHaveTextContent('June 2026');
+    expect(cards[2]).toHaveTextContent('May 2026');
+  });
+
+  it('Open button has aria-label containing the period', async () => {
+    vi.mocked(craApi.listCras).mockResolvedValue([DRAFT_CRA]);
+    render(<CraHistory onOpen={vi.fn()} />);
+    await waitFor(() =>
+      expect(
+        screen.getByRole('button', { name: 'Open CRA for July 2026' }),
+      ).toBeInTheDocument(),
+    );
+  });
+
+  it('Download PDF button has aria-label containing the period', async () => {
+    vi.mocked(craApi.listCras).mockResolvedValue([VALIDATED_CRA]);
+    render(<CraHistory onOpen={vi.fn()} />);
+    await waitFor(() =>
+      expect(
+        screen.getByRole('button', { name: 'Download PDF for June 2026' }),
+      ).toBeInTheDocument(),
+    );
+  });
+
+  it('shows error banner when PDF download fails and keeps list visible', async () => {
     vi.mocked(craApi.listCras).mockResolvedValue([VALIDATED_CRA]);
     vi.mocked(craApi.downloadCraPdf).mockRejectedValue(new Error('Download failed'));
 
