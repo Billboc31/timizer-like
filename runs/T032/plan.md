@@ -1,7 +1,5 @@
-The plan is written to `runs/T032/plan.md`. It targets three files:
+The plan is written to `runs/T032/plan.md`. It targets three configuration/documentation changes:
 
-- **`frontend/vite.config.ts`** — add `server: { host: true, port: 5173, strictPort: true }`.
-- **`README.md`** — fix `npm start` → `npm run dev` and add Tailscale/LAN URL discovery instructions.
-- **`docs/local-development.md`** — same command fix, explicit port, and a new sub-section on accessing from another device.
-
-One pre-existing issue surfaced: `README.md` and `docs/local-development.md` both say `npm start`, but no `start` script exists in `package.json` (only `dev`). The plan includes fixing this as part of the documentation update.
+1. **`frontend/vite.config.ts`** — add `server: { host: true, port: 5173, strictPort: true }` to bind on all interfaces and enforce the port.
+2. **`docs/local-development.md`** — fix `npm start` → `npm run dev` (pre-existing bug: no `start` script exists), and add a sub-section on finding and using the LAN/Tailscale URL.
+3. **`README.md`** and **`frontend/README.md`** — same command fix plus a brief pointer to the LAN/Tailscale instructions.
