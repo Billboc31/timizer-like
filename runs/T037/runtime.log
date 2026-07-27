@@ -32,3 +32,8 @@
 [2026-07-27T18:19:47Z] push: pushing branch=ticket/T037-add-robust-loading-empty-success-and-error-states
 [2026-07-27T18:19:49Z] push: done branch=ticket/T037-add-robust-loading-empty-success-and-error-states
 [2026-07-27T18:19:49Z] auto-run: TEST_COMPLETE — running PR lifecycle
+[2026-07-27T20:06:48Z] conflict-resolver: [pass 1/3] conflicted=['frontend/src/App.tsx', 'frontend/src/components/CalendarGrid/CalendarGrid.test.tsx', 'frontend/src/components/CalendarGrid/CalendarGrid.tsx', 'frontend/src/components/CraHistory/CraHistory.test.tsx', 'frontend/src/components/CraHistory/CraHistory.tsx', 'frontend/src/components/CraValidation/CraValidation.tsx'] | staged=['frontend/src/App.tsx', 'frontend/src/components/CalendarGrid/CalendarGrid.test.tsx', 'frontend/src/components/CalendarGrid/CalendarGrid.tsx', 'frontend/src/components/CraHistory/CraHistory.test.tsx', 'frontend/src/components/CraHistory/CraHistory.tsx', 'frontend/src/components/CraValidation/CraValidation.tsx'] | unresolved=[] | continue_rc=1 | next_source=[]
+[2026-07-27T20:06:48Z] conflict-resolver: all conflicts resolved after 1 pass(es)
+[2026-07-27T20:06:48Z] conflict-resolver: running tests
+[2026-07-27T20:06:48Z] conflict-resolver: test-report written: runs/T037/conflict/test-report.md
+[2026-07-27T20:06:48Z] conflict-resolver: staging and committing resolution artifacts
