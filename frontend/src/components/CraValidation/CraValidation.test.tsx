@@ -57,6 +57,7 @@ describe('CraValidation', () => {
   it('clicking validate button shows confirmation UI', () => {
     render(<CraValidation cra={DRAFT_CRA} onValidated={vi.fn()} />);
     fireEvent.click(screen.getByRole('button', { name: /valider le cra/i }));
+    expect(screen.getByRole('dialog')).toBeInTheDocument();
     expect(screen.getByText(/verrouille le cra/i)).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /confirmer/i })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /annuler/i })).toBeInTheDocument();
@@ -96,12 +97,14 @@ describe('CraValidation', () => {
     resolve(VALIDATED_DTO);
   });
 
-  it('displays error and re-enables validate button on API error', async () => {
+  it('displays error inside dialog and re-enables action buttons on API error', async () => {
     mockValidateCra.mockRejectedValueOnce(new Error('Server error'));
     render(<CraValidation cra={DRAFT_CRA} onValidated={vi.fn()} />);
     fireEvent.click(screen.getByRole('button', { name: /valider le cra/i }));
     fireEvent.click(screen.getByRole('button', { name: /confirmer/i }));
     await waitFor(() => expect(screen.getByRole('alert')).toBeInTheDocument());
-    expect(screen.getByRole('button', { name: /valider le cra/i })).toBeInTheDocument();
+    expect(screen.getByRole('dialog')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /confirmer/i })).not.toBeDisabled();
+    expect(screen.getByRole('button', { name: /annuler/i })).not.toBeDisabled();
   });
 });

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import './CraValidation.css';
 import { validateCra } from '../../api/craClient';
 import { isApiError } from '../../api/apiError';
@@ -15,17 +15,20 @@ type UIState = 'idle' | 'confirming' | 'loading';
 export function CraValidation({ cra, onValidated }: Props) {
   const [uiState, setUiState] = useState<UIState>('idle');
   const [error, setError] = useState<string | null>(null);
+  const dialogRef = useRef<HTMLDialogElement>(null);
 
   if (!cra || cra.status === 'VALIDATED') return null;
 
   const handleValidateClick = () => {
     setError(null);
     setUiState('confirming');
+    dialogRef.current?.showModal();
   };
 
   const handleCancel = () => {
     setError(null);
     setUiState('idle');
+    dialogRef.current?.close();
   };
 
   const handleConfirm = async () => {
@@ -34,6 +37,7 @@ export function CraValidation({ cra, onValidated }: Props) {
     try {
       const today = new Date().toISOString().slice(0, 10);
       const updated = await validateCra(cra.id, { providerSignatureDate: today });
+      dialogRef.current?.close();
       onValidated(updated);
     } catch (e) {
       const msg =
@@ -41,46 +45,42 @@ export function CraValidation({ cra, onValidated }: Props) {
           ? e.message
           : 'Une erreur est survenue. Veuillez réessayer.';
       setError(msg);
-      setUiState('idle');
+      setUiState('confirming');
     }
   };
 
-  if (uiState === 'idle') {
-    return (
-      <div className="cra-validation">
-        <button className="cra-validation__button" onClick={handleValidateClick}>
-          Valider le CRA
-        </button>
+  return (
+    <div className="cra-validation">
+      <button className="cra-validation__button" onClick={handleValidateClick}>
+        Valider le CRA
+      </button>
+
+      <dialog ref={dialogRef} className="cra-validation-dialog" aria-modal="true">
+        <p className="cra-validation__warning">
+          La validation verrouille le CRA, cette action est irréversible. Le CRA validé devient en lecture seule.
+        </p>
         {error && (
           <p role="alert" className="cra-validation__error">
             {error}
           </p>
         )}
-      </div>
-    );
-  }
-
-  return (
-    <div className="cra-validation">
-      <p className="cra-validation__warning">
-        La validation verrouille le CRA, cette action est irréversible.
-      </p>
-      <div className="cra-validation__actions">
-        <button
-          className="cra-validation__confirm"
-          onClick={handleConfirm}
-          disabled={uiState === 'loading'}
-        >
-          {uiState === 'loading' ? 'Validation…' : 'Confirmer'}
-        </button>
-        <button
-          className="cra-validation__cancel"
-          onClick={handleCancel}
-          disabled={uiState === 'loading'}
-        >
-          Annuler
-        </button>
-      </div>
+        <div className="cra-validation__actions">
+          <button
+            className="cra-validation__confirm"
+            onClick={handleConfirm}
+            disabled={uiState === 'loading'}
+          >
+            {uiState === 'loading' ? 'Validation…' : 'Confirmer'}
+          </button>
+          <button
+            className="cra-validation__cancel"
+            onClick={handleCancel}
+            disabled={uiState === 'loading'}
+          >
+            Annuler
+          </button>
+        </div>
+      </dialog>
     </div>
   );
 }

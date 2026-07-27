@@ -92,4 +92,15 @@ describe('CraSummaryPanel', () => {
     render(<CraSummaryPanel cra={cra} loading={false} error={null} />);
     expect(screen.getByTestId('summary-status')).toHaveTextContent('VALIDATED');
   });
+
+  it('applies draft badge class for DRAFT status', () => {
+    render(<CraSummaryPanel cra={BASE_CRA} loading={false} error={null} />);
+    expect(screen.getByTestId('summary-status')).toHaveClass('cra-summary-panel__badge--draft');
+  });
+
+  it('applies validated badge class for VALIDATED status', () => {
+    const cra: CraDetails = { ...BASE_CRA, status: 'VALIDATED' };
+    render(<CraSummaryPanel cra={cra} loading={false} error={null} />);
+    expect(screen.getByTestId('summary-status')).toHaveClass('cra-summary-panel__badge--validated');
+  });
 });
