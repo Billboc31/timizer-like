@@ -1,7 +1,21 @@
 {
   "ticket_id": "T035",
-  "state": "PLAN_APPROVED",
+  "state": "TEST_COMPLETE",
   "branch": "ticket/T035-redesign-the-application-shell-and-navigation",
   "issue_number": 67,
-  "updated_at": "2026-07-27T16:41:24Z"
+  "updated_at": "2026-07-27T16:56:21Z",
+  "pr_number": 80,
+  "pr_synced": true,
+  "pre_conflict_state": "TEST_COMPLETE",
+  "conflict_detected_at": "2026-07-27T16:53:46Z",
+  "conflict_pr_number": 80,
+  "conflicted_files": [
+    "frontend/node_modules/.vite/vitest/da39a3ee5e6b4b0d3255bfef95601890afd80709/results.json",
+    "frontend/src/App.css",
+    "frontend/src/App.tsx",
+    "frontend/src/components/AppShell/AppShell.css",
+    "frontend/src/components/AppShell/AppShell.tsx",
+    "frontend/src/index.css",
+    "prompts/generic/planner.md"
+  ]
 }
