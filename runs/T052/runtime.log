@@ -32,3 +32,8 @@
 [2026-07-28T10:55:26Z] push: pushing branch=ticket/T052-add-cra-signature-workflow-and-signature-status-tr
 [2026-07-28T10:55:29Z] push: done branch=ticket/T052-add-cra-signature-workflow-and-signature-status-tr
 [2026-07-28T10:55:29Z] auto-run: TEST_COMPLETE — running PR lifecycle
+[2026-07-28T15:59:42Z] conflict-resolver: git rebase origin/main exit=0
+[2026-07-28T15:59:42Z] conflict-resolver: rebase clean — no conflicts
+[2026-07-28T15:59:42Z] conflict-resolver: running tests
+[2026-07-28T15:59:42Z] conflict-resolver: test-report written: runs/T052/conflict/test-report.md
+[2026-07-28T15:59:42Z] conflict-resolver: staging and committing resolution artifacts
