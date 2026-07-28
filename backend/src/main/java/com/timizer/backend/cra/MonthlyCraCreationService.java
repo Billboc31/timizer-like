@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.timizerlike.backend.cra.dto.CraDetailsDto;
+import com.timizerlike.backend.provider.ProviderSettingsDto;
+import com.timizerlike.backend.provider.ProviderSettingsService;
 import com.timizerlike.backend.settings.ClientSettingsDto;
 import com.timizerlike.backend.settings.ClientSettingsService;
 import com.timizerlike.cra.config.CraDefaultsProperties;
@@ -22,14 +24,17 @@ public class MonthlyCraCreationService {
     private final MonthlyCraReportRepository repository;
     private final CraDefaultsProperties defaults;
     private final ClientSettingsService clientSettingsService;
+    private final ProviderSettingsService providerSettingsService;
 
     public MonthlyCraCreationService(
             MonthlyCraReportRepository repository,
             CraDefaultsProperties defaults,
-            ClientSettingsService clientSettingsService) {
+            ClientSettingsService clientSettingsService,
+            ProviderSettingsService providerSettingsService) {
         this.repository = repository;
         this.defaults = defaults;
         this.clientSettingsService = clientSettingsService;
+        this.providerSettingsService = providerSettingsService;
     }
 
     @Transactional
@@ -52,23 +57,25 @@ public class MonthlyCraCreationService {
     }
 
     private MonthlyCraReport buildReport(int year, int month) {
-        CraDefaultsProperties.Provider provider = defaults.provider();
+        ProviderSettingsDto provider = providerSettingsService.getSettings();
         ClientSettingsDto client = clientSettingsService.get();
 
-        String[] providerName = splitName(provider.name());
         String[] contactName = splitName(client.contactFullName());
 
         return new MonthlyCraReport(
                 month,
                 year,
-                providerName[0],
-                providerName[1],
+                provider.firstName(),
+                provider.lastName(),
                 provider.company(),
                 contactName[0],
                 contactName[1],
                 client.clientCompany(),
                 client.contactEmail(),
                 null,
+                provider.address(),
+                provider.email(),
+                provider.phone(),
                 client.clientAddress(),
                 client.contactRole()
         );
