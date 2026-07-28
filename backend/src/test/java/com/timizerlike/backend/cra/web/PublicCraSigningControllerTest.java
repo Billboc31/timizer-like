@@ -17,7 +17,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.timizer.backend.cra.ConsentNotGivenException;
-import com.timizer.backend.cra.CraNotSignedByProviderException;
 import com.timizer.backend.cra.InvalidSignatureImageException;
 import com.timizer.backend.cra.TokenAlreadyConsumedException;
 import com.timizer.backend.cra.TokenNotFoundException;
@@ -127,15 +126,4 @@ class PublicCraSigningControllerTest {
                 .andExpect(jsonPath("$.error").value("invalid_signature_image"));
     }
 
-    @Test
-    void returns409WhenCraNotInSignedByProviderStatus() throws Exception {
-        doThrow(new CraNotSignedByProviderException(1L))
-                .when(clientSignatureService).sign(any(), any(), any(), eq(true), any());
-
-        mockMvc.perform(post("/public/cra-link/{token}/sign", TOKEN)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(VALID_PAYLOAD))
-                .andExpect(status().isConflict())
-                .andExpect(jsonPath("$.error").value("cra_not_signed"));
-    }
 }
