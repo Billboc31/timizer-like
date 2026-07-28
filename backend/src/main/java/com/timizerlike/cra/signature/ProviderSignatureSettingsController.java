@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.timizer.backend.cra.signature.ProviderSignatureSettings;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/api/signature")
 public class ProviderSignatureSettingsController {
@@ -28,7 +30,7 @@ public class ProviderSignatureSettingsController {
     }
 
     @PutMapping
-    public ProviderSignatureDto save(@RequestBody ProviderSignatureDto request) {
+    public ProviderSignatureDto save(@Valid @RequestBody ProviderSignatureDto request) {
         ProviderSignatureSettings saved = service.save(request.signerName(), request.signatureImage());
         return new ProviderSignatureDto(saved.getSignerName(), saved.getSignatureImage());
     }

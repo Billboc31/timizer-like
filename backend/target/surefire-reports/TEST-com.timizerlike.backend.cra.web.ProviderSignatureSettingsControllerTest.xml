@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="com.timizerlike.cra.signature.ProviderSignatureSettingsServiceTest" time="0.069" tests="5" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="com.timizerlike.backend.cra.web.ProviderSignatureSettingsControllerTest" time="0.14" tests="5" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="26"/>
     <property name="sun.jnu.encoding" value="UTF-8"/>
@@ -8,7 +8,6 @@
     <property name="sun.arch.data.model" value="64"/>
     <property name="net.bytebuddy.experimental" value="true"/>
     <property name="java.vendor.url" value="https://github.com/Homebrew/homebrew-core/issues"/>
-    <property name="catalina.useNaming" value="false"/>
     <property name="user.timezone" value="Europe/Paris"/>
     <property name="org.jboss.logging.provider" value="slf4j"/>
     <property name="os.name" value="Mac OS X"/>
@@ -50,15 +49,12 @@
     <property name="localRepository" value="/Users/pierrebocquet/.m2/repository"/>
     <property name="java.vendor.url.bug" value="https://github.com/Homebrew/homebrew-core/issues"/>
     <property name="java.io.tmpdir" value="/var/folders/0g/xf7sr5893d980r0nztgck6680000gn/T/"/>
-    <property name="catalina.home" value="/private/var/folders/0g/xf7sr5893d980r0nztgck6680000gn/T/tomcat.0.14037181744548427625"/>
-    <property name="com.zaxxer.hikari.pool_number" value="1"/>
     <property name="java.version" value="26.0.1"/>
     <property name="user.dir" value="/Users/pierrebocquet/runtime/timizer-like/worktrees/T051/backend"/>
     <property name="os.arch" value="aarch64"/>
     <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
     <property name="PID" value="49862"/>
     <property name="CONSOLE_LOG_CHARSET" value="UTF-8"/>
-    <property name="catalina.base" value="/private/var/folders/0g/xf7sr5893d980r0nztgck6680000gn/T/tomcat.0.14037181744548427625"/>
     <property name="native.encoding" value="UTF-8"/>
     <property name="java.library.path" value="/Users/pierrebocquet/Library/Java/Extensions:/Library/Java/Extensions:/Network/Library/Java/Extensions:/System/Library/Java/Extensions:/usr/lib/java:."/>
     <property name="java.vm.info" value="mixed mode, sharing"/>
@@ -70,9 +66,31 @@
     <property name="socksNonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
     <property name="java.class.version" value="70.0"/>
   </properties>
-  <testcase name="getReturnsEmptyWhenNoSettingsSaved" classname="com.timizerlike.cra.signature.ProviderSignatureSettingsServiceTest" time="0.058"/>
-  <testcase name="getReturnsStoredSettings" classname="com.timizerlike.cra.signature.ProviderSignatureSettingsServiceTest" time="0.0"/>
-  <testcase name="deleteRemovesById" classname="com.timizerlike.cra.signature.ProviderSignatureSettingsServiceTest" time="0.003"/>
-  <testcase name="saveUpdatesExistingRecord" classname="com.timizerlike.cra.signature.ProviderSignatureSettingsServiceTest" time="0.004"/>
-  <testcase name="saveCreatesNewRecordWhenNoneExists" classname="com.timizerlike.cra.signature.ProviderSignatureSettingsServiceTest" time="0.001"/>
+  <testcase name="returnsHttp200WithDtoWhenSignatureExists" classname="com.timizerlike.backend.cra.web.ProviderSignatureSettingsControllerTest" time="0.006">
+    <system-out><![CDATA[2026-07-28T18:50:49.013+02:00  INFO 49862 --- [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.timizerlike.backend.cra.web.ProviderSignatureSettingsControllerTest]: ProviderSignatureSettingsControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-28T18:50:49.015+02:00  INFO 49862 --- [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.timizerlike.TimizerlikeTestConfig for test class com.timizerlike.backend.cra.web.ProviderSignatureSettingsControllerTest
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::                (v3.2.5)
+
+2026-07-28T18:50:49.025+02:00  INFO 49862 --- [           main] .ProviderSignatureSettingsControllerTest : Starting ProviderSignatureSettingsControllerTest using Java 26.0.1 with PID 49862 (started by pierrebocquet in /Users/pierrebocquet/runtime/timizer-like/worktrees/T051/backend)
+2026-07-28T18:50:49.025+02:00  INFO 49862 --- [           main] .ProviderSignatureSettingsControllerTest : No active profile set, falling back to 1 default profile: "default"
+2026-07-28T18:50:49.101+02:00  INFO 49862 --- [           main] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2026-07-28T18:50:49.101+02:00  INFO 49862 --- [           main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2026-07-28T18:50:49.101+02:00  INFO 49862 --- [           main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 0 ms
+2026-07-28T18:50:49.103+02:00  INFO 49862 --- [           main] .ProviderSignatureSettingsControllerTest : Started ProviderSignatureSettingsControllerTest in 0.086 seconds (process running for 1.839)
+]]></system-out>
+  </testcase>
+  <testcase name="returnsHttp200WithDtoOnSave" classname="com.timizerlike.backend.cra.web.ProviderSignatureSettingsControllerTest" time="0.03"/>
+  <testcase name="returnsHttp204OnDelete" classname="com.timizerlike.backend.cra.web.ProviderSignatureSettingsControllerTest" time="0.003"/>
+  <testcase name="returnsHttp404WhenNoSignatureSaved" classname="com.timizerlike.backend.cra.web.ProviderSignatureSettingsControllerTest" time="0.002"/>
+  <testcase name="returnsHttp400WhenSaveBodyHasBlankFields" classname="com.timizerlike.backend.cra.web.ProviderSignatureSettingsControllerTest" time="0.008">
+    <system-out><![CDATA[2026-07-28T18:50:49.151+02:00  WARN 49862 --- [           main] .w.s.m.s.DefaultHandlerExceptionResolver : Resolved [org.springframework.web.bind.MethodArgumentNotValidException: Validation failed for argument [0] in public com.timizerlike.cra.signature.ProviderSignatureDto com.timizerlike.cra.signature.ProviderSignatureSettingsController.save(com.timizerlike.cra.signature.ProviderSignatureDto) with 2 errors: [Field error in object 'providerSignatureDto' on field 'signatureImage': rejected value []; codes [NotBlank.providerSignatureDto.signatureImage,NotBlank.signatureImage,NotBlank.java.lang.String,NotBlank]; arguments [org.springframework.context.support.DefaultMessageSourceResolvable: codes [providerSignatureDto.signatureImage,signatureImage]; arguments []; default message [signatureImage]]; default message [must not be blank]] [Field error in object 'providerSignatureDto' on field 'signerName': rejected value []; codes [NotBlank.providerSignatureDto.signerName,NotBlank.signerName,NotBlank.java.lang.String,NotBlank]; arguments [org.springframework.context.support.DefaultMessageSourceResolvable: codes [providerSignatureDto.signerName,signerName]; arguments []; default message [signerName]]; default message [must not be blank]] ]
+]]></system-out>
+  </testcase>
 </testsuite>
