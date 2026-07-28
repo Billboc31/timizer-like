@@ -1,8 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: com.timizerlike.backend.cra.web.CraDayControllerTest
 -------------------------------------------------------------------------------
-<<<<<<< HEAD
-Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.180 s -- in com.timizerlike.backend.cra.web.CraDayControllerTest
-=======
 Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.178 s -- in com.timizerlike.backend.cra.web.CraDayControllerTest
->>>>>>> ff8358f6 (feat(T052/workflow): coder — update 41 file(s))

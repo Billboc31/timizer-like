@@ -1,8 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: com.timizerlike.backend.cra.web.CraPdfDownloadControllerTest
 -------------------------------------------------------------------------------
-<<<<<<< HEAD
-Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.097 s -- in com.timizerlike.backend.cra.web.CraPdfDownloadControllerTest
-=======
 Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.077 s -- in com.timizerlike.backend.cra.web.CraPdfDownloadControllerTest
->>>>>>> ff8358f6 (feat(T052/workflow): coder — update 41 file(s))

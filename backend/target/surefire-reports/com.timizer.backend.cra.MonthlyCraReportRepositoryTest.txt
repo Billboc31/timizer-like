@@ -1,8 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: com.timizer.backend.cra.MonthlyCraReportRepositoryTest
 -------------------------------------------------------------------------------
-<<<<<<< HEAD
-Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.079 s -- in com.timizer.backend.cra.MonthlyCraReportRepositoryTest
-=======
 Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.074 s -- in com.timizer.backend.cra.MonthlyCraReportRepositoryTest
->>>>>>> ff8358f6 (feat(T052/workflow): coder — update 41 file(s))

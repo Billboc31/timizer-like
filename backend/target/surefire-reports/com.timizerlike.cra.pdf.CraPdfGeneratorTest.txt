@@ -1,8 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: com.timizerlike.cra.pdf.CraPdfGeneratorTest
 -------------------------------------------------------------------------------
-<<<<<<< HEAD
-Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.236 s -- in com.timizerlike.cra.pdf.CraPdfGeneratorTest
-=======
 Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.038 s -- in com.timizerlike.cra.pdf.CraPdfGeneratorTest
->>>>>>> ff8358f6 (feat(T052/workflow): coder — update 41 file(s))
