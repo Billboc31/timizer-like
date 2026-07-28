@@ -31,3 +31,8 @@
 [2026-07-28T06:41:24Z] push: pushing branch=ticket/T047-redesign-cra-month-and-year-selection-with-a-moder
 [2026-07-28T06:41:26Z] push: done branch=ticket/T047-redesign-cra-month-and-year-selection-with-a-moder
 [2026-07-28T06:41:26Z] auto-run: TEST_COMPLETE — running PR lifecycle
+[2026-07-28T06:44:03Z] conflict-resolver: [pass 1/3] conflicted=['frontend/src/components/CraMonthSelector/CraMonthSelector.tsx'] | staged=['frontend/src/components/CraMonthSelector/CraMonthSelector.tsx'] | unresolved=[] | continue_rc=1 | next_source=[]
+[2026-07-28T06:44:03Z] conflict-resolver: all conflicts resolved after 1 pass(es)
+[2026-07-28T06:44:03Z] conflict-resolver: running tests
+[2026-07-28T06:44:03Z] conflict-resolver: test-report written: runs/T047/conflict/test-report.md
+[2026-07-28T06:44:03Z] conflict-resolver: staging and committing resolution artifacts
