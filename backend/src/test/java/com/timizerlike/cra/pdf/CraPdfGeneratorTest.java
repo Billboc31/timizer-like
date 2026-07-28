@@ -1,5 +1,6 @@
 package com.timizerlike.cra.pdf;
 
+import com.timizerlike.cra.pdf.model.CraPdfClientSignature;
 import com.timizerlike.cra.pdf.model.CraPdfContact;
 import com.timizerlike.cra.pdf.model.CraPdfDayEntry;
 import com.timizerlike.cra.pdf.model.CraPdfDayType;
@@ -24,11 +25,25 @@ import java.util.Base64;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 
 class CraPdfGeneratorTest {
 
     private static final YearMonth PERIOD = YearMonth.of(2026, 3);
     private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+    // Minimal valid 1x1 PNG (67 bytes)
+    private static final byte[] MINIMAL_PNG = new byte[]{
+        (byte) 0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A,
+        0x00, 0x00, 0x00, 0x0D, 0x49, 0x48, 0x44, 0x52,
+        0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01,
+        0x08, 0x02, 0x00, 0x00, 0x00, (byte) 0x90, 0x77, 0x53,
+        (byte) 0xDE, 0x00, 0x00, 0x00, 0x0C, 0x49, 0x44, 0x41,
+        0x54, 0x08, (byte) 0xD7, 0x63, (byte) 0xF8, (byte) 0xCF, (byte) 0xC0, 0x00,
+        0x00, 0x00, 0x02, 0x00, 0x01, (byte) 0xE2, 0x21, (byte) 0xBC,
+        0x33, 0x00, 0x00, 0x00, 0x00, 0x49, 0x45, 0x4E,
+        0x44, (byte) 0xAE, 0x42, 0x60, (byte) 0x82
+    };
 
     private final CraPdfGenerator generator = new CraPdfGenerator();
 
@@ -205,6 +220,54 @@ class CraPdfGeneratorTest {
         }
     }
 
+    @Test
+    void generatesPdfWithPendingClientSignature() throws IOException {
+        CraPdfDocument document = providerOnlyFixture();
+
+        byte[] bytes = generator.generate(document);
+
+        assertThat(bytes).isNotEmpty();
+        try (PDDocument loaded = Loader.loadPDF(bytes)) {
+            String page1 = extractPage(loaded, 1);
+            assertThat(page1).contains("En attente de signature");
+            assertThat(page1).contains("Alice Provider");
+            assertThat(page1).contains("01/04/2026");
+        }
+    }
+
+    @Test
+    void generatesPdfWithBothSignatures() throws IOException {
+        CraPdfDocument document = bothSignaturesFixture();
+
+        byte[] bytes = generator.generate(document);
+
+        assertThat(bytes).isNotEmpty();
+        try (PDDocument loaded = Loader.loadPDF(bytes)) {
+            String page1 = extractPage(loaded, 1);
+            assertThat(page1).contains("Alice Provider");
+            assertThat(page1).contains("01/04/2026");
+            assertThat(page1).contains("Bob Client");
+            assertThat(page1).contains("15/04/2026");
+        }
+    }
+
+    @Test
+    void handlesMissingSignatureImageGracefully() {
+        CraPdfSignatures signatures = new CraPdfSignatures(
+                new CraPdfProviderSignature("Alice Provider", LocalDate.of(2026, 4, 1), new byte[]{1, 2, 3}),
+                new CraPdfClientSignature("Bob Client", LocalDate.of(2026, 4, 15), new byte[]{99})
+        );
+        CraPdfSummary summary = new CraPdfSummary(
+                PERIOD,
+                new CraPdfParty("Alice Provider", "Provider SARL", null, null),
+                new CraPdfParty("Acme Corp", "Corporate Client SA", null, null),
+                BigDecimal.ZERO
+        );
+        CraPdfDocument document = new CraPdfDocument(summary, List.of(), signatures);
+
+        assertThatCode(() -> generator.generate(document)).doesNotThrowAnyException();
+    }
+
     private static CraPdfDocument monthFixture(YearMonth yearMonth, int halfDayOfMonth) {
         CraPdfSummary summary = new CraPdfSummary(yearMonth, null, null, BigDecimal.ZERO);
         List<CraPdfDayEntry> days = new ArrayList<>();
@@ -291,6 +354,34 @@ class CraPdfGeneratorTest {
                 null
         );
         return new CraPdfDocument(summary, days, signatures);
+    }
+
+    private static CraPdfDocument providerOnlyFixture() {
+        CraPdfSummary summary = new CraPdfSummary(
+                PERIOD,
+                new CraPdfParty("Alice Provider", "Provider SARL", null, null),
+                new CraPdfParty("Acme Corp", "Corporate Client SA", null, null),
+                BigDecimal.ZERO
+        );
+        CraPdfSignatures signatures = new CraPdfSignatures(
+                new CraPdfProviderSignature("Alice Provider", LocalDate.of(2026, 4, 1), MINIMAL_PNG),
+                null
+        );
+        return new CraPdfDocument(summary, List.of(), signatures);
+    }
+
+    private static CraPdfDocument bothSignaturesFixture() {
+        CraPdfSummary summary = new CraPdfSummary(
+                PERIOD,
+                new CraPdfParty("Alice Provider", "Provider SARL", null, null),
+                new CraPdfParty("Acme Corp", "Corporate Client SA", null, null),
+                BigDecimal.ZERO
+        );
+        CraPdfSignatures signatures = new CraPdfSignatures(
+                new CraPdfProviderSignature("Alice Provider", LocalDate.of(2026, 4, 1), MINIMAL_PNG),
+                new CraPdfClientSignature("Bob Client", LocalDate.of(2026, 4, 15), MINIMAL_PNG)
+        );
+        return new CraPdfDocument(summary, List.of(), signatures);
     }
 
     private static String extractPage(PDDocument document, int pageNumber) throws IOException {

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.timizer.backend.cra.ConsentNotGivenException;
+import com.timizer.backend.cra.CraAlreadyClientSignedException;
 import com.timizer.backend.cra.CraDayNotFoundException;
 import com.timizer.backend.cra.CraNotFoundException;
 import com.timizer.backend.cra.CraNotSignedByProviderException;
@@ -93,5 +94,11 @@ public class CraApiExceptionHandler {
     public ResponseEntity<Map<String, String>> handleInvalidSignatureImage() {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(Map.of("error", "invalid_signature_image"));
+    }
+
+    @ExceptionHandler(CraAlreadyClientSignedException.class)
+    public ResponseEntity<Map<String, String>> handleCraAlreadyClientSigned() {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(Map.of("error", "cra_already_client_signed"));
     }
 }

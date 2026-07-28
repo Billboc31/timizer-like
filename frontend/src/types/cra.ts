@@ -30,6 +30,8 @@ export interface CraDetails {
 export interface CraDetailsDto extends CraSummaryDto {
   days: CraDayEntry[];
   providerSignatureDate: string | null;
+  clientSignatureDate: string | null;
+  clientRepresentativeName?: string | null;
   providerFirstName?: string | null;
   providerLastName?: string | null;
   providerCompany?: string | null;

@@ -33,7 +33,8 @@ export interface CraDetailsDto {
   providerSignerName?: string | null;
   clientContactFirstName?: string | null;
   clientContactLastName?: string | null;
-  clientSignatureDate?: string | null;
+  clientSignatureDate: string | null;
+  clientRepresentativeName: string | null;
 }
 
 export interface CraSummaryDto {
@@ -43,6 +44,7 @@ export interface CraSummaryDto {
   totalWorkedDays: number;
   status: CraStatus;
   validationDate: string | null;
+  clientSignatureDate: string | null;
 }
 
 export interface CraDayUpdateRequest {
@@ -54,6 +56,12 @@ export interface SignProviderRequest {
   providerSignatureDate: string;
   providerSignatureImage: string;
   providerSignerName: string;
+}
+
+export interface ClientSignRequest {
+  clientRepresentativeName: string;
+  clientSignatureDate: string;
+  signatureImageBase64?: string | null;
 }
 
 export interface ProviderSignatureDto {

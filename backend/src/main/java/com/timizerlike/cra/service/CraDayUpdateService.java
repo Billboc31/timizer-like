@@ -83,7 +83,9 @@ public class CraDayUpdateService {
                 cra.getClientAddress(),
                 cra.getClientContactRole(),
                 cra.getProviderSignatureImage(),
-                cra.getProviderSignerName()
+                cra.getProviderSignerName(),
+                cra.getClientSignatureDate(),
+                cra.getClientRepresentativeName()
         );
     }
 }

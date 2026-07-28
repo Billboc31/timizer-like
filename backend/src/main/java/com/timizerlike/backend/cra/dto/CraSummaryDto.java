@@ -8,6 +8,7 @@ public record CraSummaryDto(
         int year,
         double totalWorkedDays,
         CraStatus status,
-        LocalDate validationDate
+        LocalDate validationDate,
+        LocalDate clientSignatureDate
 ) {
 }

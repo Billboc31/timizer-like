@@ -38,7 +38,7 @@ class CraDtoTest {
 
     @Test
     void craSummaryDtoRoundTripWithoutValidationDate() {
-        CraSummaryDto summary = new CraSummaryDto(42L, 3, 2026, 18.5, CraStatus.DRAFT, null);
+        CraSummaryDto summary = new CraSummaryDto(42L, 3, 2026, 18.5, CraStatus.DRAFT, null, null);
 
         assertEquals(42L, summary.id());
         assertEquals(3, summary.month());
@@ -51,7 +51,7 @@ class CraDtoTest {
     @Test
     void craSummaryDtoRoundTripWithValidationDate() {
         LocalDate validationDate = LocalDate.of(2026, 6, 30);
-        CraSummaryDto summary = new CraSummaryDto(7L, 6, 2026, 20.0, CraStatus.VALIDATED, validationDate);
+        CraSummaryDto summary = new CraSummaryDto(7L, 6, 2026, 20.0, CraStatus.VALIDATED, validationDate, null);
 
         assertEquals(CraStatus.VALIDATED, summary.status());
         assertEquals(validationDate, summary.validationDate());
@@ -67,7 +67,7 @@ class CraDtoTest {
         CraDetailsDto details = new CraDetailsDto(
                 7L, 6, 2026, 1.5, CraStatus.VALIDATED, days, null, null,
                 "Jean", "Dupont", "Acme Corp", "Alice", "Martin", "Lyra Network",
-                null, null, null, null);
+                null, null, null, null, null, null);
 
         assertEquals(7L, details.id());
         assertEquals(6, details.month());

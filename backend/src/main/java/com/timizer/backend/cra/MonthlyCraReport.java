@@ -113,6 +113,18 @@ public class MonthlyCraReport {
     @Column(name = "validation_date")
     private LocalDate validationDate;
 
+    @Column(name = "client_signature_date")
+    private LocalDate clientSignatureDate;
+
+    @Column(name = "client_representative_name")
+    private String clientRepresentativeName;
+
+    @Column(name = "provider_signature_image", columnDefinition = "TEXT")
+    private String providerSignatureImage;
+
+    @Column(name = "client_signature_image", columnDefinition = "TEXT")
+    private String clientSignatureImage;
+
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;
 
@@ -350,5 +362,37 @@ public class MonthlyCraReport {
 
     public void setProviderCompany(String providerCompany) {
         this.providerCompany = providerCompany;
+    }
+
+    public LocalDate getClientSignatureDate() {
+        return clientSignatureDate;
+    }
+
+    public void setClientSignatureDate(LocalDate clientSignatureDate) {
+        this.clientSignatureDate = clientSignatureDate;
+    }
+
+    public String getClientRepresentativeName() {
+        return clientRepresentativeName;
+    }
+
+    public void setClientRepresentativeName(String clientRepresentativeName) {
+        this.clientRepresentativeName = clientRepresentativeName;
+    }
+
+    public String getProviderSignatureImage() {
+        return providerSignatureImage;
+    }
+
+    public void setProviderSignatureImage(String providerSignatureImage) {
+        this.providerSignatureImage = providerSignatureImage;
+    }
+
+    public String getClientSignatureImage() {
+        return clientSignatureImage;
+    }
+
+    public void setClientSignatureImage(String clientSignatureImage) {
+        this.clientSignatureImage = clientSignatureImage;
     }
 }

@@ -127,9 +127,9 @@ class CraPdfDocumentTest {
 
         assertThat(signatures.client().clientRepresentativeName()).isNull();
         assertThat(signatures.client().signedAt()).isNull();
-        assertThat(signatures.client().signatureImageData()).isNull();
+        assertThat(signatures.client().signatureImage()).isNull();
         assertThat(signatures.provider().name()).isEqualTo("Alice Provider");
         assertThat(signatures.provider().signedAt()).isEqualTo(LocalDate.of(2026, 4, 1));
-        assertThat(signatures.provider().signatureImageData()).isNull();
+        assertThat(signatures.provider().signatureImage()).isNull();
     }
 }
