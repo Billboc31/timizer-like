@@ -1,4 +1,8 @@
 -------------------------------------------------------------------------------
 Test set: com.timizer.backend.cra.CraDayEntryTest
 -------------------------------------------------------------------------------
+<<<<<<< HEAD
 Tests run: 16, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.006 s -- in com.timizer.backend.cra.CraDayEntryTest
+=======
+Tests run: 16, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.011 s -- in com.timizer.backend.cra.CraDayEntryTest
+>>>>>>> ff8358f6 (feat(T052/workflow): coder — update 41 file(s))

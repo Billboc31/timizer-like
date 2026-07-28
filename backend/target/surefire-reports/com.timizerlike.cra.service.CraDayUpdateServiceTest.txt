@@ -1,4 +1,8 @@
 -------------------------------------------------------------------------------
 Test set: com.timizerlike.cra.service.CraDayUpdateServiceTest
 -------------------------------------------------------------------------------
+<<<<<<< HEAD
 Tests run: 12, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.042 s -- in com.timizerlike.cra.service.CraDayUpdateServiceTest
+=======
+Tests run: 15, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.046 s -- in com.timizerlike.cra.service.CraDayUpdateServiceTest
+>>>>>>> ff8358f6 (feat(T052/workflow): coder — update 41 file(s))

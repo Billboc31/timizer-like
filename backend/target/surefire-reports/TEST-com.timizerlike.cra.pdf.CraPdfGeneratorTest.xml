@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<<<<<<< HEAD
 <testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="com.timizerlike.cra.pdf.CraPdfGeneratorTest" time="0.236" tests="6" errors="0" skipped="0" failures="0">
+=======
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="com.timizerlike.cra.pdf.CraPdfGeneratorTest" time="0.038" tests="2" errors="0" skipped="0" failures="0">
+>>>>>>> ff8358f6 (feat(T052/workflow): coder — update 41 file(s))
   <properties>
     <property name="java.specification.version" value="26"/>
     <property name="sun.jnu.encoding" value="UTF-8"/>
@@ -14,7 +18,11 @@
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="user.country" value="FR"/>
     <property name="sun.boot.library.path" value="/opt/homebrew/Cellar/openjdk/26.0.1/libexec/openjdk.jdk/Contents/Home/lib"/>
+<<<<<<< HEAD
     <property name="sun.java.command" value="/Users/pierrebocquet/runtime/timizer-like/worktrees/T057/backend/target/surefire/surefirebooter-20260728085350424_3.jar /Users/pierrebocquet/runtime/timizer-like/worktrees/T057/backend/target/surefire 2026-07-28T08-53-50_391-jvmRun1 surefire-20260728085350424_1tmp surefire_0-20260728085350424_2tmp"/>
+=======
+    <property name="sun.java.command" value="/Users/pierrebocquet/runtime/timizer-like/worktrees/T052/backend/target/surefire/surefirebooter-20260728123829277_3.jar /Users/pierrebocquet/runtime/timizer-like/worktrees/T052/backend/target/surefire 2026-07-28T12-38-29_248-jvmRun1 surefire-20260728123829277_1tmp surefire_0-20260728123829277_2tmp"/>
+>>>>>>> ff8358f6 (feat(T052/workflow): coder — update 41 file(s))
     <property name="http.nonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
     <property name="jdk.debug" value="release"/>
     <property name="test" value="CraPdfGeneratorTest"/>
@@ -32,7 +40,11 @@
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
     <property name="apple.awt.application.name" value="ForkedBooter"/>
+<<<<<<< HEAD
     <property name="surefire.real.class.path" value="/Users/pierrebocquet/runtime/timizer-like/worktrees/T057/backend/target/surefire/surefirebooter-20260728085350424_3.jar"/>
+=======
+    <property name="surefire.real.class.path" value="/Users/pierrebocquet/runtime/timizer-like/worktrees/T052/backend/target/surefire/surefirebooter-20260728123829277_3.jar"/>
+>>>>>>> ff8358f6 (feat(T052/workflow): coder — update 41 file(s))
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
     <property name="ftp.nonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
     <property name="java.runtime.version" value="26.0.1"/>
@@ -47,10 +59,21 @@
     <property name="localRepository" value="/Users/pierrebocquet/.m2/repository"/>
     <property name="java.vendor.url.bug" value="https://github.com/Homebrew/homebrew-core/issues"/>
     <property name="java.io.tmpdir" value="/var/folders/0g/xf7sr5893d980r0nztgck6680000gn/T/"/>
+<<<<<<< HEAD
+=======
+    <property name="catalina.home" value="/private/var/folders/0g/xf7sr5893d980r0nztgck6680000gn/T/tomcat.0.4793090357991585421"/>
+    <property name="com.zaxxer.hikari.pool_number" value="1"/>
+>>>>>>> ff8358f6 (feat(T052/workflow): coder — update 41 file(s))
     <property name="java.version" value="26.0.1"/>
     <property name="user.dir" value="/Users/pierrebocquet/runtime/timizer-like/worktrees/T057/backend"/>
     <property name="os.arch" value="aarch64"/>
     <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
+<<<<<<< HEAD
+=======
+    <property name="PID" value="67480"/>
+    <property name="CONSOLE_LOG_CHARSET" value="UTF-8"/>
+    <property name="catalina.base" value="/private/var/folders/0g/xf7sr5893d980r0nztgck6680000gn/T/tomcat.0.4793090357991585421"/>
+>>>>>>> ff8358f6 (feat(T052/workflow): coder — update 41 file(s))
     <property name="native.encoding" value="UTF-8"/>
     <property name="java.library.path" value="/Users/pierrebocquet/Library/Java/Extensions:/Library/Java/Extensions:/Network/Library/Java/Extensions:/System/Library/Java/Extensions:/usr/lib/java:."/>
     <property name="java.vm.info" value="mixed mode, sharing"/>
@@ -62,10 +85,15 @@
     <property name="socksNonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
     <property name="java.class.version" value="70.0"/>
   </properties>
+<<<<<<< HEAD
   <testcase name="rendersAllDaysOf30DayMonth" classname="com.timizerlike.cra.pdf.CraPdfGeneratorTest" time="0.091"/>
   <testcase name="rendersAllDaysOf31DayMonthAcrossPages" classname="com.timizerlike.cra.pdf.CraPdfGeneratorTest" time="0.009"/>
   <testcase name="generatesTwoPagePdfWithSummaryAndDayDetails" classname="com.timizerlike.cra.pdf.CraPdfGeneratorTest" time="0.007"/>
   <testcase name="tolerantToNullProviderContactAndEmptyDayList" classname="com.timizerlike.cra.pdf.CraPdfGeneratorTest" time="0.002"/>
   <testcase name="rendersAllDaysOf28DayMonth" classname="com.timizerlike.cra.pdf.CraPdfGeneratorTest" time="0.006"/>
   <testcase name="displaysMonthPeriodAboveTable" classname="com.timizerlike.cra.pdf.CraPdfGeneratorTest" time="0.003"/>
+=======
+  <testcase name="generatesTwoPagePdfWithSummaryAndDayDetails" classname="com.timizerlike.cra.pdf.CraPdfGeneratorTest" time="0.033"/>
+  <testcase name="tolerantToNullProviderContactAndEmptyDayList" classname="com.timizerlike.cra.pdf.CraPdfGeneratorTest" time="0.004"/>
+>>>>>>> ff8358f6 (feat(T052/workflow): coder — update 41 file(s))
 </testsuite>
