@@ -67,20 +67,20 @@ class CraHistoryServiceTest {
         List<CraSummaryDto> result = service.listHistory();
 
         CraSummaryDto summary = result.get(0);
-        assertThat(summary.status()).isEqualTo(CraStatus.VALIDATED);
+        assertThat(summary.status()).isEqualTo(CraStatus.FULLY_SIGNED);
         assertThat(summary.validationDate()).isEqualTo(validationDate);
         assertThat(summary.totalWorkedDays()).isEqualTo(20.0);
     }
 
     @Test
-    void mapsSignedByProviderAsDraft() {
+    void mapsSignedByProviderStatus() {
         MonthlyCraReport cra = mockReport(3L, 5, 2026, ValidationStatus.SIGNED_BY_PROVIDER, null, List.of());
         when(craRepository.findAllByOrderByYearDescMonthDesc()).thenReturn(List.of(cra));
         when(calculationService.calculateTotalWorkedDays(List.of())).thenReturn(10.0);
 
         List<CraSummaryDto> result = service.listHistory();
 
-        assertThat(result.get(0).status()).isEqualTo(CraStatus.DRAFT);
+        assertThat(result.get(0).status()).isEqualTo(CraStatus.SIGNED_BY_PROVIDER);
     }
 
     @Test

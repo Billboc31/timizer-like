@@ -13,9 +13,16 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 class CraDtoTest {
 
     @Test
-    void craStatusExposesDraftAndValidated() {
+    void craStatusExposesAllWorkflowValues() {
         assertArrayEquals(
-                new CraStatus[]{CraStatus.DRAFT, CraStatus.VALIDATED},
+                new CraStatus[]{
+                        CraStatus.DRAFT,
+                        CraStatus.READY_FOR_PROVIDER_SIGNATURE,
+                        CraStatus.SIGNED_BY_PROVIDER,
+                        CraStatus.AWAITING_CLIENT_SIGNATURE,
+                        CraStatus.FULLY_SIGNED,
+                        CraStatus.VALIDATED,
+                },
                 CraStatus.values()
         );
     }

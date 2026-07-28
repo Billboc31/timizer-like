@@ -4,14 +4,13 @@ import type {
   CraDayUpdateRequest,
   CraSummaryDto,
   ProviderSettingsDto,
-  ValidateCraRequest,
+  SignProviderRequest,
 } from './types';
 
 export function createCra(year: number, month: number): Promise<CraDetailsDto> {
   return apiPost<CraDetailsDto>('/api/cra', { year, month });
 }
 
-// NOTE: backend endpoint GET /api/cras/:id is pending implementation
 export function getCra(id: number): Promise<CraDetailsDto> {
   return apiGet<CraDetailsDto>(`/api/cras/${id}`);
 }
@@ -24,16 +23,22 @@ export function updateDay(
   return apiPatch<CraDetailsDto>(`/api/cras/${craId}/days/${date}`, body);
 }
 
-export function validateCra(craId: number, body: ValidateCraRequest): Promise<CraDetailsDto> {
-  return apiPost<CraDetailsDto>(`/api/cras/${craId}/validate`, body);
+export function submitCra(craId: number): Promise<CraDetailsDto> {
+  return apiPost<CraDetailsDto>(`/api/cras/${craId}/submit`, null);
 }
 
-// NOTE: backend endpoint GET /api/cras is pending implementation
+export function signCraByProvider(craId: number, body: SignProviderRequest): Promise<CraDetailsDto> {
+  return apiPost<CraDetailsDto>(`/api/cras/${craId}/sign-provider`, body);
+}
+
+export function sendCraToClient(craId: number): Promise<CraDetailsDto> {
+  return apiPost<CraDetailsDto>(`/api/cras/${craId}/send-to-client`, null);
+}
+
 export function listCras(options?: { signal?: AbortSignal }): Promise<CraSummaryDto[]> {
   return apiGet<CraSummaryDto[]>('/api/cras', options);
 }
 
-// NOTE: backend endpoint GET /api/cras/:id/pdf is pending implementation
 export function downloadCraPdf(craId: number, options?: { signal?: AbortSignal }): Promise<Blob> {
   return apiGetBlob(`/api/cras/${craId}/pdf`, options);
 }

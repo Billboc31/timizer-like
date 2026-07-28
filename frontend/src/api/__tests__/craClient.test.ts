@@ -3,7 +3,9 @@ import {
   createCra,
   getCra,
   updateDay,
-  validateCra,
+  submitCra,
+  signCraByProvider,
+  sendCraToClient,
   listCras,
   downloadCraPdf,
   getProviderSettings,
@@ -100,13 +102,37 @@ describe('updateDay', () => {
   });
 });
 
-describe('validateCra', () => {
-  it('calls POST /api/cras/:craId/validate and returns CraDetailsDto', async () => {
-    mockFetchOk({ ...mockCraDetails, status: 'VALIDATED' });
-    const result = await validateCra(1, { providerSignatureDate: '2026-07-12' });
-    expect(result.status).toBe('VALIDATED');
+describe('submitCra', () => {
+  it('calls POST /api/cras/:craId/submit and returns CraDetailsDto', async () => {
+    mockFetchOk({ ...mockCraDetails, status: 'READY_FOR_PROVIDER_SIGNATURE' });
+    const result = await submitCra(1);
+    expect(result.status).toBe('READY_FOR_PROVIDER_SIGNATURE');
     expect(vi.mocked(fetch)).toHaveBeenCalledWith(
-      '/api/cras/1/validate',
+      '/api/cras/1/submit',
+      expect.objectContaining({ method: 'POST' }),
+    );
+  });
+});
+
+describe('signCraByProvider', () => {
+  it('calls POST /api/cras/:craId/sign-provider and returns CraDetailsDto', async () => {
+    mockFetchOk({ ...mockCraDetails, status: 'SIGNED_BY_PROVIDER' });
+    const result = await signCraByProvider(1, { providerSignatureDate: '2026-07-31' });
+    expect(result.status).toBe('SIGNED_BY_PROVIDER');
+    expect(vi.mocked(fetch)).toHaveBeenCalledWith(
+      '/api/cras/1/sign-provider',
+      expect.objectContaining({ method: 'POST' }),
+    );
+  });
+});
+
+describe('sendCraToClient', () => {
+  it('calls POST /api/cras/:craId/send-to-client and returns CraDetailsDto', async () => {
+    mockFetchOk({ ...mockCraDetails, status: 'AWAITING_CLIENT_SIGNATURE' });
+    const result = await sendCraToClient(1);
+    expect(result.status).toBe('AWAITING_CLIENT_SIGNATURE');
+    expect(vi.mocked(fetch)).toHaveBeenCalledWith(
+      '/api/cras/1/send-to-client',
       expect.objectContaining({ method: 'POST' }),
     );
   });
@@ -186,6 +212,20 @@ describe('error mapping', () => {
     mockFetchError(409, 'cra_validated');
     await expect(updateDay(1, '2026-07-01', { workValue: 1 })).rejects.toSatisfy(
       (e: unknown) => isApiError(e) && e.code === 'cra_validated' && e.httpStatus === 409,
+    );
+  });
+
+  it('maps 409 invalid_cra_transition to ApiError with correct code', async () => {
+    mockFetchError(409, 'invalid_cra_transition');
+    await expect(submitCra(1)).rejects.toSatisfy(
+      (e: unknown) => isApiError(e) && e.code === 'invalid_cra_transition' && e.httpStatus === 409,
+    );
+  });
+
+  it('maps 409 duplicate_cra_transition to ApiError with correct code', async () => {
+    mockFetchError(409, 'duplicate_cra_transition');
+    await expect(submitCra(1)).rejects.toSatisfy(
+      (e: unknown) => isApiError(e) && e.code === 'duplicate_cra_transition' && e.httpStatus === 409,
     );
   });
 

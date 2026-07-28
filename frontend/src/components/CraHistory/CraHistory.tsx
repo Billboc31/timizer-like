@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { listCras, downloadCraPdf } from '../../api/craClient';
 import { getErrorMessage } from '../../api/errorMessages';
-import type { CraSummaryDto } from '../../types/cra';
+import type { CraStatus, CraSummaryDto } from '../../api/types';
 import './CraHistory.css';
 
 const MONTH_NAMES = [
@@ -11,6 +11,35 @@ const MONTH_NAMES = [
 
 function periodLabel(cra: CraSummaryDto): string {
   return `${MONTH_NAMES[cra.month - 1]} ${cra.year}`;
+}
+
+function statusLabel(status: CraStatus): string {
+  switch (status) {
+    case 'DRAFT': return 'Brouillon';
+    case 'READY_FOR_PROVIDER_SIGNATURE': return 'En attente prestataire';
+    case 'SIGNED_BY_PROVIDER': return 'Signé prestataire';
+    case 'AWAITING_CLIENT_SIGNATURE': return 'En attente client';
+    case 'FULLY_SIGNED':
+    case 'VALIDATED': return 'Signé';
+  }
+}
+
+function statusBadgeModifier(status: CraStatus): string {
+  switch (status) {
+    case 'DRAFT': return 'draft';
+    case 'READY_FOR_PROVIDER_SIGNATURE': return 'ready-for-provider';
+    case 'SIGNED_BY_PROVIDER': return 'signed-by-provider';
+    case 'AWAITING_CLIENT_SIGNATURE': return 'awaiting-client';
+    case 'FULLY_SIGNED':
+    case 'VALIDATED': return 'signed';
+  }
+}
+
+function isPdfAvailable(status: CraStatus): boolean {
+  return status === 'SIGNED_BY_PROVIDER'
+    || status === 'AWAITING_CLIENT_SIGNATURE'
+    || status === 'FULLY_SIGNED'
+    || status === 'VALIDATED';
 }
 
 interface Props {
@@ -127,9 +156,9 @@ export function CraHistory({ onOpen }: Props) {
               <div className="cra-history__card-period">{period}</div>
               <div className="cra-history__card-meta">
                 <span
-                  className={`cra-history__badge cra-history__badge--${cra.status.toLowerCase()}`}
+                  className={`cra-history__badge cra-history__badge--${statusBadgeModifier(cra.status)}`}
                 >
-                  {cra.status}
+                  {statusLabel(cra.status)}
                 </span>
                 <span className="cra-history__days">
                   <span className="cra-history__label" aria-hidden="true">Days: </span>
@@ -138,7 +167,7 @@ export function CraHistory({ onOpen }: Props) {
                 <span className="cra-history__validation">
                   <span className="cra-history__label" aria-hidden="true">Validated: </span>
                   <span>
-                    {cra.status === 'VALIDATED' && cra.validationDate ? cra.validationDate : '—'}
+                    {cra.validationDate ?? '—'}
                   </span>
                 </span>
               </div>
@@ -151,7 +180,7 @@ export function CraHistory({ onOpen }: Props) {
                 >
                   Open
                 </button>
-                {cra.status === 'VALIDATED' && (
+                {isPdfAvailable(cra.status) && (
                   <button
                     className="cra-history__btn cra-history__btn--download"
                     onClick={() => { handleDownloadPdf(cra); }}

@@ -1,9 +1,8 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { CraMonthSelector } from './components/CraMonthSelector/CraMonthSelector';
 import { CalendarGrid } from './components/CalendarGrid/CalendarGrid';
 import { CraSummaryPanel } from './components/CraSummaryPanel/CraSummaryPanel';
 import { CraHistory } from './components/CraHistory/CraHistory';
-import { CraValidation } from './components/CraValidation/CraValidation';
 import { ClientSettingsForm } from './components/ClientSettingsForm/ClientSettingsForm';
 import { ProviderSettingsForm } from './components/ProviderSettingsForm/ProviderSettingsForm';
 import { ProviderSignatureBox } from './components/ProviderSignatureBox/ProviderSignatureBox';
@@ -44,7 +43,6 @@ export default function App() {
   const [dayUpdateError, setDayUpdateError] = useState<string | null>(null);
   const [clientSettings, setClientSettings] = useState<ClientSettingsDto | null>(null);
   const [settingsError, setSettingsError] = useState<string | null>(null);
-  const craValidationRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (view === 'settings' && clientSettings === null) {
@@ -75,13 +73,8 @@ export default function App() {
     loadCra(summary.id);
   };
 
-  const handleCraValidated = (updated: CraDetailsDto) => {
+  const handleSignatureSuccess = (updated: CraDetailsDto) => {
     setCra(dtoToDetails(updated));
-  };
-
-  const handleSignClick = () => {
-    const btn = craValidationRef.current?.querySelector<HTMLButtonElement>('.cra-validation__button');
-    btn?.click();
   };
 
   const handleDayClick = (day: number, newValue: 0 | 0.5 | 1) => {
@@ -118,22 +111,19 @@ export default function App() {
           ) : (
             <CraHistory onOpen={handleOpen} />
           )}
-          <CraSummaryPanel cra={cra} loading={craLoading} error={craError} />
+          <CraSummaryPanel cra={cra} loading={craLoading} error={craError} onSuccess={handleSignatureSuccess} />
           <CalendarGrid
             cra={cra}
             loading={craLoading}
             error={craError}
             onRetry={lastCraId !== null ? () => loadCra(lastCraId) : undefined}
-            onDayClick={cra?.status !== 'VALIDATED' ? handleDayClick : undefined}
+            onDayClick={cra?.status === 'DRAFT' ? handleDayClick : undefined}
             updatingDay={updatingDay}
             dayUpdateError={dayUpdateError}
           />
           {cra && (
-            <ProviderSignatureBox cra={cra} onSignClick={handleSignClick} />
+            <ProviderSignatureBox cra={cra} onSignClick={() => {}} />
           )}
-          <div ref={craValidationRef}>
-            <CraValidation cra={cra} onValidated={handleCraValidated} />
-          </div>
         </>
       )}
     </AppShell>

@@ -8,6 +8,8 @@ function toApiErrorCode(raw: unknown): ApiErrorCode {
     'cra_validated',
     'cra_not_found',
     'cra_day_not_found',
+    'invalid_cra_transition',
+    'duplicate_cra_transition',
   ];
   if (typeof raw === 'string' && (known as string[]).includes(raw)) {
     return raw as ApiErrorCode;

@@ -1,6 +1,9 @@
 import './CraSummaryPanel.css';
+import { CraSignatureStatus } from '../CraSignatureStatus/CraSignatureStatus';
+import { CraSignatureActions } from '../CraSignatureActions/CraSignatureActions';
 import type { CraDetails } from '../../types/cra';
 import { SectionHeading } from '../SectionHeading/SectionHeading';
+import type { CraDetailsDto } from '../../api/types';
 
 const MONTH_NAMES = [
   'January', 'February', 'March', 'April', 'May', 'June',
@@ -11,9 +14,10 @@ interface Props {
   cra: CraDetails | null;
   loading: boolean;
   error: string | null;
+  onSuccess?: (updated: CraDetailsDto) => void;
 }
 
-export function CraSummaryPanel({ cra, loading, error }: Props) {
+export function CraSummaryPanel({ cra, loading, error, onSuccess }: Props) {
   if (loading) {
     return (
       <div className="cra-summary-panel__loading" data-testid="summary-loading">
@@ -33,7 +37,6 @@ export function CraSummaryPanel({ cra, loading, error }: Props) {
   const period = `${MONTH_NAMES[cra.month - 1]} ${cra.year}`;
   const providerName = [cra.providerFirstName, cra.providerLastName].filter(Boolean).join(' ') || '—';
   const clientName = [cra.clientFirstName, cra.clientLastName].filter(Boolean).join(' ') || '—';
-  const statusKey = cra.status.toLowerCase() as 'draft' | 'validated';
 
   return (
     <section className="cra-summary-panel" aria-label="CRA Summary">
@@ -48,12 +51,7 @@ export function CraSummaryPanel({ cra, loading, error }: Props) {
         <span className="cra-summary-panel__hero-label">Total worked days</span>
       </div>
       <div className="cra-summary-panel__status-row">
-        <span
-          className={`cra-summary-panel__badge cra-summary-panel__badge--${statusKey}`}
-          data-testid="summary-status"
-        >
-          {cra.status}
-        </span>
+        <CraSignatureStatus status={cra.status} data-testid="summary-status" />
       </div>
       <dl className="cra-summary-panel__meta">
         <div className="cra-summary-panel__meta-item">
@@ -69,6 +67,9 @@ export function CraSummaryPanel({ cra, loading, error }: Props) {
           <dd data-testid="summary-client">{clientName}</dd>
         </div>
       </dl>
+      {onSuccess && (
+        <CraSignatureActions cra={cra} onSuccess={onSuccess} />
+      )}
     </section>
   );
 }
