@@ -1,9 +1,20 @@
-import { render, screen, cleanup, fireEvent } from '@testing-library/react';
-import { describe, it, expect, afterEach, vi } from 'vitest';
+import { render, screen, cleanup, fireEvent, waitFor } from '@testing-library/react';
+import { describe, it, expect, vi, afterEach } from 'vitest';
 import { CalendarGrid } from './CalendarGrid';
+import { updateDay } from '../../api/craClient';
 import type { CraDetails } from '../../types/cra';
+import type { CraDetailsDto } from '../../api/types';
 
-afterEach(cleanup);
+vi.mock('../../api/craClient', () => ({
+  updateDay: vi.fn(),
+}));
+
+const mockUpdateDay = vi.mocked(updateDay);
+
+afterEach(() => {
+  cleanup();
+  vi.resetAllMocks();
+});
 
 const JULY_2026: CraDetails = {
   id: 1,
@@ -12,6 +23,17 @@ const JULY_2026: CraDetails = {
   totalWorkedDays: 0,
   status: 'DRAFT',
   days: [],
+};
+
+const JULY_2026_DTO: CraDetailsDto = {
+  id: 1,
+  month: 7,
+  year: 2026,
+  totalWorkedDays: 0,
+  status: 'DRAFT',
+  days: [],
+  validationDate: null,
+  providerSignatureDate: null,
 };
 
 describe('CalendarGrid', () => {
@@ -224,5 +246,92 @@ describe('CalendarGrid', () => {
       />,
     );
     expect(screen.getByRole('alert')).toHaveTextContent("La valeur saisie n'est pas valide.");
+  });
+});
+
+describe('CalendarGrid — day interaction', () => {
+  it('cycle 0 → 1: clicking a day with worked 0 calls updateDay with workValue 1', async () => {
+    mockUpdateDay.mockResolvedValueOnce(JULY_2026_DTO);
+    render(<CalendarGrid cra={JULY_2026} loading={false} error={null} />);
+    fireEvent.click(screen.getAllByTestId('day-cell')[0]);
+    await waitFor(() =>
+      expect(mockUpdateDay).toHaveBeenCalledWith(1, '2026-07-01', { workValue: 1 }),
+    );
+  });
+
+  it('cycle 1 → 0.5: clicking a day with worked 1 calls updateDay with workValue 0.5', async () => {
+    const cra: CraDetails = { ...JULY_2026, days: [{ day: 1, worked: 1, note: '' }] };
+    mockUpdateDay.mockResolvedValueOnce(JULY_2026_DTO);
+    render(<CalendarGrid cra={cra} loading={false} error={null} />);
+    fireEvent.click(screen.getAllByTestId('day-cell')[0]);
+    await waitFor(() =>
+      expect(mockUpdateDay).toHaveBeenCalledWith(1, '2026-07-01', { workValue: 0.5 }),
+    );
+  });
+
+  it('cycle 0.5 → 0: clicking a day with worked 0.5 calls updateDay with workValue 0', async () => {
+    const cra: CraDetails = { ...JULY_2026, days: [{ day: 1, worked: 0.5, note: '' }] };
+    mockUpdateDay.mockResolvedValueOnce(JULY_2026_DTO);
+    render(<CalendarGrid cra={cra} loading={false} error={null} />);
+    fireEvent.click(screen.getAllByTestId('day-cell')[0]);
+    await waitFor(() =>
+      expect(mockUpdateDay).toHaveBeenCalledWith(1, '2026-07-01', { workValue: 0 }),
+    );
+  });
+
+  it('calls onDayChange with the resolved CraDetailsDto including updated totalWorkedDays', async () => {
+    const updatedDto: CraDetailsDto = { ...JULY_2026_DTO, totalWorkedDays: 10 };
+    mockUpdateDay.mockResolvedValueOnce(updatedDto);
+    const onDayChange = vi.fn();
+    render(
+      <CalendarGrid cra={JULY_2026} loading={false} error={null} onDayChange={onDayChange} />,
+    );
+    fireEvent.click(screen.getAllByTestId('day-cell')[0]);
+    await waitFor(() => expect(onDayChange).toHaveBeenCalledWith(updatedDto));
+  });
+
+  it('marks all day cells aria-disabled while updateDay is pending', async () => {
+    let resolve!: (v: CraDetailsDto) => void;
+    mockUpdateDay.mockReturnValueOnce(new Promise(r => { resolve = r; }));
+    render(<CalendarGrid cra={JULY_2026} loading={false} error={null} />);
+    fireEvent.click(screen.getAllByTestId('day-cell')[0]);
+    await waitFor(() =>
+      expect(screen.getAllByTestId('day-cell')[0]).toHaveAttribute('aria-disabled', 'true'),
+    );
+    screen.getAllByTestId('day-cell').forEach(cell =>
+      expect(cell).toHaveAttribute('aria-disabled', 'true'),
+    );
+    resolve(JULY_2026_DTO);
+  });
+
+  it('removes aria-disabled from all cells after updateDay resolves', async () => {
+    mockUpdateDay.mockResolvedValueOnce(JULY_2026_DTO);
+    render(<CalendarGrid cra={JULY_2026} loading={false} error={null} />);
+    fireEvent.click(screen.getAllByTestId('day-cell')[0]);
+    await waitFor(() =>
+      expect(screen.getAllByTestId('day-cell')[0]).not.toHaveAttribute('aria-disabled'),
+    );
+    screen.getAllByTestId('day-cell').forEach(cell =>
+      expect(cell).not.toHaveAttribute('aria-disabled'),
+    );
+  });
+
+  it('renders role="alert" with the error message and re-enables cells on API error', async () => {
+    mockUpdateDay.mockRejectedValueOnce(new Error('Server error'));
+    render(<CalendarGrid cra={JULY_2026} loading={false} error={null} />);
+    fireEvent.click(screen.getAllByTestId('day-cell')[0]);
+    await waitFor(() =>
+      expect(screen.getByRole('alert')).toHaveTextContent('Server error'),
+    );
+    screen.getAllByTestId('day-cell').forEach(cell =>
+      expect(cell).not.toHaveAttribute('aria-disabled'),
+    );
+  });
+
+  it('does not call updateDay when cra status is VALIDATED', () => {
+    const validatedCra: CraDetails = { ...JULY_2026, status: 'VALIDATED' };
+    render(<CalendarGrid cra={validatedCra} loading={false} error={null} />);
+    fireEvent.click(screen.getAllByTestId('day-cell')[0]);
+    expect(mockUpdateDay).not.toHaveBeenCalled();
   });
 });
