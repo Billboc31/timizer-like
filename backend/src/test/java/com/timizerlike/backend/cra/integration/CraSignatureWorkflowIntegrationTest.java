@@ -2,6 +2,7 @@ package com.timizerlike.backend.cra.integration;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.List;
 import java.util.Map;
 
 import org.apache.hc.client5.http.impl.classic.HttpClients;
@@ -129,7 +130,20 @@ class CraSignatureWorkflowIntegrationTest {
         assertThat(pdfSignedResponse.getHeaders().getContentType()).isEqualTo(MediaType.APPLICATION_PDF);
         assertThat(pdfSignedResponse.getBody()).isNotEmpty();
 
-        // Step 4: Send to client — SIGNED_BY_PROVIDER → AWAITING_CLIENT_SIGNATURE
+        // Step 4a: Generate signature link — requires SIGNED_BY_PROVIDER
+        ResponseEntity<Map<String, Object>> linkResponse = restTemplate.exchange(
+                "/api/cras/" + craId + "/signature-link",
+                HttpMethod.POST,
+                new HttpEntity<>(null),
+                new ParameterizedTypeReference<>() {});
+
+        assertThat(linkResponse.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+        assertThat(linkResponse.getBody()).isNotNull();
+        String signatureUrl = (String) linkResponse.getBody().get("signatureUrl");
+        assertThat(signatureUrl).isNotBlank();
+        String rawToken = signatureUrl.substring(signatureUrl.lastIndexOf('/') + 1);
+
+        // Step 4b: Send to client — SIGNED_BY_PROVIDER → AWAITING_CLIENT_SIGNATURE
         ResponseEntity<Map<String, Object>> sendResponse = restTemplate.exchange(
                 "/api/cras/" + craId + "/send-to-client",
                 HttpMethod.POST,
@@ -139,5 +153,43 @@ class CraSignatureWorkflowIntegrationTest {
         assertThat(sendResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(sendResponse.getBody()).isNotNull();
         assertThat(sendResponse.getBody().get("status")).isEqualTo("AWAITING_CLIENT_SIGNATURE");
+
+        // Step 5: Client signs — AWAITING_CLIENT_SIGNATURE → FULLY_SIGNED
+        Map<String, Object> clientSignBody = Map.of(
+                "signerName", "Alice Client",
+                "signerRole", "Responsable technique",
+                "consentApproved", true,
+                "signatureImageBase64", "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==");
+
+        ResponseEntity<Void> clientSignResponse = restTemplate.exchange(
+                "/public/cra-link/" + rawToken + "/sign",
+                HttpMethod.POST,
+                new HttpEntity<>(clientSignBody),
+                Void.class);
+
+        assertThat(clientSignResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        // Verify CRA transitioned to FULLY_SIGNED
+        ResponseEntity<List<Map<String, Object>>> historyResponse = restTemplate.exchange(
+                "/api/cras", HttpMethod.GET, null,
+                new ParameterizedTypeReference<>() {});
+        assertThat(historyResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(historyResponse.getBody()).isNotNull();
+        Map<String, Object> signedCra = historyResponse.getBody().stream()
+                .filter(c -> ((Number) c.get("id")).longValue() == craId)
+                .findFirst()
+                .orElseThrow(() -> new AssertionError("CRA not found in history"));
+        assertThat(signedCra.get("status")).isEqualTo("FULLY_SIGNED");
+
+        // Step 6: Re-signing with the same token must return 410 GONE
+        ResponseEntity<Map<String, Object>> reSignResponse = restTemplate.exchange(
+                "/public/cra-link/" + rawToken + "/sign",
+                HttpMethod.POST,
+                new HttpEntity<>(clientSignBody),
+                new ParameterizedTypeReference<>() {});
+
+        assertThat(reSignResponse.getStatusCode()).isEqualTo(HttpStatus.GONE);
+        assertThat(reSignResponse.getBody()).isNotNull();
+        assertThat(reSignResponse.getBody().get("error")).isEqualTo("token_already_consumed");
     }
 }

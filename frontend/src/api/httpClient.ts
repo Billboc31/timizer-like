@@ -10,9 +10,11 @@ function toApiErrorCode(raw: unknown): ApiErrorCode {
     'cra_day_not_found',
     'invalid_cra_transition',
     'duplicate_cra_transition',
-    'signature_too_large',
-    'signature_invalid_format',
+    'invalid_signature_image',
     'token_invalid',
+    'token_already_consumed',
+    'cra_not_signed',
+    'consent_not_given',
   ];
   if (typeof raw === 'string' && (known as string[]).includes(raw)) {
     return raw as ApiErrorCode;
@@ -22,7 +24,9 @@ function toApiErrorCode(raw: unknown): ApiErrorCode {
 
 async function handleResponse<T>(res: Response): Promise<T> {
   if (res.ok) {
-    return res.json() as Promise<T>;
+    const text = await res.text();
+    if (!text) return undefined as T;
+    return JSON.parse(text) as T;
   }
   let body: Record<string, unknown> = {};
   try {

@@ -3,6 +3,7 @@ package com.timizerlike.cra.service;
 import java.math.BigDecimal;
 import java.time.DayOfWeek;
 import java.time.YearMonth;
+import java.util.Base64;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -82,7 +83,7 @@ public class CraPdfDownloadService {
                 new CraPdfProviderSignature(
                         cra.getProviderFirstName() + " " + cra.getProviderLastName(),
                         cra.getProviderSignatureDate(),
-                        cra.getProviderSignatureImage()),
+                        decodeSignatureImage(cra.getProviderSignatureImage())),
                 null);
 
         return new CraPdfDocument(summary, days, signatures);
@@ -120,5 +121,13 @@ public class CraPdfDownloadService {
             return "";
         }
         return value.replaceAll("[^a-zA-Z0-9._-]", "_");
+    }
+
+    private static byte[] decodeSignatureImage(String base64Image) {
+        if (base64Image == null || base64Image.isBlank()) {
+            return null;
+        }
+        String data = base64Image.contains(",") ? base64Image.substring(base64Image.indexOf(',') + 1) : base64Image;
+        return Base64.getDecoder().decode(data);
     }
 }

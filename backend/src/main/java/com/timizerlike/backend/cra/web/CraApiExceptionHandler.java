@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import com.timizer.backend.cra.ConsentNotGivenException;
 import com.timizer.backend.cra.CraDayNotFoundException;
 import com.timizer.backend.cra.CraNotFoundException;
 import com.timizer.backend.cra.CraNotSignedByProviderException;
@@ -14,7 +15,9 @@ import com.timizer.backend.cra.CraNotValidatedException;
 import com.timizer.backend.cra.CraValidatedException;
 import com.timizer.backend.cra.DuplicateCraTransitionException;
 import com.timizer.backend.cra.InvalidCraTransitionException;
+import com.timizer.backend.cra.InvalidSignatureImageException;
 import com.timizer.backend.cra.InvalidWorkValueException;
+import com.timizer.backend.cra.TokenAlreadyConsumedException;
 import com.timizer.backend.cra.TokenNotFoundException;
 
 @RestControllerAdvice
@@ -72,5 +75,23 @@ public class CraApiExceptionHandler {
     public ResponseEntity<Map<String, String>> handleCraNotSignedByProvider() {
         return ResponseEntity.status(HttpStatus.CONFLICT)
                 .body(Map.of("error", "cra_not_signed"));
+    }
+
+    @ExceptionHandler(TokenAlreadyConsumedException.class)
+    public ResponseEntity<Map<String, String>> handleTokenAlreadyConsumed() {
+        return ResponseEntity.status(HttpStatus.GONE)
+                .body(Map.of("error", "token_already_consumed"));
+    }
+
+    @ExceptionHandler(ConsentNotGivenException.class)
+    public ResponseEntity<Map<String, String>> handleConsentNotGiven() {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(Map.of("error", "consent_not_given"));
+    }
+
+    @ExceptionHandler(InvalidSignatureImageException.class)
+    public ResponseEntity<Map<String, String>> handleInvalidSignatureImage() {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(Map.of("error", "invalid_signature_image"));
     }
 }

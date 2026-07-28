@@ -6,12 +6,13 @@ afterEach(() => {
   vi.unstubAllGlobals();
 });
 
-function mockFetchOk(body: unknown = {}): void {
+function mockFetchOk(body: unknown = {}, emptyBody = false): void {
+  const text = emptyBody ? '' : JSON.stringify(body);
   vi.stubGlobal(
     'fetch',
     vi.fn().mockResolvedValue({
       ok: true,
-      json: () => Promise.resolve(body),
+      text: () => Promise.resolve(text),
       blob: () => Promise.resolve(new Blob()),
     }),
   );
@@ -70,5 +71,29 @@ describe('httpClient — AbortSignal (D7)', () => {
     const { isApiError } = await import('../apiError');
 
     await expect(apiGet('/test')).rejects.toSatisfy(isApiError);
+  });
+});
+
+describe('httpClient — empty body handling (D8)', () => {
+  beforeEach(() => {
+    vi.resetModules();
+  });
+
+  it('resolves undefined for 200 response with empty body', async () => {
+    mockFetchOk({}, true);
+    const { apiPost } = await import('../httpClient');
+
+    const result = await apiPost<void>('/sign', {});
+
+    expect(result).toBeUndefined();
+  });
+
+  it('parses JSON for 200 response with non-empty body', async () => {
+    mockFetchOk({ id: 42 });
+    const { apiGet } = await import('../httpClient');
+
+    const result = await apiGet<{ id: number }>('/test');
+
+    expect(result).toEqual({ id: 42 });
   });
 });

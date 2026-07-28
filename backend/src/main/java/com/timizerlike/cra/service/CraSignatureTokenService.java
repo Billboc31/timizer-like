@@ -17,6 +17,7 @@ import com.timizer.backend.cra.CraSignatureToken;
 import com.timizer.backend.cra.CraSignatureTokenRepository;
 import com.timizer.backend.cra.MonthlyCraReport;
 import com.timizer.backend.cra.MonthlyCraReportRepository;
+import com.timizer.backend.cra.TokenAlreadyConsumedException;
 import com.timizer.backend.cra.TokenNotFoundException;
 import com.timizer.backend.cra.ValidationStatus;
 import com.timizerlike.backend.cra.dto.CraDayEntryDto;
@@ -24,6 +25,9 @@ import com.timizerlike.backend.cra.dto.CraPublicViewDto;
 
 @Service
 public class CraSignatureTokenService {
+
+    public record ConsumedToken(CraSignatureToken token, MonthlyCraReport cra) {}
+
 
     private static final SecureRandom SECURE_RANDOM = new SecureRandom();
 
@@ -72,7 +76,7 @@ public class CraSignatureTokenService {
         MonthlyCraReport cra = craRepository.findById(token.getCraId())
                 .orElseThrow(TokenNotFoundException::new);
 
-        if (cra.getStatus() != ValidationStatus.SIGNED_BY_PROVIDER) {
+        if (cra.getStatus() != ValidationStatus.AWAITING_CLIENT_SIGNATURE) {
             throw new TokenNotFoundException();
         }
 
@@ -80,8 +84,40 @@ public class CraSignatureTokenService {
     }
 
     @Transactional
+    public ConsumedToken validateAndConsume(String rawToken) {
+        String hash = sha256(rawToken);
+
+        CraSignatureToken token = tokenRepository.findByTokenHash(hash)
+                .orElseThrow(TokenNotFoundException::new);
+
+        if (token.isRevoked()) {
+            throw new TokenNotFoundException();
+        }
+
+        if (token.isConsumed()) {
+            throw new TokenAlreadyConsumedException();
+        }
+
+        MonthlyCraReport cra = craRepository.findById(token.getCraId())
+                .orElseThrow(TokenNotFoundException::new);
+
+        if (cra.getStatus() != ValidationStatus.AWAITING_CLIENT_SIGNATURE) {
+            throw new TokenAlreadyConsumedException();
+        }
+
+        token.consume();
+        tokenRepository.save(token);
+
+        return new ConsumedToken(token, cra);
+    }
+
+    @Transactional
     public void revokeToken(Long craId) {
         tokenRepository.deleteByCraId(craId);
+    }
+
+    public static CraPublicViewDto toPublicViewDtoStatic(MonthlyCraReport cra) {
+        return toPublicViewDto(cra);
     }
 
     private static CraPublicViewDto toPublicViewDto(MonthlyCraReport cra) {

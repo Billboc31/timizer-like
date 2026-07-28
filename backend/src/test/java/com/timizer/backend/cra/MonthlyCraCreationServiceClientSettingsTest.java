@@ -11,6 +11,8 @@ import org.junit.jupiter.api.Test;
 
 import com.timizer.backend.cra.MonthlyCraCreationService.CraCreationResult;
 import com.timizerlike.backend.cra.dto.CraDetailsDto;
+import com.timizerlike.backend.provider.ProviderSettingsDto;
+import com.timizerlike.backend.provider.ProviderSettingsService;
 import com.timizerlike.backend.settings.ClientSettingsDto;
 import com.timizerlike.backend.settings.ClientSettingsService;
 import com.timizerlike.cra.config.CraDefaultsProperties;
@@ -25,6 +27,9 @@ class MonthlyCraCreationServiceClientSettingsTest {
                     new CraDefaultsProperties.Client.Contact("Bob Client", "bob@example.com")
             )
     );
+
+    private static final ProviderSettingsDto DEFAULT_PROVIDER = new ProviderSettingsDto(
+            "Alice", "Provider", "Provider Co.", "1 rue Test", null, null);
 
     @Test
     void newCraUsesCurrentClientSettings() {
@@ -41,7 +46,9 @@ class MonthlyCraCreationServiceClientSettingsTest {
                 "jane@acme.com"
         ));
 
-        MonthlyCraCreationService service = new MonthlyCraCreationService(repository, DEFAULTS, clientSettingsService);
+        ProviderSettingsService providerSettingsService = mock(ProviderSettingsService.class);
+        when(providerSettingsService.getSettings()).thenReturn(DEFAULT_PROVIDER);
+        MonthlyCraCreationService service = new MonthlyCraCreationService(repository, DEFAULTS, clientSettingsService, providerSettingsService);
 
         CraDetailsDto dto = service.createForMonth(2026, 7).cra();
 
@@ -77,7 +84,9 @@ class MonthlyCraCreationServiceClientSettingsTest {
 
         // First CRA created with settingsA
         when(clientSettingsService.get()).thenReturn(settingsA);
-        MonthlyCraCreationService service = new MonthlyCraCreationService(repository, DEFAULTS, clientSettingsService);
+        ProviderSettingsService providerSettingsService = mock(ProviderSettingsService.class);
+        when(providerSettingsService.getSettings()).thenReturn(DEFAULT_PROVIDER);
+        MonthlyCraCreationService service = new MonthlyCraCreationService(repository, DEFAULTS, clientSettingsService, providerSettingsService);
         CraDetailsDto firstCra = service.createForMonth(2026, 7).cra();
 
         assertThat(firstCra.clientCompany()).isEqualTo("Old Corp");

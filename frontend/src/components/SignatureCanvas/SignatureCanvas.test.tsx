@@ -99,4 +99,35 @@ describe('SignatureCanvas', () => {
 
     expect(onDraw).not.toHaveBeenCalled();
   });
+
+  it('isEmpty() returns true initially', () => {
+    const ref = createRef<SignatureCanvasHandle>();
+    render(<SignatureCanvas ref={ref} />);
+    expect(ref.current?.isEmpty()).toBe(true);
+  });
+
+  it('isEmpty() returns false after drawing', () => {
+    const ref = createRef<SignatureCanvasHandle>();
+    render(<SignatureCanvas ref={ref} />);
+    const canvas = screen.getByRole('img');
+
+    fireEvent.pointerDown(canvas, { clientX: 10, clientY: 10 });
+    fireEvent.pointerMove(canvas, { clientX: 50, clientY: 50 });
+    fireEvent.pointerUp(canvas);
+
+    expect(ref.current?.isEmpty()).toBe(false);
+  });
+
+  it('isEmpty() returns true again after clear', () => {
+    const ref = createRef<SignatureCanvasHandle>();
+    render(<SignatureCanvas ref={ref} width={300} height={100} />);
+    const canvas = screen.getByRole('img');
+
+    fireEvent.pointerDown(canvas, { clientX: 10, clientY: 10 });
+    fireEvent.pointerMove(canvas, { clientX: 50, clientY: 50 });
+    fireEvent.pointerUp(canvas);
+
+    ref.current?.clear();
+    expect(ref.current?.isEmpty()).toBe(true);
+  });
 });

@@ -5,9 +5,11 @@ export type ApiErrorCode =
   | 'cra_day_not_found'
   | 'invalid_cra_transition'
   | 'duplicate_cra_transition'
-  | 'signature_too_large'
-  | 'signature_invalid_format'
+  | 'invalid_signature_image'
   | 'token_invalid'
+  | 'token_already_consumed'
+  | 'cra_not_signed'
+  | 'consent_not_given'
   | 'network_error'
   | 'unknown_error';
 

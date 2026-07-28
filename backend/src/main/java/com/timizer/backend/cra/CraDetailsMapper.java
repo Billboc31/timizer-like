@@ -49,7 +49,7 @@ public final class CraDetailsMapper {
             case SIGNED_BY_PROVIDER -> CraStatus.SIGNED_BY_PROVIDER;
             case AWAITING_CLIENT_SIGNATURE -> CraStatus.AWAITING_CLIENT_SIGNATURE;
             case FULLY_SIGNED -> CraStatus.FULLY_SIGNED;
-            case VALIDATED -> CraStatus.FULLY_SIGNED;
+            case VALIDATED -> CraStatus.VALIDATED;
         };
     }
 }

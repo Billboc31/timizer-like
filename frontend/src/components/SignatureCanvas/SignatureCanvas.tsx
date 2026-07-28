@@ -3,6 +3,7 @@ import { forwardRef, useImperativeHandle, useRef } from 'react';
 export interface SignatureCanvasHandle {
   toDataURL(): string;
   clear(): void;
+  isEmpty(): boolean;
 }
 
 interface Props {
@@ -16,6 +17,7 @@ export const SignatureCanvas = forwardRef<SignatureCanvasHandle, Props>(
   ({ onDraw, width = 400, height = 150, className }, ref) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const isDrawing = useRef(false);
+    const hasDrawn = useRef(false);
     const lastPos = useRef<{ x: number; y: number } | null>(null);
 
     useImperativeHandle(ref, () => ({
@@ -27,6 +29,10 @@ export const SignatureCanvas = forwardRef<SignatureCanvasHandle, Props>(
         if (!canvas) return;
         const ctx = canvas.getContext('2d');
         ctx?.clearRect(0, 0, canvas.width, canvas.height);
+        hasDrawn.current = false;
+      },
+      isEmpty() {
+        return !hasDrawn.current;
       },
     }));
 
@@ -63,6 +69,7 @@ export const SignatureCanvas = forwardRef<SignatureCanvasHandle, Props>(
       if (isDrawing.current) {
         isDrawing.current = false;
         lastPos.current = null;
+        hasDrawn.current = true;
         onDraw?.();
       }
     }

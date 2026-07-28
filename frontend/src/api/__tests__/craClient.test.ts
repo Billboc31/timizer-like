@@ -34,7 +34,7 @@ function mockFetchOk(body: unknown): void {
     'fetch',
     vi.fn().mockResolvedValue({
       ok: true,
-      json: () => Promise.resolve(body),
+      text: () => Promise.resolve(JSON.stringify(body)),
       blob: () => Promise.resolve(new Blob(['%PDF'], { type: 'application/pdf' })),
     }),
   );
