@@ -9,11 +9,13 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.timizer.backend.cra.CraDayNotFoundException;
 import com.timizer.backend.cra.CraNotFoundException;
+import com.timizer.backend.cra.CraNotSignedByProviderException;
 import com.timizer.backend.cra.CraNotValidatedException;
 import com.timizer.backend.cra.CraValidatedException;
 import com.timizer.backend.cra.DuplicateCraTransitionException;
 import com.timizer.backend.cra.InvalidCraTransitionException;
 import com.timizer.backend.cra.InvalidWorkValueException;
+import com.timizer.backend.cra.TokenNotFoundException;
 
 @RestControllerAdvice
 public class CraApiExceptionHandler {
@@ -58,5 +60,17 @@ public class CraApiExceptionHandler {
     public ResponseEntity<Map<String, String>> handleDuplicateCraTransition() {
         return ResponseEntity.status(HttpStatus.CONFLICT)
                 .body(Map.of("error", "duplicate_cra_transition"));
+    }
+
+    @ExceptionHandler(TokenNotFoundException.class)
+    public ResponseEntity<Map<String, String>> handleTokenNotFound() {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(Map.of("error", "token_invalid"));
+    }
+
+    @ExceptionHandler(CraNotSignedByProviderException.class)
+    public ResponseEntity<Map<String, String>> handleCraNotSignedByProvider() {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(Map.of("error", "cra_not_signed"));
     }
 }

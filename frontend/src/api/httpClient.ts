@@ -12,6 +12,7 @@ function toApiErrorCode(raw: unknown): ApiErrorCode {
     'duplicate_cra_transition',
     'signature_too_large',
     'signature_invalid_format',
+    'token_invalid',
   ];
   if (typeof raw === 'string' && (known as string[]).includes(raw)) {
     return raw as ApiErrorCode;
