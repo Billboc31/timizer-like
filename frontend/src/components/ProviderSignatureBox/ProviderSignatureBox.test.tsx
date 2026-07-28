@@ -23,6 +23,7 @@ const SIGNED_CRA: CraDetails = {
   providerSignatureDate: '2026-07-20',
   providerFirstName: 'Alice',
   providerLastName: 'Provider',
+  providerSignatureImageUrl: 'https://example.com/sig.png',
 };
 
 describe('ProviderSignatureBox — empty state', () => {
@@ -91,6 +92,25 @@ describe('ProviderSignatureBox — signed state', () => {
     render(<ProviderSignatureBox cra={cra} onSignClick={vi.fn()} />);
     expect(screen.queryByText(/alice/i)).not.toBeInTheDocument();
     expect(screen.getByText('20/07/2026')).toBeInTheDocument();
+  });
+
+  it('renders signature image with correct src and alt when url is present', () => {
+    render(<ProviderSignatureBox cra={SIGNED_CRA} onSignClick={vi.fn()} />);
+    const img = screen.getByRole('img');
+    expect(img).toHaveAttribute('src', 'https://example.com/sig.png');
+    expect(img).toHaveAttribute('alt', 'Signature de Alice Provider');
+  });
+
+  it('does not render image when providerSignatureImageUrl is absent', () => {
+    const cra: CraDetails = {
+      ...BASE_CRA,
+      status: 'VALIDATED',
+      providerSignatureDate: '2026-07-20',
+      providerFirstName: 'Alice',
+      providerLastName: 'Provider',
+    };
+    render(<ProviderSignatureBox cra={cra} onSignClick={vi.fn()} />);
+    expect(screen.queryByRole('img')).not.toBeInTheDocument();
   });
 });
 

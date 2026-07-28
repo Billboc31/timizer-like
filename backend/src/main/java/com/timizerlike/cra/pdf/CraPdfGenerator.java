@@ -16,6 +16,7 @@ import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.pdmodel.font.Standard14Fonts;
+import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 
 import java.awt.Color;
 import java.io.ByteArrayOutputStream;
@@ -102,7 +103,7 @@ public class CraPdfGenerator {
             drawText(cs, regular, 11f, MARGIN, y, "Frais : -");
             y -= 25f;
 
-            y = drawProviderSignatureBlock(cs, y, document.signatures());
+            y = drawProviderSignatureBlock(pdf, cs, y, document.signatures());
             y -= 15f;
             drawClientSignatureBlock(cs, y);
         }
@@ -134,7 +135,7 @@ public class CraPdfGenerator {
         return y - 14f;
     }
 
-    private float drawProviderSignatureBlock(PDPageContentStream cs, float startY, CraPdfSignatures signatures) throws IOException {
+    private float drawProviderSignatureBlock(PDDocument pdf, PDPageContentStream cs, float startY, CraPdfSignatures signatures) throws IOException {
         float y = startY;
         drawText(cs, bold, 12f, MARGIN, y, "Signature prestataire");
         y -= 10f;
@@ -146,17 +147,28 @@ public class CraPdfGenerator {
         CraPdfProviderSignature provider = signatures == null ? null : signatures.provider();
         if (provider != null) {
             float textX = MARGIN + SIGNATURE_BOX_PADDING;
-            float textY = boxTop - SIGNATURE_BOX_PADDING - 11f;
+            float contentTopY = boxTop - SIGNATURE_BOX_PADDING;
+
+            if (provider.signatureImageData() != null) {
+                PDImageXObject image = PDImageXObject.createFromByteArray(pdf, provider.signatureImageData(), "signature.png");
+                float availableWidth = SIGNATURE_BOX_WIDTH - 2 * SIGNATURE_BOX_PADDING;
+                float availableHeight = contentTopY - boxBottom - SIGNATURE_BOX_PADDING - 28f;
+                float scale = Math.min(availableWidth / image.getWidth(), availableHeight / image.getHeight());
+                float drawW = image.getWidth() * scale;
+                float drawH = image.getHeight() * scale;
+                float drawX = textX + (availableWidth - drawW) / 2f;
+                float drawY = contentTopY - drawH;
+                cs.drawImage(image, drawX, drawY, drawW, drawH);
+                contentTopY = drawY - 4f;
+            }
+
+            float textY = contentTopY - 11f;
             if (provider.name() != null && !provider.name().isEmpty()) {
                 drawText(cs, regular, 11f, textX, textY, provider.name());
                 textY -= 14f;
             }
             if (provider.signedAt() != null) {
                 drawText(cs, regular, 11f, textX, textY, provider.signedAt().format(DATE_FORMAT));
-                textY -= 14f;
-            }
-            if (provider.signatureImageRef() != null) {
-                drawText(cs, regular, 9f, textX, textY, "[" + provider.signatureImageRef() + "]");
             }
         }
 

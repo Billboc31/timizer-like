@@ -20,6 +20,7 @@ import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -73,7 +74,37 @@ class CraPdfGeneratorTest {
                 new java.math.BigDecimal("10")
         );
         CraPdfSignatures signatures = new CraPdfSignatures(
-                new CraPdfProviderSignature("Alice Provider", LocalDate.of(2026, 4, 1), "sig-ref-123"),
+                new CraPdfProviderSignature("Alice Provider", LocalDate.of(2026, 4, 1), null),
+                null
+        );
+        CraPdfDocument document = new CraPdfDocument(summary, List.of(), signatures);
+
+        byte[] bytes = generator.generate(document);
+
+        assertThat(bytes).isNotEmpty();
+        try (PDDocument loaded = Loader.loadPDF(bytes)) {
+            String page1 = extractPage(loaded, 1);
+            assertThat(page1)
+                    .contains("Signature prestataire")
+                    .contains("Alice Provider")
+                    .contains("01/04/2026");
+        }
+    }
+
+    @Test
+    void signedProviderBlockRendersImageDataInsideBox() throws IOException {
+        // minimal valid 1×1 white PNG
+        byte[] minimalPng = Base64.getDecoder().decode(
+                "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg=="
+        );
+        CraPdfSummary summary = new CraPdfSummary(
+                PERIOD,
+                new CraPdfParty("Alice Provider", "Provider SARL", "1 rue A", null),
+                new CraPdfParty("Acme Corp", "Corporate Client SA", "10 rue B", null),
+                new java.math.BigDecimal("10")
+        );
+        CraPdfSignatures signatures = new CraPdfSignatures(
+                new CraPdfProviderSignature("Alice Provider", LocalDate.of(2026, 4, 1), minimalPng),
                 null
         );
         CraPdfDocument document = new CraPdfDocument(summary, List.of(), signatures);
@@ -255,7 +286,7 @@ class CraPdfGeneratorTest {
                 new CraPdfProviderSignature(
                         "Alice Provider",
                         LocalDate.of(2026, 4, 1),
-                        "provider-signature-ref"
+                        null
                 ),
                 null
         );

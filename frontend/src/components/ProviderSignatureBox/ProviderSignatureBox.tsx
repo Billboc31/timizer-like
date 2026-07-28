@@ -39,6 +39,13 @@ export function ProviderSignatureBox({ cra, onSignClick }: Props) {
 
   return (
     <div className="provider-signature-box provider-signature-box--signed">
+      {cra.providerSignatureImageUrl && (
+        <img
+          src={cra.providerSignatureImageUrl}
+          alt={`Signature de ${providerName ?? 'prestataire'}`}
+          className="provider-signature-box__img"
+        />
+      )}
       <div className="provider-signature-box__footer">
         {providerName && (
           <span className="provider-signature-box__name">{providerName}</span>

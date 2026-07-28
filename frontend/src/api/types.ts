@@ -15,6 +15,7 @@ export interface CraDetailsDto {
   days: CraDayEntryDto[];
   validationDate: string | null;
   providerSignatureDate: string | null;
+  providerSignatureImageUrl?: string | null;
 }
 
 export interface CraSummaryDto {

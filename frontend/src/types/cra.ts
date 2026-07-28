@@ -15,6 +15,7 @@ export interface CraDetails {
   status: 'DRAFT' | 'VALIDATED';
   days: CraDayEntry[];
   providerSignatureDate: string | null;
+  providerSignatureImageUrl?: string | null;
   providerFirstName?: string | null;
   providerLastName?: string | null;
   providerCompany?: string | null;
