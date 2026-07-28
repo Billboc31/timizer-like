@@ -3,6 +3,7 @@ import './CalendarGrid.css';
 import type { CraDetails } from '../../types/cra';
 import type { CraDetailsDto } from '../../api/types';
 import { updateDay } from '../../api/craClient';
+import { SectionHeading } from '../SectionHeading/SectionHeading';
 
 const MONTH_NAMES = [
   'January', 'February', 'March', 'April', 'May', 'June',
@@ -106,7 +107,7 @@ export function CalendarGrid({ cra, loading, error, onRetry, onDayClick, updatin
   return (
     <>
       <div className="calendar-grid-wrapper">
-        <h2 className="calendar-header">{MONTH_NAMES[cra.month - 1]} {cra.year}</h2>
+        <SectionHeading title={`${MONTH_NAMES[cra.month - 1]} ${cra.year}`} />
         <div className="calendar-grid">
           {WEEKDAY_HEADERS.map(h => (
             <div key={h} className="calendar-grid__weekday-header" aria-hidden="true">{h}</div>

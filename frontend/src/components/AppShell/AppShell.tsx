@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { PageHeader } from '../PageHeader/PageHeader';
 import './AppShell.css';
 
 interface AppShellProps {
@@ -35,7 +36,7 @@ export function AppShell({ activeView, onNavigate, children }: AppShellProps) {
         </nav>
       </header>
       <main className="app-shell__main">
-        <h2 className="app-shell__page-title">{PAGE_TITLES[activeView]}</h2>
+        <PageHeader title={PAGE_TITLES[activeView]} />
         {children}
       </main>
     </div>

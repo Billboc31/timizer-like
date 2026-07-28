@@ -128,4 +128,8 @@
   --bp-sm: 640px;
   --bp-md: 768px;
   --bp-lg: 1024px;
+
+  /* Typography — Heading size aliases */
+  --page-header-title-size: var(--font-size-2xl);
+  --section-heading-size: var(--font-size-xl);
 }

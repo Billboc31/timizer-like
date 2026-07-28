@@ -1,5 +1,6 @@
 import './CraSummaryPanel.css';
 import type { CraDetails } from '../../types/cra';
+import { SectionHeading } from '../SectionHeading/SectionHeading';
 
 const MONTH_NAMES = [
   'January', 'February', 'March', 'April', 'May', 'June',
@@ -37,7 +38,7 @@ export function CraSummaryPanel({ cra, loading, error }: Props) {
   return (
     <section className="cra-summary-panel" aria-label="CRA Summary">
       <header className="cra-summary-panel__header">
-        <h2 className="cra-summary-panel__title">Compte Rendu d'Activité</h2>
+        <SectionHeading title="Compte Rendu d'Activité" />
         <p className="cra-summary-panel__period" data-testid="summary-period">{period}</p>
       </header>
       <div className="cra-summary-panel__hero">
