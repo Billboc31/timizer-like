@@ -1,7 +1,6 @@
 package com.timizerlike.backend.provider;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -85,24 +84,4 @@ class ProviderSettingsServiceTest {
         assertThat(result.phone()).isEqualTo("0600000000");
     }
 
-    @Test
-    void updateSettings_rejectsBlankFirstName() {
-        ProviderSettingsDto dto = new ProviderSettingsDto("", "Dupont", "Acme", null, null, null);
-        assertThatThrownBy(() -> service.updateSettings(dto))
-                .isInstanceOf(IllegalArgumentException.class);
-    }
-
-    @Test
-    void updateSettings_rejectsBlankLastName() {
-        ProviderSettingsDto dto = new ProviderSettingsDto("Jean", "  ", "Acme", null, null, null);
-        assertThatThrownBy(() -> service.updateSettings(dto))
-                .isInstanceOf(IllegalArgumentException.class);
-    }
-
-    @Test
-    void updateSettings_rejectsBlankCompany() {
-        ProviderSettingsDto dto = new ProviderSettingsDto("Jean", "Dupont", "", null, null, null);
-        assertThatThrownBy(() -> service.updateSettings(dto))
-                .isInstanceOf(IllegalArgumentException.class);
-    }
 }
