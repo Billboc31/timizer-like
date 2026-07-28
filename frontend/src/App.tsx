@@ -35,10 +35,14 @@ export default function App() {
   const [updatingDay, setUpdatingDay] = useState<number | null>(null);
   const [dayUpdateError, setDayUpdateError] = useState<string | null>(null);
   const [clientSettings, setClientSettings] = useState<ClientSettingsDto | null>(null);
+  const [settingsError, setSettingsError] = useState<string | null>(null);
 
   useEffect(() => {
     if (view === 'settings' && clientSettings === null) {
-      getClientSettings().then(setClientSettings).catch(() => {});
+      setSettingsError(null);
+      getClientSettings()
+        .then(setClientSettings)
+        .catch(err => setSettingsError(getErrorMessage(err)));
     }
   }, [view, clientSettings]);
 
@@ -85,7 +89,9 @@ export default function App() {
   return (
     <AppShell activeView={view} onNavigate={setView}>
       {view === 'settings' ? (
-        clientSettings !== null ? (
+        settingsError !== null ? (
+          <p role="alert">{settingsError}</p>
+        ) : clientSettings !== null ? (
           <ClientSettingsForm initialValues={clientSettings} />
         ) : null
       ) : (

@@ -4,7 +4,6 @@ com/timizerlike/backend/settings/ClientSettingsControllerTest.class
 com/timizerlike/backend/cra/integration/CraWorkflowIntegrationTest$2.class
 com/timizer/backend/cra/MonthlyCraReportRepositoryTest.class
 com/timizer/backend/cra/MonthlyCraCreationServiceTest.class
-com/timizerlike/cra/service/CraCreationServiceTest.class
 com/timizer/backend/cra/MonthlyCraCreationServiceClientSettingsTest.class
 com/timizerlike/cra/service/CraValidationServiceTest.class
 com/timizer/backend/cra/CraDayEntryTest.class
