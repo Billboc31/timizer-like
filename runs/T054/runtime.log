@@ -32,3 +32,7 @@
 [2026-07-28T22:36:31Z] push: pushing branch=ticket/T054-add-client-signature-capture-and-approval-page
 [2026-07-28T22:36:34Z] push: done branch=ticket/T054-add-client-signature-capture-and-approval-page
 [2026-07-28T22:36:35Z] auto-run: TEST_COMPLETE — running PR lifecycle
+[2026-07-28T22:37:51Z] conflict-resolver: rebase clean — no conflicts
+[2026-07-28T22:37:51Z] conflict-resolver: running tests
+[2026-07-28T22:37:51Z] conflict-resolver: test-report written: runs/T054/conflict/test-report.md
+[2026-07-28T22:37:51Z] conflict-resolver: staging and committing resolution artifacts
