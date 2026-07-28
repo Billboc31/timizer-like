@@ -1,7 +1,7 @@
 {
   "ticket_id": "T056",
-  "state": "INIT",
+  "state": "PLAN_APPROVED",
   "branch": "ticket/T056-add-a-detailed-cra-history-view-with-explicit-cove",
   "issue_number": 101,
-  "updated_at": "2026-07-28T05:36:54Z"
+  "updated_at": "2026-07-28T18:18:22Z"
 }
