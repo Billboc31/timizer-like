@@ -172,6 +172,36 @@ class CraDayUpdateServiceTest {
     }
 
     @Test
+    void rejectsUpdateOnReadyForProviderSignatureCra() {
+        MonthlyCraReport cra = mock(MonthlyCraReport.class);
+        when(cra.getStatus()).thenReturn(ValidationStatus.READY_FOR_PROVIDER_SIGNATURE);
+        when(craRepository.findById(CRA_ID)).thenReturn(Optional.of(cra));
+
+        assertThatThrownBy(() -> service.updateDay(CRA_ID, JUNE_15, new CraDayUpdateRequestDto(0.5, null)))
+                .isInstanceOf(CraValidatedException.class);
+    }
+
+    @Test
+    void rejectsUpdateOnAwaitingClientSignatureCra() {
+        MonthlyCraReport cra = mock(MonthlyCraReport.class);
+        when(cra.getStatus()).thenReturn(ValidationStatus.AWAITING_CLIENT_SIGNATURE);
+        when(craRepository.findById(CRA_ID)).thenReturn(Optional.of(cra));
+
+        assertThatThrownBy(() -> service.updateDay(CRA_ID, JUNE_15, new CraDayUpdateRequestDto(0.5, null)))
+                .isInstanceOf(CraValidatedException.class);
+    }
+
+    @Test
+    void rejectsUpdateOnFullySignedCra() {
+        MonthlyCraReport cra = mock(MonthlyCraReport.class);
+        when(cra.getStatus()).thenReturn(ValidationStatus.FULLY_SIGNED);
+        when(craRepository.findById(CRA_ID)).thenReturn(Optional.of(cra));
+
+        assertThatThrownBy(() -> service.updateDay(CRA_ID, JUNE_15, new CraDayUpdateRequestDto(0.5, null)))
+                .isInstanceOf(CraValidatedException.class);
+    }
+
+    @Test
     void throwsCraNotFoundWhenCraAbsent() {
         when(craRepository.findById(CRA_ID)).thenReturn(Optional.empty());
 

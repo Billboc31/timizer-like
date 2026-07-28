@@ -2,7 +2,7 @@ import { render, screen, waitFor, fireEvent, cleanup } from '@testing-library/re
 import { describe, it, expect, vi, afterEach } from 'vitest';
 import { CraHistory } from './CraHistory';
 import * as craApi from '../../api/craClient';
-import type { CraSummaryDto } from '../../types/cra';
+import type { CraSummaryDto } from '../../api/types';
 
 vi.mock('../../api/craClient');
 
@@ -32,6 +32,42 @@ const OLDER_CRA: CraSummaryDto = {
   year: 2026,
   totalWorkedDays: 18,
   status: 'DRAFT',
+  validationDate: null,
+};
+
+const READY_CRA: CraSummaryDto = {
+  id: 4,
+  month: 4,
+  year: 2026,
+  totalWorkedDays: 15,
+  status: 'READY_FOR_PROVIDER_SIGNATURE',
+  validationDate: null,
+};
+
+const SIGNED_PROVIDER_CRA: CraSummaryDto = {
+  id: 5,
+  month: 3,
+  year: 2026,
+  totalWorkedDays: 22,
+  status: 'SIGNED_BY_PROVIDER',
+  validationDate: null,
+};
+
+const AWAITING_CLIENT_CRA: CraSummaryDto = {
+  id: 6,
+  month: 2,
+  year: 2026,
+  totalWorkedDays: 18,
+  status: 'AWAITING_CLIENT_SIGNATURE',
+  validationDate: null,
+};
+
+const FULLY_SIGNED_CRA: CraSummaryDto = {
+  id: 7,
+  month: 1,
+  year: 2026,
+  totalWorkedDays: 20,
+  status: 'FULLY_SIGNED',
   validationDate: null,
 };
 
@@ -71,11 +107,11 @@ describe('CraHistory', () => {
     );
   });
 
-  it('renders CRA cards with period, status, and worked days', async () => {
+  it('renders CRA cards with period, status label, and worked days', async () => {
     vi.mocked(craApi.listCras).mockResolvedValue([DRAFT_CRA]);
     render(<CraHistory onOpen={vi.fn()} />);
     await waitFor(() => expect(screen.getByText('July 2026')).toBeInTheDocument());
-    expect(screen.getByText('DRAFT')).toBeInTheDocument();
+    expect(screen.getByText('Brouillon')).toBeInTheDocument();
     expect(screen.getByText('20')).toBeInTheDocument();
   });
 
@@ -107,27 +143,88 @@ describe('CraHistory', () => {
     expect(screen.queryByText('Download PDF')).not.toBeInTheDocument();
   });
 
+  it('does not show Download PDF button for READY_FOR_PROVIDER_SIGNATURE CRA', async () => {
+    vi.mocked(craApi.listCras).mockResolvedValue([READY_CRA]);
+    render(<CraHistory onOpen={vi.fn()} />);
+    await waitFor(() => expect(screen.getByText('Open')).toBeInTheDocument());
+    expect(screen.queryByText('Download PDF')).not.toBeInTheDocument();
+  });
+
+  it('shows Download PDF button for SIGNED_BY_PROVIDER CRA', async () => {
+    vi.mocked(craApi.listCras).mockResolvedValue([SIGNED_PROVIDER_CRA]);
+    render(<CraHistory onOpen={vi.fn()} />);
+    await waitFor(() => expect(screen.getByText('Download PDF')).toBeInTheDocument());
+  });
+
+  it('shows Download PDF button for AWAITING_CLIENT_SIGNATURE CRA', async () => {
+    vi.mocked(craApi.listCras).mockResolvedValue([AWAITING_CLIENT_CRA]);
+    render(<CraHistory onOpen={vi.fn()} />);
+    await waitFor(() => expect(screen.getByText('Download PDF')).toBeInTheDocument());
+  });
+
+  it('shows Download PDF button for FULLY_SIGNED CRA', async () => {
+    vi.mocked(craApi.listCras).mockResolvedValue([FULLY_SIGNED_CRA]);
+    render(<CraHistory onOpen={vi.fn()} />);
+    await waitFor(() => expect(screen.getByText('Download PDF')).toBeInTheDocument());
+  });
+
   it('shows Download PDF button for VALIDATED CRA', async () => {
     vi.mocked(craApi.listCras).mockResolvedValue([VALIDATED_CRA]);
     render(<CraHistory onOpen={vi.fn()} />);
     await waitFor(() => expect(screen.getByText('Download PDF')).toBeInTheDocument());
   });
 
-  it('shows VALIDATED badge with distinct class', async () => {
+  it('shows "Signé" badge for VALIDATED CRA with signed class', async () => {
     vi.mocked(craApi.listCras).mockResolvedValue([VALIDATED_CRA]);
     render(<CraHistory onOpen={vi.fn()} />);
     await waitFor(() => {
-      const badge = screen.getByText('VALIDATED');
-      expect(badge).toHaveClass('cra-history__badge--validated');
+      const badge = screen.getByText('Signé');
+      expect(badge).toHaveClass('cra-history__badge--signed');
     });
   });
 
-  it('shows DRAFT badge with distinct class', async () => {
+  it('shows "Brouillon" badge for DRAFT CRA with draft class', async () => {
     vi.mocked(craApi.listCras).mockResolvedValue([DRAFT_CRA]);
     render(<CraHistory onOpen={vi.fn()} />);
     await waitFor(() => {
-      const badge = screen.getByText('DRAFT');
+      const badge = screen.getByText('Brouillon');
       expect(badge).toHaveClass('cra-history__badge--draft');
+    });
+  });
+
+  it('shows correct label for READY_FOR_PROVIDER_SIGNATURE', async () => {
+    vi.mocked(craApi.listCras).mockResolvedValue([READY_CRA]);
+    render(<CraHistory onOpen={vi.fn()} />);
+    await waitFor(() => {
+      const badge = screen.getByText('En attente prestataire');
+      expect(badge).toHaveClass('cra-history__badge--ready-for-provider');
+    });
+  });
+
+  it('shows correct label for SIGNED_BY_PROVIDER', async () => {
+    vi.mocked(craApi.listCras).mockResolvedValue([SIGNED_PROVIDER_CRA]);
+    render(<CraHistory onOpen={vi.fn()} />);
+    await waitFor(() => {
+      const badge = screen.getByText('Signé prestataire');
+      expect(badge).toHaveClass('cra-history__badge--signed-by-provider');
+    });
+  });
+
+  it('shows correct label for AWAITING_CLIENT_SIGNATURE', async () => {
+    vi.mocked(craApi.listCras).mockResolvedValue([AWAITING_CLIENT_CRA]);
+    render(<CraHistory onOpen={vi.fn()} />);
+    await waitFor(() => {
+      const badge = screen.getByText('En attente client');
+      expect(badge).toHaveClass('cra-history__badge--awaiting-client');
+    });
+  });
+
+  it('shows "Signé" label for FULLY_SIGNED', async () => {
+    vi.mocked(craApi.listCras).mockResolvedValue([FULLY_SIGNED_CRA]);
+    render(<CraHistory onOpen={vi.fn()} />);
+    await waitFor(() => {
+      const badge = screen.getByText('Signé');
+      expect(badge).toHaveClass('cra-history__badge--signed');
     });
   });
 

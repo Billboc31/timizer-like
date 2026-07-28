@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.timizer.backend.cra.CraDayEntry;
 import com.timizer.backend.cra.CraDayEntryRepository;
 import com.timizer.backend.cra.CraDayNotFoundException;
+import com.timizer.backend.cra.CraDetailsMapper;
 import com.timizer.backend.cra.CraNotFoundException;
 import com.timizer.backend.cra.CraValidatedException;
 import com.timizer.backend.cra.MonthlyCraReport;
@@ -63,7 +64,7 @@ public class CraDayUpdateService {
             days.add(new CraDayEntryDto(e.getDate().getDayOfMonth(), e.getWorkValue(), e.getNote()));
             total += e.getWorkValue();
         }
-        CraStatus status = cra.getStatus() == ValidationStatus.VALIDATED ? CraStatus.VALIDATED : CraStatus.DRAFT;
+        CraStatus status = CraDetailsMapper.mapStatus(cra.getStatus());
         return new CraDetailsDto(
                 cra.getId(),
                 cra.getMonth(),

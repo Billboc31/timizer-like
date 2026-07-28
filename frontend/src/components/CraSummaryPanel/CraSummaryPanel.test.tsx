@@ -1,7 +1,9 @@
 import { render, screen, cleanup } from '@testing-library/react';
-import { describe, it, expect, afterEach } from 'vitest';
+import { describe, it, expect, afterEach, vi } from 'vitest';
 import { CraSummaryPanel } from './CraSummaryPanel';
 import type { CraDetails } from '../../types/cra';
+
+vi.mock('../../api/craClient');
 
 afterEach(cleanup);
 
@@ -27,9 +29,9 @@ describe('CraSummaryPanel', () => {
     expect(screen.getByTestId('summary-period')).toHaveTextContent('July 2026');
   });
 
-  it('displays the CRA status', () => {
+  it('displays the CRA status as French label', () => {
     render(<CraSummaryPanel cra={BASE_CRA} loading={false} error={null} />);
-    expect(screen.getByTestId('summary-status')).toHaveTextContent('DRAFT');
+    expect(screen.getByTestId('summary-status')).toHaveTextContent('Brouillon');
   });
 
   it('displays total worked days', () => {
@@ -88,20 +90,30 @@ describe('CraSummaryPanel', () => {
     expect(screen.getByTestId('summary-provider-company')).toHaveTextContent('—');
   });
 
-  it('shows VALIDATED status', () => {
+  it('shows "Signé" label for VALIDATED status', () => {
     const cra: CraDetails = { ...BASE_CRA, status: 'VALIDATED' };
     render(<CraSummaryPanel cra={cra} loading={false} error={null} />);
-    expect(screen.getByTestId('summary-status')).toHaveTextContent('VALIDATED');
+    expect(screen.getByTestId('summary-status')).toHaveTextContent('Signé');
   });
 
   it('applies draft badge class for DRAFT status', () => {
     render(<CraSummaryPanel cra={BASE_CRA} loading={false} error={null} />);
-    expect(screen.getByTestId('summary-status')).toHaveClass('cra-summary-panel__badge--draft');
+    expect(screen.getByTestId('summary-status')).toHaveClass('cra-signature-status--draft');
   });
 
-  it('applies validated badge class for VALIDATED status', () => {
+  it('applies signed badge class for VALIDATED status', () => {
     const cra: CraDetails = { ...BASE_CRA, status: 'VALIDATED' };
     render(<CraSummaryPanel cra={cra} loading={false} error={null} />);
-    expect(screen.getByTestId('summary-status')).toHaveClass('cra-summary-panel__badge--validated');
+    expect(screen.getByTestId('summary-status')).toHaveClass('cra-signature-status--signed');
+  });
+
+  it('shows "Soumettre" action button when onSuccess is provided for DRAFT', () => {
+    render(<CraSummaryPanel cra={BASE_CRA} loading={false} error={null} onSuccess={vi.fn()} />);
+    expect(screen.getByRole('button', { name: /soumettre pour signature/i })).toBeInTheDocument();
+  });
+
+  it('does not show action button when onSuccess is not provided', () => {
+    render(<CraSummaryPanel cra={BASE_CRA} loading={false} error={null} />);
+    expect(screen.queryByRole('button', { name: /soumettre/i })).not.toBeInTheDocument();
   });
 });

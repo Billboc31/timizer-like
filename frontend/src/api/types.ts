@@ -1,4 +1,10 @@
-export type CraStatus = 'DRAFT' | 'VALIDATED';
+export type CraStatus =
+  | 'DRAFT'
+  | 'READY_FOR_PROVIDER_SIGNATURE'
+  | 'SIGNED_BY_PROVIDER'
+  | 'AWAITING_CLIENT_SIGNATURE'
+  | 'FULLY_SIGNED'
+  | 'VALIDATED';
 
 export interface CraDayEntryDto {
   day: number;
@@ -37,7 +43,7 @@ export interface CraDayUpdateRequest {
   note?: string | null;
 }
 
-export interface ValidateCraRequest {
+export interface SignProviderRequest {
   providerSignatureDate: string;
 }
 

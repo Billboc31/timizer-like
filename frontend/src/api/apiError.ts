@@ -3,6 +3,8 @@ export type ApiErrorCode =
   | 'cra_validated'
   | 'cra_not_found'
   | 'cra_day_not_found'
+  | 'invalid_cra_transition'
+  | 'duplicate_cra_transition'
   | 'network_error'
   | 'unknown_error';
 

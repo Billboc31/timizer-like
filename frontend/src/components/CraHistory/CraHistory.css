@@ -61,13 +61,33 @@
 }
 
 .cra-history__badge--draft {
-  background-color: var(--color-warning-light);
-  color: var(--color-warning-text);
+  background-color: #f3f4f6;
+  color: #6b7280;
 }
 
 .cra-history__badge--validated {
   background-color: var(--color-success-bg);
   color: var(--color-success-text);
+}
+
+.cra-history__badge--ready-for-provider {
+  background-color: #dbeafe;
+  color: #1e40af;
+}
+
+.cra-history__badge--signed-by-provider {
+  background-color: #fef3c7;
+  color: #92400e;
+}
+
+.cra-history__badge--awaiting-client {
+  background-color: #fef9c3;
+  color: #854d0e;
+}
+
+.cra-history__badge--signed {
+  background-color: #d1fae5;
+  color: #065f46;
 }
 
 /* Meta labels and values */

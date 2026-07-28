@@ -40,10 +40,14 @@ public final class CraDetailsMapper {
         );
     }
 
-    private static CraStatus mapStatus(ValidationStatus status) {
-        if (status == ValidationStatus.VALIDATED) {
-            return CraStatus.VALIDATED;
-        }
-        return CraStatus.DRAFT;
+    public static CraStatus mapStatus(ValidationStatus status) {
+        return switch (status) {
+            case DRAFT -> CraStatus.DRAFT;
+            case READY_FOR_PROVIDER_SIGNATURE -> CraStatus.READY_FOR_PROVIDER_SIGNATURE;
+            case SIGNED_BY_PROVIDER -> CraStatus.SIGNED_BY_PROVIDER;
+            case AWAITING_CLIENT_SIGNATURE -> CraStatus.AWAITING_CLIENT_SIGNATURE;
+            case FULLY_SIGNED -> CraStatus.FULLY_SIGNED;
+            case VALIDATED -> CraStatus.FULLY_SIGNED;
+        };
     }
 }

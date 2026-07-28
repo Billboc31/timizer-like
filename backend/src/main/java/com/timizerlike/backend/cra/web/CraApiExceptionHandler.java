@@ -11,6 +11,8 @@ import com.timizer.backend.cra.CraDayNotFoundException;
 import com.timizer.backend.cra.CraNotFoundException;
 import com.timizer.backend.cra.CraNotValidatedException;
 import com.timizer.backend.cra.CraValidatedException;
+import com.timizer.backend.cra.DuplicateCraTransitionException;
+import com.timizer.backend.cra.InvalidCraTransitionException;
 import com.timizer.backend.cra.InvalidWorkValueException;
 
 @RestControllerAdvice
@@ -44,5 +46,17 @@ public class CraApiExceptionHandler {
     public ResponseEntity<Map<String, String>> handleCraNotValidated() {
         return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
                 .body(Map.of("error", "cra_not_validated"));
+    }
+
+    @ExceptionHandler(InvalidCraTransitionException.class)
+    public ResponseEntity<Map<String, String>> handleInvalidCraTransition() {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(Map.of("error", "invalid_cra_transition"));
+    }
+
+    @ExceptionHandler(DuplicateCraTransitionException.class)
+    public ResponseEntity<Map<String, String>> handleDuplicateCraTransition() {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(Map.of("error", "duplicate_cra_transition"));
     }
 }
