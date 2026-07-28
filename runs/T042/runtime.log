@@ -31,3 +31,8 @@
 [2026-07-27T23:12:00Z] push: pushing branch=ticket/T042-add-frontend-component-tests-for-calendar-and-vali
 [2026-07-27T23:12:02Z] push: done branch=ticket/T042-add-frontend-component-tests-for-calendar-and-vali
 [2026-07-27T23:12:02Z] auto-run: TEST_COMPLETE — running PR lifecycle
+[2026-07-28T00:28:41Z] conflict-resolver: [pass 1/3] conflicted=['frontend/src/components/CalendarGrid/CalendarGrid.test.tsx', 'frontend/src/components/CalendarGrid/CalendarGrid.tsx'] | staged=['frontend/src/components/CalendarGrid/CalendarGrid.test.tsx', 'frontend/src/components/CalendarGrid/CalendarGrid.tsx'] | unresolved=[] | continue_rc=1 | next_source=[]
+[2026-07-28T00:28:41Z] conflict-resolver: all conflicts resolved after 1 pass(es)
+[2026-07-28T00:28:41Z] conflict-resolver: running tests
+[2026-07-28T00:28:41Z] conflict-resolver: test-report written: runs/T042/conflict/test-report.md
+[2026-07-28T00:28:41Z] conflict-resolver: staging and committing resolution artifacts
