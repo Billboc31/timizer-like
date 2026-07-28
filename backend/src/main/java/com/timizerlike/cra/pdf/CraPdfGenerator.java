@@ -17,6 +17,7 @@ import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.pdmodel.font.Standard14Fonts;
 
+import java.awt.Color;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -25,6 +26,7 @@ import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 @Component
@@ -35,13 +37,16 @@ public class CraPdfGenerator {
     private static final float SIGNATURE_BOX_WIDTH = 120f;
     private static final float SIGNATURE_BOX_HEIGHT = 60f;
 
-    private static final float PAGE2_ROW_HEIGHT = 18f;
-    private static final float PAGE2_COL_JOUR_X = MARGIN;
-    private static final float PAGE2_COL_VALEUR_X = MARGIN + 115f;
-    private static final float PAGE2_COL_NOTE_X = MARGIN + 270f;
+    private static final float PAGE2_COL_DATE_X = MARGIN;
+    private static final float PAGE2_COL_VALEUR_X = MARGIN + 140f;
+    private static final float PAGE2_COL_NOTE_X = MARGIN + 260f;
+    private static final float PAGE2_ROW_HEIGHT = 16f;
+    private static final float PAGE2_HEADER_HEIGHT = 20f;
+    private static final float PAGE2_MIN_BOTTOM_Y = MARGIN + 25f;
 
     private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private static final DateTimeFormatter PERIOD_FORMAT = DateTimeFormatter.ofPattern("MM/yyyy");
+    private static final DateTimeFormatter PERIOD_FORMAT_LONG = DateTimeFormatter.ofPattern("MMMM yyyy", Locale.FRENCH);
 
     private static final Map<DayOfWeek, String> SHORT_DAY_LABELS = Map.of(
             DayOfWeek.MONDAY, "Lun",
@@ -53,16 +58,9 @@ public class CraPdfGenerator {
             DayOfWeek.SUNDAY, "Dim"
     );
 
-    private static final Map<CraPdfDayType, String> DAY_TYPE_LABELS = Map.of(
-            CraPdfDayType.WORKED_FULL, "Travaillé",
-            CraPdfDayType.WORKED_HALF, "Demi-journée",
-            CraPdfDayType.WEEKEND, "Week-end",
-            CraPdfDayType.HOLIDAY, "Férié",
-            CraPdfDayType.NOT_WORKED, "Non travaillé"
-    );
-
     private final PDType1Font regular = new PDType1Font(Standard14Fonts.FontName.HELVETICA);
     private final PDType1Font bold = new PDType1Font(Standard14Fonts.FontName.HELVETICA_BOLD);
+    private final PDType1Font italic = new PDType1Font(Standard14Fonts.FontName.HELVETICA_OBLIQUE);
 
     public byte[] generate(CraPdfDocument document) {
         try (PDDocument pdf = new PDDocument();
@@ -169,30 +167,138 @@ public class CraPdfGenerator {
     private void renderPage2(PDDocument pdf, CraPdfDocument document) throws IOException {
         PDPage page = new PDPage(PDRectangle.A4);
         pdf.addPage(page);
-        try (PDPageContentStream cs = new PDPageContentStream(pdf, page)) {
+        float tableWidth = PDRectangle.A4.getWidth() - 2 * MARGIN;
+        PDPageContentStream cs = new PDPageContentStream(pdf, page);
+        try {
             float y = PAGE_TOP;
-            drawText(cs, bold, 14f, MARGIN, y, "Détail journalier");
-            y -= 25f;
 
-            drawText(cs, bold, 11f, PAGE2_COL_JOUR_X, y, "Jour");
-            drawText(cs, bold, 11f, PAGE2_COL_VALEUR_X, y, "Valeur");
-            drawText(cs, bold, 11f, PAGE2_COL_NOTE_X, y, "Note");
-            y -= PAGE2_ROW_HEIGHT;
+            drawText(cs, bold, 14f, MARGIN, y, "Détail journalier");
+            y -= 20f;
+
+            CraPdfSummary summary = document.page1();
+            if (summary != null && summary.period() != null) {
+                drawText(cs, regular, 11f, MARGIN, y, "Période : " + summary.period().format(PERIOD_FORMAT_LONG));
+                y -= 18f;
+            }
+            y -= 4f;
+
+            y = drawTableHeader(cs, tableWidth, y);
 
             List<CraPdfDayEntry> days = document.page2Days();
-            if (days == null) {
+            if (days == null || days.isEmpty()) {
                 return;
             }
+
+            int workedFullIndex = 0;
             for (CraPdfDayEntry entry : days) {
-                drawText(cs, regular, 10f, PAGE2_COL_JOUR_X, y, formatDay(entry.date(), entry.dayOfWeek()));
-                drawText(cs, regular, 10f, PAGE2_COL_VALEUR_X, y,
-                        formatFraction(entry.workedFraction()) + " " + formatDayType(entry.type()));
-                if (entry.comment() != null && !entry.comment().isEmpty()) {
-                    drawText(cs, regular, 10f, PAGE2_COL_NOTE_X, y, entry.comment());
+                if (y < PAGE2_MIN_BOTTOM_Y + PAGE2_ROW_HEIGHT) {
+                    cs.close();
+                    cs = null;
+                    PDPage nextPage = new PDPage(PDRectangle.A4);
+                    pdf.addPage(nextPage);
+                    cs = new PDPageContentStream(pdf, nextPage);
+                    y = PAGE_TOP;
+                    y = drawTableHeader(cs, tableWidth, y);
                 }
-                y -= PAGE2_ROW_HEIGHT;
+
+                float rowBottom = y - PAGE2_ROW_HEIGHT;
+                drawFilledRect(cs, MARGIN, rowBottom, tableWidth, PAGE2_ROW_HEIGHT, rowBackground(entry, workedFullIndex));
+
+                boolean secondary = isSecondary(entry.type());
+                PDType1Font rowFont = secondary ? italic : regular;
+                Color textColor = secondary ? new Color(113, 128, 150) : Color.BLACK;
+
+                drawColoredText(cs, rowFont, 9f, PAGE2_COL_DATE_X + 3f, y - 12f, buildDateCell(entry), textColor);
+                drawColoredText(cs, rowFont, 9f, PAGE2_COL_VALEUR_X + 3f, y - 12f, workedValue(entry), textColor);
+                if (entry.comment() != null && !entry.comment().isEmpty()) {
+                    drawColoredText(cs, rowFont, 9f, PAGE2_COL_NOTE_X + 3f, y - 12f, entry.comment(), textColor);
+                }
+                drawHorizontalLine(cs, MARGIN, MARGIN + tableWidth, rowBottom, new Color(203, 213, 224));
+
+                if (entry.type() == CraPdfDayType.WORKED_FULL) {
+                    workedFullIndex++;
+                }
+                y = rowBottom;
+            }
+
+            if (y < PAGE2_MIN_BOTTOM_Y + PAGE2_ROW_HEIGHT) {
+                cs.close();
+                cs = null;
+                PDPage nextPage = new PDPage(PDRectangle.A4);
+                pdf.addPage(nextPage);
+                cs = new PDPageContentStream(pdf, nextPage);
+                y = PAGE_TOP;
+            }
+            float totalBottom = y - PAGE2_ROW_HEIGHT;
+            drawFilledRect(cs, MARGIN, totalBottom, tableWidth, PAGE2_ROW_HEIGHT, new Color(219, 234, 254));
+            drawColoredText(cs, bold, 9f, PAGE2_COL_DATE_X + 3f, y - 12f, "Total", Color.BLACK);
+            BigDecimal total = summary != null ? summary.totalWorkedDays() : BigDecimal.ZERO;
+            drawColoredText(cs, bold, 9f, PAGE2_COL_VALEUR_X + 3f, y - 12f, formatFraction(total), Color.BLACK);
+            drawHorizontalLine(cs, MARGIN, MARGIN + tableWidth, totalBottom, new Color(203, 213, 224));
+        } finally {
+            if (cs != null) {
+                cs.close();
             }
         }
+    }
+
+    private float drawTableHeader(PDPageContentStream cs, float tableWidth, float y) throws IOException {
+        float headerBottom = y - PAGE2_HEADER_HEIGHT;
+        drawFilledRect(cs, MARGIN, headerBottom, tableWidth, PAGE2_HEADER_HEIGHT, new Color(45, 55, 72));
+        float textY = y - 14f;
+        drawColoredText(cs, bold, 9f, PAGE2_COL_DATE_X + 3f, textY, "Date", Color.WHITE);
+        drawColoredText(cs, bold, 9f, PAGE2_COL_VALEUR_X + 3f, textY, "Valeur", Color.WHITE);
+        drawColoredText(cs, bold, 9f, PAGE2_COL_NOTE_X + 3f, textY, "Note", Color.WHITE);
+        return headerBottom;
+    }
+
+    private Color rowBackground(CraPdfDayEntry entry, int workedFullIndex) {
+        return switch (entry.type()) {
+            case WORKED_FULL -> workedFullIndex % 2 == 0 ? Color.WHITE : new Color(247, 250, 252);
+            case WORKED_HALF -> new Color(255, 251, 235);
+            case WEEKEND -> new Color(226, 232, 240);
+            case HOLIDAY, NOT_WORKED -> new Color(241, 245, 249);
+        };
+    }
+
+    private boolean isSecondary(CraPdfDayType type) {
+        return type == CraPdfDayType.WEEKEND || type == CraPdfDayType.NOT_WORKED || type == CraPdfDayType.HOLIDAY;
+    }
+
+    private String buildDateCell(CraPdfDayEntry entry) {
+        String label = entry.dayOfWeek() != null ? SHORT_DAY_LABELS.getOrDefault(entry.dayOfWeek(), "") : "";
+        String date = entry.date() != null ? entry.date().format(DATE_FORMAT) : "";
+        return (label + " " + date).trim();
+    }
+
+    private String workedValue(CraPdfDayEntry entry) {
+        return switch (entry.type()) {
+            case WORKED_FULL -> "1";
+            case WORKED_HALF -> "0.5";
+            default -> "0";
+        };
+    }
+
+    private void drawFilledRect(PDPageContentStream cs, float x, float y, float width, float height, Color color) throws IOException {
+        cs.setNonStrokingColor(color);
+        cs.addRect(x, y, width, height);
+        cs.fill();
+    }
+
+    private void drawHorizontalLine(PDPageContentStream cs, float x1, float x2, float y, Color color) throws IOException {
+        cs.setStrokingColor(color);
+        cs.moveTo(x1, y);
+        cs.lineTo(x2, y);
+        cs.stroke();
+    }
+
+    private void drawColoredText(PDPageContentStream cs, PDType1Font font, float size, float x, float y, String text, Color color) throws IOException {
+        cs.setNonStrokingColor(color);
+        cs.beginText();
+        cs.setFont(font, size);
+        cs.newLineAtOffset(x, y);
+        cs.showText(text);
+        cs.endText();
     }
 
     private void drawText(PDPageContentStream cs, PDType1Font font, float size, float x, float y, String text) throws IOException {
@@ -212,20 +318,10 @@ public class CraPdfGenerator {
         return period.format(PERIOD_FORMAT);
     }
 
-    private String formatDay(LocalDate date, DayOfWeek dayOfWeek) {
-        String label = dayOfWeek == null ? "" : SHORT_DAY_LABELS.getOrDefault(dayOfWeek, "");
-        String formattedDate = date == null ? "" : date.format(DATE_FORMAT);
-        return (label + " " + formattedDate).trim();
-    }
-
     private String formatFraction(BigDecimal value) {
         if (value == null) {
             return "0";
         }
         return value.toPlainString();
-    }
-
-    private String formatDayType(CraPdfDayType type) {
-        return type == null ? "" : DAY_TYPE_LABELS.getOrDefault(type, type.name());
     }
 }

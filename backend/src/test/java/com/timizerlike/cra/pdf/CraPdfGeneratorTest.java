@@ -19,6 +19,7 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -83,8 +84,91 @@ class CraPdfGeneratorTest {
         try (PDDocument loaded = Loader.loadPDF(bytes)) {
             assertThat(loaded.getNumberOfPages()).isEqualTo(2);
             String page2 = extractPage(loaded, 2);
-            assertThat(page2).contains("Jour").contains("Valeur").contains("Note");
+            assertThat(page2).contains("Date").contains("Valeur").contains("Note");
         }
+    }
+
+    @Test
+    void displaysMonthPeriodAboveTable() throws IOException {
+        byte[] bytes = generator.generate(fullFixture());
+
+        try (PDDocument loaded = Loader.loadPDF(bytes)) {
+            String page2 = extractPage(loaded, 2);
+            assertThat(page2).contains("mars 2026");
+        }
+    }
+
+    @Test
+    void rendersAllDaysOf28DayMonth() throws IOException {
+        YearMonth february = YearMonth.of(2026, 2);
+        CraPdfDocument document = monthFixture(february, 11);
+
+        byte[] bytes = generator.generate(document);
+
+        try (PDDocument loaded = Loader.loadPDF(bytes)) {
+            assertThat(loaded.getNumberOfPages()).isGreaterThanOrEqualTo(2);
+            String allText = extractAllPages(loaded);
+            for (int d = 1; d <= 28; d++) {
+                assertThat(allText).contains(february.atDay(d).format(DATE_FORMAT));
+            }
+        }
+    }
+
+    @Test
+    void rendersAllDaysOf30DayMonth() throws IOException {
+        YearMonth april = YearMonth.of(2026, 4);
+        CraPdfDocument document = monthFixture(april, 8);
+
+        byte[] bytes = generator.generate(document);
+
+        try (PDDocument loaded = Loader.loadPDF(bytes)) {
+            assertThat(loaded.getNumberOfPages()).isGreaterThanOrEqualTo(2);
+            String allText = extractAllPages(loaded);
+            for (int d = 1; d <= 30; d++) {
+                assertThat(allText).contains(april.atDay(d).format(DATE_FORMAT));
+            }
+            assertThat(allText).contains("Total");
+        }
+    }
+
+    @Test
+    void rendersAllDaysOf31DayMonthAcrossPages() throws IOException {
+        YearMonth july = YearMonth.of(2026, 7);
+        CraPdfDocument document = monthFixture(july, 15);
+
+        byte[] bytes = generator.generate(document);
+
+        try (PDDocument loaded = Loader.loadPDF(bytes)) {
+            assertThat(loaded.getNumberOfPages()).isGreaterThanOrEqualTo(2);
+            String allText = extractAllPages(loaded);
+            for (int d = 1; d <= 31; d++) {
+                assertThat(allText).contains(july.atDay(d).format(DATE_FORMAT));
+            }
+            assertThat(allText).contains("Total");
+        }
+    }
+
+    private static CraPdfDocument monthFixture(YearMonth yearMonth, int halfDayOfMonth) {
+        CraPdfSummary summary = new CraPdfSummary(yearMonth, null, null, BigDecimal.ZERO);
+        List<CraPdfDayEntry> days = new ArrayList<>();
+        for (int d = 1; d <= yearMonth.lengthOfMonth(); d++) {
+            LocalDate date = yearMonth.atDay(d);
+            DayOfWeek dow = date.getDayOfWeek();
+            CraPdfDayType type;
+            BigDecimal fraction;
+            if (dow == DayOfWeek.SATURDAY || dow == DayOfWeek.SUNDAY) {
+                type = CraPdfDayType.WEEKEND;
+                fraction = BigDecimal.ZERO;
+            } else if (d == halfDayOfMonth) {
+                type = CraPdfDayType.WORKED_HALF;
+                fraction = new BigDecimal("0.5");
+            } else {
+                type = CraPdfDayType.WORKED_FULL;
+                fraction = BigDecimal.ONE;
+            }
+            days.add(new CraPdfDayEntry(date, dow, type, fraction, null));
+        }
+        return new CraPdfDocument(summary, days, null);
     }
 
     private static CraPdfDocument fullFixture() {
@@ -157,5 +241,9 @@ class CraPdfGeneratorTest {
         stripper.setStartPage(pageNumber);
         stripper.setEndPage(pageNumber);
         return stripper.getText(document);
+    }
+
+    private static String extractAllPages(PDDocument document) throws IOException {
+        return new PDFTextStripper().getText(document);
     }
 }
