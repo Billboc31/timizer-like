@@ -5,10 +5,10 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.timizer.backend.cra.CraDetailsMapper;
 import com.timizer.backend.cra.CraTotalCalculationService;
 import com.timizer.backend.cra.MonthlyCraReport;
 import com.timizer.backend.cra.MonthlyCraReportRepository;
-import com.timizer.backend.cra.ValidationStatus;
 import com.timizerlike.backend.cra.dto.CraStatus;
 import com.timizerlike.backend.cra.dto.CraSummaryDto;
 
@@ -34,9 +34,7 @@ public class CraHistoryService {
 
     private CraSummaryDto toSummary(MonthlyCraReport report) {
         double total = calculationService.calculateTotalWorkedDays(report.getDayEntries());
-        CraStatus status = report.getStatus() == ValidationStatus.VALIDATED
-                ? CraStatus.VALIDATED
-                : CraStatus.DRAFT;
+        CraStatus status = CraDetailsMapper.mapStatus(report.getStatus());
         return new CraSummaryDto(
                 report.getId(),
                 report.getMonth(),
