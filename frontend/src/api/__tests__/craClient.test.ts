@@ -1,7 +1,16 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
-import { createCra, getCra, updateDay, validateCra, listCras, downloadCraPdf } from '../craClient';
+import {
+  createCra,
+  getCra,
+  updateDay,
+  validateCra,
+  listCras,
+  downloadCraPdf,
+  getProviderSettings,
+  updateProviderSettings,
+} from '../craClient';
 import { ApiError, isApiError } from '../apiError';
-import type { CraDetailsDto, CraSummaryDto } from '../types';
+import type { CraDetailsDto, CraSummaryDto, ProviderSettingsDto } from '../types';
 
 const mockCraDetails: CraDetailsDto = {
   id: 1,
@@ -118,6 +127,50 @@ describe('downloadCraPdf', () => {
     const result = await downloadCraPdf(1);
     expect(result).toBeInstanceOf(Blob);
     expect(vi.mocked(fetch)).toHaveBeenCalledWith('/api/cras/1/pdf', undefined);
+  });
+});
+
+const mockProviderSettings: ProviderSettingsDto = {
+  firstName: 'Jean',
+  lastName: 'Dupont',
+  company: 'Acme',
+  address: '1 rue Paix',
+  email: 'jean@acme.com',
+  phone: '0600000000',
+};
+
+describe('getProviderSettings', () => {
+  it('calls GET /api/provider-settings and returns ProviderSettingsDto', async () => {
+    mockFetchOk(mockProviderSettings);
+    const result = await getProviderSettings();
+    expect(result).toEqual(mockProviderSettings);
+    expect(vi.mocked(fetch)).toHaveBeenCalledWith('/api/provider-settings', undefined);
+  });
+
+  it('maps network failure to ApiError', async () => {
+    mockFetchNetworkFailure();
+    await expect(getProviderSettings()).rejects.toSatisfy(
+      (e: unknown) => isApiError(e) && e.code === 'network_error',
+    );
+  });
+});
+
+describe('updateProviderSettings', () => {
+  it('calls PUT /api/provider-settings and returns ProviderSettingsDto', async () => {
+    mockFetchOk(mockProviderSettings);
+    const result = await updateProviderSettings(mockProviderSettings);
+    expect(result).toEqual(mockProviderSettings);
+    expect(vi.mocked(fetch)).toHaveBeenCalledWith(
+      '/api/provider-settings',
+      expect.objectContaining({ method: 'PUT' }),
+    );
+  });
+
+  it('maps network failure to ApiError', async () => {
+    mockFetchNetworkFailure();
+    await expect(updateProviderSettings(mockProviderSettings)).rejects.toSatisfy(
+      (e: unknown) => isApiError(e) && e.code === 'network_error',
+    );
   });
 });
 

@@ -7,8 +7,8 @@ import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication(scanBasePackages = {"com.timizer", "com.timizerlike"})
-@EntityScan(basePackages = {"com.timizer.backend.cra", "com.timizerlike.backend.settings"})
-@EnableJpaRepositories(basePackages = {"com.timizer.backend.cra", "com.timizerlike.backend.settings"})
+@EntityScan(basePackages = {"com.timizer.backend.cra", "com.timizerlike.backend.settings", "com.timizerlike.backend.provider"})
+@EnableJpaRepositories(basePackages = {"com.timizer.backend.cra", "com.timizerlike.backend.settings", "com.timizerlike.backend.provider"})
 @ConfigurationPropertiesScan
 public class TimizerLikeApplication {
 

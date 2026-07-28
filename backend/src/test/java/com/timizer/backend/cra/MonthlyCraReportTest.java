@@ -26,6 +26,9 @@ class MonthlyCraReportTest {
             "bob.client@example.com",
             "+33123456789",
             null,
+            null,
+            null,
+            null,
             null
         );
     }
@@ -81,7 +84,7 @@ class MonthlyCraReportTest {
             "Alice", "Provider", "Provider Co.",
             "Bob", "Client", "Client Co.",
             "bob.client@example.com", null,
-            null, null
+            null, null, null, null, null
         );
 
         Set<ConstraintViolation<MonthlyCraReport>> violations = validate(report);
@@ -98,7 +101,7 @@ class MonthlyCraReportTest {
             "Alice", "Provider", "Provider Co.",
             "Bob", "Client", "Client Co.",
             "bob.client@example.com", null,
-            null, null
+            null, null, null, null, null
         );
 
         Set<ConstraintViolation<MonthlyCraReport>> violations = validate(report);

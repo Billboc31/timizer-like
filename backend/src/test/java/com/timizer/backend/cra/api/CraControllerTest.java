@@ -43,7 +43,14 @@ class CraControllerTest {
                 List.of(new CraDayEntryDto(1, 0.0, null), new CraDayEntryDto(2, 0.0, null)),
                 null,
                 null,
-                null, null, null, null, null, null, null, null
+                "Alice",
+                "Provider",
+                "Provider Co.",
+                "Bob",
+                "Client",
+                "Client Co.",
+                null,
+                null
         );
         when(creationService.createForMonth(2025, 3)).thenReturn(new CraCreationResult(dto, true));
 
@@ -69,7 +76,14 @@ class CraControllerTest {
                 List.of(),
                 null,
                 null,
-                null, null, null, null, null, null, null, null
+                "Alice",
+                "Provider",
+                "Provider Co.",
+                "Bob",
+                "Client",
+                "Client Co.",
+                null,
+                null
         );
         when(creationService.createForMonth(2025, 4)).thenReturn(new CraCreationResult(dto, false));
 

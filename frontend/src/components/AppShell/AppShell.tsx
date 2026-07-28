@@ -2,18 +2,18 @@ import type { ReactNode } from 'react';
 import { PageHeader } from '../PageHeader/PageHeader';
 import './AppShell.css';
 
-type View = 'selector' | 'history' | 'settings';
+export type AppView = 'selector' | 'history' | 'settings';
 
 interface AppShellProps {
-  activeView: View;
-  onNavigate: (view: View) => void;
+  activeView: AppView;
+  onNavigate: (view: AppView) => void;
   children: ReactNode;
 }
 
-const PAGE_TITLES: Record<View, string> = {
+const PAGE_TITLES: Record<AppView, string> = {
   selector: 'New CRA',
   history: 'CRA History',
-  settings: 'Client Settings',
+  settings: 'Settings',
 };
 
 export function AppShell({ activeView, onNavigate, children }: AppShellProps) {

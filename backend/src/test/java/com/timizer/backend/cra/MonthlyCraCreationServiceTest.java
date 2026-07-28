@@ -20,6 +20,8 @@ import com.timizer.backend.cra.MonthlyCraCreationService.CraCreationResult;
 import com.timizerlike.backend.cra.dto.CraDayEntryDto;
 import com.timizerlike.backend.cra.dto.CraDetailsDto;
 import com.timizerlike.backend.cra.dto.CraStatus;
+import com.timizerlike.backend.provider.ProviderSettingsDto;
+import com.timizerlike.backend.provider.ProviderSettingsService;
 import com.timizerlike.backend.settings.ClientSettingsDto;
 import com.timizerlike.backend.settings.ClientSettingsService;
 import com.timizerlike.cra.config.CraDefaultsProperties;
@@ -43,10 +45,15 @@ class MonthlyCraCreationServiceTest {
             "bob@example.com"
     );
 
+    private static final ProviderSettingsDto PROVIDER_SETTINGS = new ProviderSettingsDto(
+            "Alice", "Provider", "Provider Co.", "1 rue Test", null, null);
+
     private static MonthlyCraCreationService buildService(MonthlyCraReportRepository repository) {
         ClientSettingsService clientSettingsService = mock(ClientSettingsService.class);
         when(clientSettingsService.get()).thenReturn(CLIENT_SETTINGS);
-        return new MonthlyCraCreationService(repository, DEFAULTS, clientSettingsService);
+        ProviderSettingsService providerSettingsService = mock(ProviderSettingsService.class);
+        when(providerSettingsService.getSettings()).thenReturn(PROVIDER_SETTINGS);
+        return new MonthlyCraCreationService(repository, DEFAULTS, clientSettingsService, providerSettingsService);
     }
 
     @Test
@@ -153,6 +160,9 @@ class MonthlyCraCreationServiceTest {
                 "Client",
                 "Lyra Network",
                 "bob@example.com",
+                null,
+                null,
+                null,
                 null,
                 null,
                 null

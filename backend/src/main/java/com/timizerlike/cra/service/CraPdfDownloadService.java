@@ -57,8 +57,8 @@ public class CraPdfDownloadService {
         CraPdfParty provider = new CraPdfParty(
                 cra.getProviderFirstName() + " " + cra.getProviderLastName(),
                 cra.getProviderCompany(),
-                null,
-                null);
+                cra.getProviderAddress(),
+                new CraPdfContact(null, cra.getProviderEmail()));
 
         CraPdfParty client = new CraPdfParty(
                 cra.getClientFirstName() + " " + cra.getClientLastName(),

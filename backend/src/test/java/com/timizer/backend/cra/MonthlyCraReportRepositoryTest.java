@@ -38,6 +38,9 @@ class MonthlyCraReportRepositoryTest {
             "bob.client@example.com",
             "+33123456789",
             null,
+            null,
+            null,
+            null,
             null
         );
     }

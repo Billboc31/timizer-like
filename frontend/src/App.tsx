@@ -5,7 +5,9 @@ import { CraSummaryPanel } from './components/CraSummaryPanel/CraSummaryPanel';
 import { CraHistory } from './components/CraHistory/CraHistory';
 import { CraValidation } from './components/CraValidation/CraValidation';
 import { ClientSettingsForm } from './components/ClientSettingsForm/ClientSettingsForm';
+import { ProviderSettingsForm } from './components/ProviderSettingsForm/ProviderSettingsForm';
 import { AppShell } from './components/AppShell/AppShell';
+import type { AppView } from './components/AppShell/AppShell';
 import { getCra, updateDay } from './api/craClient';
 import { getClientSettings } from './api/settingsClient';
 import { getErrorMessage } from './api/errorMessages';
@@ -24,10 +26,8 @@ function dtoToDetails(dto: CraDetailsDto): CraDetails {
   };
 }
 
-type View = 'selector' | 'history' | 'settings';
-
 export default function App() {
-  const [view, setView] = useState<View>('selector');
+  const [view, setView] = useState<AppView>('selector');
   const [cra, setCra] = useState<CraDetails | null>(null);
   const [craLoading, setCraLoading] = useState(false);
   const [craError, setCraError] = useState<string | null>(null);
@@ -89,11 +89,14 @@ export default function App() {
   return (
     <AppShell activeView={view} onNavigate={setView}>
       {view === 'settings' ? (
-        settingsError !== null ? (
-          <p role="alert">{settingsError}</p>
-        ) : clientSettings !== null ? (
-          <ClientSettingsForm initialValues={clientSettings} />
-        ) : null
+        <>
+          <ProviderSettingsForm />
+          {settingsError !== null ? (
+            <p role="alert">{settingsError}</p>
+          ) : clientSettings !== null ? (
+            <ClientSettingsForm initialValues={clientSettings} />
+          ) : null}
+        </>
       ) : (
         <>
           {view === 'selector' ? (

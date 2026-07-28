@@ -60,6 +60,16 @@ public class MonthlyCraReport {
     @Column(name = "provider_company", nullable = false)
     private String providerCompany;
 
+    @Column(name = "provider_address")
+    private String providerAddress;
+
+    @Email
+    @Column(name = "provider_email")
+    private String providerEmail;
+
+    @Column(name = "provider_phone")
+    private String providerPhone;
+
     @NotBlank
     @Column(name = "client_first_name", nullable = false)
     private String clientFirstName;
@@ -125,6 +135,9 @@ public class MonthlyCraReport {
         String clientCompany,
         String clientContactEmail,
         String clientContactPhone,
+        String providerAddress,
+        String providerEmail,
+        String providerPhone,
         String clientAddress,
         String clientContactRole
     ) {
@@ -138,6 +151,9 @@ public class MonthlyCraReport {
         this.clientCompany = clientCompany;
         this.clientContactEmail = clientContactEmail;
         this.clientContactPhone = clientContactPhone;
+        this.providerAddress = providerAddress;
+        this.providerEmail = providerEmail;
+        this.providerPhone = providerPhone;
         this.clientAddress = clientAddress;
         this.clientContactRole = clientContactRole;
         this.status = ValidationStatus.DRAFT;
@@ -180,6 +196,18 @@ public class MonthlyCraReport {
 
     public String getProviderCompany() {
         return providerCompany;
+    }
+
+    public String getProviderAddress() {
+        return providerAddress;
+    }
+
+    public String getProviderEmail() {
+        return providerEmail;
+    }
+
+    public String getProviderPhone() {
+        return providerPhone;
     }
 
     public String getClientFirstName() {

@@ -34,3 +34,12 @@ export interface CraDayUpdateRequest {
 export interface ValidateCraRequest {
   providerSignatureDate: string;
 }
+
+export interface ProviderSettingsDto {
+  firstName: string;
+  lastName: string;
+  company: string;
+  address?: string | null;
+  email?: string | null;
+  phone?: string | null;
+}
