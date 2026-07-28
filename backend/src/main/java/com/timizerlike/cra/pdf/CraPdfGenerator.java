@@ -16,6 +16,7 @@ import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.pdmodel.font.Standard14Fonts;
+import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 
 import java.awt.Color;
 import java.io.ByteArrayOutputStream;
@@ -34,8 +35,9 @@ public class CraPdfGenerator {
 
     private static final float MARGIN = 40f;
     private static final float PAGE_TOP = PDRectangle.A4.getHeight() - MARGIN;
-    private static final float SIGNATURE_BOX_WIDTH = 120f;
-    private static final float SIGNATURE_BOX_HEIGHT = 60f;
+    private static final float SIGNATURE_BOX_WIDTH = 180f;
+    private static final float SIGNATURE_BOX_HEIGHT = 80f;
+    private static final float SIGNATURE_BOX_PADDING = 8f;
 
     private static final float PAGE2_COL_DATE_X = MARGIN;
     private static final float PAGE2_COL_VALEUR_X = MARGIN + 140f;
@@ -101,7 +103,7 @@ public class CraPdfGenerator {
             drawText(cs, regular, 11f, MARGIN, y, "Frais : -");
             y -= 25f;
 
-            y = drawProviderSignatureBlock(cs, y, document.signatures());
+            y = drawProviderSignatureBlock(pdf, cs, y, document.signatures());
             y -= 15f;
             drawClientSignatureBlock(cs, y);
         }
@@ -133,26 +135,44 @@ public class CraPdfGenerator {
         return y - 14f;
     }
 
-    private float drawProviderSignatureBlock(PDPageContentStream cs, float startY, CraPdfSignatures signatures) throws IOException {
+    private float drawProviderSignatureBlock(PDDocument pdf, PDPageContentStream cs, float startY, CraPdfSignatures signatures) throws IOException {
         float y = startY;
         drawText(cs, bold, 12f, MARGIN, y, "Signature prestataire");
-        y -= 15f;
+        y -= 10f;
+
+        float boxTop = y - 5f;
+        float boxBottom = boxTop - SIGNATURE_BOX_HEIGHT;
+        drawRectangle(cs, MARGIN, boxBottom, SIGNATURE_BOX_WIDTH, SIGNATURE_BOX_HEIGHT);
+
         CraPdfProviderSignature provider = signatures == null ? null : signatures.provider();
         if (provider != null) {
-            y = drawOptionalLine(cs, y, provider.name());
-            if (provider.signedAt() != null) {
-                drawText(cs, regular, 11f, MARGIN, y, "Signé le " + provider.signedAt().format(DATE_FORMAT));
-                y -= 14f;
+            float textX = MARGIN + SIGNATURE_BOX_PADDING;
+            float contentTopY = boxTop - SIGNATURE_BOX_PADDING;
+
+            if (provider.signatureImageData() != null) {
+                PDImageXObject image = PDImageXObject.createFromByteArray(pdf, provider.signatureImageData(), "signature.png");
+                float availableWidth = SIGNATURE_BOX_WIDTH - 2 * SIGNATURE_BOX_PADDING;
+                float availableHeight = contentTopY - boxBottom - SIGNATURE_BOX_PADDING - 28f;
+                float scale = Math.min(availableWidth / image.getWidth(), availableHeight / image.getHeight());
+                float drawW = image.getWidth() * scale;
+                float drawH = image.getHeight() * scale;
+                float drawX = textX + (availableWidth - drawW) / 2f;
+                float drawY = contentTopY - drawH;
+                cs.drawImage(image, drawX, drawY, drawW, drawH);
+                contentTopY = drawY - 4f;
             }
-            if (provider.signatureImageRef() != null) {
-                float boxTop = y - 5f;
-                float boxBottom = boxTop - SIGNATURE_BOX_HEIGHT;
-                drawRectangle(cs, MARGIN, boxBottom, SIGNATURE_BOX_WIDTH, SIGNATURE_BOX_HEIGHT);
-                drawText(cs, regular, 9f, MARGIN + 4f, boxTop - 15f, provider.signatureImageRef());
-                y = boxBottom - 5f;
+
+            float textY = contentTopY - 11f;
+            if (provider.name() != null && !provider.name().isEmpty()) {
+                drawText(cs, regular, 11f, textX, textY, provider.name());
+                textY -= 14f;
+            }
+            if (provider.signedAt() != null) {
+                drawText(cs, regular, 11f, textX, textY, provider.signedAt().format(DATE_FORMAT));
             }
         }
-        return y;
+
+        return boxBottom - 5f;
     }
 
     private void drawClientSignatureBlock(PDPageContentStream cs, float startY) throws IOException {
@@ -162,6 +182,7 @@ public class CraPdfGenerator {
         float boxTop = y - 5f;
         float boxBottom = boxTop - SIGNATURE_BOX_HEIGHT;
         drawRectangle(cs, MARGIN, boxBottom, SIGNATURE_BOX_WIDTH, SIGNATURE_BOX_HEIGHT);
+        drawText(cs, regular, 9f, MARGIN + SIGNATURE_BOX_PADDING, boxTop - SIGNATURE_BOX_PADDING - 9f, "À signer");
     }
 
     private void renderPage2(PDDocument pdf, CraPdfDocument document) throws IOException {

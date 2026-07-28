@@ -5,5 +5,5 @@ import java.time.LocalDate;
 public record CraPdfProviderSignature(
         String name,
         LocalDate signedAt,
-        String signatureImageRef
+        byte[] signatureImageData
 ) {}

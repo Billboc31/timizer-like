@@ -15,6 +15,12 @@ export interface CraDetailsDto {
   days: CraDayEntryDto[];
   validationDate: string | null;
   providerSignatureDate: string | null;
+  providerFirstName?: string | null;
+  providerLastName?: string | null;
+  providerCompany?: string | null;
+  clientFirstName?: string | null;
+  clientLastName?: string | null;
+  clientCompany?: string | null;
 }
 
 export interface CraSummaryDto {

@@ -24,6 +24,7 @@ const DRAFT_CRA: CraDetails = {
   totalWorkedDays: 10,
   status: 'DRAFT',
   days: [],
+  providerSignatureDate: null,
 };
 
 const VALIDATED_CRA: CraDetails = { ...DRAFT_CRA, status: 'VALIDATED' };

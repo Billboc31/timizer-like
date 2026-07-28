@@ -1,4 +1,3 @@
-import type { CraSummaryDto } from '../api/types';
 export type { CraSummaryDto } from '../api/types';
 
 export interface CraDayEntry {
@@ -14,17 +13,8 @@ export interface CraDetails {
   totalWorkedDays: number;
   status: 'DRAFT' | 'VALIDATED';
   days: CraDayEntry[];
-  providerFirstName?: string | null;
-  providerLastName?: string | null;
-  providerCompany?: string | null;
-  clientFirstName?: string | null;
-  clientLastName?: string | null;
-  clientCompany?: string | null;
-}
-
-export interface CraDetailsDto extends CraSummaryDto {
-  days: CraDayEntry[];
   providerSignatureDate: string | null;
+  providerSignatureImageUrl?: string | null;
   providerFirstName?: string | null;
   providerLastName?: string | null;
   providerCompany?: string | null;

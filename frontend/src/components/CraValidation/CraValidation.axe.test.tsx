@@ -20,6 +20,7 @@ const DRAFT_CRA: CraDetails = {
   totalWorkedDays: 10,
   status: 'DRAFT',
   days: [],
+  providerSignatureDate: null,
 };
 
 describe('CraValidation accessibility', () => {

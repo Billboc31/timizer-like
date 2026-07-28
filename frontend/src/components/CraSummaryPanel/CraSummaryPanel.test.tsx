@@ -12,6 +12,7 @@ const BASE_CRA: CraDetails = {
   totalWorkedDays: 12.5,
   status: 'DRAFT',
   days: [],
+  providerSignatureDate: null,
   providerFirstName: 'Jean',
   providerLastName: 'Dupont',
   providerCompany: 'Acme Corp',
