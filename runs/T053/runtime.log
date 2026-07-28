@@ -31,3 +31,8 @@
 [2026-07-28T20:39:33Z] push: pushing branch=ticket/T053-create-a-secure-public-client-signature-link-for-a
 [2026-07-28T20:39:36Z] push: done branch=ticket/T053-create-a-secure-public-client-signature-link-for-a
 [2026-07-28T20:39:36Z] auto-run: TEST_COMPLETE — running PR lifecycle
+[2026-07-28T20:49:01Z] conflict-resolver: [pass 1/3] conflicted=['backend/src/main/java/com/timizerlike/backend/cra/web/CraApiExceptionHandler.java', 'backend/src/test/java/com/timizer/backend/cra/api/CraControllerTest.java', 'frontend/package-lock.json', 'frontend/package.json', 'frontend/src/api/apiError.ts', 'frontend/src/api/httpClient.ts'] | staged=['backend/src/main/java/com/timizerlike/backend/cra/web/CraApiExceptionHandler.java', 'backend/src/test/java/com/timizer/backend/cra/api/CraControllerTest.java', 'frontend/package-lock.json', 'frontend/package.json', 'frontend/src/api/apiError.ts', 'frontend/src/api/httpClient.ts'] | unresolved=[] | continue_rc=1 | next_source=[]
+[2026-07-28T20:49:01Z] conflict-resolver: all conflicts resolved after 1 pass(es)
+[2026-07-28T20:49:01Z] conflict-resolver: running tests
+[2026-07-28T20:49:01Z] conflict-resolver: test-report written: runs/T053/conflict/test-report.md
+[2026-07-28T20:49:01Z] conflict-resolver: staging and committing resolution artifacts
