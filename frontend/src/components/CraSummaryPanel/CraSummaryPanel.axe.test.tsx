@@ -13,6 +13,7 @@ const SAMPLE_CRA: CraDetails = {
   totalWorkedDays: 15,
   status: 'DRAFT',
   days: [],
+  providerSignatureDate: null,
   providerFirstName: 'Jean',
   providerLastName: 'Dupont',
   providerCompany: 'Acme Corp',

@@ -65,6 +65,32 @@ class CraPdfGeneratorTest {
     }
 
     @Test
+    void signedProviderBlockRendersNameAndDateInsideBox() throws IOException {
+        CraPdfSummary summary = new CraPdfSummary(
+                PERIOD,
+                new CraPdfParty("Alice Provider", "Provider SARL", "1 rue A", null),
+                new CraPdfParty("Acme Corp", "Corporate Client SA", "10 rue B", null),
+                new java.math.BigDecimal("10")
+        );
+        CraPdfSignatures signatures = new CraPdfSignatures(
+                new CraPdfProviderSignature("Alice Provider", LocalDate.of(2026, 4, 1), "sig-ref-123"),
+                null
+        );
+        CraPdfDocument document = new CraPdfDocument(summary, List.of(), signatures);
+
+        byte[] bytes = generator.generate(document);
+
+        assertThat(bytes).isNotEmpty();
+        try (PDDocument loaded = Loader.loadPDF(bytes)) {
+            String page1 = extractPage(loaded, 1);
+            assertThat(page1)
+                    .contains("Signature prestataire")
+                    .contains("Alice Provider")
+                    .contains("01/04/2026");
+        }
+    }
+
+    @Test
     void tolerantToNullProviderContactAndEmptyDayList() throws IOException {
         CraPdfSummary summary = new CraPdfSummary(
                 PERIOD,

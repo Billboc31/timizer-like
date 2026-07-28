@@ -16,6 +16,7 @@ const SAMPLE_CRA: CraDetails = {
     { day: 1, worked: 1, note: '' },
     { day: 2, worked: 0.5, note: '' },
   ],
+  providerSignatureDate: null,
 };
 
 describe('CalendarGrid accessibility', () => {

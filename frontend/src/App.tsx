@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { CraMonthSelector } from './components/CraMonthSelector/CraMonthSelector';
 import { CalendarGrid } from './components/CalendarGrid/CalendarGrid';
 import { CraSummaryPanel } from './components/CraSummaryPanel/CraSummaryPanel';
@@ -6,6 +6,7 @@ import { CraHistory } from './components/CraHistory/CraHistory';
 import { CraValidation } from './components/CraValidation/CraValidation';
 import { ClientSettingsForm } from './components/ClientSettingsForm/ClientSettingsForm';
 import { ProviderSettingsForm } from './components/ProviderSettingsForm/ProviderSettingsForm';
+import { ProviderSignatureBox } from './components/ProviderSignatureBox/ProviderSignatureBox';
 import { AppShell } from './components/AppShell/AppShell';
 import type { AppView } from './components/AppShell/AppShell';
 import { getCra, updateDay } from './api/craClient';
@@ -23,6 +24,7 @@ function dtoToDetails(dto: CraDetailsDto): CraDetails {
     totalWorkedDays: dto.totalWorkedDays,
     status: dto.status,
     days: dto.days.map(d => ({ day: d.day, worked: d.worked, note: d.note ?? '' })),
+    providerSignatureDate: dto.providerSignatureDate,
   };
 }
 
@@ -36,6 +38,7 @@ export default function App() {
   const [dayUpdateError, setDayUpdateError] = useState<string | null>(null);
   const [clientSettings, setClientSettings] = useState<ClientSettingsDto | null>(null);
   const [settingsError, setSettingsError] = useState<string | null>(null);
+  const craValidationRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (view === 'settings' && clientSettings === null) {
@@ -68,6 +71,11 @@ export default function App() {
 
   const handleCraValidated = (updated: CraDetailsDto) => {
     setCra(dtoToDetails(updated));
+  };
+
+  const handleSignClick = () => {
+    const btn = craValidationRef.current?.querySelector<HTMLButtonElement>('.cra-validation__button');
+    btn?.click();
   };
 
   const handleDayClick = (day: number, newValue: 0 | 0.5 | 1) => {
@@ -114,7 +122,12 @@ export default function App() {
             updatingDay={updatingDay}
             dayUpdateError={dayUpdateError}
           />
-          <CraValidation cra={cra} onValidated={handleCraValidated} />
+          {cra && (
+            <ProviderSignatureBox cra={cra} onSignClick={handleSignClick} />
+          )}
+          <div ref={craValidationRef}>
+            <CraValidation cra={cra} onValidated={handleCraValidated} />
+          </div>
         </>
       )}
     </AppShell>

@@ -23,6 +23,7 @@ const JULY_2026: CraDetails = {
   totalWorkedDays: 0,
   status: 'DRAFT',
   days: [],
+  providerSignatureDate: null,
 };
 
 const JULY_2026_DTO: CraDetailsDto = {

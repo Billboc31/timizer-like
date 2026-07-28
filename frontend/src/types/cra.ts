@@ -14,6 +14,7 @@ export interface CraDetails {
   totalWorkedDays: number;
   status: 'DRAFT' | 'VALIDATED';
   days: CraDayEntry[];
+  providerSignatureDate: string | null;
   providerFirstName?: string | null;
   providerLastName?: string | null;
   providerCompany?: string | null;
