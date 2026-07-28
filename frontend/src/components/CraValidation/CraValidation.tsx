@@ -22,6 +22,13 @@ export function CraValidation({ cra, onValidated, onGoToSettings }: Props) {
   const triggerRef = useRef<HTMLButtonElement>(null);
   const dialogRef = useRef<HTMLDialogElement>(null);
   const prevStateRef = useRef<UIState>('idle');
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current !== null) clearTimeout(timeoutRef.current);
+    };
+  }, []);
 
   useEffect(() => {
     const prev = prevStateRef.current;
@@ -74,7 +81,7 @@ export function CraValidation({ cra, onValidated, onGoToSettings }: Props) {
       });
       setUiState('success');
       dialogRef.current?.close();
-      setTimeout(() => {
+      timeoutRef.current = setTimeout(() => {
         onValidated(updated);
       }, 2000);
     } catch (e) {
@@ -154,6 +161,7 @@ export function CraValidation({ cra, onValidated, onGoToSettings }: Props) {
         aria-modal="true"
         aria-labelledby="cra-validation-dialog-title"
         onKeyDown={handleDialogKeyDown}
+        onCancel={handleCancel}
       >
         <p id="cra-validation-dialog-title" className="cra-validation__warning">
           La validation verrouille le CRA, cette action est irréversible. Le CRA validé devient en lecture seule.

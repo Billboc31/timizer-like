@@ -103,6 +103,20 @@ describe('CraValidation', () => {
     expect(screen.getByRole('button', { name: /confirmer/i })).toBeInTheDocument();
   });
 
+  it('pressing Escape (native cancel event) resets state to idle', async () => {
+    mockGetSignature.mockResolvedValueOnce(SIGNATURE);
+    render(<CraValidation cra={DRAFT_CRA} onValidated={noop} onGoToSettings={noop} />);
+
+    fireEvent.click(screen.getByRole('button', { name: /valider le cra/i }));
+    await waitFor(() => expect(screen.getByRole('dialog')).toBeInTheDocument());
+
+    const dialog = screen.getByRole('dialog');
+    fireEvent(dialog, new Event('cancel', { bubbles: false }));
+
+    expect(screen.getByRole('button', { name: /valider le cra/i })).toBeInTheDocument();
+    expect(mockValidateCra).not.toHaveBeenCalled();
+  });
+
   it('clicking annuler hides confirmation and does not call validateCra', async () => {
     mockGetSignature.mockResolvedValueOnce(SIGNATURE);
     render(<CraValidation cra={DRAFT_CRA} onValidated={noop} onGoToSettings={noop} />);
