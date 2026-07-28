@@ -46,7 +46,8 @@ class CraValidationControllerTest {
             LocalDate.of(2026, 6, 30),
             null, null, null, null, null, null,
             null, null,
-            "data:image/png;base64,abc", "Jean Dupont");
+            "data:image/png;base64,abc", "Jean Dupont",
+            null, null);
 
     @Test
     void returnsHttp200WithValidatedDtoOnSuccess() throws Exception {

@@ -16,6 +16,7 @@ import com.timizer.backend.cra.MonthlyCraReport;
 import com.timizer.backend.cra.MonthlyCraReportRepository;
 import com.timizer.backend.cra.ValidationStatus;
 import com.timizerlike.cra.pdf.CraPdfGenerator;
+import com.timizerlike.cra.pdf.model.CraPdfClientSignature;
 import com.timizerlike.cra.pdf.model.CraPdfContact;
 import com.timizerlike.cra.pdf.model.CraPdfDayEntry;
 import com.timizerlike.cra.pdf.model.CraPdfDayType;
@@ -79,12 +80,22 @@ public class CraPdfDownloadService {
                 .map(this::toPdfDayEntry)
                 .toList();
 
-        CraPdfSignatures signatures = new CraPdfSignatures(
-                new CraPdfProviderSignature(
-                        cra.getProviderFirstName() + " " + cra.getProviderLastName(),
-                        cra.getProviderSignatureDate(),
-                        decodeSignatureImage(cra.getProviderSignatureImage())),
-                null);
+        byte[] providerImage = decodeSignatureImage(cra.getProviderSignatureImage());
+        CraPdfProviderSignature providerSignature = new CraPdfProviderSignature(
+                cra.getProviderFirstName() + " " + cra.getProviderLastName(),
+                cra.getProviderSignatureDate(),
+                providerImage);
+
+        CraPdfClientSignature clientSignature = null;
+        if (cra.getClientSignatureDate() != null || cra.getClientRepresentativeName() != null) {
+            byte[] clientImage = decodeBase64(cra.getClientSignatureImage());
+            clientSignature = new CraPdfClientSignature(
+                    cra.getClientRepresentativeName(),
+                    cra.getClientSignatureDate(),
+                    clientImage);
+        }
+
+        CraPdfSignatures signatures = new CraPdfSignatures(providerSignature, clientSignature);
 
         return new CraPdfDocument(summary, days, signatures);
     }
@@ -114,6 +125,17 @@ public class CraPdfDownloadService {
         String client = sanitize(cra.getClientCompany());
         String period = String.format("%04d-%02d", cra.getYear(), cra.getMonth());
         return "CRA-" + provider + "-" + client + "-" + period + ".pdf";
+    }
+
+    private byte[] decodeBase64(String base64) {
+        if (base64 == null || base64.isBlank()) {
+            return null;
+        }
+        try {
+            return Base64.getDecoder().decode(base64);
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
     }
 
     private String sanitize(String value) {

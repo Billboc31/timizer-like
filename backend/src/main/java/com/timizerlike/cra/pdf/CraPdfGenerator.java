@@ -2,6 +2,7 @@ package com.timizerlike.cra.pdf;
 
 import org.springframework.stereotype.Component;
 
+import com.timizerlike.cra.pdf.model.CraPdfClientSignature;
 import com.timizerlike.cra.pdf.model.CraPdfContact;
 import com.timizerlike.cra.pdf.model.CraPdfDayEntry;
 import com.timizerlike.cra.pdf.model.CraPdfDayType;
@@ -103,9 +104,13 @@ public class CraPdfGenerator {
             drawText(cs, regular, 11f, MARGIN, y, "Frais : -");
             y -= 25f;
 
-            y = drawProviderSignatureBlock(pdf, cs, y, document.signatures());
+            CraPdfSignatures signatures = document.signatures();
+            CraPdfProviderSignature provider = signatures == null ? null : signatures.provider();
+            CraPdfClientSignature client = signatures == null ? null : signatures.client();
+
+            y = drawProviderSignatureBlock(pdf, cs, y, provider);
             y -= 15f;
-            drawClientSignatureBlock(cs, y);
+            drawClientSignatureBlock(pdf, cs, y, client);
         }
     }
 
@@ -135,54 +140,62 @@ public class CraPdfGenerator {
         return y - 14f;
     }
 
-    private float drawProviderSignatureBlock(PDDocument pdf, PDPageContentStream cs, float startY, CraPdfSignatures signatures) throws IOException {
+    private float drawProviderSignatureBlock(PDDocument pdf, PDPageContentStream cs, float startY, CraPdfProviderSignature provider) throws IOException {
         float y = startY;
         drawText(cs, bold, 12f, MARGIN, y, "Signature prestataire");
-        y -= 10f;
-
-        float boxTop = y - 5f;
-        float boxBottom = boxTop - SIGNATURE_BOX_HEIGHT;
-        drawRectangle(cs, MARGIN, boxBottom, SIGNATURE_BOX_WIDTH, SIGNATURE_BOX_HEIGHT);
-
-        CraPdfProviderSignature provider = signatures == null ? null : signatures.provider();
+        y -= 15f;
         if (provider != null) {
-            float textX = MARGIN + SIGNATURE_BOX_PADDING;
-            float contentTopY = boxTop - SIGNATURE_BOX_PADDING;
-
-            if (provider.signatureImageData() != null) {
-                PDImageXObject image = PDImageXObject.createFromByteArray(pdf, provider.signatureImageData(), "signature.png");
-                float availableWidth = SIGNATURE_BOX_WIDTH - 2 * SIGNATURE_BOX_PADDING;
-                float availableHeight = contentTopY - boxBottom - SIGNATURE_BOX_PADDING - 28f;
-                float scale = Math.min(availableWidth / image.getWidth(), availableHeight / image.getHeight());
-                float drawW = image.getWidth() * scale;
-                float drawH = image.getHeight() * scale;
-                float drawX = textX + (availableWidth - drawW) / 2f;
-                float drawY = contentTopY - drawH;
-                cs.drawImage(image, drawX, drawY, drawW, drawH);
-                contentTopY = drawY - 4f;
-            }
-
-            float textY = contentTopY - 11f;
-            if (provider.name() != null && !provider.name().isEmpty()) {
-                drawText(cs, regular, 11f, textX, textY, provider.name());
-                textY -= 14f;
-            }
+            y = drawOptionalLine(cs, y, provider.name());
             if (provider.signedAt() != null) {
-                drawText(cs, regular, 11f, textX, textY, provider.signedAt().format(DATE_FORMAT));
+                drawText(cs, regular, 11f, MARGIN, y, "Signé le " + provider.signedAt().format(DATE_FORMAT));
+                y -= 14f;
             }
+            float boxTop = y - 5f;
+            float boxBottom = boxTop - SIGNATURE_BOX_HEIGHT;
+            drawRectangle(cs, MARGIN, boxBottom, SIGNATURE_BOX_WIDTH, SIGNATURE_BOX_HEIGHT);
+            embedSignatureImage(pdf, cs, provider.signatureImage(), MARGIN, boxBottom, SIGNATURE_BOX_WIDTH, SIGNATURE_BOX_HEIGHT);
+            y = boxBottom - 5f;
         }
-
-        return boxBottom - 5f;
+        return y;
     }
 
-    private void drawClientSignatureBlock(PDPageContentStream cs, float startY) throws IOException {
+    private void drawClientSignatureBlock(PDDocument pdf, PDPageContentStream cs, float startY, CraPdfClientSignature client) throws IOException {
         float y = startY;
         drawText(cs, bold, 12f, MARGIN, y, "Signature client");
-        y -= 10f;
-        float boxTop = y - 5f;
-        float boxBottom = boxTop - SIGNATURE_BOX_HEIGHT;
-        drawRectangle(cs, MARGIN, boxBottom, SIGNATURE_BOX_WIDTH, SIGNATURE_BOX_HEIGHT);
-        drawText(cs, regular, 9f, MARGIN + SIGNATURE_BOX_PADDING, boxTop - SIGNATURE_BOX_PADDING - 9f, "À signer");
+        y -= 15f;
+        if (client != null && client.signedAt() != null) {
+            y = drawOptionalLine(cs, y, client.clientRepresentativeName());
+            drawText(cs, regular, 11f, MARGIN, y, "Signé le " + client.signedAt().format(DATE_FORMAT));
+            y -= 14f;
+            float boxTop = y - 5f;
+            float boxBottom = boxTop - SIGNATURE_BOX_HEIGHT;
+            drawRectangle(cs, MARGIN, boxBottom, SIGNATURE_BOX_WIDTH, SIGNATURE_BOX_HEIGHT);
+            embedSignatureImage(pdf, cs, client.signatureImage(), MARGIN, boxBottom, SIGNATURE_BOX_WIDTH, SIGNATURE_BOX_HEIGHT);
+        } else {
+            float boxTop = y - 5f;
+            float boxBottom = boxTop - SIGNATURE_BOX_HEIGHT;
+            drawRectangle(cs, MARGIN, boxBottom, SIGNATURE_BOX_WIDTH, SIGNATURE_BOX_HEIGHT);
+            drawText(cs, regular, 9f, MARGIN + 4f, boxTop - 15f, "En attente de signature");
+        }
+    }
+
+    private void embedSignatureImage(PDDocument pdf, PDPageContentStream cs, byte[] imageBytes, float x, float y, float w, float h) {
+        if (imageBytes == null || imageBytes.length == 0) {
+            return;
+        }
+        try {
+            PDImageXObject image = PDImageXObject.createFromByteArray(pdf, imageBytes, "sig");
+            float imgW = image.getWidth();
+            float imgH = image.getHeight();
+            float scale = Math.min(w / imgW, h / imgH);
+            float drawW = imgW * scale;
+            float drawH = imgH * scale;
+            float drawX = x + (w - drawW) / 2f;
+            float drawY = y + (h - drawH) / 2f;
+            cs.drawImage(image, drawX, drawY, drawW, drawH);
+        } catch (Exception e) {
+            // corrupt or unsupported image — skip silently, box is already drawn
+        }
     }
 
     private void renderPage2(PDDocument pdf, CraPdfDocument document) throws IOException {

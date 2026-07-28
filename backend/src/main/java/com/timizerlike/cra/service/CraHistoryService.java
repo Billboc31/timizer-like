@@ -41,7 +41,8 @@ public class CraHistoryService {
                 report.getYear(),
                 total,
                 status,
-                report.getValidationDate()
+                report.getValidationDate(),
+                report.getClientSignatureDate()
         );
     }
 }

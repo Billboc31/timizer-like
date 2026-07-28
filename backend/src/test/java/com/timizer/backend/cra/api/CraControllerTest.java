@@ -48,6 +48,8 @@ class CraControllerTest {
                 null,
                 null,
                 null,
+                null,
+                null,
                 null
         );
         when(creationService.createForMonth(2025, 3)).thenReturn(new CraCreationResult(dto, true));
@@ -76,6 +78,8 @@ class CraControllerTest {
                 "Bob",
                 "Client",
                 "Client Co.",
+                null,
+                null,
                 null,
                 null,
                 null,

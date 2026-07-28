@@ -42,8 +42,8 @@ class CraHistoryControllerTest {
     @Test
     void returnsHttp200WithSummaries() throws Exception {
         List<CraSummaryDto> summaries = List.of(
-                new CraSummaryDto(1L, 6, 2026, 20.0, CraStatus.VALIDATED, LocalDate.of(2026, 6, 30)),
-                new CraSummaryDto(2L, 5, 2026, 15.0, CraStatus.DRAFT, null)
+                new CraSummaryDto(1L, 6, 2026, 20.0, CraStatus.VALIDATED, LocalDate.of(2026, 6, 30), null),
+                new CraSummaryDto(2L, 5, 2026, 15.0, CraStatus.DRAFT, null, null)
         );
         when(historyService.listHistory()).thenReturn(summaries);
 

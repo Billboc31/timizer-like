@@ -3,6 +3,7 @@ package com.timizerlike.cra.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -22,6 +23,7 @@ import com.timizer.backend.cra.MonthlyCraReport;
 import com.timizer.backend.cra.MonthlyCraReportRepository;
 import com.timizer.backend.cra.ValidationStatus;
 import com.timizerlike.cra.pdf.CraPdfGenerator;
+import com.timizerlike.cra.pdf.model.CraPdfClientSignature;
 import com.timizerlike.cra.pdf.model.CraPdfDocument;
 
 class CraPdfDownloadServiceTest {
@@ -154,6 +156,67 @@ class CraPdfDownloadServiceTest {
         assertThat(result.filename()).endsWith(".pdf");
     }
 
+    @Test
+    void snapshotAddressAndEmailPassedToPdfDocument() {
+        MonthlyCraReport cra = validatedCra();
+        when(craRepository.findById(CRA_ID)).thenReturn(Optional.of(cra));
+        when(pdfGenerator.generate(any(CraPdfDocument.class))).thenReturn(new byte[]{});
+
+        service.download(CRA_ID);
+
+        ArgumentCaptor<CraPdfDocument> captor = ArgumentCaptor.forClass(CraPdfDocument.class);
+        verify(pdfGenerator).generate(captor.capture());
+        CraPdfDocument doc = captor.getValue();
+        assertThat(doc.page1().provider().address()).isEqualTo("1 rue Provider");
+        assertThat(doc.page1().provider().contact().email()).isEqualTo("john@example.com");
+    }
+
+    @Test
+    void populatesProviderSignatureFromCra() {
+        MonthlyCraReport cra = validatedCra();
+        when(cra.getProviderSignatureImage()).thenReturn(null);
+        when(craRepository.findById(CRA_ID)).thenReturn(Optional.of(cra));
+        when(pdfGenerator.generate(any(CraPdfDocument.class))).thenReturn(new byte[]{});
+
+        service.download(CRA_ID);
+
+        verify(pdfGenerator).generate(argThat(doc ->
+                doc.signatures() != null && doc.signatures().provider() != null
+        ));
+    }
+
+    @Test
+    void populatesNullClientSignatureWhenNotSigned() {
+        MonthlyCraReport cra = validatedCra();
+        when(craRepository.findById(CRA_ID)).thenReturn(Optional.of(cra));
+        when(pdfGenerator.generate(any(CraPdfDocument.class))).thenReturn(new byte[]{});
+
+        service.download(CRA_ID);
+
+        verify(pdfGenerator).generate(argThat(doc ->
+                doc.signatures() != null && doc.signatures().client() == null
+        ));
+    }
+
+    @Test
+    void populatesClientSignatureWhenSigned() {
+        MonthlyCraReport cra = validatedCra();
+        when(cra.getClientSignatureDate()).thenReturn(LocalDate.of(2026, 7, 1));
+        when(cra.getClientRepresentativeName()).thenReturn("Jane Smith");
+        when(cra.getClientSignatureImage()).thenReturn(null);
+        when(craRepository.findById(CRA_ID)).thenReturn(Optional.of(cra));
+        when(pdfGenerator.generate(any(CraPdfDocument.class))).thenReturn(new byte[]{});
+
+        service.download(CRA_ID);
+
+        verify(pdfGenerator).generate(argThat(doc -> {
+            CraPdfClientSignature client = doc.signatures() == null ? null : doc.signatures().client();
+            return client != null
+                    && "Jane Smith".equals(client.clientRepresentativeName())
+                    && LocalDate.of(2026, 7, 1).equals(client.signedAt());
+        }));
+    }
+
     private MonthlyCraReport validatedCra() {
         MonthlyCraReport cra = mock(MonthlyCraReport.class);
         when(cra.getId()).thenReturn(CRA_ID);
@@ -170,23 +233,12 @@ class CraPdfDownloadServiceTest {
         when(cra.getProviderSignatureDate()).thenReturn(LocalDate.of(2026, 6, 30));
         when(cra.getProviderAddress()).thenReturn("1 rue Provider");
         when(cra.getProviderEmail()).thenReturn("john@example.com");
+        when(cra.getProviderSignatureImage()).thenReturn(null);
+        when(cra.getClientSignatureDate()).thenReturn(null);
+        when(cra.getClientRepresentativeName()).thenReturn(null);
+        when(cra.getClientSignatureImage()).thenReturn(null);
         when(cra.getDayEntries()).thenReturn(List.of());
         return cra;
-    }
-
-    @Test
-    void snapshotAddressAndEmailPassedToPdfDocument() {
-        MonthlyCraReport cra = validatedCra();
-        when(craRepository.findById(CRA_ID)).thenReturn(Optional.of(cra));
-        when(pdfGenerator.generate(any(CraPdfDocument.class))).thenReturn(new byte[]{});
-
-        service.download(CRA_ID);
-
-        ArgumentCaptor<CraPdfDocument> captor = ArgumentCaptor.forClass(CraPdfDocument.class);
-        verify(pdfGenerator).generate(captor.capture());
-        CraPdfDocument doc = captor.getValue();
-        assertThat(doc.page1().provider().address()).isEqualTo("1 rue Provider");
-        assertThat(doc.page1().provider().contact().email()).isEqualTo("john@example.com");
     }
 
     private MonthlyCraReport signedByProviderCra() {
@@ -203,6 +255,12 @@ class CraPdfDownloadServiceTest {
         when(cra.getClientCompany()).thenReturn("ClientCo");
         when(cra.getClientContactEmail()).thenReturn("jane@clientco.com");
         when(cra.getProviderSignatureDate()).thenReturn(LocalDate.of(2026, 6, 30));
+        when(cra.getProviderAddress()).thenReturn("1 rue Provider");
+        when(cra.getProviderEmail()).thenReturn("john@example.com");
+        when(cra.getProviderSignatureImage()).thenReturn(null);
+        when(cra.getClientSignatureDate()).thenReturn(null);
+        when(cra.getClientRepresentativeName()).thenReturn(null);
+        when(cra.getClientSignatureImage()).thenReturn(null);
         when(cra.getDayEntries()).thenReturn(List.of());
         return cra;
     }

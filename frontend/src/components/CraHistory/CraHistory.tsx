@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { listCras, downloadCraPdf } from '../../api/craClient';
 import { getErrorMessage } from '../../api/errorMessages';
 import type { CraStatus, CraSummaryDto } from '../../api/types';
+import { CraClientSign } from '../CraClientSign/CraClientSign';
 import './CraHistory.css';
 
 const MONTH_NAMES = [
@@ -72,6 +73,7 @@ export function CraHistory({ onOpenDetail }: Props) {
   const [error, setError] = useState<string | null>(null);
   const [downloading, setDownloading] = useState<number | null>(null);
   const [downloadError, setDownloadError] = useState<string | null>(null);
+  const [signingCra, setSigningCra] = useState<CraSummaryDto | null>(null);
 
   const loadCras = (signal?: AbortSignal) => {
     setLoading(true);
@@ -139,8 +141,20 @@ export function CraHistory({ onOpenDetail }: Props) {
     );
   }
 
+  const handleClientSigned = () => {
+    setSigningCra(null);
+    loadCras();
+  };
+
   return (
     <div className="cra-history">
+      {signingCra && (
+        <CraClientSign
+          cra={signingCra}
+          onSigned={handleClientSigned}
+          onCancel={() => { setSigningCra(null); }}
+        />
+      )}
       {downloadError && (
         <div role="alert" className="cra-history__error cra-history__error--inline">
           <span className="cra-history__error-icon" aria-hidden="true">⚠</span>
@@ -188,6 +202,16 @@ export function CraHistory({ onOpenDetail }: Props) {
                     aria-label={`Download PDF for ${period}`}
                   >
                     {isDownloading ? 'Downloading…' : 'Download PDF'}
+                  </button>
+                )}
+                {cra.status === 'VALIDATED' && cra.clientSignatureDate === null && (
+                  <button
+                    className="cra-history__btn"
+                    onClick={() => { setSigningCra(cra); }}
+                    disabled={isDownloading}
+                    aria-label={`Sign CRA as client for ${period}`}
+                  >
+                    Signer (client)
                   </button>
                 )}
               </div>

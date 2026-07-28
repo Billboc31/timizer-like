@@ -1,5 +1,6 @@
 import { apiGet, apiGetBlob, apiPatch, apiPost, apiPut } from './httpClient';
 import type {
+  ClientSignRequest,
   CraDetailsDto,
   CraDayUpdateRequest,
   CraSummaryDto,
@@ -49,4 +50,8 @@ export function getProviderSettings(): Promise<ProviderSettingsDto> {
 
 export function updateProviderSettings(data: ProviderSettingsDto): Promise<ProviderSettingsDto> {
   return apiPut<ProviderSettingsDto>('/api/provider-settings', data);
+}
+
+export function clientSignCra(craId: number, body: ClientSignRequest): Promise<CraDetailsDto> {
+  return apiPost<CraDetailsDto>(`/api/cras/${craId}/client-sign`, body);
 }
