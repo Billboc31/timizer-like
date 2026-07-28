@@ -10,3 +10,24 @@
 [2026-07-28T22:39:09Z] compose: task (canonical prompt)
 [2026-07-28T22:39:09Z] snapshot: runtime-prompt=runs/T055/prompts/planner-attempt-1.md
 [2026-07-28T22:45:44Z] auto-run: step=planner done rc=0
+[2026-07-28T23:08:10Z] auto-run start: state=IMPLEMENTATION_APPROVED
+[2026-07-28T23:08:10Z] auto-run: running step=tester
+[2026-07-28T23:08:10Z] prompt: resolved=prompts/generic/tester.md source=generic
+[2026-07-28T23:08:10Z] prompt: generic fallback — injecting runs/T055/ticket.md
+[2026-07-28T23:08:10Z] compose: global-context=docs/ai/global-context.md
+[2026-07-28T23:08:10Z] compose: role=ai/roles/tester.md
+[2026-07-28T23:08:10Z] compose: skill=ai/skills/workflow-discipline.md
+[2026-07-28T23:08:10Z] compose: skill=ai/skills/testing.md
+[2026-07-28T23:08:10Z] compose: skill=ai/skills/debugging.md
+[2026-07-28T23:08:10Z] compose: task (canonical prompt)
+[2026-07-28T23:08:10Z] snapshot: runtime-prompt=runs/T055/prompts/tester-attempt-1.md
+[2026-07-28T23:13:09Z] auto-run: step=tester done rc=0
+[2026-07-28T23:13:09Z] auto-run: transition IMPLEMENTATION_APPROVED → TEST_COMPLETE
+[2026-07-28T23:13:09Z] auto-run: auto-commit triggered (step=tester, include_code=True)
+[2026-07-28T23:13:09Z] commit-checkpoint: unstaged runtime garbage: ['runs/T055/daemon.lock', 'runs/T055/runtime.log', 'runs/T055/workflow-status.md']
+[2026-07-28T23:13:10Z] commit-checkpoint: sha=53e7005a files=42 title='test(T055/workflow): tester — update 42 file(s)'
+[2026-07-28T23:13:10Z] auto-run: auto-push triggered
+[2026-07-28T23:13:10Z] push: tolerating runtime dirty files (not blocking): ['runs/T055/daemon.lock', 'runs/T055/runtime.log', 'runs/T055/workflow-status.md']
+[2026-07-28T23:13:10Z] push: pushing branch=ticket/T055-generate-the-final-cra-pdf-with-provider-and-clien
+[2026-07-28T23:13:13Z] push: done branch=ticket/T055-generate-the-final-cra-pdf-with-provider-and-clien
+[2026-07-28T23:13:13Z] auto-run: TEST_COMPLETE — running PR lifecycle
