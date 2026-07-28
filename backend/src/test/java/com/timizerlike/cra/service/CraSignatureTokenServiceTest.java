@@ -111,7 +111,7 @@ class CraSignatureTokenServiceTest {
 
     @Test
     void resolveTokenReturnsCraPublicViewForValidToken() {
-        MonthlyCraReport cra = signedByProviderCra();
+        MonthlyCraReport cra = awaitingClientSignatureCra();
         when(cra.getMonth()).thenReturn(7);
         when(cra.getYear()).thenReturn(2026);
         when(cra.getDayEntries()).thenReturn(List.of());
@@ -180,6 +180,14 @@ class CraSignatureTokenServiceTest {
         MonthlyCraReport cra = mock(MonthlyCraReport.class);
         when(cra.getId()).thenReturn(CRA_ID);
         when(cra.getStatus()).thenReturn(ValidationStatus.SIGNED_BY_PROVIDER);
+        when(cra.getDayEntries()).thenReturn(List.of());
+        return cra;
+    }
+
+    private MonthlyCraReport awaitingClientSignatureCra() {
+        MonthlyCraReport cra = mock(MonthlyCraReport.class);
+        when(cra.getId()).thenReturn(CRA_ID);
+        when(cra.getStatus()).thenReturn(ValidationStatus.AWAITING_CLIENT_SIGNATURE);
         when(cra.getDayEntries()).thenReturn(List.of());
         return cra;
     }

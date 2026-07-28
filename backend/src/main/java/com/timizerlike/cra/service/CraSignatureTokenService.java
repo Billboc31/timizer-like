@@ -76,7 +76,7 @@ public class CraSignatureTokenService {
         MonthlyCraReport cra = craRepository.findById(token.getCraId())
                 .orElseThrow(TokenNotFoundException::new);
 
-        if (cra.getStatus() != ValidationStatus.SIGNED_BY_PROVIDER) {
+        if (cra.getStatus() != ValidationStatus.AWAITING_CLIENT_SIGNATURE) {
             throw new TokenNotFoundException();
         }
 
@@ -101,7 +101,7 @@ public class CraSignatureTokenService {
         MonthlyCraReport cra = craRepository.findById(token.getCraId())
                 .orElseThrow(TokenNotFoundException::new);
 
-        if (cra.getStatus() != ValidationStatus.SIGNED_BY_PROVIDER) {
+        if (cra.getStatus() != ValidationStatus.AWAITING_CLIENT_SIGNATURE) {
             throw new TokenAlreadyConsumedException();
         }
 

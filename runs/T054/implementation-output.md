@@ -1,19 +1,21 @@
-All 208 backend tests pass (207 + 1 new). Here's a summary of what was changed:
+All 208 tests pass. Here's a summary of every change made:
 
 ---
 
-**BLOQUANT 1 — False positive:** The project uses Hibernate `ddl-auto: update`, not Flyway. No SQL migration files are needed — Hibernate manages the schema from JPA entity annotations automatically.
+### Files modified
 
-**BLOQUANT 2 — Fixed:** `IllegalArgumentException` for invalid signature image format now maps correctly to 400 Bad Request.
+**BLOQUANT 1 — Wrong final status**
 
-### Files changed
+- **`ClientSignatureService.java:65`** — `ValidationStatus.VALIDATED` → `ValidationStatus.FULLY_SIGNED`
+- **`ClientSignatureServiceTest.java`** — updated test name and `verify()` call to `FULLY_SIGNED`
 
-| File | Change |
-|------|--------|
-| `com/timizer/backend/cra/InvalidSignatureImageException.java` | **New** — dedicated exception for invalid signature image format |
-| `com/timizerlike/cra/service/ClientSignatureService.java` | Throws `InvalidSignatureImageException` instead of `IllegalArgumentException` |
-| `com/timizerlike/backend/cra/web/CraApiExceptionHandler.java` | Added `handleInvalidSignatureImage()` → 400 with `"error": "invalid_signature_image"` |
-| `ClientSignatureServiceTest.java` | Updated 2 test names + expected exception type to `InvalidSignatureImageException` |
-| `PublicCraSigningControllerTest.java` | Added `returns400WhenSignatureImageHasInvalidFormat()` test |
+**BLOQUANT 2 — Error code mismatch**
 
-Total: **208 backend tests passing**, no regressions.
+- **`frontend/src/api/apiError.ts`** — removed dead codes `signature_too_large` and `signature_invalid_format`; added `invalid_signature_image` (matches what the backend emits)
+- **`frontend/src/api/httpClient.ts`** — same replacement in the `known` array
+
+**BLOQUANT 3 — Truncated integration test** (+ prerequisite fixes)
+
+- **`CraSignatureTokenService.java`** — `resolveToken` and `validateAndConsume` now check for `AWAITING_CLIENT_SIGNATURE` instead of `SIGNED_BY_PROVIDER` — required because `sendToClient` transitions the CRA before the client signs; without this fix the integration test would always get 410 at the signing step
+- **`CraSignatureTokenServiceTest.java`** — added `awaitingClientSignatureCra()` helper; updated `resolveTokenReturnsCraPublicViewForValidToken` to use it
+- **`CraSignatureWorkflowIntegrationTest.java`** — added step 4a (token generation while SIGNED_BY_PROVIDER), then step 5 (client signs → 200 OK), status assertion (FULLY_SIGNED via `GET /api/cras`), and step 6 (re-sign → 410 GONE with `token_already_consumed`)

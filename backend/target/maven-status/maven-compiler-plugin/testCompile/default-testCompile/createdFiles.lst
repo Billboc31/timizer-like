@@ -2,6 +2,7 @@ com/timizer/backend/cra/api/CraControllerTest.class
 com/timizerlike/cra/pdf/model/CraPdfDocumentTest.class
 com/timizerlike/backend/settings/ClientSettingsControllerTest.class
 com/timizer/backend/cra/MonthlyCraReportRepositoryTest.class
+com/timizerlike/backend/cra/integration/CraSignatureWorkflowIntegrationTest$11.class
 com/timizerlike/backend/cra/integration/CraWorkflowIntegrationTest$3.class
 com/timizer/backend/cra/JpaTestConfig.class
 com/timizerlike/backend/cra/dto/CraDtoTest.class
@@ -13,9 +14,11 @@ com/timizerlike/cra/service/ClientSignatureServiceTest.class
 com/timizer/backend/cra/MonthlyCraCreationServiceClientSettingsTest.class
 com/timizerlike/cra/service/CraValidationServiceTest.class
 com/timizer/backend/cra/CraDayEntryTest.class
+com/timizerlike/backend/cra/integration/CraSignatureWorkflowIntegrationTest$12.class
 com/timizerlike/backend/cra/web/PublicCraSigningControllerTest.class
 com/timizerlike/backend/cra/web/CraValidationControllerTest.class
 com/timizer/backend/cra/MonthlyCraReportTest.class
 com/timizerlike/backend/cra/integration/CraWorkflowIntegrationTest$4.class
+com/timizerlike/backend/cra/integration/CraSignatureWorkflowIntegrationTest$13.class
 com/timizerlike/backend/cra/integration/CraWorkflowIntegrationTest$1.class
 com/timizer/backend/cra/MonthlyCraReportPersistenceTest.class

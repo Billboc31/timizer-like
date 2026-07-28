@@ -62,7 +62,7 @@ public class ClientSignatureService {
                 snapshot,
                 Instant.now()));
 
-        cra.setStatus(ValidationStatus.VALIDATED);
+        cra.setStatus(ValidationStatus.FULLY_SIGNED);
         craRepository.save(cra);
     }
 

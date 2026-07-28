@@ -45,7 +45,7 @@ class ClientSignatureServiceTest {
     }
 
     @Test
-    void happyPathPersistsRecordAndTransitionsCraToValidated() {
+    void happyPathPersistsRecordAndTransitionsCraToFullySigned() {
         MonthlyCraReport cra = signedByProviderCra();
         CraSignatureToken token = new CraSignatureToken("hash", 1L);
         when(tokenService.validateAndConsume(VALID_TOKEN)).thenReturn(new ConsumedToken(token, cra));
@@ -54,7 +54,7 @@ class ClientSignatureServiceTest {
         service.sign(VALID_TOKEN, SIGNER_NAME, null, true, VALID_SIGNATURE);
 
         verify(recordRepository).save(any(CraClientSignatureRecord.class));
-        verify(cra).setStatus(ValidationStatus.VALIDATED);
+        verify(cra).setStatus(ValidationStatus.FULLY_SIGNED);
         verify(craRepository).save(cra);
     }
 
