@@ -24,7 +24,9 @@ function toApiErrorCode(raw: unknown): ApiErrorCode {
 
 async function handleResponse<T>(res: Response): Promise<T> {
   if (res.ok) {
-    return res.json() as Promise<T>;
+    const text = await res.text();
+    if (!text) return undefined as T;
+    return JSON.parse(text) as T;
   }
   let body: Record<string, unknown> = {};
   try {
