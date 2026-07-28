@@ -25,7 +25,12 @@ function dtoToDetails(dto: CraDetailsDto): CraDetails {
     status: dto.status,
     days: dto.days.map(d => ({ day: d.day, worked: d.worked, note: d.note ?? '' })),
     providerSignatureDate: dto.providerSignatureDate,
-    providerSignatureImageUrl: dto.providerSignatureImageUrl ?? null,
+    providerFirstName: dto.providerFirstName ?? null,
+    providerLastName: dto.providerLastName ?? null,
+    providerCompany: dto.providerCompany ?? null,
+    clientFirstName: dto.clientFirstName ?? null,
+    clientLastName: dto.clientLastName ?? null,
+    clientCompany: dto.clientCompany ?? null,
   };
 }
 
