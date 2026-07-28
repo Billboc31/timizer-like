@@ -32,6 +32,14 @@ const JULY_2026_DETAILS: CraDetailsDto = {
   days: [],
 };
 
+/** Navigate to a specific period via the jump dialog. Requires the navigator to be rendered. */
+function jumpToPeriod(month: number, year: number) {
+  fireEvent.click(screen.getByRole('button', { name: /\w+ \d{4}/ }));
+  fireEvent.change(screen.getByLabelText('Month'), { target: { value: String(month) } });
+  fireEvent.change(screen.getByLabelText('Year'), { target: { value: String(year) } });
+  fireEvent.click(screen.getByRole('button', { name: /^go$/i }));
+}
+
 describe('CraMonthSelector', () => {
   it('renders loading indicator while fetching', () => {
     vi.mocked(craApi.listCras).mockReturnValue(new Promise(() => {}));
@@ -55,14 +63,17 @@ describe('CraMonthSelector', () => {
     render(<CraMonthSelector onOpen={vi.fn()} />);
     await waitFor(() => expect(screen.getByRole('button', { name: 'Réessayer' })).toBeInTheDocument());
     fireEvent.click(screen.getByRole('button', { name: 'Réessayer' }));
-    await waitFor(() => expect(screen.getByLabelText('Month')).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByRole('button', { name: 'Create CRA' })).toBeInTheDocument());
   });
 
-  it('renders month select and year input after loading', async () => {
+  it('renders the period navigator after loading', async () => {
     vi.mocked(craApi.listCras).mockResolvedValue([]);
     render(<CraMonthSelector onOpen={vi.fn()} />);
-    await waitFor(() => expect(screen.getByLabelText('Month')).toBeInTheDocument());
-    expect(screen.getByLabelText('Year')).toBeInTheDocument();
+    await waitFor(() =>
+      expect(screen.getByRole('button', { name: /previous month/i })).toBeInTheDocument(),
+    );
+    expect(screen.getByRole('button', { name: /next month/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /\w+ \d{4}/ })).toBeInTheDocument();
   });
 
   it('shows "Create CRA" button when no CRA exists for the period', async () => {
@@ -71,23 +82,25 @@ describe('CraMonthSelector', () => {
     await waitFor(() => expect(screen.getByText('Create CRA')).toBeInTheDocument());
   });
 
-  it('shows "Open CRA" button when a CRA exists for the current period (July 2026)', async () => {
+  it('shows "Open CRA" button when a CRA exists for July 2026', async () => {
     vi.mocked(craApi.listCras).mockResolvedValue([JULY_2026]);
     render(<CraMonthSelector onOpen={vi.fn()} />);
-    await waitFor(() => expect(screen.getByLabelText('Month')).toBeInTheDocument());
-    fireEvent.change(screen.getByLabelText('Month'), { target: { value: '7' } });
-    fireEvent.change(screen.getByLabelText('Year'), { target: { value: '2026' } });
-    await waitFor(() => expect(screen.getByText('Open CRA')).toBeInTheDocument());
+    await waitFor(() =>
+      expect(screen.getByRole('button', { name: /previous month/i })).toBeInTheDocument(),
+    );
+    jumpToPeriod(7, 2026);
+    expect(screen.getByText('Open CRA')).toBeInTheDocument();
   });
 
   it('calls onOpen with the existing CRA when "Open CRA" is clicked', async () => {
     const onOpen = vi.fn();
     vi.mocked(craApi.listCras).mockResolvedValue([JULY_2026]);
     render(<CraMonthSelector onOpen={onOpen} />);
-    await waitFor(() => expect(screen.getByLabelText('Month')).toBeInTheDocument());
-    fireEvent.change(screen.getByLabelText('Month'), { target: { value: '7' } });
-    fireEvent.change(screen.getByLabelText('Year'), { target: { value: '2026' } });
-    await waitFor(() => fireEvent.click(screen.getByText('Open CRA')));
+    await waitFor(() =>
+      expect(screen.getByRole('button', { name: /previous month/i })).toBeInTheDocument(),
+    );
+    jumpToPeriod(7, 2026);
+    fireEvent.click(screen.getByText('Open CRA'));
     expect(onOpen).toHaveBeenCalledWith(JULY_2026);
   });
 
@@ -97,7 +110,7 @@ describe('CraMonthSelector', () => {
     vi.mocked(craApi.listCras).mockResolvedValue([]);
     vi.mocked(craApi.createCra).mockResolvedValue(JULY_2026_DETAILS);
     render(<CraMonthSelector onOpen={onOpen} />);
-    await act(async () => {}); // flush listCras promise → form rendered
+    await act(async () => {}); // flush listCras promise → navigator rendered
     fireEvent.click(screen.getByText('Create CRA'));
     await act(async () => {}); // flush createCra promise → success state
     expect(screen.getByText('CRA créé avec succès.')).toBeInTheDocument();
@@ -121,12 +134,13 @@ describe('CraMonthSelector', () => {
     expect(screen.getByText('Create CRA')).not.toBeDisabled();
   });
 
-  it('displays the selected period as a formatted label', async () => {
+  it('updates the period label when navigating via the dialog', async () => {
     vi.mocked(craApi.listCras).mockResolvedValue([]);
     render(<CraMonthSelector onOpen={vi.fn()} />);
-    await waitFor(() => expect(screen.getByLabelText('Month')).toBeInTheDocument());
-    fireEvent.change(screen.getByLabelText('Month'), { target: { value: '3' } });
-    fireEvent.change(screen.getByLabelText('Year'), { target: { value: '2025' } });
-    expect(screen.getByText('March 2025')).toBeInTheDocument();
+    await waitFor(() =>
+      expect(screen.getByRole('button', { name: /previous month/i })).toBeInTheDocument(),
+    );
+    jumpToPeriod(3, 2025);
+    expect(screen.getByRole('button', { name: 'March 2025' })).toBeInTheDocument();
   });
 });

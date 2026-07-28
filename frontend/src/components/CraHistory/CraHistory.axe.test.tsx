@@ -2,10 +2,10 @@ import { render, screen, waitFor, cleanup } from '@testing-library/react';
 import { describe, it, expect, vi, afterEach } from 'vitest';
 import { axe } from 'jest-axe';
 import { CraHistory } from './CraHistory';
-import * as craApi from '../../api/cra';
+import * as craApi from '../../api/craClient';
 import type { CraSummaryDto } from '../../types/cra';
 
-vi.mock('../../api/cra');
+vi.mock('../../api/craClient');
 
 afterEach(() => {
   cleanup();
