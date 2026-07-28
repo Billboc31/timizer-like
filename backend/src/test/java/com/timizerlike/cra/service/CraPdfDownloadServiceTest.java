@@ -14,6 +14,7 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 
 import com.timizer.backend.cra.CraNotFoundException;
 import com.timizer.backend.cra.CraNotValidatedException;
@@ -119,7 +120,24 @@ class CraPdfDownloadServiceTest {
         when(cra.getClientCompany()).thenReturn("ClientCo");
         when(cra.getClientContactEmail()).thenReturn("jane@clientco.com");
         when(cra.getProviderSignatureDate()).thenReturn(LocalDate.of(2026, 6, 30));
+        when(cra.getProviderAddress()).thenReturn("1 rue Provider");
+        when(cra.getProviderEmail()).thenReturn("john@example.com");
         when(cra.getDayEntries()).thenReturn(List.of());
         return cra;
+    }
+
+    @Test
+    void snapshotAddressAndEmailPassedToPdfDocument() {
+        MonthlyCraReport cra = validatedCra();
+        when(craRepository.findById(CRA_ID)).thenReturn(Optional.of(cra));
+        when(pdfGenerator.generate(any(CraPdfDocument.class))).thenReturn(new byte[]{});
+
+        service.download(CRA_ID);
+
+        ArgumentCaptor<CraPdfDocument> captor = ArgumentCaptor.forClass(CraPdfDocument.class);
+        verify(pdfGenerator).generate(captor.capture());
+        CraPdfDocument doc = captor.getValue();
+        assertThat(doc.page1().provider().address()).isEqualTo("1 rue Provider");
+        assertThat(doc.page1().provider().contact().email()).isEqualTo("john@example.com");
     }
 }

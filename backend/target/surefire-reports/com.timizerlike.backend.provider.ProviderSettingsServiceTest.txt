@@ -1,4 +1,52 @@
 -------------------------------------------------------------------------------
 Test set: com.timizerlike.backend.provider.ProviderSettingsServiceTest
 -------------------------------------------------------------------------------
-Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.084 s -- in com.timizerlike.backend.provider.ProviderSettingsServiceTest
+Tests run: 6, Failures: 3, Errors: 0, Skipped: 0, Time elapsed: 0.092 s <<< FAILURE! -- in com.timizerlike.backend.provider.ProviderSettingsServiceTest
+com.timizerlike.backend.provider.ProviderSettingsServiceTest.updateSettings_rejectsBlankLastName -- Time elapsed: 0.082 s <<< FAILURE!
+java.lang.AssertionError: 
+
+Expecting actual throwable to be an instance of:
+  java.lang.IllegalArgumentException
+but was:
+  java.lang.NullPointerException: Cannot invoke "com.timizerlike.backend.provider.ProviderSettings.getFirstName()" because "s" is null
+	at com.timizerlike.backend.provider.ProviderSettingsService.toDto(ProviderSettingsService.java:53)
+	at com.timizerlike.backend.provider.ProviderSettingsService.updateSettings(ProviderSettingsService.java:36)
+	at com.timizerlike.backend.provider.ProviderSettingsServiceTest.lambda$updateSettings_rejectsBlankLastName$0(ProviderSettingsServiceTest.java:98)
+	...(74 remaining lines not displayed - this can be changed with Assertions.setMaxStackTraceElementsDisplayed)
+	at com.timizerlike.backend.provider.ProviderSettingsServiceTest.updateSettings_rejectsBlankLastName(ProviderSettingsServiceTest.java:99)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1612)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1612)
+
+com.timizerlike.backend.provider.ProviderSettingsServiceTest.updateSettings_rejectsBlankCompany -- Time elapsed: 0.001 s <<< FAILURE!
+java.lang.AssertionError: 
+
+Expecting actual throwable to be an instance of:
+  java.lang.IllegalArgumentException
+but was:
+  java.lang.NullPointerException: Cannot invoke "com.timizerlike.backend.provider.ProviderSettings.getFirstName()" because "s" is null
+	at com.timizerlike.backend.provider.ProviderSettingsService.toDto(ProviderSettingsService.java:53)
+	at com.timizerlike.backend.provider.ProviderSettingsService.updateSettings(ProviderSettingsService.java:36)
+	at com.timizerlike.backend.provider.ProviderSettingsServiceTest.lambda$updateSettings_rejectsBlankCompany$0(ProviderSettingsServiceTest.java:105)
+	...(74 remaining lines not displayed - this can be changed with Assertions.setMaxStackTraceElementsDisplayed)
+	at com.timizerlike.backend.provider.ProviderSettingsServiceTest.updateSettings_rejectsBlankCompany(ProviderSettingsServiceTest.java:106)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1612)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1612)
+
+com.timizerlike.backend.provider.ProviderSettingsServiceTest.updateSettings_rejectsBlankFirstName -- Time elapsed: 0.001 s <<< FAILURE!
+java.lang.AssertionError: 
+
+Expecting actual throwable to be an instance of:
+  java.lang.IllegalArgumentException
+but was:
+  java.lang.NullPointerException: Cannot invoke "com.timizerlike.backend.provider.ProviderSettings.getFirstName()" because "s" is null
+	at com.timizerlike.backend.provider.ProviderSettingsService.toDto(ProviderSettingsService.java:53)
+	at com.timizerlike.backend.provider.ProviderSettingsService.updateSettings(ProviderSettingsService.java:36)
+	at com.timizerlike.backend.provider.ProviderSettingsServiceTest.lambda$updateSettings_rejectsBlankFirstName$0(ProviderSettingsServiceTest.java:91)
+	...(74 remaining lines not displayed - this can be changed with Assertions.setMaxStackTraceElementsDisplayed)
+	at com.timizerlike.backend.provider.ProviderSettingsServiceTest.updateSettings_rejectsBlankFirstName(ProviderSettingsServiceTest.java:92)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1612)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1612)
+

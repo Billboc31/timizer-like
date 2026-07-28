@@ -25,15 +25,6 @@ public class ProviderSettingsService {
 
     @Transactional
     public ProviderSettingsDto updateSettings(ProviderSettingsDto dto) {
-        if (dto.firstName() == null || dto.firstName().isBlank()) {
-            throw new IllegalArgumentException("firstName must not be blank");
-        }
-        if (dto.lastName() == null || dto.lastName().isBlank()) {
-            throw new IllegalArgumentException("lastName must not be blank");
-        }
-        if (dto.company() == null || dto.company().isBlank()) {
-            throw new IllegalArgumentException("company must not be blank");
-        }
         ProviderSettings settings = repository.findById(1L).orElseGet(ProviderSettings::new);
         settings.setId(1L);
         settings.setFirstName(dto.firstName());

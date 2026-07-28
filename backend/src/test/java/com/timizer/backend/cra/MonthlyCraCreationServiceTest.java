@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 
 import com.timizer.backend.cra.MonthlyCraCreationService.CraCreationResult;
 import com.timizerlike.backend.cra.dto.CraDayEntryDto;
@@ -147,6 +148,34 @@ class MonthlyCraCreationServiceTest {
                     .as("day %s", date)
                     .isEqualTo(expected);
         }
+    }
+
+    @Test
+    void snapshotsProviderSettingsIntoCreatedCra() {
+        MonthlyCraReportRepository repository = mock(MonthlyCraReportRepository.class);
+        when(repository.findByMonthAndYear(6, 2025)).thenReturn(Optional.empty());
+        when(repository.save(any(MonthlyCraReport.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        ProviderSettingsDto settings = new ProviderSettingsDto(
+                "Jean", "Dupont", "Acme Corp", "42 rue de la Paix", "jean@acme.com", "0600000000");
+        ProviderSettingsService providerSettingsService = mock(ProviderSettingsService.class);
+        when(providerSettingsService.getSettings()).thenReturn(settings);
+
+        MonthlyCraCreationService service = new MonthlyCraCreationService(repository, DEFAULTS, providerSettingsService);
+
+        CraCreationResult result = service.createForMonth(2025, 6);
+
+        CraDetailsDto cra = result.cra();
+        assertThat(cra.providerFirstName()).isEqualTo("Jean");
+        assertThat(cra.providerLastName()).isEqualTo("Dupont");
+        assertThat(cra.providerCompany()).isEqualTo("Acme Corp");
+
+        ArgumentCaptor<MonthlyCraReport> captor = ArgumentCaptor.forClass(MonthlyCraReport.class);
+        verify(repository).save(captor.capture());
+        MonthlyCraReport saved = captor.getValue();
+        assertThat(saved.getProviderAddress()).isEqualTo("42 rue de la Paix");
+        assertThat(saved.getProviderEmail()).isEqualTo("jean@acme.com");
+        assertThat(saved.getProviderPhone()).isEqualTo("0600000000");
     }
 
     private static MonthlyCraReport buildExisting(int year, int month) {
