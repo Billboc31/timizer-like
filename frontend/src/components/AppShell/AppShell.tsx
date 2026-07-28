@@ -2,15 +2,18 @@ import type { ReactNode } from 'react';
 import { PageHeader } from '../PageHeader/PageHeader';
 import './AppShell.css';
 
+type View = 'selector' | 'history' | 'settings';
+
 interface AppShellProps {
-  activeView: 'selector' | 'history';
-  onNavigate: (view: 'selector' | 'history') => void;
+  activeView: View;
+  onNavigate: (view: View) => void;
   children: ReactNode;
 }
 
-const PAGE_TITLES: Record<'selector' | 'history', string> = {
+const PAGE_TITLES: Record<View, string> = {
   selector: 'New CRA',
   history: 'CRA History',
+  settings: 'Client Settings',
 };
 
 export function AppShell({ activeView, onNavigate, children }: AppShellProps) {
@@ -32,6 +35,13 @@ export function AppShell({ activeView, onNavigate, children }: AppShellProps) {
             onClick={() => onNavigate('history')}
           >
             History
+          </button>
+          <button
+            className="app-shell__nav-item"
+            aria-current={activeView === 'settings' ? 'page' : undefined}
+            onClick={() => onNavigate('settings')}
+          >
+            Settings
           </button>
         </nav>
       </header>

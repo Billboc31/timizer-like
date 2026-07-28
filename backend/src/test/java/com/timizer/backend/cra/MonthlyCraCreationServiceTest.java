@@ -20,6 +20,8 @@ import com.timizer.backend.cra.MonthlyCraCreationService.CraCreationResult;
 import com.timizerlike.backend.cra.dto.CraDayEntryDto;
 import com.timizerlike.backend.cra.dto.CraDetailsDto;
 import com.timizerlike.backend.cra.dto.CraStatus;
+import com.timizerlike.backend.settings.ClientSettingsDto;
+import com.timizerlike.backend.settings.ClientSettingsService;
 import com.timizerlike.cra.config.CraDefaultsProperties;
 
 class MonthlyCraCreationServiceTest {
@@ -33,13 +35,27 @@ class MonthlyCraCreationServiceTest {
             )
     );
 
+    private static final ClientSettingsDto CLIENT_SETTINGS = new ClientSettingsDto(
+            "Lyra Network",
+            "Client Address",
+            "Bob Client",
+            "Manager",
+            "bob@example.com"
+    );
+
+    private static MonthlyCraCreationService buildService(MonthlyCraReportRepository repository) {
+        ClientSettingsService clientSettingsService = mock(ClientSettingsService.class);
+        when(clientSettingsService.get()).thenReturn(CLIENT_SETTINGS);
+        return new MonthlyCraCreationService(repository, DEFAULTS, clientSettingsService);
+    }
+
     @Test
     void createsCraForFebruary2025With28Entries() {
         MonthlyCraReportRepository repository = mock(MonthlyCraReportRepository.class);
         when(repository.findByMonthAndYear(2, 2025)).thenReturn(Optional.empty());
         when(repository.save(any(MonthlyCraReport.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
-        MonthlyCraCreationService service = new MonthlyCraCreationService(repository, DEFAULTS);
+        MonthlyCraCreationService service = buildService(repository);
 
         CraCreationResult result = service.createForMonth(2025, 2);
 
@@ -59,7 +75,7 @@ class MonthlyCraCreationServiceTest {
         when(repository.findByMonthAndYear(1, 2025)).thenReturn(Optional.empty());
         when(repository.save(any(MonthlyCraReport.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
-        MonthlyCraCreationService service = new MonthlyCraCreationService(repository, DEFAULTS);
+        MonthlyCraCreationService service = buildService(repository);
 
         CraCreationResult result = service.createForMonth(2025, 1);
 
@@ -74,7 +90,7 @@ class MonthlyCraCreationServiceTest {
         when(repository.findByMonthAndYear(2, 2024)).thenReturn(Optional.empty());
         when(repository.save(any(MonthlyCraReport.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
-        MonthlyCraCreationService service = new MonthlyCraCreationService(repository, DEFAULTS);
+        MonthlyCraCreationService service = buildService(repository);
 
         CraCreationResult result = service.createForMonth(2024, 2);
 
@@ -89,7 +105,7 @@ class MonthlyCraCreationServiceTest {
         MonthlyCraReport existing = buildExisting(2025, 3);
         when(repository.findByMonthAndYear(3, 2025)).thenReturn(Optional.of(existing));
 
-        MonthlyCraCreationService service = new MonthlyCraCreationService(repository, DEFAULTS);
+        MonthlyCraCreationService service = buildService(repository);
 
         CraCreationResult result = service.createForMonth(2025, 3);
 
@@ -105,7 +121,7 @@ class MonthlyCraCreationServiceTest {
         when(repository.findByMonthAndYear(3, 2025)).thenReturn(Optional.empty());
         when(repository.save(any(MonthlyCraReport.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
-        MonthlyCraCreationService service = new MonthlyCraCreationService(repository, DEFAULTS);
+        MonthlyCraCreationService service = buildService(repository);
 
         CraCreationResult result = service.createForMonth(2025, 3);
 
@@ -137,6 +153,8 @@ class MonthlyCraCreationServiceTest {
                 "Client",
                 "Lyra Network",
                 "bob@example.com",
+                null,
+                null,
                 null
         );
         YearMonth ym = YearMonth.of(year, month);

@@ -78,7 +78,9 @@ public class CraDayUpdateService {
                 cra.getProviderCompany(),
                 cra.getClientFirstName(),
                 cra.getClientLastName(),
-                cra.getClientCompany()
+                cra.getClientCompany(),
+                cra.getClientAddress(),
+                cra.getClientContactRole()
         );
     }
 }
