@@ -53,6 +53,20 @@ export async function apiPost<T>(path: string, body: unknown): Promise<T> {
   return handleResponse<T>(res);
 }
 
+export async function apiPut<T>(path: string, body: unknown): Promise<T> {
+  let res: Response;
+  try {
+    res = await fetch(`${BASE_URL}${path}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+  } catch (err) {
+    throw new ApiError('network_error', null, err);
+  }
+  return handleResponse<T>(res);
+}
+
 export async function apiPatch<T>(path: string, body: unknown): Promise<T> {
   let res: Response;
   try {

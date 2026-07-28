@@ -80,6 +80,12 @@ public class MonthlyCraReport {
     @Column(name = "client_contact_phone")
     private String clientContactPhone;
 
+    @Column(name = "client_address")
+    private String clientAddress;
+
+    @Column(name = "client_contact_role")
+    private String clientContactRole;
+
     @NotNull
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
@@ -118,7 +124,9 @@ public class MonthlyCraReport {
         String clientLastName,
         String clientCompany,
         String clientContactEmail,
-        String clientContactPhone
+        String clientContactPhone,
+        String clientAddress,
+        String clientContactRole
     ) {
         this.month = month;
         this.year = year;
@@ -130,6 +138,8 @@ public class MonthlyCraReport {
         this.clientCompany = clientCompany;
         this.clientContactEmail = clientContactEmail;
         this.clientContactPhone = clientContactPhone;
+        this.clientAddress = clientAddress;
+        this.clientContactRole = clientContactRole;
         this.status = ValidationStatus.DRAFT;
     }
 
@@ -190,6 +200,14 @@ public class MonthlyCraReport {
 
     public String getClientContactPhone() {
         return clientContactPhone;
+    }
+
+    public String getClientAddress() {
+        return clientAddress;
+    }
+
+    public String getClientContactRole() {
+        return clientContactRole;
     }
 
     public ValidationStatus getStatus() {
@@ -262,6 +280,14 @@ public class MonthlyCraReport {
 
     public void setClientContactPhone(String clientContactPhone) {
         this.clientContactPhone = clientContactPhone;
+    }
+
+    public void setClientAddress(String clientAddress) {
+        this.clientAddress = clientAddress;
+    }
+
+    public void setClientContactRole(String clientContactRole) {
+        this.clientContactRole = clientContactRole;
     }
 
     public void setProviderFirstName(String providerFirstName) {

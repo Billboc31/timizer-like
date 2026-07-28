@@ -17,6 +17,8 @@ public record CraDetailsDto(
         String providerCompany,
         String clientFirstName,
         String clientLastName,
-        String clientCompany
+        String clientCompany,
+        String clientAddress,
+        String clientContactRole
 ) {
 }

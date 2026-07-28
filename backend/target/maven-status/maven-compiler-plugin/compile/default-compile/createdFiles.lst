@@ -18,7 +18,6 @@ com/timizerlike/cra/service/CraValidationService.class
 com/timizer/backend/cra/MonthlyCraCreationService.class
 com/timizer/backend/cra/MonthlyCraReportRepository.class
 com/timizerlike/cra/pdf/model/CraPdfSummary.class
-com/timizerlike/cra/service/CraCreationService.class
 com/timizer/backend/cra/CraNotFoundException.class
 com/timizerlike/cra/config/CraDefaultsProperties.class
 com/timizerlike/backend/cra/dto/CraDetailsDto.class

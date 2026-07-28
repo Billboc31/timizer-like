@@ -1,0 +1,112 @@
+Now I have all the context needed to write the review.
+
+---
+
+## PR Review — T050: Add Editable Client and Client-Contact Settings
+
+### Résumé
+
+L'implémentation couvre tous les critères d'acceptabilité par le chemin actif (`MonthlyCraCreationService` → `ClientSettingsService` → DB). Le backend Spring Boot ajoute un endpoint CRUD `GET/PUT /api/settings/client`, le frontend expose un formulaire avec validation double-couche. La logique de snapshot est architecturalement correcte. Un problème bloquant est identifié : `CraCreationService` (paquet `com.timizerlike.cra.service`) est présent dans le diff, annoté `@Service`, mais n'a pas été mis à jour pour utiliser `ClientSettingsService`.
+
+---
+
+### Vérifications effectuées
+
+- Lecture de tous les fichiers source du diff (backend + frontend)
+- Traçage du chemin actif de création de CRA : `CraController` → `MonthlyCraCreationService` → `ClientSettingsService`
+- Vérification de l'entité `MonthlyCraReport` : champs `clientAddress` et `clientContactRole` ajoutés et mappés
+- Lecture du mapper `CraDetailsMapper.toDto()` : les deux nouveaux champs sont correctement inclus
+- Lecture des tests backend et frontend
+- Lecture de `TimizerLikeApplication` : `@EntityScan` et `@EnableJpaRepositories` étendus au paquet `settings`
+- Comparaison des deux services de création de CRA
+
+---
+
+### Points validés
+
+**Backend**
+- `ClientSettings` : entité singleton (id=1L) avec 5 colonnes NOT NULL ; pattern JPA conforme
+- `ClientSettingsDto` : record Java avec `@NotBlank` sur tous les champs + `@Email` sur `contactEmail`
+- `ClientSettingsService.seed()` : peuple la DB au premier appel depuis `CraDefaultsProperties` si aucune ligne n'existe
+- `ClientSettingsService.update()` : upsert avec `save()`, transactionnel
+- `ClientSettingsController` : `GET /api/settings/client` et `PUT /api/settings/client` avec `@Valid`
+- `MonthlyCraCreationService.buildReport()` : appelle `clientSettingsService.get()` et capture les champs au moment de la création → snapshot correct
+- Scission du nom (`splitName()`) : gère null, blank, sans espace
+- Tests : 4 tests controller (mock), 2 tests snapshot (unit mock)
+
+**Frontend**
+- Formulaire avec 5 champs, labels accessibles, `aria-invalid`, bouton désactivé pendant la sauvegarde
+- Validation côté client : champs requis + regex email avant l'appel API
+- `App.tsx` : chargement lazy des settings au premier affichage de la vue, `initialValues` transmis au formulaire
+- `AppShell` : bouton de navigation "Client Settings" avec `aria-current="page"`
+- Tests : 4 tests (rendu, blank, email invalide, soumission valide)
+
+---
+
+### Problèmes détectés
+
+#### 🔴 BLOQUANT — `CraCreationService` non mis à jour dans le diff
+
+**Fichier** : `backend/src/main/java/com/timizerlike/cra/service/CraCreationService.java`
+
+Ce fichier figure dans le diff de T050. Il est annoté `@Service` (bean Spring actif) et son `createForMonth()` lit uniquement `CraDefaultsProperties` — il n'appelle pas `ClientSettingsService`. Son test `CraCreationServiceTest` valide ce comportement sans `ClientSettingsService`.
+
+Bien qu'aucun contrôleur actuel ne l'injecte (le chemin actif utilise `MonthlyCraCreationService`), ce service :
+- Est un bean Spring enregistré au démarrage
+- Contradite l'intent architectural du ticket
+- Constitue un piège pour le développeur suivant qui câblerait ce service à un contrôleur
+- Rend le test `CraCreationServiceTest` trompeur vis-à-vis des critères T050
+
+**Correction attendue** : supprimer `CraCreationService` et `CraCreationServiceTest` (dead code), ou les mettre à jour pour injecter `ClientSettingsService`.
+
+---
+
+#### 🟡 OBSERVATION — Test snapshot superficiel
+
+**Fichier** : `MonthlyCraCreationServiceClientSettingsTest#savedCraRetainsClientFieldsAfterSettingsChange`
+
+Le test vérifie l'immuabilité d'un record Java en mémoire (`firstCra.clientCompany() == "Old Corp"` après changement du mock), mais ne simule pas un rechargement depuis la base de données. La garantie de snapshot est architecturalement solide (colonnes stockées sur l'entité), mais le test ne couvre pas le chemin DB → `CraDetailsMapper.toDto()` avec de nouvelles settings actives. Non bloquant, mais la valeur du test est limitée.
+
+---
+
+#### 🟡 OBSERVATION — Erreur silencieuse sur le chargement des settings
+
+**Fichier** : `frontend/src/App.tsx`, ligne 41
+
+```ts
+getClientSettings().then(setClientSettings).catch(() => {});
+```
+
+Si le fetch échoue, `clientSettings` reste `null` et le formulaire n'est jamais affiché. L'utilisateur voit une page vide sans message d'erreur. UX dégradée mais non bloquante pour le workflow.
+
+---
+
+#### 🟡 OBSERVATION — `contactRole` seedé en dur
+
+**Fichier** : `ClientSettingsService.java`, ligne 49
+
+```java
+s.setContactRole("Contact");
+```
+
+Les autres champs de seed proviennent de `CraDefaultsProperties`, mais `contactRole` est codé en dur. Comportement divergent mineur ; l'utilisateur peut le modifier depuis le formulaire.
+
+---
+
+### Risques éventuels
+
+- **Backward compatibility DB** : `client_address` et `client_contact_role` sont ajoutés nullable sur `monthly_cra_report`. Les CRAs existantes auront `NULL` pour ces colonnes. Le mapping `CraDetailsMapper` les retourne tels quels (pas de fallback). Si le PDF generator les utilise sans null-check, un NPE est possible sur les anciens CRAs. À vérifier.
+- **Seeding concurrent** : `ClientSettingsService.get()` peut théoriquement être appelé simultanément par deux requêtes avant que la ligne `id=1` n'existe, causant une tentative de double insertion. L'annotation `@Transactional` atténue le risque, mais ne le supprime pas entièrement sur SQLite sans isolation explicite.
+
+---
+
+### Décision
+
+L'implémentation remplit les critères fonctionnels. Un service Spring actif dans le diff (`CraCreationService`) n'a pas été mis à jour pour utiliser `ClientSettingsService`, créant une incohérence architecturale et un risque de régression future.
+
+**Actions demandées :**
+1. Supprimer `CraCreationService.java` et `CraCreationServiceTest.java` (si dead code confirmé), ou les mettre à jour pour injecter et utiliser `ClientSettingsService`
+2. (Optionnel) Afficher un message d'erreur dans `App.tsx` si le chargement des settings échoue
+3. (Optionnel) Ajouter un test d'intégration ou de persistence qui charge un CRA depuis la DB après changement de settings pour valider le snapshot end-to-end
+
+IMPLEMENTATION_FIX_REQUIRED

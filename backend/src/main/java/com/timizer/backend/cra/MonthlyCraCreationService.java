@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.timizerlike.backend.cra.dto.CraDetailsDto;
+import com.timizerlike.backend.settings.ClientSettingsDto;
+import com.timizerlike.backend.settings.ClientSettingsService;
 import com.timizerlike.cra.config.CraDefaultsProperties;
 
 @Service
@@ -19,10 +21,15 @@ public class MonthlyCraCreationService {
 
     private final MonthlyCraReportRepository repository;
     private final CraDefaultsProperties defaults;
+    private final ClientSettingsService clientSettingsService;
 
-    public MonthlyCraCreationService(MonthlyCraReportRepository repository, CraDefaultsProperties defaults) {
+    public MonthlyCraCreationService(
+            MonthlyCraReportRepository repository,
+            CraDefaultsProperties defaults,
+            ClientSettingsService clientSettingsService) {
         this.repository = repository;
         this.defaults = defaults;
+        this.clientSettingsService = clientSettingsService;
     }
 
     @Transactional
@@ -46,11 +53,10 @@ public class MonthlyCraCreationService {
 
     private MonthlyCraReport buildReport(int year, int month) {
         CraDefaultsProperties.Provider provider = defaults.provider();
-        CraDefaultsProperties.Client client = defaults.client();
-        CraDefaultsProperties.Client.Contact contact = client.contact();
+        ClientSettingsDto client = clientSettingsService.get();
 
         String[] providerName = splitName(provider.name());
-        String[] contactName = splitName(contact.name());
+        String[] contactName = splitName(client.contactFullName());
 
         return new MonthlyCraReport(
                 month,
@@ -60,9 +66,11 @@ public class MonthlyCraCreationService {
                 provider.company(),
                 contactName[0],
                 contactName[1],
-                client.name(),
-                contact.email(),
-                null
+                client.clientCompany(),
+                client.contactEmail(),
+                null,
+                client.clientAddress(),
+                client.contactRole()
         );
     }
 

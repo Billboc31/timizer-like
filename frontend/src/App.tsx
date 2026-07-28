@@ -1,14 +1,17 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { CraMonthSelector } from './components/CraMonthSelector/CraMonthSelector';
 import { CalendarGrid } from './components/CalendarGrid/CalendarGrid';
 import { CraSummaryPanel } from './components/CraSummaryPanel/CraSummaryPanel';
 import { CraHistory } from './components/CraHistory/CraHistory';
 import { CraValidation } from './components/CraValidation/CraValidation';
+import { ClientSettingsForm } from './components/ClientSettingsForm/ClientSettingsForm';
 import { AppShell } from './components/AppShell/AppShell';
 import { getCra, updateDay } from './api/craClient';
+import { getClientSettings } from './api/settingsClient';
 import { getErrorMessage } from './api/errorMessages';
 import type { CraSummaryDto, CraDetails } from './types/cra';
 import type { CraDetailsDto } from './api/types';
+import type { ClientSettingsDto } from './types/settings';
 
 function dtoToDetails(dto: CraDetailsDto): CraDetails {
   return {
@@ -21,7 +24,7 @@ function dtoToDetails(dto: CraDetailsDto): CraDetails {
   };
 }
 
-type View = 'selector' | 'history';
+type View = 'selector' | 'history' | 'settings';
 
 export default function App() {
   const [view, setView] = useState<View>('selector');
@@ -31,6 +34,17 @@ export default function App() {
   const [lastCraId, setLastCraId] = useState<number | null>(null);
   const [updatingDay, setUpdatingDay] = useState<number | null>(null);
   const [dayUpdateError, setDayUpdateError] = useState<string | null>(null);
+  const [clientSettings, setClientSettings] = useState<ClientSettingsDto | null>(null);
+  const [settingsError, setSettingsError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (view === 'settings' && clientSettings === null) {
+      setSettingsError(null);
+      getClientSettings()
+        .then(setClientSettings)
+        .catch(err => setSettingsError(getErrorMessage(err)));
+    }
+  }, [view, clientSettings]);
 
   const loadCra = (id: number) => {
     setCraLoading(true);
@@ -74,22 +88,32 @@ export default function App() {
 
   return (
     <AppShell activeView={view} onNavigate={setView}>
-      {view === 'selector' ? (
-        <CraMonthSelector onOpen={handleOpen} />
+      {view === 'settings' ? (
+        settingsError !== null ? (
+          <p role="alert">{settingsError}</p>
+        ) : clientSettings !== null ? (
+          <ClientSettingsForm initialValues={clientSettings} />
+        ) : null
       ) : (
-        <CraHistory onOpen={handleOpen} />
+        <>
+          {view === 'selector' ? (
+            <CraMonthSelector onOpen={handleOpen} />
+          ) : (
+            <CraHistory onOpen={handleOpen} />
+          )}
+          <CraSummaryPanel cra={cra} loading={craLoading} error={craError} />
+          <CalendarGrid
+            cra={cra}
+            loading={craLoading}
+            error={craError}
+            onRetry={lastCraId !== null ? () => loadCra(lastCraId) : undefined}
+            onDayClick={cra?.status !== 'VALIDATED' ? handleDayClick : undefined}
+            updatingDay={updatingDay}
+            dayUpdateError={dayUpdateError}
+          />
+          <CraValidation cra={cra} onValidated={handleCraValidated} />
+        </>
       )}
-      <CraSummaryPanel cra={cra} loading={craLoading} error={craError} />
-      <CalendarGrid
-        cra={cra}
-        loading={craLoading}
-        error={craError}
-        onRetry={lastCraId !== null ? () => loadCra(lastCraId) : undefined}
-        onDayClick={cra?.status !== 'VALIDATED' ? handleDayClick : undefined}
-        updatingDay={updatingDay}
-        dayUpdateError={dayUpdateError}
-      />
-      <CraValidation cra={cra} onValidated={handleCraValidated} />
     </AppShell>
   );
 }
