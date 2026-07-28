@@ -79,7 +79,7 @@ export function CraMonthSelector({ onOpen }: Props) {
     return (
       <div>
         <p role="alert">{error}</p>
-        <button onClick={loadCras}>Réessayer</button>
+        <button onClick={() => { loadCras(); }}>Réessayer</button>
       </div>
     );
   }

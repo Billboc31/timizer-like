@@ -16,3 +16,16 @@
 - HIGH_RISK
 
 ## Notes
+
+## 2026-07-28T06:26:12Z
+
+- prev: PLAN_APPROVED
+- step: coder
+- next: IMPLEMENTATION_REVIEW_NEEDED
+
+## 2026-07-28T08:32:00Z
+
+- prev: IMPLEMENTATION_REVIEW_NEEDED
+- step: coder (attempt-3)
+- next: IMPLEMENTATION_REVIEW_NEEDED
+- fixes: @types/jest-axe installed; onClick handlers wrapped; CraHistory.axe.test.tsx import corrected

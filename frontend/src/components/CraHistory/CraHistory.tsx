@@ -95,7 +95,7 @@ export function CraHistory({ onOpen }: Props) {
           <span className="cra-history__error-icon" aria-hidden="true">⚠</span>
           <span>{error}</span>
         </div>
-        <button onClick={loadCras}>Réessayer</button>
+        <button onClick={() => { loadCras(); }}>Réessayer</button>
       </div>
     );
   }
