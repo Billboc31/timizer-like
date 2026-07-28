@@ -7,6 +7,7 @@ export type ApiErrorCode =
   | 'duplicate_cra_transition'
   | 'signature_too_large'
   | 'signature_invalid_format'
+  | 'token_invalid'
   | 'network_error'
   | 'unknown_error';
 
