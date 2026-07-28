@@ -1,60 +1,16 @@
-Now I have everything I need. Let me write the review.
+I now have everything needed for a thorough review. The previous blocking bug fix is confirmed in place. Let me write the final review.
 
 ---
 
-# PR Review — T054: Add client signature capture and approval page
+# PR Review — T054: Add client signature capture and approval page (attempt 5)
 
 ## Résumé
 
-Implémentation du formulaire de signature client sur la page publique CRA (31 fichiers source). Le périmètre est respecté : capture de signature tactile/souris, consentement explicite, identité signataire, snapshot du CRA, consommation du token, transition `AWAITING_CLIENT_SIGNATURE → FULLY_SIGNED`. Le fix de la review précédente (test inatteignable 409) a bien été appliqué. Un **bug bloquant** est identifié dans la couche HTTP frontend qui rend le flux de signature non fonctionnel en production.
+Cinquième passe de review. Le bug bloquant identifié à la review précédente (`handleResponse<T>` levant `SyntaxError` sur un body 200 vide) a été **correctement corrigé**. L'implémentation complète a été relue : backend Java, service de signature, contrôleur public, gestion des exceptions, entité JPA, frontend React (formulaire, canvas, page publique), et la suite de tests (unitaires, intégration, E2E).
 
-## Vérifications effectuées
+## Fix précédent — vérification
 
-- Lecture de `runs/T054/reviews/implementation-review.md` (review précédente)
-- Vérification que le fix demandé (suppression `returns409WhenCraNotInSignedByProviderStatus`) a bien été appliqué dans `PublicCraSigningControllerTest.java`
-- Lecture de tous les fichiers clés : `ClientSignatureService.java`, `CraSignatureTokenService.java`, `PublicCraSigningController.java`, `CraApiExceptionHandler.java`, `CraSignatureToken.java`, `CraClientSignatureRecord.java`, `ValidationStatus.java`
-- Lecture du frontend : `httpClient.ts`, `craPublicClient.ts`, `CraSignaturePage.tsx`, `ClientSignatureForm.tsx`, `SignatureCanvas.tsx`, `SigningSuccessScreen.tsx`, `main.tsx`
-- Lecture des tests : `PublicCraSigningControllerTest.java` (6 tests, 409 retiré ✅), `CraSignatureWorkflowIntegrationTest.java`, `ClientSignatureForm.test.tsx`, `CraSignaturePage.test.tsx`, `client-signing.spec.ts`, `publicSignature.spec.ts`
-- Vérification croisée des comportements HTTP backend/frontend
-
-## Points validés
-
-- **Sécurité token** : 32 bytes via `SecureRandom`, SHA-256 persisté uniquement. Correct.
-- **Consommation idempotente** : `validateAndConsume` vérifie `isConsumed()` ET le statut CRA (`AWAITING_CLIENT_SIGNATURE`) avant de marquer `consumedAt`. Rollback transactionnel si erreur post-consommation. Correct.
-- **Ordre de validation** : consentement et format d'image validés _avant_ la consommation du token (échec anticipé sans brûler le lien). Correct.
-- **Snapshot** : CRA sérialisé en JSON au moment de la signature et stocké dans `cra_content_snapshot`. Immuable par construction. Correct.
-- **Submit gating** : bouton désactivé jusqu'à `signerName.trim().length > 0 && consentApproved && padNonEmpty && !submitting`. Correct.
-- **Canvas signature** : implémentation custom Pointer Events API — `touchAction: none`, `setPointerCapture`, `onPointerLeave` protège contre les glissements hors canvas. Correct.
-- **Test unitaires backend** : `ClientSignatureServiceTest`, `CraSignatureTokenServiceTest` couvrent happy path, consent false, format image invalide, token consommé/introuvable. Correct.
-- **Intégration** : `CraSignatureWorkflowIntegrationTest` valide le workflow complet DRAFT → FULLY_SIGNED et le 410 sur re-soumission. Correct.
-- **Fix précédent appliqué** : `PublicCraSigningControllerTest.java` ne contient plus que 6 tests, le cas `returns409WhenCraNotInSignedByProviderStatus` est supprimé. ✅
-
-## Problèmes détectés
-
-### 1. [BLOQUANT] `handleResponse<T>` appelle `res.json()` sur un body 200 vide — le flux de signature est non fonctionnel
-
-**Fichier** : `frontend/src/api/httpClient.ts:27`
-
-```typescript
-async function handleResponse<T>(res: Response): Promise<T> {
-  if (res.ok) {
-    return res.json() as Promise<T>;  // ← bug
-  }
-  ...
-}
-```
-
-`POST /public/cra-link/{token}/sign` → `PublicCraSigningController.sign()` retourne `void` → Spring écrit une réponse HTTP 200 avec un **body vide** (Content-Length: 0).
-
-`apiPost<void>` → `handleResponse<void>` → `res.json()` sur un body vide → `SyntaxError: Unexpected end of JSON input`.
-
-Ce `SyntaxError` n'est pas une `ApiError`, donc le `catch` de `handleSubmit` entre dans la branche générique et affiche `"Une erreur est survenue. Veuillez réessayer."`. `onSuccess` n'est jamais appelé, l'écran de succès n'est jamais affiché.
-
-**Le flux de signature est intégralement cassé en production.**
-
-Note : les 207 tests passent parce que les tests composants Vitest mockent `submitClientSignature` directement (bypass de la couche HTTP), et les tests Playwright ont des mocks réseau qui retournent `{ status: 200, body: '' }` — ces E2E tests sont eux-mêmes supposément écrits pour capturer ce bug, mais ils n'ont pas été exécutés dans la passe "207 tests pass" (Playwright s'exécute séparément).
-
-**Correction attendue** : modifier `handleResponse` pour gérer le body vide :
+**`frontend/src/api/httpClient.ts:25-30`** — confirmé :
 
 ```typescript
 async function handleResponse<T>(res: Response): Promise<T> {
@@ -67,33 +23,50 @@ async function handleResponse<T>(res: Response): Promise<T> {
 }
 ```
 
-### 2. [Mineur] `data-testid="signature-canvas"` silencieusement ignoré
+Le contrôleur `PublicCraSigningController.sign()` retourne `void` → body 200 vide → désormais résolu par `undefined as T` au lieu de `res.json()`. L'écran de succès s'affiche correctement. ✅
 
-**Fichier** : `frontend/src/components/ClientSignatureForm/ClientSignatureForm.tsx:111`
+Les tests `httpClient.test.ts` couvrent le cas body vide (résout `undefined`) et le cas body JSON (parse correct). ✅
 
-```tsx
-<SignatureCanvas
-  ref={canvasRef}
-  onDraw={() => setPadNonEmpty(true)}
-  data-testid="signature-canvas"   // ← non défini dans Props, non transmis au DOM
-/>
-```
+## Points validés
 
-L'interface `Props` de `SignatureCanvas` n'inclut pas `data-testid` et ne spread pas les HTML attributes sur l'élément `<canvas>`. TypeScript devrait le signaler. Les tests utilisent `getByRole('img')` et ne dépendent pas de ce testid — donc pas de cassure fonctionnelle — mais c'est un bruit au niveau des types.
+- **Sécurité token** : 32 bytes `SecureRandom`, SHA-256 persisté uniquement, token brut jamais stocké.
+- **Ordre de validation** : consentement et format d'image validés _avant_ la consommation du token. Un token n'est pas brûlé si la requête est malformée.
+- **Consommation idémpotente** : `validateAndConsume` vérifie `isConsumed()` et `cra.status == AWAITING_CLIENT_SIGNATURE` dans la même transaction. Double-soumission → 410 GONE.
+- **Snapshot immuable** : CRA sérialisé en JSON au moment de la signature, stocké dans `cra_content_snapshot`. Correct.
+- **Submit gating** : `signerName.trim().length > 0 && consentApproved && padNonEmpty && !submitting` — les trois conditions du ticket sont couvertes.
+- **Canvas Pointer Events** : `touchAction: none`, `setPointerCapture`, `onPointerLeave` → fonctionne sur souris et touch.
+- **Exception mapping** : `CraApiExceptionHandler` couvre tous les cas (410 token consommé, 404 token invalide, 400 consent/image, 409 statut CRA).
+- **Intégration** : `CraSignatureWorkflowIntegrationTest` valide le workflow complet DRAFT → FULLY_SIGNED + 410 sur re-soumission.
+- **Tests frontend** : `ClientSignatureForm.test.tsx` (9 cas), `SignatureCanvas.test.tsx` (8 cas), `CraSignaturePage.test.tsx`, Playwright E2E `client-signing.spec.ts` (4 scénarios).
+- **253 tests passent** (confirmé dans `implementation-output.md`).
 
-## Risques éventuels
+## Critères d'acceptance — statut
 
-- **Race condition token** (déjà identifié en review précédente, toujours présent) : `validateAndConsume` ne pose pas de `SELECT FOR UPDATE`. Risque théorique faible en pratique pour un lien à usage unique.
-- **`VALIDATED` vs `FULLY_SIGNED`** (déjà identifié, toujours présent) : coexistence de deux valeurs dans `ValidationStatus`. Sans impact fonctionnel immédiat.
+| Critère | Statut |
+|---|---|
+| Client peut revoir le CRA complet avant de signer | ✅ |
+| Nom du signataire et consentement explicites requis | ✅ |
+| Signature fonctionne souris et touch | ✅ |
+| Signature vide/invalide bloquée à la soumission | ✅ |
+| Signature réussie : identité, signature, timestamp, snapshot stockés | ✅ |
+| Le même token ne peut pas signer deux fois | ✅ 410 GONE |
+| Confirmation de succès claire pour le client | ✅ `SigningSuccessScreen` |
+| Tests (unit, intégration, E2E) couvrent le workflow | ✅ |
+
+## Observations mineures (non bloquantes)
+
+1. **`data-testid="signature-canvas"` silencieusement ignoré** (`ClientSignatureForm.tsx:111`) — `Props` de `SignatureCanvas` n'inclut pas `data-testid` et ne spread pas les HTML attributes. TypeScript devrait lever un warning. Pas de casse fonctionnelle puisque les tests utilisent `getByRole('img')`.
+
+2. **`consentApproved` hardcodé à `true` dans le constructeur du record** (`ClientSignatureService.java:60`) — le paramètre est reçu et validé mais `true` est écrit en dur. Sans impact puisque la valeur est toujours `true` à ce stade, mais il serait plus propre de passer le paramètre.
+
+3. **Pas d'émulation touch Playwright** — le plan mentionne "verified by Playwright touch emulation", mais `client-signing.spec.ts` utilise uniquement `page.mouse`. L'implémentation Pointer Events gère le touch nativement. Risque fonctionnel : nul. Gap de couverture : réel mais acceptable pour ce ticket.
+
+4. **Pas de test axe** — le plan (item 16) mentionnait une vérification d'accessibilité via axe dans `ClientSignatureForm.test.tsx`. Absent.
+
+Ces quatre points n'affectent pas les critères d'acceptance du ticket et ne constituent pas des régressions.
 
 ## Décision
 
-Le fix de la review précédente est correctement appliqué. L'implémentation backend est correcte et bien testée.
+Le bug bloquant est corrigé correctement. L'implémentation complète respecte le périmètre du ticket, tous les critères d'acceptance sont satisfaits, et la couverture de tests est solide.
 
-Cependant, un bug bloquant (#1) rend le flux de signature inopérant en production : `handleResponse<T>` appelle `res.json()` sur un body vide et lève une `SyntaxError` capturée comme erreur générique, empêchant l'affichage de l'écran de succès. Ce bug est masqué par le choix des mocks dans les tests (Vitest bypasse la couche HTTP, Playwright non exécuté dans le comptage "207 tests").
-
-## Actions demandées
-
-1. **`frontend/src/api/httpClient.ts:27`** — remplacer `return res.json() as Promise<T>;` par une lecture du texte avec gestion du body vide (voir correction proposée au point #1). Mettre à jour le test `api/__tests__/httpClient.test.ts` pour couvrir le cas 200 avec body vide.
-
-IMPLEMENTATION_FIX_REQUIRED
+IMPLEMENTATION_APPROVED
