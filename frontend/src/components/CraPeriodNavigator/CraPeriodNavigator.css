@@ -1,0 +1,103 @@
+.cra-period-navigator {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  width: 100%;
+}
+
+.cra-period-navigator__label {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  flex: 1;
+  text-align: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  border-radius: var(--radius-md);
+  padding: var(--space-1) var(--space-2);
+  color: var(--color-text);
+}
+
+.cra-period-navigator__label:hover:not(:disabled) {
+  background: var(--color-neutral-100);
+}
+
+.cra-period-navigator__prev,
+.cra-period-navigator__next {
+  min-width: 44px;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  font-size: var(--font-size-lg);
+  color: var(--color-text);
+  flex-shrink: 0;
+}
+
+.cra-period-navigator__prev:hover:not(:disabled),
+.cra-period-navigator__next:hover:not(:disabled) {
+  background: var(--color-neutral-100);
+}
+
+.cra-period-navigator__prev:disabled,
+.cra-period-navigator__next:disabled,
+.cra-period-navigator__label:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.cra-period-navigator__dialog {
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  padding: var(--space-6);
+  width: min(90vw, 320px);
+}
+
+.cra-period-navigator__dialog::backdrop {
+  background: rgb(0 0 0 / 0.4);
+}
+
+.cra-period-navigator__dialog h2 {
+  margin: 0 0 var(--space-4);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+}
+
+.cra-period-navigator__dialog-fields {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+}
+
+.cra-period-navigator__dialog-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.cra-period-navigator__dialog-actions {
+  display: flex;
+  gap: var(--space-2);
+  justify-content: flex-end;
+}
+
+@media (max-width: 320px) {
+  .cra-period-navigator__label {
+    font-size: var(--font-size-base);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .cra-period-navigator__prev,
+  .cra-period-navigator__next {
+    min-width: 36px;
+    min-height: 36px;
+  }
+}
