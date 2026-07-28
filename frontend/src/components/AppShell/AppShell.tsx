@@ -13,7 +13,7 @@ interface AppShellProps {
 const PAGE_TITLES: Record<AppView, string> = {
   selector: 'New CRA',
   history: 'CRA History',
-  settings: 'Settings',
+  settings: 'Paramètres',
 };
 
 export function AppShell({ activeView, onNavigate, children }: AppShellProps) {
@@ -41,7 +41,7 @@ export function AppShell({ activeView, onNavigate, children }: AppShellProps) {
             aria-current={activeView === 'settings' ? 'page' : undefined}
             onClick={() => onNavigate('settings')}
           >
-            Settings
+            Paramètres
           </button>
         </nav>
       </header>

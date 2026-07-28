@@ -8,6 +8,8 @@ const ERROR_MESSAGES: Record<ApiErrorCode, string> = {
   cra_day_not_found: "Ce jour n'existe pas dans ce CRA.",
   invalid_cra_transition: "Cette action n'est pas autorisée pour l'état actuel du CRA.",
   duplicate_cra_transition: 'Cette action a déjà été effectuée sur ce CRA.',
+  signature_too_large: 'Le fichier de signature est trop volumineux (max 500 Ko).',
+  signature_invalid_format: 'Le format de fichier est invalide. Formats acceptés : PNG, JPEG, SVG.',
   network_error: 'Impossible de contacter le serveur. Vérifiez votre connexion.',
   unknown_error: 'Une erreur est survenue. Veuillez réessayer.',
 };

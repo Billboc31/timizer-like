@@ -82,7 +82,7 @@ public class CraPdfDownloadService {
                 new CraPdfProviderSignature(
                         cra.getProviderFirstName() + " " + cra.getProviderLastName(),
                         cra.getProviderSignatureDate(),
-                        null),
+                        cra.getProviderSignatureImage()),
                 null);
 
         return new CraPdfDocument(summary, days, signatures);

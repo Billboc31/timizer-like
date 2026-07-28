@@ -27,6 +27,10 @@ export interface CraDetailsDto {
   clientFirstName?: string | null;
   clientLastName?: string | null;
   clientCompany?: string | null;
+  clientAddress?: string | null;
+  clientContactRole?: string | null;
+  providerSignatureImage?: string | null;
+  providerSignerName?: string | null;
 }
 
 export interface CraSummaryDto {
@@ -45,6 +49,13 @@ export interface CraDayUpdateRequest {
 
 export interface SignProviderRequest {
   providerSignatureDate: string;
+  providerSignatureImage: string;
+  providerSignerName: string;
+}
+
+export interface ProviderSignatureDto {
+  signerName: string;
+  signatureImage: string;
 }
 
 export interface ProviderSettingsDto {

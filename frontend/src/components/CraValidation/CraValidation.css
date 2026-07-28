@@ -1,0 +1,172 @@
+.cra-validation {
+  padding: var(--space-4);
+}
+
+.cra-validation__dialog {
+  max-width: min(90vw, 480px);
+  box-sizing: border-box;
+}
+
+.cra-validation__button {
+  display: block;
+  width: 100%;
+  min-height: 44px;
+  padding: var(--space-2) var(--space-4);
+  background-color: var(--color-primary);
+  color: var(--color-white);
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+}
+
+.cra-validation__button:hover {
+  background-color: var(--color-primary-hover);
+}
+
+.cra-validation-dialog {
+  max-width: 480px;
+  width: 100%;
+  border: none;
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+}
+
+.cra-validation-dialog::backdrop {
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.cra-validation__warning {
+  color: var(--color-warning-text);
+  background-color: var(--color-warning-light);
+  border: var(--border-width) solid var(--color-warning-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-2) var(--space-3);
+  margin: 0 0 var(--space-4);
+  font-size: var(--font-size-base);
+}
+
+.cra-validation__actions {
+  display: flex;
+  gap: var(--space-2);
+  justify-content: flex-end;
+}
+
+.cra-validation__confirm {
+  min-height: 44px;
+  padding: var(--space-2) var(--space-5);
+  background-color: var(--color-destructive);
+  color: var(--color-white);
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+}
+
+.cra-validation__confirm:hover:not(:disabled) {
+  background-color: var(--color-destructive-hover);
+}
+
+.cra-validation__confirm:disabled,
+.cra-validation__cancel:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.cra-validation__cancel {
+  min-height: 44px;
+  padding: var(--space-2) var(--space-5);
+  background-color: var(--color-secondary);
+  color: var(--color-white);
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  font-size: var(--font-size-base);
+}
+
+.cra-validation__cancel:hover:not(:disabled) {
+  background-color: var(--color-secondary-hover);
+}
+
+.cra-validation__error {
+  color: var(--color-error);
+  background-color: var(--color-error-light);
+  border: var(--border-width) solid var(--color-error-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-2) var(--space-3);
+  margin: 0 0 var(--space-4);
+  font-size: var(--font-size-sm);
+}
+
+@media (max-width: 480px) {
+  .cra-validation-dialog {
+    max-width: 95vw;
+    padding: var(--space-4);
+  }
+
+  .cra-validation__actions {
+    flex-direction: column-reverse;
+  }
+
+  .cra-validation__confirm,
+  .cra-validation__cancel {
+    width: 100%;
+  }
+}
+
+.cra-validation__success {
+  color: #15803d;
+  background-color: #dcfce7;
+  border: 1px solid #86efac;
+  border-radius: 4px;
+  padding: 8px 12px;
+  font-size: 0.875rem;
+}
+
+.cra-validation__no-sig {
+  color: var(--color-warning-text);
+  background-color: var(--color-warning-light);
+  border: var(--border-width) solid var(--color-warning-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-2) var(--space-3);
+  margin: 0 0 var(--space-3);
+  font-size: var(--font-size-base);
+}
+
+.cra-validation__settings-link {
+  background: none;
+  border: none;
+  color: var(--color-primary, #2563eb);
+  cursor: pointer;
+  padding: 0;
+  font-size: inherit;
+  text-decoration: underline;
+}
+
+.cra-validation__back-btn {
+  display: inline-block;
+  width: auto;
+}
+
+.cra-validation__sig-preview {
+  margin-bottom: var(--space-3);
+}
+
+.cra-validation__sig-name {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted, #6b7280);
+  margin: 0 0 var(--space-1);
+}
+
+.cra-validation__sig-img {
+  display: block;
+  max-width: 200px;
+  max-height: 80px;
+  border: var(--border-width) solid var(--color-border, #e5e7eb);
+  border-radius: var(--radius-sm);
+  background: #f9fafb;
+  object-fit: contain;
+}

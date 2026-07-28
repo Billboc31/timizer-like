@@ -5,6 +5,8 @@ export type ApiErrorCode =
   | 'cra_day_not_found'
   | 'invalid_cra_transition'
   | 'duplicate_cra_transition'
+  | 'signature_too_large'
+  | 'signature_invalid_format'
   | 'network_error'
   | 'unknown_error';
 

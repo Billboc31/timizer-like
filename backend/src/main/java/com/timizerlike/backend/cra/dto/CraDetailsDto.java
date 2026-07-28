@@ -19,6 +19,8 @@ public record CraDetailsDto(
         String clientLastName,
         String clientCompany,
         String clientAddress,
-        String clientContactRole
+        String clientContactRole,
+        String providerSignatureImage,
+        String providerSignerName
 ) {
 }

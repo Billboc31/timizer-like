@@ -6,6 +6,8 @@ import { CraHistory } from './components/CraHistory/CraHistory';
 import { ClientSettingsForm } from './components/ClientSettingsForm/ClientSettingsForm';
 import { ProviderSettingsForm } from './components/ProviderSettingsForm/ProviderSettingsForm';
 import { ProviderSignatureBox } from './components/ProviderSignatureBox/ProviderSignatureBox';
+import { CraValidation } from './components/CraValidation/CraValidation';
+import { SignatureSettings } from './components/SignatureSettings/SignatureSettings';
 import { AppShell } from './components/AppShell/AppShell';
 import type { AppView } from './components/AppShell/AppShell';
 import { getCra, updateDay } from './api/craClient';
@@ -30,6 +32,8 @@ function dtoToDetails(dto: CraDetailsDto): CraDetails {
     clientFirstName: dto.clientFirstName ?? null,
     clientLastName: dto.clientLastName ?? null,
     clientCompany: dto.clientCompany ?? null,
+    providerSignatureImage: dto.providerSignatureImage ?? null,
+    providerSignerName: dto.providerSignerName ?? null,
   };
 }
 
@@ -98,6 +102,7 @@ export default function App() {
       {view === 'settings' ? (
         <>
           <ProviderSettingsForm />
+          <SignatureSettings />
           {settingsError !== null ? (
             <p role="alert">{settingsError}</p>
           ) : clientSettings !== null ? (
@@ -124,6 +129,7 @@ export default function App() {
           {cra && (
             <ProviderSignatureBox cra={cra} onSignClick={() => {}} />
           )}
+          <CraValidation cra={cra} onValidated={handleSignatureSuccess} onGoToSettings={() => setView('settings')} />
         </>
       )}
     </AppShell>
