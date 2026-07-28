@@ -1,0 +1,101 @@
+Now I have all the information needed. Let me write the review.
+
+---
+
+# Review — T049: Add editable provider profile settings
+
+## Résumé
+
+L'implémentation couvre l'ensemble du périmètre fonctionnel : entité `ProviderSettings`, API REST GET/PUT, service avec seeding depuis les défauts, snapshotting des champs provider dans `MonthlyCraReport` à la création, lecture des champs snapshotés pour la génération PDF, composant React avec validation et états UI. L'architecture garantit correctement l'isolation historique des CRAs.
+
+Un problème bloquant est identifié : le critère d'acceptation « tests couvrent le comportement de snapshot » n'est pas satisfait.
+
+---
+
+## Points validés
+
+**Backend :**
+- `ProviderSettings` entity (singleton id=1, champs requis annotés `@NotBlank`/`@Email`, getters/setters)
+- `ProviderSettingsRepository` JPA
+- `ProviderSettingsDto` record avec annotations Bean Validation
+- `ProviderSettingsService` : seeding lazy depuis `CraDefaultsProperties`, update transactionnel, `splitName()` correct
+- `ProviderSettingsController` : GET + PUT avec `@Valid @RequestBody`, 400 via Spring's `MethodArgumentNotValidException`
+- `MonthlyCraReport` : colonnes snapshot `providerAddress`, `providerEmail`, `providerPhone` ajoutées (nullable), passées via constructeur package-private — pas de setter, immuables après création
+- `MonthlyCraCreationService.buildReport()` appelle `providerSettingsService.getSettings()` et passe tous les champs provider au constructeur → snapshot correct
+- `CraPdfDownloadService` lit depuis `cra.getProviderAddress()`, `cra.getProviderEmail()` (snapshot) et non depuis `ProviderSettingsService` → préservation historique correcte
+- `CraController` utilise bien `MonthlyCraCreationService` (pas l'ancien `CraCreationService`)
+- Tests backend : 6 tests service + 3 tests contrôleur, couvrent seeding, update, validation `@NotBlank`
+
+**Frontend :**
+- `ProviderSettingsForm` : fetch on mount, loading/saving/success/error states, validation client-side, cancel restaure les valeurs sans appel API, attributs ARIA corrects
+- API client : `getProviderSettings()`, `updateProviderSettings()`, `apiPut()` ajouté à `httpClient`
+- Navigation : `AppView` étendu, AppShell avec bouton Settings, `aria-current` correct, App.tsx render conditionnel propre
+- Tests frontend : 8 tests de composant (tous les états couverts), 2 tests API client pour les nouvelles fonctions
+
+---
+
+## Problèmes détectés
+
+### 🔴 BLOQUANT — Snapshot behaviour non couvert par les tests
+
+Le critère d'acceptation est explicite : **"Backend and frontend tests cover reading, updating, validation, and snapshot behaviour."**
+
+Aucun test ne vérifie que les valeurs provider sont correctement snapshotées dans le `MonthlyCraReport` créé. `MonthlyCraCreationServiceTest` mocke `ProviderSettingsService` mais n'assert pas que les champs provider du CRA créé (`providerFirstName`, `providerLastName`, `providerCompany`, `providerAddress`, `providerEmail`, `providerPhone`) correspondent aux valeurs retournées par le mock.
+
+**Test manquant (exemple minimal) :**
+```java
+// Dans MonthlyCraCreationServiceTest
+@Test
+void snapshotsProviderSettingsIntoCreatedCra() {
+    // Given
+    ProviderSettingsDto settings = new ProviderSettingsDto(
+        "Jean", "Dupont", "Acme", "1 rue Test", "jean@acme.com", "0600000000");
+    // mock repository + providerSettingsService retournant settings
+    
+    CraCreationResult result = service.createForMonth(2025, 6);
+    
+    // Assert provider fields are snapshotted
+    assertThat(result.cra().providerFirstName()).isEqualTo("Jean");
+    assertThat(result.cra().providerLastName()).isEqualTo("Dupont");
+    assertThat(result.cra().providerCompany()).isEqualTo("Acme");
+    // etc.
+}
+```
+
+De même, `CraPdfDownloadServiceTest.validatedCra()` ne stube pas `getProviderAddress()` ni `getProviderEmail()` → le test passe avec null pour ces champs, ne vérifiant pas que les valeurs snapshotées sont bien transmises au document PDF.
+
+---
+
+### 🟡 MINEUR — Code mort : `CraCreationService` non mis à jour
+
+`com.timizerlike.cra.service.CraCreationService` subsiste avec sa propre dépendance à `CraDefaultsProperties` (pas à `ProviderSettingsService`). Il n'est pas utilisé par la chaîne HTTP active (le contrôleur appelle `MonthlyCraCreationService`), mais reste dans le codebase avec son test `CraCreationServiceTest`, ce qui est trompeur.
+
+**Action attendue** : supprimer `CraCreationService` et `CraCreationServiceTest`, ou si nécessaire, les faire migrer vers `ProviderSettingsService`.
+
+---
+
+### 🟡 MINEUR — Validation redondante dans le service
+
+`ProviderSettingsService.updateSettings()` répète les checks `isBlank()` pour les champs déjà protégés par `@Valid @NotBlank` au niveau du contrôleur. Ces branches sont du code mort : elles ne peuvent pas être atteintes par un appel HTTP normal. À supprimer pour clarté.
+
+---
+
+## Risques éventuels
+
+- **Hibernate `ddl-auto: update`** pour les colonnes snapshot : acceptable si c'est l'approche configurée pour ce projet (pas de Flyway/Liquibase), mais fragile en production sur des schémas existants. Non introduit par T049 — déjà en place.
+- **`CraDetailsDto`** n'expose pas `providerAddress/email/phone` : acceptable car ces champs ne sont utiles que pour la génération PDF.
+
+---
+
+## Décision
+
+L'architecture du snapshot est correcte et le comportement fonctionnel attendu est implémenté. Cependant, le critère d'acceptation "tests couvrent le comportement de snapshot" n'est pas satisfait — il manque au minimum un test assertant que les champs provider du settings service sont bien snapshotés dans le CRA créé, et un test vérifiant que l'adresse/email provider snapshotés sont bien transmis au PDF.
+
+## Actions demandées
+
+1. **[REQUIS]** Ajouter dans `MonthlyCraCreationServiceTest` un test qui assert explicitement que les valeurs retournées par `ProviderSettingsService.getSettings()` sont présentes dans le `CraDetailsDto` retourné (firstName, lastName, company, address, email, phone).
+2. **[REQUIS]** Compléter `CraPdfDownloadServiceTest.validatedCra()` pour stubber `getProviderAddress()` et `getProviderEmail()` avec des valeurs non-null, et asserter que ces valeurs apparaissent dans le `CraPdfDocument` généré.
+3. **[RECOMMANDÉ]** Supprimer `CraCreationService` et son test `CraCreationServiceTest` (code mort).
+4. **[RECOMMANDÉ]** Supprimer la validation manuelle redondante dans `ProviderSettingsService.updateSettings()`.
+
+IMPLEMENTATION_FIX_REQUIRED
