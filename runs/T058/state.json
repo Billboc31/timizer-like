@@ -1,7 +1,7 @@
 {
   "ticket_id": "T058",
-  "state": "INIT",
+  "state": "PLAN_APPROVED",
   "branch": "ticket/T058-use-a-rectangular-provider-signature-box-in-the-cr",
   "issue_number": 103,
-  "updated_at": "2026-07-28T05:38:28Z"
+  "updated_at": "2026-07-28T06:45:36Z"
 }
