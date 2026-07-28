@@ -36,7 +36,9 @@ public final class CraDetailsMapper {
                 report.getClientLastName(),
                 report.getClientCompany(),
                 report.getClientAddress(),
-                report.getClientContactRole()
+                report.getClientContactRole(),
+                report.getProviderSignatureImage(),
+                report.getProviderSignerName()
         );
     }
 

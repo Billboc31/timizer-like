@@ -1,89 +1,181 @@
-# T052 Conflict Resolution
+# T051 Conflict Resolution
 
-Conflicts arose syncing T052 (CRA signature workflow) with main, which included T049 (editable provider profile) and T058 (rectangular provider signature box in PDF).
+Conflicts arose merging T051 (provider signature capture and reusable signature settings) with main, which already included T052 (CRA signature workflow + status machine) and T058 (rectangular signature box in PDF).
+
+## Summary of intent preserved
+
+- **T051**: `ProviderSignatureSettings` CRUD entity/service, `providerSignatureImage`/`providerSignerName` stored on `MonthlyCraReport`, `CraValidation` component (validate button + confirmation dialog), `SignatureSettings` component, `ValidateCraRequestDto` (3-field: date + image + signer name).
+- **HEAD (T052/T058)**: Full CRA status enum (`DRAFT → READY_FOR_PROVIDER_SIGNATURE → SIGNED_BY_PROVIDER → AWAITING_CLIENT_SIGNATURE → FULLY_SIGNED → VALIDATED`), `clientAddress`/`clientContactRole` on DTO, `ProviderSignatureBox`, `ClientSettingsForm`/`ProviderSettingsForm`, `SignProviderRequestDto` (1-field: date only), `invalid_cra_transition`/`duplicate_cra_transition` error codes.
+
+---
 
 ## Files resolved
 
-### 1. `backend/.../CraControllerTest.java` — UU (both modified)
+### 1. `backend/.../CraDetailsDto.java` — UU
 
-**Conflict:** T052 side had only 4 `null` args for provider/client fields (14-arg constructor call), but `CraDetailsDto` is a 16-field record. HEAD had the correct 6 named values (`"Alice"`, `"Provider"`, `"Provider Co."`, `"Bob"`, `"Client"`, `"Client Co."`).
+**Conflict:** HEAD added `clientAddress, clientContactRole` (positions 15-16); T051 added `providerSignatureImage, providerSignerName` (positions 15-16).
 
-**Decision:** Keep HEAD's named values for both test methods (`returnsHttp201WhenCraIsCreated` and `returnsHttp200WhenCraAlreadyExists`). T052's 4-arg shortcut was wrong — it would not compile against the 16-field record added by T049.
-
----
-
-### 2. `backend/.../CraValidationControllerTest.java` — UD (T052 deleted, main kept)
-
-**Conflict:** Main kept the test file for the old `CraValidationController`. T052 deleted the controller entirely (replaced by `CraSignatureController`).
-
-**Decision:** `git rm` the file. T052's intent is unambiguous — the validate endpoint is gone, replaced by the signature workflow.
+**Decision:** Keep all 4 fields. Order: `clientAddress, clientContactRole` (HEAD, positions 15-16) then `providerSignatureImage, providerSignerName` (T051, positions 17-18). Total: 18 fields.
 
 ---
 
-### 3. `backend/.../CraPdfDownloadServiceTest.java` — UU (both modified)
+### 2. `backend/.../CraDetailsMapper.java` — UU
 
-**Conflict:** HEAD added `snapshotAddressAndEmailPassedToPdfDocument()` test (T058 — verifies `providerAddress` and `providerEmail` pass through to `CraPdfDocument`). T052 added `signedByProviderCra()` helper and tests for the new `SIGNED_BY_PROVIDER`/`AWAITING_CLIENT_SIGNATURE`/`FULLY_SIGNED` statuses.
+**Conflict:** Last 2 constructor args: HEAD passed `getClientAddress(), getClientContactRole()`; T051 passed `getProviderSignatureImage(), getProviderSignerName()`.
 
-**Decision:** Merge both additions. They are purely additive with no overlap. The `validatedCra()` helper already mocks `getProviderAddress()` and `getProviderEmail()` as required by T058's test. The T052 `signedByProviderCra()` helper does not need those fields because none of the T052 tests verify them.
+**Decision:** Pass all 4 in field-order: `clientAddress, clientContactRole, providerSignatureImage, providerSignerName`.
 
 ---
 
-### 4. `frontend/src/App.tsx` — UU (both modified)
+### 3. `backend/.../CraDayUpdateService.java` — UU
 
-**Conflict block 1 — imports:**
-- HEAD: kept `CraValidation` import, `useRef`; T049 added `ClientSettingsForm`, `ProviderSettingsForm`; T058 added `ProviderSignatureBox`
-- T052: removed `CraValidation` and `useRef`; did not include T049/T058 additions
+Same trailing-args conflict as `CraDetailsMapper.java`. Same resolution: all 4 args.
 
-**Decision:** Remove `CraValidation` and `useRef` (T052 intent). Keep `ClientSettingsForm`, `ProviderSettingsForm`, `ProviderSignatureBox` (T049/T058 are already merged to main).
+---
 
-**Conflict block 2 — JSX body:**
-- HEAD had `craValidationRef`, `handleSignClick`, `<CraValidation>`, and referenced undefined `handleCraValidated`
-- T052 added a duplicate `CraSummaryPanel` + `CalendarGrid` block outside the conditional (clearly erroneous pre-sync commit artifact)
+### 4. `backend/.../SignProviderRequestDto.java` — UU (rename conflict)
+
+**Conflict:** Git merged HEAD's `SignProviderRequestDto.java` (1 field: `providerSignatureDate`) with T051's `ValidateCraRequestDto.java` (3 fields: date + image + signer) into one file with conflict markers and a dual path annotation.
 
 **Decision:**
-- Remove `craValidationRef` and `handleSignClick` (dead code — they existed only to click the CraValidation button via DOM ref)
-- Remove `<CraValidation>` JSX entirely
-- Wire `onSuccess={handleSignatureSuccess}` to `CraSummaryPanel` (T052's handler)
-- Fix `onDayClick` guard: `cra?.status !== 'VALIDATED'` → `cra?.status === 'DRAFT'` (DRAFT is the only editable state in the new workflow)
-- Keep `<ProviderSignatureBox cra={cra} onSignClick={() => {}} />` — T058 component stays; actual signing is now done via `CraSignatureActions` inside `CraSummaryPanel`. The `onSignClick` no-op is a known gap — no panel wiring needed at this stage
-- Discard T052's duplicate JSX block entirely
+- Kept `SignProviderRequestDto.java` as HEAD's 1-field version (used by `CraSignatureController`).
+- Created `ValidateCraRequestDto.java` as a new file with T051's 3-field content (used by `CraValidationController`).
+- Removed unused `@NotBlank` import from `SignProviderRequestDto.java`.
 
 ---
 
-### 5. `frontend/src/api/__tests__/craClient.test.ts` — UU (both modified)
+### 5. `backend/.../CraValidationController.java` — DU (T051 new, HEAD deleted)
 
-**Conflict:** HEAD had `validateCra` import + test block; T049 added `getProviderSettings`/`updateProviderSettings` tests; T052 replaced `validateCra` with `submitCra`, `signCraByProvider`, `sendCraToClient`.
-
-**Decision:** Remove `validateCra` (T052 intent — endpoint deleted). Keep all of: T052's new function imports and tests, T049's provider settings tests. Also add T052's new error code tests (`invalid_cra_transition`, `duplicate_cra_transition`).
+Already contained T051's clean content (no conflict markers). Staged as-is.
 
 ---
 
-### 6. `frontend/src/api/craClient.ts` — UU (both modified)
+### 6. `backend/.../CraValidationService.java` — DU (T051 new, HEAD deleted)
 
-**Conflict:** HEAD had `ValidateCraRequest` type import; T049 added `ProviderSettingsDto`; T052 replaced `ValidateCraRequest` with `SignProviderRequest`.
-
-**Decision:** Keep `ProviderSettingsDto` (T049) and `SignProviderRequest` (T052). Remove `ValidateCraRequest` (validate endpoint is gone).
+Already contained T051's clean content. Staged as-is.
 
 ---
 
-### 7. `frontend/src/components/CraHistory/CraHistory.css` — UU (both modified)
+### 7. `backend/.../CraControllerTest.java` — UU
 
-**Conflict:** HEAD had `.cra-history__badge--validated`; T052 added 4 new badge classes (`--ready-for-provider`, `--signed-by-provider`, `--awaiting-client`, `--signed`).
+**Conflict:** HEAD passed 10 named args after `days` (valid 16-arg constructor); T051 passed 10 nulls. Merged DTO now has 18 fields → 12 trailing args needed.
 
-**Decision:** Keep all 5 classes. `--validated` is needed for the `VALIDATED` status which still exists in `ValidationStatus`. The 4 T052 classes are needed for the new workflow statuses displayed in CraHistory.
-
----
-
-### 8. `frontend/src/components/CraSummaryPanel/CraSummaryPanel.tsx` — UU (both modified)
-
-**Conflict:** HEAD imported `SectionHeading` (T049 addition); T052 imported `CraDetailsDto` for the `onSuccess` prop type.
-
-**Decision:** Keep both imports. `SectionHeading` is used in the rendered JSX (`<SectionHeading title="Compte Rendu d'Activité" />`). `CraDetailsDto` is used in the `Props` interface for `onSuccess?: (updated: CraDetailsDto) => void`.
+**Decision:** Keep HEAD's 10 meaningful values, append 2 nulls for `providerSignatureImage` and `providerSignerName`.
 
 ---
 
-### 9. `frontend/src/components/CraValidation/` — UD × 3 (T052 deleted, main kept)
+### 8. `backend/.../CraDtoTest.java` — UU
 
-Files deleted: `CraValidation.axe.test.tsx`, `CraValidation.css`, `CraValidation.test.tsx`
+**Conflict:** Both sides had identical content, only whitespace differed. Merged DTO has 18 fields; test was passing 16 args.
 
-**Decision:** `git rm` all three. T052 removes the `CraValidation` component entirely — the validate-endpoint flow is replaced by the signature workflow. Retaining these tests would test a deleted component.
+**Decision:** Remove conflict markers, add 2 more trailing nulls (for `clientAddress, clientContactRole`) and 2 more (for `providerSignatureImage, providerSignerName`) = 4 total trailing nulls.
+
+---
+
+### 9. `backend/.../CraValidationControllerTest.java` — DU (T051 new)
+
+Already contained T051's clean content. `VALIDATED_DTO` used 16 args; now 18 fields exist.
+
+**Fix:** Inserted `null, null` (clientAddress, clientContactRole) at positions 15-16, before the existing `"data:image/png;base64,abc", "Jean Dupont"` (providerSignatureImage, providerSignerName).
+
+---
+
+### 10. `backend/.../CraWorkflowIntegrationTest.java` — DU (T051 new)
+
+Already contained T051's clean content. Staged as-is.
+
+---
+
+### 11. `backend/.../CraValidationServiceTest.java` — DU (T051 new)
+
+Already contained T051's clean content. Uses Mockito mocks — does not construct `CraDetailsDto` directly. Staged as-is.
+
+---
+
+### 12. `backend/.../CraDayControllerTest.java` — not in conflict list
+
+`DRAFT_DTO` used 16 args; merged DTO has 18 fields.
+
+**Fix:** Added 2 trailing nulls for `providerSignatureImage` and `providerSignerName`.
+
+---
+
+### 13. `frontend/src/api/apiError.ts` — UU
+
+**Conflict:** HEAD had `invalid_cra_transition`, `duplicate_cra_transition`; T051 had `signature_too_large`, `signature_invalid_format`.
+
+**Decision:** Include all 4 codes.
+
+---
+
+### 14. `frontend/src/api/errorMessages.ts` — UU
+
+Same 4-code merge. All 4 messages retained.
+
+---
+
+### 15. `frontend/src/api/httpClient.ts` — UU
+
+**Conflict 1:** Same 4 error codes in `toApiErrorCode()` — all 4 retained.
+
+**Conflict 2:** Duplicate `apiPut` function (one from each branch). Removed the second duplicate.
+
+---
+
+### 16. `frontend/src/api/types.ts` — UU
+
+**Conflict:** HEAD had `providerFirstName/LastName/Company, clientFirstName/LastName/Company`; T051 had `providerSignatureImage, providerSignerName`.
+
+**Decision:** Keep all fields from both sides, adding also `clientAddress` and `clientContactRole` to match the backend DTO.
+
+---
+
+### 17. `frontend/src/components/AppShell/AppShell.tsx` — UU
+
+**Conflict 1 (type block):** HEAD exported `AppView` type (required by App.tsx import); T051 used local `View` type.
+
+**Decision:** Keep `export type AppView` (HEAD). Use T051's French label "Paramètres".
+
+**Conflict 2 (button label):** HEAD "Settings" vs T051 "Paramètres".
+
+**Decision:** Use "Paramètres".
+
+---
+
+### 18. `frontend/src/types/cra.ts` — UU (complex)
+
+**Conflict:** HEAD had full 6-value status enum + `providerSignatureDate` + provider/client name fields + `providerSignatureImageUrl`; T051 simplified to `DRAFT|VALIDATED` + added `providerSignatureImage`/`providerSignerName` + spurious `CraDetailsDto` interface re-export.
+
+**Decision:**
+- Keep HEAD's full 6-value status enum (needed by T052 workflow).
+- Keep `providerSignatureDate`.
+- Keep all provider/client name fields (from HEAD).
+- Replace `providerSignatureImageUrl` with `providerSignatureImage` (T051 naming, consistent with backend).
+- Add `providerSignerName` (T051).
+- Remove spurious `CraDetailsDto` interface (already defined in `api/types.ts`).
+
+---
+
+### 19. `frontend/src/App.tsx` — UU (4 conflict blocks)
+
+**Block 1 (imports):** HEAD imports `ClientSettingsForm`, `ProviderSettingsForm`, `ProviderSignatureBox`; T051 imports `CraValidation`, `SignatureSettings`.
+
+**Decision:** Keep all 5 imports — both sets are needed.
+
+**Block 2 (dtoToDetails):** HEAD maps name fields; T051 maps `providerSignatureImage`/`providerSignerName`.
+
+**Decision:** Map all fields from both sides.
+
+**Block 3 (settings view):** HEAD shows `ProviderSettingsForm + ClientSettingsForm`; T051 shows `SignatureSettings`.
+
+**Decision:** Show all 3: `ProviderSettingsForm`, `SignatureSettings`, then `ClientSettingsForm` with settings error.
+
+**Block 4 (CalendarGrid area):** HEAD has `onDayClick` guard `=== 'DRAFT'` + `ProviderSignatureBox`; T051 has `!== 'VALIDATED'` guard + `CraValidation`.
+
+**Decision:** Use `=== 'DRAFT'` guard (correct: only DRAFT is editable). Keep both `ProviderSignatureBox` and `CraValidation`. Fix T051's undefined reference `handleCraValidated` → `handleSignatureSuccess` (already defined).
+
+---
+
+### 20. `frontend/src/components/CraValidation/` — DU × 4 (T051 new files)
+
+`CraValidation.tsx`, `CraValidation.css`, `CraValidation.test.tsx`, `CraValidation.axe.test.tsx` — all clean T051 content. Staged as-is.

@@ -10,6 +10,8 @@ function toApiErrorCode(raw: unknown): ApiErrorCode {
     'cra_day_not_found',
     'invalid_cra_transition',
     'duplicate_cra_transition',
+    'signature_too_large',
+    'signature_invalid_format',
   ];
   if (typeof raw === 'string' && (known as string[]).includes(raw)) {
     return raw as ApiErrorCode;
@@ -81,6 +83,24 @@ export async function apiPatch<T>(path: string, body: unknown): Promise<T> {
     throw new ApiError('network_error', null, err);
   }
   return handleResponse<T>(res);
+}
+
+export async function apiDelete(path: string): Promise<void> {
+  let res: Response;
+  try {
+    res = await fetch(`${BASE_URL}${path}`, { method: 'DELETE' });
+  } catch (err) {
+    throw new ApiError('network_error', null, err);
+  }
+  if (!res.ok) {
+    let body: Record<string, unknown> = {};
+    try {
+      body = (await res.json()) as Record<string, unknown>;
+    } catch {
+      // non-JSON body — ignore
+    }
+    throw new ApiError(toApiErrorCode(body['error']), res.status, body);
+  }
 }
 
 export async function apiGetBlob(path: string, options?: { signal?: AbortSignal }): Promise<Blob> {

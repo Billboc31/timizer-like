@@ -35,11 +35,7 @@ class CraControllerTest {
     @Test
     void returnsHttp201WhenCraIsCreated() throws Exception {
         CraDetailsDto dto = new CraDetailsDto(
-                42L,
-                3,
-                2025,
-                21.0,
-                CraStatus.DRAFT,
+                42L, 3, 2025, 21.0, CraStatus.DRAFT,
                 List.of(new CraDayEntryDto(1, 0.0, null), new CraDayEntryDto(2, 0.0, null)),
                 null,
                 null,
@@ -49,6 +45,8 @@ class CraControllerTest {
                 "Bob",
                 "Client",
                 "Client Co.",
+                null,
+                null,
                 null,
                 null
         );
@@ -68,11 +66,7 @@ class CraControllerTest {
     @Test
     void returnsHttp200WhenCraAlreadyExists() throws Exception {
         CraDetailsDto dto = new CraDetailsDto(
-                7L,
-                4,
-                2025,
-                20.0,
-                CraStatus.DRAFT,
+                7L, 4, 2025, 20.0, CraStatus.DRAFT,
                 List.of(),
                 null,
                 null,
@@ -82,6 +76,8 @@ class CraControllerTest {
                 "Bob",
                 "Client",
                 "Client Co.",
+                null,
+                null,
                 null,
                 null
         );
