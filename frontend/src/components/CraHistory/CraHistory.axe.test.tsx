@@ -33,7 +33,7 @@ const DRAFT_CRA: CraSummaryDto = {
 describe('CraHistory accessibility', () => {
   it('has no axe violations when listing CRAs', async () => {
     vi.mocked(craApi.listCras).mockResolvedValueOnce([VALIDATED_CRA, DRAFT_CRA]);
-    const { container } = render(<CraHistory onOpen={vi.fn()} />);
+    const { container } = render(<CraHistory onOpenDetail={vi.fn()} />);
     await waitFor(() =>
       expect(screen.queryByText('Loading...')).not.toBeInTheDocument(),
     );
@@ -43,7 +43,7 @@ describe('CraHistory accessibility', () => {
 
   it('has no axe violations when the list is empty', async () => {
     vi.mocked(craApi.listCras).mockResolvedValueOnce([]);
-    const { container } = render(<CraHistory onOpen={vi.fn()} />);
+    const { container } = render(<CraHistory onOpenDetail={vi.fn()} />);
     await waitFor(() =>
       expect(screen.queryByText('Loading...')).not.toBeInTheDocument(),
     );

@@ -74,13 +74,13 @@ const FULLY_SIGNED_CRA: CraSummaryDto = {
 describe('CraHistory', () => {
   it('renders loading skeleton while fetching', () => {
     vi.mocked(craApi.listCras).mockReturnValue(new Promise(() => {}));
-    render(<CraHistory onOpen={vi.fn()} />);
+    render(<CraHistory onOpenDetail={vi.fn()} />);
     expect(screen.getByRole('list', { name: /loading/i })).toBeInTheDocument();
   });
 
   it('renders error with retry button when listCras fails', async () => {
     vi.mocked(craApi.listCras).mockRejectedValue(new Error('Network error'));
-    render(<CraHistory onOpen={vi.fn()} />);
+    render(<CraHistory onOpenDetail={vi.fn()} />);
     await waitFor(() =>
       expect(screen.getByRole('alert')).toHaveTextContent('Une erreur est survenue. Veuillez réessayer.'),
     );
@@ -91,7 +91,7 @@ describe('CraHistory', () => {
     vi.mocked(craApi.listCras)
       .mockRejectedValueOnce(new Error('Network error'))
       .mockResolvedValueOnce([]);
-    render(<CraHistory onOpen={vi.fn()} />);
+    render(<CraHistory onOpenDetail={vi.fn()} />);
     await waitFor(() => expect(screen.getByRole('button', { name: 'Réessayer' })).toBeInTheDocument());
     fireEvent.click(screen.getByRole('button', { name: 'Réessayer' }));
     await waitFor(() =>
@@ -101,7 +101,7 @@ describe('CraHistory', () => {
 
   it('renders empty state when no CRAs exist', async () => {
     vi.mocked(craApi.listCras).mockResolvedValue([]);
-    render(<CraHistory onOpen={vi.fn()} />);
+    render(<CraHistory onOpenDetail={vi.fn()} />);
     await waitFor(() =>
       expect(screen.getByText('No CRA records found.')).toBeInTheDocument(),
     );
@@ -109,7 +109,7 @@ describe('CraHistory', () => {
 
   it('renders CRA cards with period, status label, and worked days', async () => {
     vi.mocked(craApi.listCras).mockResolvedValue([DRAFT_CRA]);
-    render(<CraHistory onOpen={vi.fn()} />);
+    render(<CraHistory onOpenDetail={vi.fn()} />);
     await waitFor(() => expect(screen.getByText('July 2026')).toBeInTheDocument());
     expect(screen.getByText('Brouillon')).toBeInTheDocument();
     expect(screen.getByText('20')).toBeInTheDocument();
@@ -117,28 +117,28 @@ describe('CraHistory', () => {
 
   it('shows validation date when available', async () => {
     vi.mocked(craApi.listCras).mockResolvedValue([VALIDATED_CRA]);
-    render(<CraHistory onOpen={vi.fn()} />);
+    render(<CraHistory onOpenDetail={vi.fn()} />);
     await waitFor(() => expect(screen.getByText('2026-07-01')).toBeInTheDocument());
   });
 
   it('shows dash when validation date is null', async () => {
     vi.mocked(craApi.listCras).mockResolvedValue([DRAFT_CRA]);
-    render(<CraHistory onOpen={vi.fn()} />);
+    render(<CraHistory onOpenDetail={vi.fn()} />);
     await waitFor(() => expect(screen.getByText('—')).toBeInTheDocument());
   });
 
-  it('calls onOpen when Open button is clicked', async () => {
-    const onOpen = vi.fn();
+  it('calls onOpenDetail when Open button is clicked', async () => {
+    const onOpenDetail = vi.fn();
     vi.mocked(craApi.listCras).mockResolvedValue([DRAFT_CRA]);
-    render(<CraHistory onOpen={onOpen} />);
+    render(<CraHistory onOpenDetail={onOpenDetail} />);
     await waitFor(() => expect(screen.getByText('Open')).toBeInTheDocument());
     fireEvent.click(screen.getByText('Open'));
-    expect(onOpen).toHaveBeenCalledWith(DRAFT_CRA);
+    expect(onOpenDetail).toHaveBeenCalledWith(DRAFT_CRA);
   });
 
   it('does not show Download PDF button for DRAFT CRA', async () => {
     vi.mocked(craApi.listCras).mockResolvedValue([DRAFT_CRA]);
-    render(<CraHistory onOpen={vi.fn()} />);
+    render(<CraHistory onOpenDetail={vi.fn()} />);
     await waitFor(() => expect(screen.getByText('Open')).toBeInTheDocument());
     expect(screen.queryByText('Download PDF')).not.toBeInTheDocument();
   });
@@ -170,13 +170,13 @@ describe('CraHistory', () => {
 
   it('shows Download PDF button for VALIDATED CRA', async () => {
     vi.mocked(craApi.listCras).mockResolvedValue([VALIDATED_CRA]);
-    render(<CraHistory onOpen={vi.fn()} />);
+    render(<CraHistory onOpenDetail={vi.fn()} />);
     await waitFor(() => expect(screen.getByText('Download PDF')).toBeInTheDocument());
   });
 
   it('shows "Signé" badge for VALIDATED CRA with signed class', async () => {
     vi.mocked(craApi.listCras).mockResolvedValue([VALIDATED_CRA]);
-    render(<CraHistory onOpen={vi.fn()} />);
+    render(<CraHistory onOpenDetail={vi.fn()} />);
     await waitFor(() => {
       const badge = screen.getByText('Signé');
       expect(badge).toHaveClass('cra-history__badge--signed');
@@ -185,7 +185,7 @@ describe('CraHistory', () => {
 
   it('shows "Brouillon" badge for DRAFT CRA with draft class', async () => {
     vi.mocked(craApi.listCras).mockResolvedValue([DRAFT_CRA]);
-    render(<CraHistory onOpen={vi.fn()} />);
+    render(<CraHistory onOpenDetail={vi.fn()} />);
     await waitFor(() => {
       const badge = screen.getByText('Brouillon');
       expect(badge).toHaveClass('cra-history__badge--draft');
@@ -230,7 +230,7 @@ describe('CraHistory', () => {
 
   it('sorts CRAs newest first', async () => {
     vi.mocked(craApi.listCras).mockResolvedValue([OLDER_CRA, VALIDATED_CRA, DRAFT_CRA]);
-    render(<CraHistory onOpen={vi.fn()} />);
+    render(<CraHistory onOpenDetail={vi.fn()} />);
     await waitFor(() => expect(screen.getByText('July 2026')).toBeInTheDocument());
     const cards = screen.getAllByRole('listitem');
     expect(cards[0]).toHaveTextContent('July 2026');
@@ -240,7 +240,7 @@ describe('CraHistory', () => {
 
   it('Open button has aria-label containing the period', async () => {
     vi.mocked(craApi.listCras).mockResolvedValue([DRAFT_CRA]);
-    render(<CraHistory onOpen={vi.fn()} />);
+    render(<CraHistory onOpenDetail={vi.fn()} />);
     await waitFor(() =>
       expect(
         screen.getByRole('button', { name: 'Open CRA for July 2026' }),
@@ -250,7 +250,7 @@ describe('CraHistory', () => {
 
   it('Download PDF button has aria-label containing the period', async () => {
     vi.mocked(craApi.listCras).mockResolvedValue([VALIDATED_CRA]);
-    render(<CraHistory onOpen={vi.fn()} />);
+    render(<CraHistory onOpenDetail={vi.fn()} />);
     await waitFor(() =>
       expect(
         screen.getByRole('button', { name: 'Download PDF for June 2026' }),
@@ -261,7 +261,7 @@ describe('CraHistory', () => {
   it('disables Open and Download PDF buttons while PDF is downloading', async () => {
     vi.mocked(craApi.listCras).mockResolvedValue([VALIDATED_CRA]);
     vi.mocked(craApi.downloadCraPdf).mockReturnValue(new Promise(() => {}));
-    render(<CraHistory onOpen={vi.fn()} />);
+    render(<CraHistory onOpenDetail={vi.fn()} />);
     await waitFor(() =>
       expect(screen.getByRole('button', { name: 'Download PDF for June 2026' })).toBeInTheDocument(),
     );
@@ -274,7 +274,7 @@ describe('CraHistory', () => {
     vi.mocked(craApi.listCras).mockResolvedValue([VALIDATED_CRA]);
     vi.mocked(craApi.downloadCraPdf).mockRejectedValue(new Error('Download failed'));
 
-    render(<CraHistory onOpen={vi.fn()} />);
+    render(<CraHistory onOpenDetail={vi.fn()} />);
     await waitFor(() => expect(screen.getByText('Download PDF')).toBeInTheDocument());
     fireEvent.click(screen.getByText('Download PDF'));
 
@@ -295,7 +295,7 @@ describe('CraHistory', () => {
     URL.createObjectURL = createObjectURL;
     URL.revokeObjectURL = revokeObjectURL;
 
-    render(<CraHistory onOpen={vi.fn()} />);
+    render(<CraHistory onOpenDetail={vi.fn()} />);
     await waitFor(() => expect(screen.getByText('Download PDF')).toBeInTheDocument());
     fireEvent.click(screen.getByText('Download PDF'));
 

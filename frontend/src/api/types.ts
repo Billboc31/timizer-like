@@ -31,6 +31,9 @@ export interface CraDetailsDto {
   clientContactRole?: string | null;
   providerSignatureImage?: string | null;
   providerSignerName?: string | null;
+  clientContactFirstName?: string | null;
+  clientContactLastName?: string | null;
+  clientSignatureDate?: string | null;
 }
 
 export interface CraSummaryDto {

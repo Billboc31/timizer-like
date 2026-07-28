@@ -26,7 +26,88 @@ const DETAILS: CraDetailsDto = {
   days: [{ day: 1, worked: 1, note: null }],
   validationDate: null,
   providerSignatureDate: null,
+  providerFirstName: null,
+  providerLastName: null,
+  providerCompany: null,
+  clientFirstName: null,
+  clientLastName: null,
+  clientCompany: null,
+  clientContactFirstName: null,
+  clientContactLastName: null,
+  clientSignatureDate: null,
 };
+
+const HISTORY_SUMMARY: CraSummaryDto = {
+  id: 2,
+  month: 6,
+  year: 2026,
+  totalWorkedDays: 21,
+  status: 'VALIDATED',
+  validationDate: '2026-07-01',
+};
+
+const HISTORY_DETAILS: CraDetailsDto = {
+  id: 2,
+  month: 6,
+  year: 2026,
+  totalWorkedDays: 21,
+  status: 'VALIDATED',
+  days: [{ day: 1, worked: 1, note: null }],
+  validationDate: '2026-07-01',
+  providerSignatureDate: '2026-07-01',
+  providerFirstName: 'Jean',
+  providerLastName: 'Dupont',
+  providerCompany: null,
+  clientFirstName: null,
+  clientLastName: null,
+  clientCompany: null,
+  clientContactFirstName: null,
+  clientContactLastName: null,
+  clientSignatureDate: null,
+};
+
+describe('App — D2: history-detail navigation', () => {
+  it('clicking Open on a history entry transitions to detail view', async () => {
+    vi.mocked(craClient.listCras).mockResolvedValue([HISTORY_SUMMARY]);
+    vi.mocked(craClient.getCra).mockResolvedValue(HISTORY_DETAILS);
+
+    render(<App />);
+
+    fireEvent.click(screen.getByRole('button', { name: 'History' }));
+
+    await waitFor(() =>
+      expect(screen.getByRole('button', { name: 'Open CRA for June 2026' })).toBeInTheDocument(),
+    );
+    fireEvent.click(screen.getByRole('button', { name: 'Open CRA for June 2026' }));
+
+    await waitFor(() => expect(craClient.getCra).toHaveBeenCalledWith(HISTORY_SUMMARY.id));
+    await waitFor(() =>
+      expect(screen.getByRole('button', { name: /retour/i })).toBeInTheDocument(),
+    );
+  });
+
+  it('clicking back from detail returns to the history list', async () => {
+    vi.mocked(craClient.listCras).mockResolvedValue([HISTORY_SUMMARY]);
+    vi.mocked(craClient.getCra).mockResolvedValue(HISTORY_DETAILS);
+
+    render(<App />);
+
+    fireEvent.click(screen.getByRole('button', { name: 'History' }));
+    await waitFor(() =>
+      expect(screen.getByRole('button', { name: 'Open CRA for June 2026' })).toBeInTheDocument(),
+    );
+    fireEvent.click(screen.getByRole('button', { name: 'Open CRA for June 2026' }));
+    await waitFor(() =>
+      expect(screen.getByRole('button', { name: /retour/i })).toBeInTheDocument(),
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: /retour/i }));
+
+    await waitFor(() =>
+      expect(screen.getByRole('button', { name: 'Open CRA for June 2026' })).toBeInTheDocument(),
+    );
+  });
+});
 
 describe('App — D1: getCra on open', () => {
   it('calls getCra when a CRA is opened via CraMonthSelector', async () => {
