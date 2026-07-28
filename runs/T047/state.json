@@ -1,7 +1,7 @@
 {
   "ticket_id": "T047",
-  "state": "INIT",
+  "state": "PLAN_APPROVED",
   "branch": "ticket/T047-redesign-cra-month-and-year-selection-with-a-moder",
   "issue_number": 92,
-  "updated_at": "2026-07-28T05:34:30Z"
+  "updated_at": "2026-07-28T06:09:45Z"
 }
