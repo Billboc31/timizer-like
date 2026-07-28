@@ -1,7 +1,18 @@
 {
   "ticket_id": "T042",
-  "state": "PLAN_APPROVED",
+  "state": "TEST_COMPLETE",
   "branch": "ticket/T042-add-frontend-component-tests-for-calendar-and-vali",
   "issue_number": 74,
-  "updated_at": "2026-07-27T20:43:40Z"
+  "updated_at": "2026-07-28T00:28:43Z",
+  "pr_number": 86,
+  "pr_synced": true,
+  "pre_conflict_state": "TEST_COMPLETE",
+  "conflict_detected_at": "2026-07-27T23:12:09Z",
+  "conflict_pr_number": 86,
+  "conflicted_files": [
+    "frontend/node_modules/.vite/vitest/da39a3ee5e6b4b0d3255bfef95601890afd80709/results.json",
+    "frontend/src/components/CalendarGrid/CalendarGrid.test.tsx",
+    "frontend/src/components/CalendarGrid/CalendarGrid.tsx",
+    "prompts/generic/planner.md"
+  ]
 }
