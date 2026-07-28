@@ -168,6 +168,19 @@ describe('CraHistoryDetail', () => {
     expect(interactiveCells.length).toBe(0);
   });
 
+  it('weekday cells in DRAFT CRA have role="button" but clicking does not mutate the CRA', async () => {
+    vi.mocked(craApi.getCra).mockResolvedValue(DRAFT_DETAIL);
+    const mockUpdateDay = vi.mocked(craApi.updateDay);
+    render(<CraHistoryDetail craId={2} onBack={vi.fn()} />);
+    await waitFor(() => expect(screen.getByText('Juillet 2026')).toBeInTheDocument());
+    const interactiveCells = screen.getAllByTestId('day-cell').filter(
+      el => el.getAttribute('role') === 'button',
+    );
+    expect(interactiveCells.length).toBeGreaterThan(0);
+    fireEvent.click(interactiveCells[0]);
+    expect(mockUpdateDay).not.toHaveBeenCalled();
+  });
+
   it('renders nothing interactive for null craId', () => {
     render(<CraHistoryDetail craId={null} onBack={vi.fn()} />);
     expect(screen.getByText(/aucun cra/i)).toBeInTheDocument();

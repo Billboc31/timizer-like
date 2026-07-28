@@ -37,7 +37,7 @@ function dtoToCraDetails(dto: CraDetailsDto): CraDetails {
     month: dto.month,
     year: dto.year,
     totalWorkedDays: dto.totalWorkedDays,
-    status: 'VALIDATED',
+    status: dto.status,
     days: dto.days.map(d => ({ day: d.day, worked: d.worked, note: d.note ?? '' })),
     providerFirstName: dto.providerFirstName,
     providerLastName: dto.providerLastName,
@@ -196,6 +196,7 @@ export function CraHistoryDetail({ craId, onBack }: Props) {
             cra={dtoToCraDetails(cra)}
             loading={false}
             error={null}
+            onDayClick={() => undefined}
           />
         </>
       )}
