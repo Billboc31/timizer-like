@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { listCras, createCra } from '../../api/craClient';
 import { getErrorMessage } from '../../api/errorMessages';
 import type { CraSummaryDto } from '../../types/cra';
+import { SectionHeading } from '../SectionHeading/SectionHeading';
 import './CraMonthSelector.css';
 
 const MONTH_NAMES = [
@@ -91,7 +92,7 @@ export function CraMonthSelector({ onOpen }: Props) {
 
   return (
     <div className="cra-month-selector">
-      <h2>{periodLabel}</h2>
+      <SectionHeading title={periodLabel} />
       <div className="cra-month-selector__controls">
         <div className="cra-month-selector__field">
           <label htmlFor="month-select">Month</label>

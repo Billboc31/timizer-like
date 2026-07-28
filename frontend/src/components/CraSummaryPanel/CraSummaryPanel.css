@@ -9,13 +9,6 @@
   margin-bottom: 16px;
 }
 
-.cra-summary-panel__title {
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--color-neutral-700);
-  margin: 0 0 4px;
-}
-
 .cra-summary-panel__period {
   font-size: 0.875rem;
   color: var(--color-text-muted);

@@ -64,11 +64,6 @@
   width: 100%;
 }
 
-.app-shell__page-title {
-  font-size: 1.5rem;
-  margin: 0 0 var(--space-4);
-}
-
 @media (max-width: 768px) {
   .app-shell__header {
     padding: var(--space-2) var(--space-3);
