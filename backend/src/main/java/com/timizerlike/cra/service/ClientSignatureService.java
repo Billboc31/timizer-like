@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.timizer.backend.cra.ConsentNotGivenException;
+import com.timizer.backend.cra.InvalidSignatureImageException;
 import com.timizer.backend.cra.CraClientSignatureRecord;
 import com.timizer.backend.cra.CraClientSignatureRecordRepository;
 import com.timizer.backend.cra.MonthlyCraReport;
@@ -43,7 +44,7 @@ public class ClientSignatureService {
         }
         if (signatureImageBase64 == null || signatureImageBase64.isBlank()
                 || !signatureImageBase64.startsWith("data:image/")) {
-            throw new IllegalArgumentException("Invalid signature image");
+            throw new InvalidSignatureImageException();
         }
 
         ConsumedToken result = tokenService.validateAndConsume(rawToken);

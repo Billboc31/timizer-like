@@ -15,6 +15,7 @@ import com.timizer.backend.cra.CraNotValidatedException;
 import com.timizer.backend.cra.CraValidatedException;
 import com.timizer.backend.cra.DuplicateCraTransitionException;
 import com.timizer.backend.cra.InvalidCraTransitionException;
+import com.timizer.backend.cra.InvalidSignatureImageException;
 import com.timizer.backend.cra.InvalidWorkValueException;
 import com.timizer.backend.cra.TokenAlreadyConsumedException;
 import com.timizer.backend.cra.TokenNotFoundException;
@@ -86,5 +87,11 @@ public class CraApiExceptionHandler {
     public ResponseEntity<Map<String, String>> handleConsentNotGiven() {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(Map.of("error", "consent_not_given"));
+    }
+
+    @ExceptionHandler(InvalidSignatureImageException.class)
+    public ResponseEntity<Map<String, String>> handleInvalidSignatureImage() {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(Map.of("error", "invalid_signature_image"));
     }
 }

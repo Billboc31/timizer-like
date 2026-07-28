@@ -1,44 +1,19 @@
-All tests pass: **207 backend** and **251 frontend**. Here's a summary of what was implemented:
+All 208 backend tests pass (207 + 1 new). Here's a summary of what was changed:
 
 ---
 
-## T054 — Implementation Summary
+**BLOQUANT 1 — False positive:** The project uses Hibernate `ddl-auto: update`, not Flyway. No SQL migration files are needed — Hibernate manages the schema from JPA entity annotations automatically.
 
-### Prerequisite
-Merged T053 branch (secure public CRA link) to bring in `CraSignatureToken`, `CraSignatureTokenService`, `PublicCraViewController`, `CraSignaturePage`, and related types.
+**BLOQUANT 2 — Fixed:** `IllegalArgumentException` for invalid signature image format now maps correctly to 400 Bad Request.
 
-### Backend (new + modified files)
+### Files changed
 
-**New exceptions:**
-- `TokenAlreadyConsumedException` → 410 Gone
-- `ConsentNotGivenException` → 400 Bad Request
+| File | Change |
+|------|--------|
+| `com/timizer/backend/cra/InvalidSignatureImageException.java` | **New** — dedicated exception for invalid signature image format |
+| `com/timizerlike/cra/service/ClientSignatureService.java` | Throws `InvalidSignatureImageException` instead of `IllegalArgumentException` |
+| `com/timizerlike/backend/cra/web/CraApiExceptionHandler.java` | Added `handleInvalidSignatureImage()` → 400 with `"error": "invalid_signature_image"` |
+| `ClientSignatureServiceTest.java` | Updated 2 test names + expected exception type to `InvalidSignatureImageException` |
+| `PublicCraSigningControllerTest.java` | Added `returns400WhenSignatureImageHasInvalidFormat()` test |
 
-**Modified entities:**
-- `CraSignatureToken` — added `consumedAt` field with `isConsumed()`/`consume()` methods
-
-**New entity:**
-- `CraClientSignatureRecord` — persists signerName, signerRole, consentApproved, signatureImageBase64 (LOB), craContentSnapshot (JSON LOB), signedAt, craId, tokenId
-
-**New repository:** `CraClientSignatureRecordRepository`
-
-**New service:** `ClientSignatureService.sign()` — validates consent, signature format, calls `tokenService.validateAndConsume()`, serializes CRA snapshot, persists record, transitions CRA to `VALIDATED`
-
-**New controller:** `PublicCraSigningController` — `POST /public/cra-link/{token}/sign`
-
-**Updated:** `CraApiExceptionHandler`, `CraSignatureTokenService` (added `validateAndConsume` returning `ConsumedToken` record), `CraApiExceptionHandler` with new exception handlers, `CraDetailsMapper` (fixed VALIDATED → VALIDATED mapping)
-
-### Frontend (new + modified files)
-
-- `SignatureCanvas` — added `isEmpty()` via `hasDrawn` ref tracking
-- `ClientSignatureForm` — name input, role input, consent checkbox, `SignatureCanvas`, clear button; submit disabled until all three conditions met
-- `SigningSuccessScreen` — shows signer name + formatted date on success
-- `CraSignaturePage` — mounts `ClientSignatureForm` below read-only CRA view; replaces with `SigningSuccessScreen` on success
-- `craPublicClient.ts` — added `submitClientSignature()`
-- `apiError.ts` / `httpClient.ts` — added `token_already_consumed`, `cra_not_signed`, `consent_not_given` codes
-
-### Tests
-- `ClientSignatureServiceTest` (6 unit tests)
-- `PublicCraSigningControllerTest` (6 WebMvc tests)
-- `SignatureCanvas.test.tsx` (3 new isEmpty tests)
-- `ClientSignatureForm.test.tsx` (11 component tests)
-- `client-signing.spec.ts` (4 E2E Playwright scenarios)
+Total: **208 backend tests passing**, no regressions.

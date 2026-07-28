@@ -6,6 +6,7 @@
 /Users/pierrebocquet/runtime/timizer-like/worktrees/T054/backend/src/main/java/com/timizerlike/backend/cra/web/SignProviderRequestDto.java
 /Users/pierrebocquet/runtime/timizer-like/worktrees/T054/backend/src/main/java/com/timizer/backend/cra/CraNotSignedByProviderException.java
 /Users/pierrebocquet/runtime/timizer-like/worktrees/T054/backend/src/main/java/com/timizer/backend/cra/CraDayEntryRepository.java
+/Users/pierrebocquet/runtime/timizer-like/worktrees/T054/backend/src/main/java/com/timizer/backend/cra/InvalidSignatureImageException.java
 /Users/pierrebocquet/runtime/timizer-like/worktrees/T054/backend/src/main/java/com/timizerlike/cra/model/CraMonthlyReport.java
 /Users/pierrebocquet/runtime/timizer-like/worktrees/T054/backend/src/main/java/com/timizerlike/cra/service/CraPdfDownloadService.java
 /Users/pierrebocquet/runtime/timizer-like/worktrees/T054/backend/src/main/java/com/timizer/backend/cra/CraDayNotFoundException.java

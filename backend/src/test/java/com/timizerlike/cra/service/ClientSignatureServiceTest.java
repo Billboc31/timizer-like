@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.timizer.backend.cra.ConsentNotGivenException;
+import com.timizer.backend.cra.InvalidSignatureImageException;
 import com.timizer.backend.cra.CraClientSignatureRecord;
 import com.timizer.backend.cra.CraClientSignatureRecordRepository;
 import com.timizer.backend.cra.CraSignatureToken;
@@ -68,19 +69,19 @@ class ClientSignatureServiceTest {
     }
 
     @Test
-    void throwsIllegalArgumentWhenSignatureImageIsBlank() {
+    void throwsInvalidSignatureImageWhenSignatureImageIsBlank() {
         assertThatThrownBy(() ->
                 service.sign(VALID_TOKEN, SIGNER_NAME, null, true, ""))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(InvalidSignatureImageException.class);
 
         verify(tokenService, never()).validateAndConsume(any());
     }
 
     @Test
-    void throwsIllegalArgumentWhenSignatureImageHasWrongPrefix() {
+    void throwsInvalidSignatureImageWhenSignatureImageHasWrongPrefix() {
         assertThatThrownBy(() ->
                 service.sign(VALID_TOKEN, SIGNER_NAME, null, true, "base64,abc"))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(InvalidSignatureImageException.class);
 
         verify(tokenService, never()).validateAndConsume(any());
     }

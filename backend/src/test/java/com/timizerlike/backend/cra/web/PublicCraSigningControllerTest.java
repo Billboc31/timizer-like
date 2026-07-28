@@ -18,6 +18,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.timizer.backend.cra.ConsentNotGivenException;
 import com.timizer.backend.cra.CraNotSignedByProviderException;
+import com.timizer.backend.cra.InvalidSignatureImageException;
 import com.timizer.backend.cra.TokenAlreadyConsumedException;
 import com.timizer.backend.cra.TokenNotFoundException;
 import com.timizerlike.cra.service.ClientSignatureService;
@@ -106,6 +107,24 @@ class PublicCraSigningControllerTest {
                                 """))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.error").value("consent_not_given"));
+    }
+
+    @Test
+    void returns400WhenSignatureImageHasInvalidFormat() throws Exception {
+        doThrow(new InvalidSignatureImageException())
+                .when(clientSignatureService).sign(any(), any(), any(), eq(true), any());
+
+        mockMvc.perform(post("/public/cra-link/{token}/sign", TOKEN)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "signerName": "Bob",
+                                  "consentApproved": true,
+                                  "signatureImageBase64": "not-a-data-uri"
+                                }
+                                """))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error").value("invalid_signature_image"));
     }
 
     @Test
