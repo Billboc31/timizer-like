@@ -66,8 +66,8 @@
 }
 
 .cra-history__badge--validated {
-  background-color: #d1fae5;
-  color: #065f46;
+  background-color: var(--color-success-bg);
+  color: var(--color-success-text);
 }
 
 /* Meta labels and values */

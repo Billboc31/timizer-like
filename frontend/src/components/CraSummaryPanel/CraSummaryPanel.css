@@ -1,7 +1,7 @@
 .cra-summary-panel {
-  background: #fff;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
   padding: 20px;
 }
 
@@ -12,13 +12,13 @@
 .cra-summary-panel__title {
   font-size: 1rem;
   font-weight: 600;
-  color: #374151;
+  color: var(--color-neutral-700);
   margin: 0 0 4px;
 }
 
 .cra-summary-panel__period {
   font-size: 0.875rem;
-  color: #6b7280;
+  color: var(--color-text-muted);
   margin: 0;
 }
 
@@ -27,21 +27,21 @@
   flex-direction: column;
   align-items: center;
   padding: 16px 0;
-  border-top: 1px solid #f3f4f6;
-  border-bottom: 1px solid #f3f4f6;
+  border-top: 1px solid var(--color-bg);
+  border-bottom: 1px solid var(--color-bg);
   margin-bottom: 16px;
 }
 
 .cra-summary-panel__hero-value {
   font-size: 2.5rem;
   font-weight: 700;
-  color: #111827;
+  color: var(--color-text);
   line-height: 1;
 }
 
 .cra-summary-panel__hero-label {
   font-size: 0.75rem;
-  color: #6b7280;
+  color: var(--color-text-muted);
   text-transform: uppercase;
   letter-spacing: 0.05em;
   margin: 4px 0 0;
@@ -62,13 +62,13 @@
 }
 
 .cra-summary-panel__badge--draft {
-  background-color: #fef3c7;
-  color: #92400e;
+  background-color: var(--color-warning-light);
+  color: var(--color-warning-text);
 }
 
 .cra-summary-panel__badge--validated {
-  background-color: #d1fae5;
-  color: #065f46;
+  background-color: var(--color-success-bg);
+  color: var(--color-success-text);
 }
 
 .cra-summary-panel__meta {
@@ -80,7 +80,7 @@
 
 .cra-summary-panel__meta-item dt {
   font-size: 0.75rem;
-  color: #6b7280;
+  color: var(--color-text-subtle);
   text-transform: uppercase;
   letter-spacing: 0.04em;
 }
@@ -88,22 +88,22 @@
 .cra-summary-panel__meta-item dd {
   margin: 0;
   font-size: 0.875rem;
-  color: #111827;
+  color: var(--color-text);
   font-weight: 500;
 }
 
 .cra-summary-panel__loading {
   padding: 20px;
-  color: #6b7280;
+  color: var(--color-text-muted);
   font-style: italic;
 }
 
 .cra-summary-panel__error {
   padding: 12px 16px;
-  background-color: #fef2f2;
-  border: 1px solid #fecaca;
+  background-color: var(--color-error-light);
+  border: 1px solid var(--color-error-border);
   border-radius: 6px;
-  color: #dc2626;
+  color: var(--color-error);
   font-size: 0.875rem;
 }
 
