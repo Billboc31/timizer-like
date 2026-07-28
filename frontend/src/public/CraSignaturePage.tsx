@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { getPublicCra } from '../api/craPublicClient';
 import type { CraPublicView } from '../types/craPublicView';
+import { ClientSignatureForm } from '../components/ClientSignatureForm/ClientSignatureForm';
+import { SigningSuccessScreen } from '../components/SigningSuccessScreen/SigningSuccessScreen';
 
 interface CraSignaturePageProps {
   token: string;
@@ -11,10 +13,16 @@ const MONTH_NAMES = [
   'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre',
 ];
 
+interface SignedState {
+  signerName: string;
+  signedAt: Date;
+}
+
 export function CraSignaturePage({ token }: CraSignaturePageProps) {
   const [cra, setCra] = useState<CraPublicView | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [signed, setSigned] = useState<SignedState | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -96,6 +104,17 @@ export function CraSignaturePage({ token }: CraSignaturePageProps) {
             ))}
           </tbody>
         </table>
+      </section>
+
+      <section>
+        {signed ? (
+          <SigningSuccessScreen signerName={signed.signerName} signedAt={signed.signedAt} />
+        ) : (
+          <ClientSignatureForm
+            token={token}
+            onSuccess={(signerName, signedAt) => setSigned({ signerName, signedAt })}
+          />
+        )}
       </section>
     </main>
   );

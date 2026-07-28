@@ -13,6 +13,9 @@ function toApiErrorCode(raw: unknown): ApiErrorCode {
     'signature_too_large',
     'signature_invalid_format',
     'token_invalid',
+    'token_already_consumed',
+    'cra_not_signed',
+    'consent_not_given',
   ];
   if (typeof raw === 'string' && (known as string[]).includes(raw)) {
     return raw as ApiErrorCode;

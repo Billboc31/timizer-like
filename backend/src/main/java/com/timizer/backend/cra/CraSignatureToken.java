@@ -27,6 +27,9 @@ public class CraSignatureToken {
     @Column(name = "revoked_at")
     private Instant revokedAt;
 
+    @Column(name = "consumed_at")
+    private Instant consumedAt;
+
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;
 
@@ -65,5 +68,13 @@ public class CraSignatureToken {
 
     public boolean isRevoked() {
         return this.revokedAt != null;
+    }
+
+    public boolean isConsumed() {
+        return this.consumedAt != null;
+    }
+
+    public void consume() {
+        this.consumedAt = Instant.now();
     }
 }

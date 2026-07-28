@@ -64,7 +64,7 @@ class CraWorkflowIntegrationTest {
         assertThat(((Number) updatedCra.get("totalWorkedDays")).doubleValue()).isGreaterThan(0.0);
 
         // Step 3: Validate the CRA — expect 200 VALIDATED
-        String minPng = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAC0lEQVQI12NgAAIABQAABjE+ibYAAAAASUVORK5CYII=";
+        String minPng = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAAAAAA6fptVAAAACklEQVQI12NgAAAAAgAB4iG8MwAAAABJRU5ErkJggg==";
         Map<String, Object> validateBody = Map.of(
                 "providerSignatureDate", "2026-07-31",
                 "providerSignatureImage", minPng,

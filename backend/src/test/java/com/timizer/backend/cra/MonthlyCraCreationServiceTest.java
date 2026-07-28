@@ -161,7 +161,10 @@ class MonthlyCraCreationServiceTest {
         ProviderSettingsService providerSettingsService = mock(ProviderSettingsService.class);
         when(providerSettingsService.getSettings()).thenReturn(settings);
 
-        MonthlyCraCreationService service = new MonthlyCraCreationService(repository, DEFAULTS, providerSettingsService);
+        com.timizerlike.backend.settings.ClientSettingsService clientSettingsService = mock(com.timizerlike.backend.settings.ClientSettingsService.class);
+        when(clientSettingsService.get()).thenReturn(new com.timizerlike.backend.settings.ClientSettingsDto(
+                "Default Client", "1 rue Défaut", "Client Contact", "Manager", "client@example.com"));
+        MonthlyCraCreationService service = new MonthlyCraCreationService(repository, DEFAULTS, clientSettingsService, providerSettingsService);
 
         CraCreationResult result = service.createForMonth(2025, 6);
 

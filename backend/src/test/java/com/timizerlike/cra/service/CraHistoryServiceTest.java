@@ -67,7 +67,7 @@ class CraHistoryServiceTest {
         List<CraSummaryDto> result = service.listHistory();
 
         CraSummaryDto summary = result.get(0);
-        assertThat(summary.status()).isEqualTo(CraStatus.FULLY_SIGNED);
+        assertThat(summary.status()).isEqualTo(CraStatus.VALIDATED);
         assertThat(summary.validationDate()).isEqualTo(validationDate);
         assertThat(summary.totalWorkedDays()).isEqualTo(20.0);
     }
