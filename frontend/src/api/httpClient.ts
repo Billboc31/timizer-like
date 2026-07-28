@@ -1,6 +1,6 @@
 import { ApiError, type ApiErrorCode } from './apiError';
 
-const BASE_URL = (import.meta.env.VITE_API_BASE_URL as string | undefined) ?? '';
+const BASE_URL = import.meta.env.VITE_API_BASE_URL ?? '';
 
 function toApiErrorCode(raw: unknown): ApiErrorCode {
   const known: ApiErrorCode[] = [
