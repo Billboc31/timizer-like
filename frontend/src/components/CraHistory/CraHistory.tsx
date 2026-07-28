@@ -43,7 +43,7 @@ function isPdfAvailable(status: CraStatus): boolean {
 }
 
 interface Props {
-  onOpen: (cra: CraSummaryDto) => void;
+  onOpenDetail: (cra: CraSummaryDto) => void;
 }
 
 function LoadingSkeleton() {
@@ -66,7 +66,7 @@ function LoadingSkeleton() {
   );
 }
 
-export function CraHistory({ onOpen }: Props) {
+export function CraHistory({ onOpenDetail }: Props) {
   const [cras, setCras] = useState<CraSummaryDto[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -174,7 +174,7 @@ export function CraHistory({ onOpen }: Props) {
               <div className="cra-history__card-actions">
                 <button
                   className="cra-history__btn"
-                  onClick={() => { onOpen(cra); }}
+                  onClick={() => { onOpenDetail(cra); }}
                   disabled={isDownloading}
                   aria-label={`Open CRA for ${period}`}
                 >
