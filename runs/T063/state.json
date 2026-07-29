@@ -1,7 +1,7 @@
 {
   "ticket_id": "T063",
-  "state": "INIT",
+  "state": "PLAN_APPROVED",
   "branch": "ticket/T063-move-application-navigation-to-a-responsive-left-s",
   "issue_number": 121,
-  "updated_at": "2026-07-29T17:17:39Z"
+  "updated_at": "2026-07-29T18:01:18Z"
 }
