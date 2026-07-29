@@ -32,3 +32,8 @@
 [2026-07-29T18:33:15Z] push: pushing branch=ticket/T063-move-application-navigation-to-a-responsive-left-s
 [2026-07-29T18:33:17Z] push: done branch=ticket/T063-move-application-navigation-to-a-responsive-left-s
 [2026-07-29T18:33:18Z] auto-run: TEST_COMPLETE — running PR lifecycle
+[2026-07-29T23:57:42Z] conflict-resolver: [pass 2/3] conflicted=['frontend/src/components/AppShell/AppShell.tsx'] | staged=['frontend/src/components/AppShell/AppShell.tsx'] | unresolved=[] | continue_rc=1 | next_source=[]
+[2026-07-29T23:57:42Z] conflict-resolver: all conflicts resolved after 2 pass(es)
+[2026-07-29T23:57:42Z] conflict-resolver: running tests
+[2026-07-29T23:57:42Z] conflict-resolver: test-report written: runs/T063/conflict/test-report.md
+[2026-07-29T23:57:42Z] conflict-resolver: staging and committing resolution artifacts
