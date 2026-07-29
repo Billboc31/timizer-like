@@ -252,6 +252,56 @@ class CraPdfGeneratorTest {
     }
 
     @Test
+    void clientValidationBlockAppearsOnShortCra() throws IOException {
+        byte[] bytes = generator.generate(fullFixture());
+
+        try (PDDocument loaded = Loader.loadPDF(bytes)) {
+            String allText = extractAllPages(loaded);
+            assertThat(allText)
+                    .contains("Bon pour validation des temps")
+                    .contains("Nom du client")
+                    .contains("Date de validation")
+                    .contains("Signature");
+        }
+    }
+
+    @Test
+    void clientNameIsPreFilledInValidationBlock() throws IOException {
+        CraPdfSummary summary = new CraPdfSummary(
+                PERIOD,
+                new CraPdfParty("Alice Provider", null, null, null),
+                new CraPdfParty("Acme Corp", null, null, new CraPdfContact("Bob Buyer", null)),
+                BigDecimal.ZERO
+        );
+        CraPdfDocument document = new CraPdfDocument(summary, List.of(
+                new CraPdfDayEntry(LocalDate.of(2026, 3, 2), DayOfWeek.MONDAY, CraPdfDayType.WORKED_FULL, BigDecimal.ONE, null)
+        ), null);
+
+        byte[] bytes = generator.generate(document);
+
+        try (PDDocument loaded = Loader.loadPDF(bytes)) {
+            String allText = extractAllPages(loaded);
+            assertThat(allText).contains("Bon pour validation des temps");
+            assertThat(allText).contains("Bob Buyer");
+        }
+    }
+
+    @Test
+    void clientValidationBlockAppearsAfter31DayPeriod() throws IOException {
+        YearMonth july = YearMonth.of(2026, 7);
+        CraPdfDocument document = monthFixture(july, 15);
+
+        byte[] bytes = generator.generate(document);
+
+        try (PDDocument loaded = Loader.loadPDF(bytes)) {
+            String allText = extractAllPages(loaded);
+            assertThat(allText)
+                    .contains("Bon pour validation des temps")
+                    .contains("Date de validation");
+        }
+    }
+
+    @Test
     void handlesMissingSignatureImageGracefully() {
         CraPdfSignatures signatures = new CraPdfSignatures(
                 new CraPdfProviderSignature("Alice Provider", LocalDate.of(2026, 4, 1), new byte[]{1, 2, 3}),

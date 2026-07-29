@@ -46,6 +46,7 @@ public class CraPdfGenerator {
     private static final float PAGE2_ROW_HEIGHT = 16f;
     private static final float PAGE2_HEADER_HEIGHT = 20f;
     private static final float PAGE2_MIN_BOTTOM_Y = MARGIN + 25f;
+    private static final float VALIDATION_BLOCK_HEIGHT = 160f;
 
     private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private static final DateTimeFormatter PERIOD_FORMAT = DateTimeFormatter.ofPattern("MM/yyyy");
@@ -269,11 +270,54 @@ public class CraPdfGenerator {
             BigDecimal total = summary != null ? summary.totalWorkedDays() : BigDecimal.ZERO;
             drawColoredText(cs, bold, 9f, PAGE2_COL_VALEUR_X + 3f, y - 12f, formatFraction(total), Color.BLACK);
             drawHorizontalLine(cs, MARGIN, MARGIN + tableWidth, totalBottom, new Color(203, 213, 224));
+
+            y = totalBottom;
+            if (y - VALIDATION_BLOCK_HEIGHT < MARGIN) {
+                cs.close();
+                cs = null;
+                PDPage validationPage = new PDPage(PDRectangle.A4);
+                pdf.addPage(validationPage);
+                cs = new PDPageContentStream(pdf, validationPage);
+                y = PAGE_TOP;
+            }
+            drawClientValidationBlock(cs, y, document);
         } finally {
             if (cs != null) {
                 cs.close();
             }
         }
+    }
+
+    private void drawClientValidationBlock(PDPageContentStream cs, float y, CraPdfDocument document) throws IOException {
+        float lineRight = PDRectangle.A4.getWidth() - MARGIN;
+
+        drawHorizontalLine(cs, MARGIN, lineRight, y, Color.BLACK);
+        y -= 15f;
+
+        drawColoredText(cs, bold, 12f, MARGIN, y, "Bon pour validation des temps", Color.BLACK);
+        y -= 20f;
+
+        String clientName = "";
+        CraPdfSummary summary = document.page1();
+        if (summary != null && summary.client() != null && summary.client().contact() != null) {
+            String name = summary.client().contact().name();
+            if (name != null) clientName = name;
+        }
+        String nomLabel = "Nom du client : " + clientName;
+        drawColoredText(cs, regular, 11f, MARGIN, y, nomLabel, Color.BLACK);
+        float nomLabelWidth = regular.getStringWidth(nomLabel) / 1000f * 11f;
+        drawHorizontalLine(cs, MARGIN + nomLabelWidth + 3f, lineRight, y - 2f, Color.BLACK);
+        y -= 22f;
+
+        String dateLabel = "Date de validation :";
+        drawColoredText(cs, regular, 11f, MARGIN, y, dateLabel, Color.BLACK);
+        float dateLabelWidth = regular.getStringWidth(dateLabel) / 1000f * 11f;
+        drawHorizontalLine(cs, MARGIN + dateLabelWidth + 3f, lineRight, y - 2f, Color.BLACK);
+        y -= 22f;
+
+        drawColoredText(cs, regular, 11f, MARGIN, y, "Signature :", Color.BLACK);
+        y -= 15f;
+        drawRectangle(cs, MARGIN, y - 66f, lineRight - MARGIN, 66f);
     }
 
     private float drawTableHeader(PDPageContentStream cs, float tableWidth, float y) throws IOException {

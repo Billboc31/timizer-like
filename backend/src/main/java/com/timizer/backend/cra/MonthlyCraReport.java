@@ -104,9 +104,6 @@ public class MonthlyCraReport {
     @Column(name = "provider_signature_date")
     private LocalDate providerSignatureDate;
 
-    @Column(name = "provider_signature_image")
-    private String providerSignatureImage;
-
     @Column(name = "provider_signer_name")
     private String providerSignerName;
 
@@ -264,10 +261,6 @@ public class MonthlyCraReport {
         return providerSignatureDate;
     }
 
-    public String getProviderSignatureImage() {
-        return providerSignatureImage;
-    }
-
     public String getProviderSignerName() {
         return providerSignerName;
     }
@@ -310,10 +303,6 @@ public class MonthlyCraReport {
 
     public void setProviderSignatureDate(LocalDate providerSignatureDate) {
         this.providerSignatureDate = providerSignatureDate;
-    }
-
-    public void setProviderSignatureImage(String providerSignatureImage) {
-        this.providerSignatureImage = providerSignatureImage;
     }
 
     public void setProviderSignerName(String providerSignerName) {

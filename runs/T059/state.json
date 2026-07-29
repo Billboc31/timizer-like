@@ -1,7 +1,7 @@
 {
   "ticket_id": "T059",
-  "state": "PLAN_APPROVED",
+  "state": "IMPLEMENTATION_REVIEW_NEEDED",
   "branch": "ticket/T059-add-client-signature-section-to-cra-pdf",
   "issue_number": 117,
-  "updated_at": "2026-07-29T17:26:54Z"
+  "updated_at": "2026-07-29T17:34:35Z"
 }
