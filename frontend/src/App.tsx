@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { CraMonthSelector } from './components/CraMonthSelector/CraMonthSelector';
 import { CalendarGrid } from './components/CalendarGrid/CalendarGrid';
 import { CraSummaryPanel } from './components/CraSummaryPanel/CraSummaryPanel';
@@ -11,7 +11,8 @@ import { CraValidation } from './components/CraValidation/CraValidation';
 import { SignatureSettings } from './components/SignatureSettings/SignatureSettings';
 import { AppShell } from './components/AppShell/AppShell';
 import type { AppView } from './components/AppShell/AppShell';
-import { getCra, updateDay } from './api/craClient';
+import { NewCraDialog } from './components/NewCraDialog/NewCraDialog';
+import { getCra, updateDay, listCras, createCra } from './api/craClient';
 import { getClientSettings } from './api/settingsClient';
 import { getErrorMessage } from './api/errorMessages';
 import type { CraSummaryDto, CraDetails } from './types/cra';
@@ -51,6 +52,11 @@ export default function App() {
   const [dayUpdateError, setDayUpdateError] = useState<string | null>(null);
   const [clientSettings, setClientSettings] = useState<ClientSettingsDto | null>(null);
   const [settingsError, setSettingsError] = useState<string | null>(null);
+  const [newCraDialogOpen, setNewCraDialogOpen] = useState(false);
+  const [newCraLoading, setNewCraLoading] = useState(false);
+  const [newCraError, setNewCraError] = useState<string | null>(null);
+  const [selectedPeriod, setSelectedPeriod] = useState<{ startDate: string; endDate: string } | null>(null);
+  const newCraTriggerRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     if (view === 'settings' && clientSettings === null) {
@@ -106,10 +112,71 @@ export default function App() {
       });
   };
 
+  useEffect(() => {
+    if (cra === null) setSelectedPeriod(null);
+  }, [cra]);
+
+  const didOpenDialog = useRef(false);
+  useEffect(() => {
+    if (newCraDialogOpen) {
+      didOpenDialog.current = true;
+    } else if (didOpenDialog.current) {
+      newCraTriggerRef.current?.focus();
+    }
+  }, [newCraDialogOpen]);
+
+  const handleNewCraOpen = () => {
+    setNewCraError(null);
+    setNewCraDialogOpen(true);
+  };
+
+  const handleNewCraCancel = () => {
+    setNewCraDialogOpen(false);
+    setNewCraError(null);
+  };
+
+  const handleNewCraConfirm = async (startDate: string, endDate: string) => {
+    const parsed = new Date(startDate + 'T00:00:00');
+    const year = parsed.getFullYear();
+    const month = parsed.getMonth() + 1;
+
+    setNewCraLoading(true);
+    setNewCraError(null);
+
+    try {
+      const cras = await listCras();
+      const existing = cras.find(c => c.year === year && c.month === month);
+
+      if (existing) {
+        setSelectedPeriod({ startDate, endDate });
+        setNewCraDialogOpen(false);
+        setNewCraLoading(false);
+        handleOpen(existing);
+        setView('selector');
+        return;
+      }
+
+      const created = await createCra(year, month);
+      setSelectedPeriod({ startDate, endDate });
+      setNewCraDialogOpen(false);
+      setNewCraLoading(false);
+      handleOpen(created);
+      setView('selector');
+    } catch (err) {
+      setNewCraError(getErrorMessage(err));
+      setNewCraLoading(false);
+    }
+  };
+
   const shellView: AppView = view === 'history-detail' ? 'history' : view;
 
   return (
-    <AppShell activeView={shellView} onNavigate={setView}>
+    <AppShell
+      activeView={shellView}
+      onNavigate={setView}
+      onNewCra={handleNewCraOpen}
+      newCraTriggerRef={newCraTriggerRef}
+    >
       {view === 'settings' ? (
         <>
           <ProviderSettingsForm />
@@ -148,6 +215,13 @@ export default function App() {
           <CraValidation cra={cra} onValidated={handleSignatureSuccess} onGoToSettings={() => setView('settings')} />
         </>
       )}
+      <NewCraDialog
+        open={newCraDialogOpen}
+        onConfirm={handleNewCraConfirm}
+        onCancel={handleNewCraCancel}
+        loading={newCraLoading}
+        error={newCraError}
+      />
     </AppShell>
   );
 }

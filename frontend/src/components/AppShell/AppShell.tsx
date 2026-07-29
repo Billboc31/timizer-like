@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import type { ReactNode, RefObject } from 'react';
 import { PageHeader } from '../PageHeader/PageHeader';
 import './AppShell.css';
 
@@ -7,6 +7,8 @@ export type AppView = 'selector' | 'history' | 'settings';
 interface AppShellProps {
   activeView: AppView;
   onNavigate: (view: AppView) => void;
+  onNewCra: () => void;
+  newCraTriggerRef?: RefObject<HTMLButtonElement | null>;
   children: ReactNode;
 }
 
@@ -16,16 +18,17 @@ const PAGE_TITLES: Record<AppView, string> = {
   settings: 'Paramètres',
 };
 
-export function AppShell({ activeView, onNavigate, children }: AppShellProps) {
+export function AppShell({ activeView, onNavigate, onNewCra, newCraTriggerRef, children }: AppShellProps) {
   return (
     <div className="app-shell">
       <header className="app-shell__header">
         <span className="app-shell__brand">Timizer Like</span>
         <nav className="app-shell__nav" aria-label="Main navigation">
           <button
+            ref={newCraTriggerRef}
             className="app-shell__nav-item"
             aria-current={activeView === 'selector' ? 'page' : undefined}
-            onClick={() => onNavigate('selector')}
+            onClick={onNewCra}
           >
             New CRA
           </button>
