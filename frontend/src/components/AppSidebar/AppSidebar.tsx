@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { AppView } from '../AppShell/AppShell';
 import './AppSidebar.css';
 
@@ -9,11 +9,27 @@ interface AppSidebarProps {
   onClose: () => void;
 }
 
+const MOBILE_MQ = '(max-width: 767px)';
+
 export function AppSidebar({ activeView, onNavigate, isOpen, onClose }: AppSidebarProps) {
   const sidebarRef = useRef<HTMLElement>(null);
+  const [isMobile, setIsMobile] = useState(
+    () => typeof window.matchMedia === 'function' && window.matchMedia(MOBILE_MQ).matches
+  );
+
+  useEffect(() => {
+    if (typeof window.matchMedia !== 'function') return;
+    const mq = window.matchMedia(MOBILE_MQ);
+    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+    mq.addEventListener('change', handler);
+    return () => mq.removeEventListener('change', handler);
+  }, []);
 
   useEffect(() => {
     if (!isOpen) return;
+
+    const first = sidebarRef.current?.querySelector<HTMLElement>('button:not(:disabled)');
+    first?.focus();
 
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
@@ -48,6 +64,9 @@ export function AppSidebar({ activeView, onNavigate, isOpen, onClose }: AppSideb
     onClose();
   };
 
+  const isHidden = isMobile && !isOpen;
+  const isDialog = isMobile && isOpen;
+
   return (
     <>
       <div
@@ -58,6 +77,10 @@ export function AppSidebar({ activeView, onNavigate, isOpen, onClose }: AppSideb
       <aside
         ref={sidebarRef}
         className={`app-sidebar${isOpen ? ' app-sidebar--open' : ''}`}
+        inert={isHidden || undefined}
+        role={isDialog ? 'dialog' : undefined}
+        aria-modal={isDialog || undefined}
+        aria-label={isDialog ? 'Navigation menu' : undefined}
       >
         <div className="app-sidebar__brand">Timizer Like</div>
         <nav aria-label="Main navigation">
