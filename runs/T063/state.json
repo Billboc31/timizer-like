@@ -1,0 +1,19 @@
+{
+  "ticket_id": "T063",
+  "state": "TEST_COMPLETE",
+  "branch": "ticket/T063-move-application-navigation-to-a-responsive-left-s",
+  "issue_number": 121,
+  "updated_at": "2026-07-29T23:57:45Z",
+  "pr_number": 125,
+  "pr_synced": true,
+  "pre_conflict_state": "TEST_COMPLETE",
+  "conflict_detected_at": "2026-07-29T18:33:25Z",
+  "conflict_pr_number": 125,
+  "conflicted_files": [
+    "frontend/node_modules/.vite/vitest/da39a3ee5e6b4b0d3255bfef95601890afd80709/results.json",
+    "frontend/src/components/AppShell/AppShell.css",
+    "frontend/src/components/AppShell/AppShell.tsx",
+    "frontend/src/components/AppSidebar/AppSidebar.css",
+    "frontend/src/components/AppSidebar/AppSidebar.tsx"
+  ]
+}

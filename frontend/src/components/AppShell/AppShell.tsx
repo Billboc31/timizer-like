@@ -1,5 +1,7 @@
+import { useEffect, useRef, useState } from 'react';
 import type { ReactNode, RefObject } from 'react';
 import { PageHeader } from '../PageHeader/PageHeader';
+import { AppSidebar } from '../AppSidebar/AppSidebar';
 import './AppShell.css';
 
 export type AppView = 'selector' | 'history' | 'settings';
@@ -18,36 +20,39 @@ const PAGE_TITLES: Record<AppView, string> = {
   settings: 'Paramètres',
 };
 
-export function AppShell({ activeView, onNavigate, onNewCra, newCraTriggerRef, children }: AppShellProps) {
+export function AppShell({ activeView, onNavigate, onNewCra, children }: AppShellProps) {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const hamburgerRef = useRef<HTMLButtonElement>(null);
+  const prevSidebarOpen = useRef(false);
+
+  useEffect(() => {
+    if (prevSidebarOpen.current && !sidebarOpen) {
+      hamburgerRef.current?.focus();
+    }
+    prevSidebarOpen.current = sidebarOpen;
+  }, [sidebarOpen]);
+
   return (
     <div className="app-shell">
-      <header className="app-shell__header">
+      <AppSidebar
+        activeView={activeView}
+        onNavigate={(view) => (view === 'selector' ? onNewCra() : onNavigate(view))}
+        isOpen={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+      />
+      <div className="app-shell__mobile-topbar">
+        <button
+          ref={hamburgerRef}
+          className="app-shell__hamburger"
+          aria-label="Open navigation menu"
+          aria-expanded={sidebarOpen}
+          aria-controls="app-sidebar"
+          onClick={() => setSidebarOpen(true)}
+        >
+          ☰
+        </button>
         <span className="app-shell__brand">Timizer Like</span>
-        <nav className="app-shell__nav" aria-label="Main navigation">
-          <button
-            ref={newCraTriggerRef}
-            className="app-shell__nav-item"
-            aria-current={activeView === 'selector' ? 'page' : undefined}
-            onClick={onNewCra}
-          >
-            New CRA
-          </button>
-          <button
-            className="app-shell__nav-item"
-            aria-current={activeView === 'history' ? 'page' : undefined}
-            onClick={() => onNavigate('history')}
-          >
-            History
-          </button>
-          <button
-            className="app-shell__nav-item"
-            aria-current={activeView === 'settings' ? 'page' : undefined}
-            onClick={() => onNavigate('settings')}
-          >
-            Paramètres
-          </button>
-        </nav>
-      </header>
+      </div>
       <main className="app-shell__main">
         <PageHeader title={PAGE_TITLES[activeView]} />
         {children}
