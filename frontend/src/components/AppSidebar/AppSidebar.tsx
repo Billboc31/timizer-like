@@ -75,6 +75,7 @@ export function AppSidebar({ activeView, onNavigate, isOpen, onClose }: AppSideb
         aria-hidden="true"
       />
       <aside
+        id="app-sidebar"
         ref={sidebarRef}
         className={`app-sidebar${isOpen ? ' app-sidebar--open' : ''}`}
         inert={isHidden || undefined}
