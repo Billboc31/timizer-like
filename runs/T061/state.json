@@ -1,7 +1,7 @@
 {
   "ticket_id": "T061",
-  "state": "IMPLEMENTATION_REVIEW_NEEDED",
+  "state": "IMPLEMENTATION_APPROVED",
   "branch": "ticket/T061-add-new-cra-period-selection-dialog",
   "issue_number": 119,
-  "updated_at": "2026-07-29T17:48:01Z"
+  "updated_at": "2026-07-29T17:53:04Z"
 }
