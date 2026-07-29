@@ -112,10 +112,6 @@ export default function App() {
       });
   };
 
-  useEffect(() => {
-    if (cra === null) setSelectedPeriod(null);
-  }, [cra]);
-
   const didOpenDialog = useRef(false);
   useEffect(() => {
     if (newCraDialogOpen) {

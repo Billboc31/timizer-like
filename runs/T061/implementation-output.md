@@ -1,21 +1,14 @@
-Implementation is complete. Here's a summary:
+All 288 tests across 32 test files pass. The `navigation not implemented` messages are JSDOM noise that pre-existed this change.
 
----
+Here's a summary of what was done:
 
-## Files created/modified
+**Fix 1 — `selectedPeriod` clearing bug (`App.tsx:115-117`)**
 
-**New:**
-- `frontend/src/components/NewCraDialog/NewCraDialog.tsx` — Native `<dialog>` component with two date inputs, inline validation (both required, end ≥ start), focus trap, ESC/cancel handling, loading/error props, and `showModal()`/`close()` driven by the `open` prop.
-- `frontend/src/components/NewCraDialog/NewCraDialog.css` — Minimal styles matching the `CraValidation` dialog pattern.
+Removed the `useEffect` that was watching `cra` and clearing `selectedPeriod` whenever `cra === null`. Since `loadCra()` sets `cra` to `null` synchronously at the start of every load, this effect would always fire and erase the period that `handleNewCraConfirm` had just set. The `selectedPeriod` now persists through the loading phase as intended.
 
-**Modified:**
-- `frontend/src/components/AppShell/AppShell.tsx` — Added `onNewCra: () => void` and `newCraTriggerRef?: RefObject<HTMLButtonElement | null>` props; "New CRA" nav button now calls `onNewCra` and holds the trigger ref for focus return.
-- `frontend/src/App.tsx` — Added `newCraDialogOpen`, `newCraLoading`, `newCraError`, `selectedPeriod` state and `newCraTriggerRef`; `handleNewCraConfirm` calls `listCras()` to detect an existing CRA for the start month (opens it if found, creates via `createCra` otherwise); focus returns to the nav button on dialog close via a `useEffect`.
+**Fix 2 — Missing tests**
 
-## Acceptance criteria verified
+Created two new test files following the project's established patterns:
 
-- "New CRA" in the nav is present on every authenticated view — it opens the dialog instead of navigating.
-- Invalid ranges (empty date or end < start) are rejected with an inline error; the dialog stays open.
-- Confirming a valid range reuses an existing CRA or creates a new one, then opens the calendar on the start month.
-- Cancelling (button or ESC) leaves the current view and data unchanged.
-- No pre-existing TypeScript errors were introduced.
+- `NewCraDialog.test.tsx` — 9 tests covering: closed/open state, empty date validation, end-before-start validation, valid submit with correct args, cancel button, ESC (native `cancel` event), `error` prop display, and `loading` disabled state.
+- `NewCraDialog.axe.test.tsx` — 1 axe accessibility test in the open state.
