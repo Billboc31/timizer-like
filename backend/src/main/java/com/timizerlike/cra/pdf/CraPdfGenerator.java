@@ -27,9 +27,11 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.TreeSet;
 
 @Component
 public class CraPdfGenerator {
@@ -69,6 +71,7 @@ public class CraPdfGenerator {
     public byte[] generate(CraPdfDocument document) {
         try (PDDocument pdf = new PDDocument();
              ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+            renderCoverPage(pdf, document);
             renderPage1(pdf, document);
             renderPage2(pdf, document);
             pdf.save(out);
@@ -76,6 +79,159 @@ public class CraPdfGenerator {
         } catch (IOException e) {
             throw new IllegalStateException("Failed to generate CRA PDF", e);
         }
+    }
+
+    private void renderCoverPage(PDDocument pdf, CraPdfDocument document) throws IOException {
+        PDPage page = new PDPage(PDRectangle.A4);
+        pdf.addPage(page);
+        try (PDPageContentStream cs = new PDPageContentStream(pdf, page)) {
+            float y = PAGE_TOP;
+
+            CraPdfSummary summary = document.page1();
+            drawText(cs, bold, 14f, MARGIN, y, "Compte-Rendu d'Activité");
+            y -= 20f;
+
+            YearMonth period = summary != null ? summary.period() : null;
+            if (period != null) {
+                drawText(cs, regular, 10f, MARGIN, y, "Période : " + period.format(PERIOD_FORMAT_LONG));
+            }
+            y -= 16f;
+
+            BigDecimal total = summary != null ? summary.totalWorkedDays() : null;
+            drawText(cs, regular, 10f, MARGIN, y, "Total jours travaillés : " + formatFraction(total));
+            y -= 24f;
+
+            List<CraPdfDayEntry> days = document.page2Days();
+            Map<LocalDate, CraPdfDayType> dayTypes = new HashMap<>();
+            if (days != null) {
+                for (CraPdfDayEntry entry : days) {
+                    if (entry.date() != null) {
+                        dayTypes.put(entry.date(), entry.type());
+                    }
+                }
+            }
+
+            TreeSet<YearMonth> months = new TreeSet<>();
+            if (days != null) {
+                for (CraPdfDayEntry entry : days) {
+                    if (entry.date() != null) {
+                        months.add(YearMonth.from(entry.date()));
+                    }
+                }
+            }
+            if (months.isEmpty() && period != null) {
+                months.add(period);
+            }
+
+            float cardWidth = 160f;
+            float cardHeight = 115f;
+            float usableWidth = PDRectangle.A4.getWidth() - 2 * MARGIN;
+            float colGap = (usableWidth - 3 * cardWidth) / 2f;
+            float rowGap = 10f;
+
+            int col = 0;
+            int row = 0;
+            for (YearMonth month : months) {
+                float cx = MARGIN + col * (cardWidth + colGap);
+                float cy = y - row * (cardHeight + rowGap);
+                drawCalendarCard(cs, month, dayTypes, cx, cy, cardWidth, cardHeight);
+                col++;
+                if (col >= 3) {
+                    col = 0;
+                    row++;
+                }
+            }
+
+            int totalRows = (months.size() + 2) / 3;
+            float legendY = y - (totalRows - 1) * (cardHeight + rowGap) - cardHeight - 12f;
+            drawCalendarLegend(cs, legendY);
+        }
+    }
+
+    private void drawCalendarCard(PDPageContentStream cs, YearMonth month, Map<LocalDate, CraPdfDayType> dayTypes,
+                                   float x, float y, float cardWidth, float cardHeight) throws IOException {
+        drawFilledRect(cs, x, y - cardHeight, cardWidth, cardHeight, Color.WHITE);
+        cs.setStrokingColor(new Color(203, 213, 224));
+        cs.addRect(x, y - cardHeight, cardWidth, cardHeight);
+        cs.stroke();
+
+        String label = month.format(PERIOD_FORMAT_LONG);
+        drawColoredText(cs, bold, 8f, x + 4f, y - 11f, label, new Color(45, 55, 72));
+
+        float cellWidth = cardWidth / 7f;
+        float cellHeight = 12f;
+
+        String[] dowHeaders = {"L", "M", "M", "J", "V", "S", "D"};
+        float dowY = y - 22f;
+        for (int c = 0; c < 7; c++) {
+            drawColoredText(cs, bold, 6f, x + c * cellWidth + cellWidth / 2f - 2f, dowY,
+                    dowHeaders[c], new Color(107, 114, 128));
+        }
+
+        LocalDate firstOfMonth = month.atDay(1);
+        LocalDate lastOfMonth = month.atEndOfMonth();
+        int dowOffset = firstOfMonth.getDayOfWeek().getValue() - 1;
+        LocalDate gridStart = firstOfMonth.minusDays(dowOffset);
+        float gridTopY = y - 32f;
+
+        for (int r = 0; r < 6; r++) {
+            for (int c = 0; c < 7; c++) {
+                LocalDate date = gridStart.plusDays((long) r * 7 + c);
+                if (r > 0 && c == 0 && date.isAfter(lastOfMonth)) {
+                    return;
+                }
+                float cellX = x + c * cellWidth;
+                float cellTopY = gridTopY - r * cellHeight;
+                boolean inMonth = !date.isBefore(firstOfMonth) && !date.isAfter(lastOfMonth);
+                if (!inMonth) {
+                    drawFilledRect(cs, cellX, cellTopY - cellHeight, cellWidth, cellHeight, new Color(247, 250, 252));
+                } else {
+                    CraPdfDayType type = dayTypes.get(date);
+                    drawFilledRect(cs, cellX, cellTopY - cellHeight, cellWidth, cellHeight, calendarCellBg(type));
+                    PDType1Font font = type == CraPdfDayType.HOLIDAY ? italic : regular;
+                    drawColoredText(cs, font, 6f, cellX + 2f, cellTopY - cellHeight + 3f,
+                            String.valueOf(date.getDayOfMonth()), calendarCellFg(type));
+                }
+            }
+        }
+    }
+
+    private Color calendarCellBg(CraPdfDayType type) {
+        if (type == null) return Color.WHITE;
+        return switch (type) {
+            case WORKED_FULL -> new Color(45, 55, 72);
+            case WORKED_HALF -> new Color(74, 144, 217);
+            case WEEKEND -> new Color(226, 232, 240);
+            case HOLIDAY -> new Color(237, 242, 247);
+            case NOT_WORKED -> Color.WHITE;
+        };
+    }
+
+    private Color calendarCellFg(CraPdfDayType type) {
+        if (type == null) return new Color(156, 163, 175);
+        return switch (type) {
+            case WORKED_FULL, WORKED_HALF -> Color.WHITE;
+            case WEEKEND, HOLIDAY, NOT_WORKED -> new Color(107, 114, 128);
+        };
+    }
+
+    private void drawCalendarLegend(PDPageContentStream cs, float y) throws IOException {
+        float swatchSize = 8f;
+        float x = MARGIN;
+
+        drawFilledRect(cs, x, y - swatchSize, swatchSize, swatchSize, new Color(45, 55, 72));
+        drawColoredText(cs, regular, 7f, x + swatchSize + 3f, y - 7f, "Jour travaillé", new Color(45, 55, 72));
+        x += 80f;
+
+        drawFilledRect(cs, x, y - swatchSize, swatchSize, swatchSize, new Color(74, 144, 217));
+        drawColoredText(cs, regular, 7f, x + swatchSize + 3f, y - 7f, "Demi-journée", new Color(45, 55, 72));
+        x += 80f;
+
+        drawFilledRect(cs, x, y - swatchSize, swatchSize, swatchSize, new Color(247, 250, 252));
+        cs.setStrokingColor(new Color(203, 213, 224));
+        cs.addRect(x, y - swatchSize, swatchSize, swatchSize);
+        cs.stroke();
+        drawColoredText(cs, regular, 7f, x + swatchSize + 3f, y - 7f, "Non travaillé", new Color(45, 55, 72));
     }
 
     private void renderPage1(PDDocument pdf, CraPdfDocument document) throws IOException {

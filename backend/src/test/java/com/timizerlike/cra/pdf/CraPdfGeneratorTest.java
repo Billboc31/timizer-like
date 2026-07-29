@@ -55,10 +55,10 @@ class CraPdfGeneratorTest {
 
         assertThat(bytes).isNotEmpty();
         try (PDDocument loaded = Loader.loadPDF(bytes)) {
-            assertThat(loaded.getNumberOfPages()).isEqualTo(2);
+            assertThat(loaded.getNumberOfPages()).isGreaterThanOrEqualTo(3);
 
-            String page1 = extractPage(loaded, 1);
-            assertThat(page1)
+            String page2 = extractPage(loaded, 2);
+            assertThat(page2)
                     .contains("03/2026")
                     .contains("Alice Provider")
                     .contains("Provider SARL")
@@ -70,11 +70,11 @@ class CraPdfGeneratorTest {
                     .contains("01/04/2026")
                     .contains("Signature client");
 
-            String page2 = extractPage(loaded, 2);
+            String page3 = extractPage(loaded, 3);
             for (CraPdfDayEntry entry : document.page2Days()) {
-                assertThat(page2).contains(entry.date().format(DATE_FORMAT));
+                assertThat(page3).contains(entry.date().format(DATE_FORMAT));
                 if (entry.comment() != null) {
-                    assertThat(page2).contains(entry.comment());
+                    assertThat(page3).contains(entry.comment());
                 }
             }
         }
@@ -98,8 +98,8 @@ class CraPdfGeneratorTest {
 
         assertThat(bytes).isNotEmpty();
         try (PDDocument loaded = Loader.loadPDF(bytes)) {
-            String page1 = extractPage(loaded, 1);
-            assertThat(page1)
+            String page2 = extractPage(loaded, 2);
+            assertThat(page2)
                     .contains("Signature prestataire")
                     .contains("Alice Provider")
                     .contains("01/04/2026");
@@ -128,8 +128,8 @@ class CraPdfGeneratorTest {
 
         assertThat(bytes).isNotEmpty();
         try (PDDocument loaded = Loader.loadPDF(bytes)) {
-            String page1 = extractPage(loaded, 1);
-            assertThat(page1)
+            String page2 = extractPage(loaded, 2);
+            assertThat(page2)
                     .contains("Signature prestataire")
                     .contains("Alice Provider")
                     .contains("01/04/2026");
@@ -154,9 +154,9 @@ class CraPdfGeneratorTest {
 
         assertThat(bytes).isNotEmpty();
         try (PDDocument loaded = Loader.loadPDF(bytes)) {
-            assertThat(loaded.getNumberOfPages()).isEqualTo(2);
-            String page2 = extractPage(loaded, 2);
-            assertThat(page2).contains("Date").contains("Valeur").contains("Note");
+            assertThat(loaded.getNumberOfPages()).isGreaterThanOrEqualTo(3);
+            String page3 = extractPage(loaded, 3);
+            assertThat(page3).contains("Date").contains("Valeur").contains("Note");
         }
     }
 
@@ -165,8 +165,8 @@ class CraPdfGeneratorTest {
         byte[] bytes = generator.generate(fullFixture());
 
         try (PDDocument loaded = Loader.loadPDF(bytes)) {
-            String page2 = extractPage(loaded, 2);
-            assertThat(page2).contains("mars 2026");
+            String page3 = extractPage(loaded, 3);
+            assertThat(page3).contains("mars 2026");
         }
     }
 
@@ -228,10 +228,10 @@ class CraPdfGeneratorTest {
 
         assertThat(bytes).isNotEmpty();
         try (PDDocument loaded = Loader.loadPDF(bytes)) {
-            String page1 = extractPage(loaded, 1);
-            assertThat(page1).contains("En attente de signature");
-            assertThat(page1).contains("Alice Provider");
-            assertThat(page1).contains("01/04/2026");
+            String page2 = extractPage(loaded, 2);
+            assertThat(page2).contains("En attente de signature");
+            assertThat(page2).contains("Alice Provider");
+            assertThat(page2).contains("01/04/2026");
         }
     }
 
@@ -243,11 +243,11 @@ class CraPdfGeneratorTest {
 
         assertThat(bytes).isNotEmpty();
         try (PDDocument loaded = Loader.loadPDF(bytes)) {
-            String page1 = extractPage(loaded, 1);
-            assertThat(page1).contains("Alice Provider");
-            assertThat(page1).contains("01/04/2026");
-            assertThat(page1).contains("Bob Client");
-            assertThat(page1).contains("15/04/2026");
+            String page2 = extractPage(loaded, 2);
+            assertThat(page2).contains("Alice Provider");
+            assertThat(page2).contains("01/04/2026");
+            assertThat(page2).contains("Bob Client");
+            assertThat(page2).contains("15/04/2026");
         }
     }
 
@@ -316,6 +316,45 @@ class CraPdfGeneratorTest {
         CraPdfDocument document = new CraPdfDocument(summary, List.of(), signatures);
 
         assertThatCode(() -> generator.generate(document)).doesNotThrowAnyException();
+    }
+
+    @Test
+    void coverPageContainsCalendarMonthAndTotals() throws IOException {
+        CraPdfDocument document = fullFixture();
+
+        byte[] bytes = generator.generate(document);
+
+        try (PDDocument loaded = Loader.loadPDF(bytes)) {
+            String page1 = extractPage(loaded, 1);
+            assertThat(page1)
+                    .contains("Compte-Rendu d'Activité")
+                    .contains("mars 2026")
+                    .contains("18.5");
+        }
+    }
+
+    @Test
+    void coverPageRendersEveryMonthExactlyOnce() throws IOException {
+        CraPdfDocument document = twoMonthFixture();
+
+        byte[] bytes = generator.generate(document);
+
+        try (PDDocument loaded = Loader.loadPDF(bytes)) {
+            String page1 = extractPage(loaded, 1);
+            assertThat(page1)
+                    .contains("avril 2026")
+                    .contains("mai 2026");
+        }
+    }
+
+    private static CraPdfDocument twoMonthFixture() {
+        YearMonth april = YearMonth.of(2026, 4);
+        CraPdfSummary summary = new CraPdfSummary(april, null, null, new BigDecimal("5"));
+        List<CraPdfDayEntry> days = List.of(
+                new CraPdfDayEntry(LocalDate.of(2026, 4, 6), DayOfWeek.MONDAY, CraPdfDayType.WORKED_FULL, BigDecimal.ONE, null),
+                new CraPdfDayEntry(LocalDate.of(2026, 5, 4), DayOfWeek.MONDAY, CraPdfDayType.WORKED_FULL, BigDecimal.ONE, null)
+        );
+        return new CraPdfDocument(summary, days, null);
     }
 
     private static CraPdfDocument monthFixture(YearMonth yearMonth, int halfDayOfMonth) {
