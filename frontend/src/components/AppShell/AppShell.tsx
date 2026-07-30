@@ -4,7 +4,7 @@ import { PageHeader } from '../PageHeader/PageHeader';
 import { AppSidebar } from '../AppSidebar/AppSidebar';
 import './AppShell.css';
 
-export type AppView = 'selector' | 'history' | 'settings';
+export type AppView = 'overview' | 'selector' | 'history' | 'settings';
 
 interface AppShellProps {
   activeView: AppView;
@@ -15,6 +15,7 @@ interface AppShellProps {
 }
 
 const PAGE_TITLES: Record<AppView, string> = {
+  overview: 'Mes CRA',
   selector: 'New CRA',
   history: 'CRA History',
   settings: 'Paramètres',

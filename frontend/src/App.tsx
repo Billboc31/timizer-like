@@ -12,6 +12,7 @@ import { SignatureSettings } from './components/SignatureSettings/SignatureSetti
 import { AppShell } from './components/AppShell/AppShell';
 import type { AppView } from './components/AppShell/AppShell';
 import { NewCraDialog } from './components/NewCraDialog/NewCraDialog';
+import { CraOverview } from './components/CraOverview/CraOverview';
 import { getCra, updateDay, listCras, createCra } from './api/craClient';
 import { getClientSettings } from './api/settingsClient';
 import { getErrorMessage } from './api/errorMessages';
@@ -42,7 +43,7 @@ function dtoToDetails(dto: CraDetailsDto): CraDetails {
 type View = AppView | 'history-detail';
 
 export default function App() {
-  const [view, setView] = useState<View>('selector');
+  const [view, setView] = useState<View>('overview');
   const [historyDetailId, setHistoryDetailId] = useState<number | null>(null);
   const [cra, setCra] = useState<CraDetails | null>(null);
   const [craLoading, setCraLoading] = useState(false);
@@ -187,6 +188,11 @@ export default function App() {
         <CraHistoryDetail
           craId={historyDetailId}
           onBack={() => setView('history')}
+        />
+      ) : view === 'overview' ? (
+        <CraOverview
+          onOpen={(cra) => { handleOpen(cra); setView('selector'); }}
+          onNewCra={handleNewCraOpen}
         />
       ) : (
         <>
