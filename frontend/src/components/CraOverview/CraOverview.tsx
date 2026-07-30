@@ -5,8 +5,8 @@ import type { CraStatus, CraSummaryDto } from '../../api/types';
 import './CraOverview.css';
 
 const MONTH_NAMES = [
-  'January', 'February', 'March', 'April', 'May', 'June',
-  'July', 'August', 'September', 'October', 'November', 'December',
+  'Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin',
+  'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre',
 ];
 
 function periodLabel(cra: CraSummaryDto): string {
@@ -97,7 +97,7 @@ export function CraOverview({ onOpen, onNewCra }: Props) {
           <span className="cra-overview__error-icon" aria-hidden="true">⚠</span>
           <span>{error}</span>
         </div>
-        <button onClick={() => { loadCras(); }}>Réessayer</button>
+        <button className="cra-overview__btn" onClick={() => { loadCras(); }}>Réessayer</button>
       </div>
     );
   }
