@@ -1,0 +1,231 @@
+.cra-overview {
+  margin-top: var(--space-4);
+}
+
+.cra-overview__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+/* Card */
+.cra-overview__card {
+  background: var(--color-surface);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+
+.cra-overview__card-inner {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+  width: 100%;
+  padding: var(--space-4) var(--space-5);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+  transition: background 0.1s;
+}
+
+.cra-overview__card-inner:hover {
+  background: var(--color-bg);
+}
+
+.cra-overview__card-inner:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: -2px;
+}
+
+.cra-overview__card-period {
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-base);
+  flex: 1 1 120px;
+}
+
+.cra-overview__card-meta {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: var(--space-4);
+  flex: 2 1 200px;
+  flex-wrap: wrap;
+}
+
+/* Status badge */
+.cra-overview__badge {
+  display: inline-block;
+  padding: var(--space-1) 0.625rem;
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.cra-overview__badge--draft {
+  background-color: #f3f4f6;
+  color: #6b7280;
+}
+
+.cra-overview__badge--ready-for-provider {
+  background-color: #dbeafe;
+  color: #1e40af;
+}
+
+.cra-overview__badge--signed-by-provider {
+  background-color: #fef3c7;
+  color: #92400e;
+}
+
+.cra-overview__badge--awaiting-client {
+  background-color: #fef9c3;
+  color: #854d0e;
+}
+
+.cra-overview__badge--signed {
+  background-color: #d1fae5;
+  color: #065f46;
+}
+
+/* Days meta */
+.cra-overview__days {
+  font-size: var(--font-size-sm);
+  color: var(--color-neutral-700);
+  white-space: nowrap;
+}
+
+.cra-overview__label {
+  color: var(--color-text-subtle);
+}
+
+/* Error banner */
+.cra-overview__error {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-lg);
+  background: var(--color-error-light);
+  color: var(--color-error);
+  font-weight: var(--font-weight-medium);
+  margin-bottom: var(--space-4);
+}
+
+.cra-overview__error-icon {
+  font-size: 1.1em;
+  flex-shrink: 0;
+}
+
+/* Empty state */
+.cra-overview__empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--space-12) var(--space-4);
+  text-align: center;
+  color: var(--color-text-muted);
+}
+
+.cra-overview__empty-icon {
+  font-size: 2.5rem;
+  margin-bottom: var(--space-3);
+  opacity: 0.5;
+}
+
+.cra-overview__empty p {
+  margin: var(--space-1) 0;
+}
+
+.cra-overview__empty-hint {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-subtle);
+  margin-bottom: var(--space-4);
+}
+
+/* Buttons */
+.cra-overview__btn {
+  min-height: 44px;
+  padding: var(--space-2) var(--space-4);
+  border: var(--border-width) solid var(--color-neutral-300);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  color: var(--color-neutral-700);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.cra-overview__btn--primary {
+  background: var(--color-primary);
+  color: var(--color-white);
+  border-color: var(--color-primary);
+}
+
+.cra-overview__btn--primary:hover {
+  background: var(--color-primary-hover);
+}
+
+.cra-overview__btn:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Loading skeleton */
+.cra-overview__card--skeleton {
+  pointer-events: none;
+}
+
+.cra-overview__skeleton-block {
+  border-radius: var(--radius-md);
+  background: linear-gradient(90deg, var(--color-neutral-200) 25%, var(--color-bg) 50%, var(--color-neutral-200) 75%);
+  background-size: 200% 100%;
+  animation: cra-overview-shimmer 1.4s infinite;
+}
+
+.cra-overview__skeleton-block--period {
+  height: var(--font-size-lg);
+  width: 120px;
+  flex: 1 1 120px;
+}
+
+.cra-overview__skeleton-block--badge {
+  height: var(--font-size-lg);
+  width: 72px;
+  border-radius: var(--radius-full);
+}
+
+.cra-overview__skeleton-block--days {
+  height: var(--font-size-lg);
+  width: 80px;
+}
+
+@keyframes cra-overview-shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Mobile responsive */
+@media (max-width: 640px) {
+  .cra-overview__card-inner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .cra-overview__card-meta {
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+}

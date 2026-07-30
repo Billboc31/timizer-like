@@ -15,6 +15,7 @@ const SUMMARY: CraSummaryDto = {
   totalWorkedDays: 20,
   status: 'DRAFT',
   validationDate: null,
+  clientSignatureDate: null,
 };
 
 const DETAILS: CraDetailsDto = {
@@ -44,6 +45,7 @@ const HISTORY_SUMMARY: CraSummaryDto = {
   totalWorkedDays: 21,
   status: 'VALIDATED',
   validationDate: '2026-07-01',
+  clientSignatureDate: null,
 };
 
 const HISTORY_DETAILS: CraDetailsDto = {
@@ -110,14 +112,16 @@ describe('App — D2: history-detail navigation', () => {
 });
 
 describe('App — D1: getCra on open', () => {
-  it('calls getCra when a CRA is opened via CraMonthSelector', async () => {
+  it('calls getCra when a CRA is opened via CraOverview', async () => {
     vi.mocked(craClient.listCras).mockResolvedValue([SUMMARY]);
     vi.mocked(craClient.getCra).mockResolvedValue(DETAILS);
 
     render(<App />);
 
-    await waitFor(() => expect(screen.getByText('Open CRA')).toBeInTheDocument());
-    fireEvent.click(screen.getByText('Open CRA'));
+    await waitFor(() =>
+      expect(screen.getByRole('button', { name: 'Ouvrir le CRA de Juillet 2026' })).toBeInTheDocument(),
+    );
+    fireEvent.click(screen.getByRole('button', { name: 'Ouvrir le CRA de Juillet 2026' }));
 
     await waitFor(() => expect(craClient.getCra).toHaveBeenCalledWith(1));
   });
@@ -128,8 +132,10 @@ describe('App — D1: getCra on open', () => {
 
     render(<App />);
 
-    await waitFor(() => expect(screen.getByText('Open CRA')).toBeInTheDocument());
-    fireEvent.click(screen.getByText('Open CRA'));
+    await waitFor(() =>
+      expect(screen.getByRole('button', { name: 'Ouvrir le CRA de Juillet 2026' })).toBeInTheDocument(),
+    );
+    fireEvent.click(screen.getByRole('button', { name: 'Ouvrir le CRA de Juillet 2026' }));
 
     await waitFor(() =>
       expect(screen.getAllByTestId('day-cell').length).toBeGreaterThan(0),
@@ -145,8 +151,10 @@ describe('App — D1: getCra on open', () => {
 
     render(<App />);
 
-    await waitFor(() => expect(screen.getByText('Open CRA')).toBeInTheDocument());
-    fireEvent.click(screen.getByText('Open CRA'));
+    await waitFor(() =>
+      expect(screen.getByRole('button', { name: 'Ouvrir le CRA de Juillet 2026' })).toBeInTheDocument(),
+    );
+    fireEvent.click(screen.getByRole('button', { name: 'Ouvrir le CRA de Juillet 2026' }));
 
     expect(screen.getByTestId('summary-loading')).toBeInTheDocument();
 
@@ -162,8 +170,10 @@ describe('App — D1: getCra on open', () => {
 
     render(<App />);
 
-    await waitFor(() => expect(screen.getByText('Open CRA')).toBeInTheDocument());
-    fireEvent.click(screen.getByText('Open CRA'));
+    await waitFor(() =>
+      expect(screen.getByRole('button', { name: 'Ouvrir le CRA de Juillet 2026' })).toBeInTheDocument(),
+    );
+    fireEvent.click(screen.getByRole('button', { name: 'Ouvrir le CRA de Juillet 2026' }));
 
     await waitFor(() =>
       expect(screen.getByTestId('summary-error')).toBeInTheDocument(),
