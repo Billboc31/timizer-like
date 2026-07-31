@@ -1,7 +1,7 @@
 {
   "ticket_id": "T068",
-  "state": "INIT",
+  "state": "PLAN_APPROVED",
   "branch": "ticket/T068-render-stored-consultant-and-client-signatures-in",
   "issue_number": 131,
-  "updated_at": "2026-07-31T16:40:48Z"
+  "updated_at": "2026-07-31T22:45:50Z"
 }
