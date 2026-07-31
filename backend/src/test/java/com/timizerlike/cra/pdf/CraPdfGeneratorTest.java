@@ -407,12 +407,11 @@ class CraPdfGeneratorTest {
             String allText = extractAllPages(loaded);
             // Both months appear as section headers
             assertThat(allText).contains("avril 2026").contains("mai 2026");
-            // Signature blocks present (at least 2 occurrences for 2 months on detail pages + page 1)
-            long providerCount = allText.chars()
-                    .filter(c -> allText.indexOf("Signature prestataire") >= 0)
-                    .count();
-            assertThat(providerCount).isGreaterThan(0);
-            assertThat(allText).contains("Signature client");
+            // Signature blocks must appear at least twice — once per monthly detail section
+            int providerCount = countOccurrences(allText, "Signature prestataire");
+            assertThat(providerCount).isGreaterThanOrEqualTo(2);
+            int clientCount = countOccurrences(allText, "Signature client");
+            assertThat(clientCount).isGreaterThanOrEqualTo(2);
         }
     }
 
@@ -589,5 +588,15 @@ class CraPdfGeneratorTest {
 
     private static String extractAllPages(PDDocument document) throws IOException {
         return new PDFTextStripper().getText(document);
+    }
+
+    private static int countOccurrences(String text, String needle) {
+        int count = 0;
+        int idx = 0;
+        while ((idx = text.indexOf(needle, idx)) >= 0) {
+            count++;
+            idx += needle.length();
+        }
+        return count;
     }
 }

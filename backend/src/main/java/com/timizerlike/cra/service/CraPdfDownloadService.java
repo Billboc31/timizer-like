@@ -131,17 +131,6 @@ public class CraPdfDownloadService {
         return "CRA-" + provider + "-" + client + "-" + period + ".pdf";
     }
 
-    private byte[] decodeBase64(String base64) {
-        if (base64 == null || base64.isBlank()) {
-            return null;
-        }
-        try {
-            return Base64.getDecoder().decode(base64);
-        } catch (IllegalArgumentException e) {
-            return null;
-        }
-    }
-
     private String sanitize(String value) {
         if (value == null) {
             return "";
@@ -154,6 +143,10 @@ public class CraPdfDownloadService {
             return null;
         }
         String data = base64Image.contains(",") ? base64Image.substring(base64Image.indexOf(',') + 1) : base64Image;
-        return Base64.getDecoder().decode(data);
+        try {
+            return Base64.getDecoder().decode(data);
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
     }
 }

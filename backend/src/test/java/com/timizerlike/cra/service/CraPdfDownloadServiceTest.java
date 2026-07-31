@@ -163,6 +163,18 @@ class CraPdfDownloadServiceTest {
     }
 
     @Test
+    void corruptedProviderSignatureBase64DoesNotThrow() {
+        MonthlyCraReport cra = validatedCra();
+        when(cra.getProviderSignatureImage()).thenReturn("data:image/png;base64,!!!not-valid-base64!!!");
+        when(craRepository.findById(CRA_ID)).thenReturn(Optional.of(cra));
+        when(pdfGenerator.generate(any(CraPdfDocument.class))).thenReturn(new byte[]{});
+
+        CraPdfDownloadResult result = service.download(CRA_ID);
+
+        assertThat(result).isNotNull();
+    }
+
+    @Test
     void populatesClientSignatureWhenSigned() {
         Instant signedAt = Instant.parse("2026-07-01T10:00:00Z");
         MonthlyCraReport cra = validatedCra();
