@@ -41,6 +41,7 @@ class CraSignatureLinkControllerTest {
     private CraSignatureTokenService tokenService;
 
     private static final CraPublicViewDto PUBLIC_VIEW = new CraPublicViewDto(
+            42L, "AWAITING_CLIENT_SIGNATURE",
             7, 2026,
             "Alice", "Provider", "Provider Co",
             "Bob", "Client", "Client Co",
@@ -109,13 +110,14 @@ class CraSignatureLinkControllerTest {
     }
 
     @Test
-    void getPublicCraExposesNoIdOrStatus() throws Exception {
+    void getPublicCraExposesStatusAndCraIdButNotRawId() throws Exception {
         when(tokenService.resolveToken("valid-token")).thenReturn(PUBLIC_VIEW);
 
         mockMvc.perform(get("/public/cra-link/valid-token"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").doesNotExist())
-                .andExpect(jsonPath("$.status").doesNotExist());
+                .andExpect(jsonPath("$.status").value("AWAITING_CLIENT_SIGNATURE"))
+                .andExpect(jsonPath("$.craId").value(42))
+                .andExpect(jsonPath("$.id").doesNotExist());
     }
 
     @Test

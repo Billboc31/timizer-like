@@ -2,6 +2,9 @@ package com.timizerlike.backend.cra.web;
 
 import jakarta.validation.Valid;
 
+import java.util.Map;
+
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,14 +24,15 @@ public class PublicCraSigningController {
     }
 
     @PostMapping("/{token}/sign")
-    public void sign(
+    public ResponseEntity<Map<String, String>> sign(
             @PathVariable String token,
             @Valid @RequestBody ClientSignatureRequestDto request) {
-        clientSignatureService.sign(
+        String downloadToken = clientSignatureService.sign(
                 token,
                 request.signerName(),
                 request.signerRole(),
                 Boolean.TRUE.equals(request.consentApproved()),
                 request.signatureImageBase64());
+        return ResponseEntity.ok(Map.of("downloadToken", downloadToken));
     }
 }

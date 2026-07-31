@@ -7,7 +7,7 @@ import './ClientSignatureForm.css';
 
 interface ClientSignatureFormProps {
   token: string;
-  onSuccess: (signerName: string, signedAt: Date) => void;
+  onSuccess: (signerName: string, signedAt: Date, downloadToken: string) => void;
 }
 
 export function ClientSignatureForm({ token, onSuccess }: ClientSignatureFormProps) {
@@ -41,13 +41,13 @@ export function ClientSignatureForm({ token, onSuccess }: ClientSignatureFormPro
     setError(null);
 
     try {
-      await submitClientSignature(token, {
+      const { downloadToken } = await submitClientSignature(token, {
         signerName: signerName.trim(),
         signerRole: signerRole.trim() || undefined,
         consentApproved: true,
         signatureImageBase64,
       });
-      onSuccess(signerName.trim(), new Date());
+      onSuccess(signerName.trim(), new Date(), downloadToken);
     } catch (err) {
       if (err instanceof ApiError && err.code === 'token_already_consumed') {
         setError('Ce lien de signature a déjà été utilisé.');

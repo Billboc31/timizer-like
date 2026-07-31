@@ -18,6 +18,7 @@ import com.timizer.backend.cra.CraNotFoundException;
 import com.timizer.backend.cra.InvalidCraTransitionException;
 import com.timizer.backend.cra.CraSignatureToken;
 import com.timizer.backend.cra.CraSignatureTokenRepository;
+import com.timizer.backend.cra.CraWrongStatusException;
 import com.timizer.backend.cra.MonthlyCraReport;
 import com.timizer.backend.cra.MonthlyCraReportRepository;
 import com.timizer.backend.cra.TokenNotFoundException;
@@ -151,7 +152,7 @@ class CraSignatureTokenServiceTest {
     }
 
     @Test
-    void resolveTokenThrowsWhenCraNoLongerSignedByProvider() {
+    void resolveTokenThrowsCraWrongStatusWhenCraNotAwaitingClientSignature() {
         MonthlyCraReport cra = mock(MonthlyCraReport.class);
         when(cra.getStatus()).thenReturn(ValidationStatus.VALIDATED);
 
@@ -162,7 +163,7 @@ class CraSignatureTokenServiceTest {
         when(craRepository.findById(CRA_ID)).thenReturn(Optional.of(cra));
 
         assertThatThrownBy(() -> service.resolveToken(rawToken))
-                .isInstanceOf(TokenNotFoundException.class);
+                .isInstanceOf(CraWrongStatusException.class);
     }
 
     // ── revokeToken ──────────────────────────────────────────────────────────

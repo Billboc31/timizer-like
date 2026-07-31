@@ -17,10 +17,12 @@ import org.mockito.ArgumentCaptor;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.timizer.backend.cra.ConsentNotGivenException;
-import com.timizer.backend.cra.InvalidSignatureImageException;
 import com.timizer.backend.cra.CraClientSignatureRecord;
 import com.timizer.backend.cra.CraClientSignatureRecordRepository;
+import com.timizer.backend.cra.CraDownloadToken;
+import com.timizer.backend.cra.CraDownloadTokenRepository;
 import com.timizer.backend.cra.CraSignatureToken;
+import com.timizer.backend.cra.InvalidSignatureImageException;
 import com.timizer.backend.cra.MonthlyCraReport;
 import com.timizer.backend.cra.MonthlyCraReportRepository;
 import com.timizer.backend.cra.TokenAlreadyConsumedException;
@@ -37,6 +39,7 @@ class ClientSignatureServiceTest {
     private CraSignatureTokenService tokenService;
     private CraClientSignatureRecordRepository recordRepository;
     private MonthlyCraReportRepository craRepository;
+    private CraDownloadTokenRepository downloadTokenRepository;
     private CraAuditService auditService;
     private ClientSignatureService service;
 
@@ -45,8 +48,9 @@ class ClientSignatureServiceTest {
         tokenService = mock(CraSignatureTokenService.class);
         recordRepository = mock(CraClientSignatureRecordRepository.class);
         craRepository = mock(MonthlyCraReportRepository.class);
+        downloadTokenRepository = mock(CraDownloadTokenRepository.class);
         auditService = mock(CraAuditService.class);
-        service = new ClientSignatureService(tokenService, recordRepository, craRepository, new ObjectMapper(), auditService);
+        service = new ClientSignatureService(tokenService, recordRepository, craRepository, downloadTokenRepository, new ObjectMapper(), auditService);
     }
 
     @Test
@@ -55,12 +59,15 @@ class ClientSignatureServiceTest {
         CraSignatureToken token = new CraSignatureToken("hash", 1L);
         when(tokenService.validateAndConsume(VALID_TOKEN)).thenReturn(new ConsumedToken(token, cra));
         when(craRepository.save(cra)).thenReturn(cra);
+        when(downloadTokenRepository.save(any(CraDownloadToken.class))).thenAnswer(i -> i.getArgument(0));
 
-        service.sign(VALID_TOKEN, SIGNER_NAME, null, true, VALID_SIGNATURE);
+        String downloadToken = service.sign(VALID_TOKEN, SIGNER_NAME, null, true, VALID_SIGNATURE);
 
+        assertThat(downloadToken).isNotBlank();
         verify(recordRepository).save(any(CraClientSignatureRecord.class));
         verify(cra).setStatus(ValidationStatus.VALIDATED);
         verify(craRepository).save(cra);
+        verify(downloadTokenRepository).save(any(CraDownloadToken.class));
     }
 
     // F4: sign() propagates clientRepresentativeName, clientSignedAt, and clientSignatureImage to entity

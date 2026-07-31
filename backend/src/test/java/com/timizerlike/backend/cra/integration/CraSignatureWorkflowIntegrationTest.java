@@ -88,12 +88,17 @@ class CraSignatureWorkflowIntegrationTest {
                 "signerRole", "Manager",
                 "consentApproved", true,
                 "signatureImageBase64", MIN_PNG);
-        ResponseEntity<Void> sign = restTemplate.exchange(
+
+        ResponseEntity<Map<String, Object>> clientSignResponse = restTemplate.exchange(
                 "/public/cra-link/" + rawToken + "/sign",
                 HttpMethod.POST,
                 new HttpEntity<>(clientSignBody),
-                Void.class);
-        assertThat(sign.getStatusCode()).isEqualTo(HttpStatus.OK);
+                new ParameterizedTypeReference<>() {});
+
+        assertThat(clientSignResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(clientSignResponse.getBody()).isNotNull();
+        String downloadToken = (String) clientSignResponse.getBody().get("downloadToken");
+        assertThat(downloadToken).isNotBlank();
         return rawToken;
     }
 

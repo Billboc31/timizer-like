@@ -5,12 +5,12 @@ import './SigningSuccessScreen.css';
 interface SigningSuccessScreenProps {
   signerName: string;
   signedAt: Date;
-  craId: number;
+  downloadToken: string;
   month: number;
   year: number;
 }
 
-export function SigningSuccessScreen({ signerName, signedAt, craId, month, year }: SigningSuccessScreenProps) {
+export function SigningSuccessScreen({ signerName, signedAt, downloadToken, month, year }: SigningSuccessScreenProps) {
   const [downloading, setDownloading] = useState(false);
   const [downloadError, setDownloadError] = useState<string | null>(null);
 
@@ -24,13 +24,13 @@ export function SigningSuccessScreen({ signerName, signedAt, craId, month, year 
     setDownloading(true);
     setDownloadError(null);
     try {
-      const blob = await downloadPublicCraPdf(craId);
+      const blob = await downloadPublicCraPdf(downloadToken);
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
       a.download = `cra-${year}-${String(month).padStart(2, '0')}.pdf`;
       a.click();
-      URL.revokeObjectURL(url);
+      setTimeout(() => URL.revokeObjectURL(url), 100);
     } catch {
       setDownloadError('Le téléchargement a échoué. Veuillez réessayer.');
     } finally {

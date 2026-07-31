@@ -18,7 +18,7 @@ const MONTH_NAMES = [
 interface SignedState {
   signerName: string;
   signedAt: Date;
-  craId: number;
+  downloadToken: string;
   month: number;
   year: number;
 }
@@ -211,7 +211,7 @@ export function CraSignaturePage({ token }: CraSignaturePageProps) {
           <SigningSuccessScreen
             signerName={signed.signerName}
             signedAt={signed.signedAt}
-            craId={signed.craId}
+            downloadToken={signed.downloadToken}
             month={signed.month}
             year={signed.year}
           />
@@ -223,8 +223,8 @@ export function CraSignaturePage({ token }: CraSignaturePageProps) {
             <div className="cra-sign-form-card__body">
               <ClientSignatureForm
                 token={token}
-                onSuccess={(signerName, signedAt) =>
-                  setSigned({ signerName, signedAt, craId: cra.craId, month: cra.month, year: cra.year })
+                onSuccess={(signerName, signedAt, downloadToken) =>
+                  setSigned({ signerName, signedAt, downloadToken, month: cra.month, year: cra.year })
                 }
               />
             </div>

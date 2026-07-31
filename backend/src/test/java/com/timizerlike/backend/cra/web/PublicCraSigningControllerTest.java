@@ -2,8 +2,8 @@ package com.timizerlike.backend.cra.web;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -43,13 +43,15 @@ class PublicCraSigningControllerTest {
     private ClientSignatureService clientSignatureService;
 
     @Test
-    void returns200OnValidPayload() throws Exception {
-        doNothing().when(clientSignatureService).sign(eq(TOKEN), any(), any(), eq(true), any());
+    void returns200WithDownloadTokenOnValidPayload() throws Exception {
+        when(clientSignatureService.sign(eq(TOKEN), any(), any(), eq(true), any()))
+                .thenReturn("test-download-token");
 
         mockMvc.perform(post("/public/cra-link/{token}/sign", TOKEN)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(VALID_PAYLOAD))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.downloadToken").value("test-download-token"));
     }
 
     @Test

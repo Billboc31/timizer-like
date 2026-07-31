@@ -7,18 +7,18 @@ export interface SignatureCanvasHandle {
   isEmpty(): boolean;
 }
 
-interface Props {
+interface Props extends React.CanvasHTMLAttributes<HTMLCanvasElement> {
   onDraw?: () => void;
   width?: number;
   height?: number;
-  className?: string;
   disabled?: boolean;
 }
 
 export const SignatureCanvas = forwardRef<SignatureCanvasHandle, Props>(
-  ({ onDraw, width = 600, height = 200, className, disabled = false }, ref) => {
+  ({ onDraw, width = 600, height = 200, className, disabled = false, ...rest }, ref) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const isDrawing = useRef(false);
+    const hasMoved = useRef(false);
     const hasDrawn = useRef(false);
     const lastPos = useRef<{ x: number; y: number } | null>(null);
 
@@ -51,6 +51,7 @@ export const SignatureCanvas = forwardRef<SignatureCanvasHandle, Props>(
       if (disabled) return;
       e.currentTarget.setPointerCapture(e.pointerId);
       isDrawing.current = true;
+      hasMoved.current = false;
       lastPos.current = getPos(e);
     }
 
@@ -70,14 +71,18 @@ export const SignatureCanvas = forwardRef<SignatureCanvasHandle, Props>(
       ctx.lineCap = 'round';
       ctx.stroke();
       lastPos.current = pos;
+      hasMoved.current = true;
     }
 
     function handlePointerUp() {
       if (isDrawing.current) {
         isDrawing.current = false;
         lastPos.current = null;
-        hasDrawn.current = true;
-        onDraw?.();
+        if (hasMoved.current) {
+          hasDrawn.current = true;
+          onDraw?.();
+        }
+        hasMoved.current = false;
       }
     }
 
@@ -93,6 +98,7 @@ export const SignatureCanvas = forwardRef<SignatureCanvasHandle, Props>(
         onPointerLeave={handlePointerUp}
         aria-label="Zone de dessin de la signature"
         role="img"
+        {...rest}
       />
     );
   },
