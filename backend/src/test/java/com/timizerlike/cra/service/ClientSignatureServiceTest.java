@@ -34,6 +34,7 @@ class ClientSignatureServiceTest {
     private CraSignatureTokenService tokenService;
     private CraClientSignatureRecordRepository recordRepository;
     private MonthlyCraReportRepository craRepository;
+    private CraAuditService auditService;
     private ClientSignatureService service;
 
     @BeforeEach
@@ -41,7 +42,8 @@ class ClientSignatureServiceTest {
         tokenService = mock(CraSignatureTokenService.class);
         recordRepository = mock(CraClientSignatureRecordRepository.class);
         craRepository = mock(MonthlyCraReportRepository.class);
-        service = new ClientSignatureService(tokenService, recordRepository, craRepository, new ObjectMapper());
+        auditService = mock(CraAuditService.class);
+        service = new ClientSignatureService(tokenService, recordRepository, craRepository, new ObjectMapper(), auditService);
     }
 
     @Test
