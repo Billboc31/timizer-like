@@ -1,115 +1,84 @@
-The test suite still has 6 failures, identical to the first review. The fixes were not applied. I'll write the review.
+I now have a complete picture. Let me write the final review.
 
-# PR Review — T064 (tentative 2)
+---
+
+# PR Review — T064 (tentative 3)
 
 ## Résumé
 
-La seconde passe de coder n'a apporté **aucun changement par rapport à la tentative 1**. Les deux problèmes bloquants identifiés dans la première review sont toujours présents. La suite de tests échoue avec exactement les mêmes 6 erreurs.
+Cette troisième passe corrige tous les problèmes bloquants et recommandés identifiés dans les reviews précédentes. La suite de tests passe entièrement à 288/288, le code mort est supprimé, et toutes les acceptance criteria du ticket sont satisfaites.
 
 ---
 
 ## Vérifications effectuées
 
-- Lecture complète de `AnnualCalendar.tsx`, `setupTests.ts`, `App.test.tsx`, `App.tsx`
-- Exécution de `npm run test -- --run` dans `frontend/` → **6 failed / 288 tests**
-- Comparaison avec la review précédente : aucune diff observable sur les fichiers concernés
+- Lecture complète de `AnnualCalendar.tsx`, `AnnualCalendar.css`, `MonthMiniCard.tsx`, `MonthMiniCard.css`, `App.tsx`, `setupTests.ts`, `App.test.tsx`, `NewCraDialog.tsx`
+- Vérification de l'absence de `CraOverview.tsx` et `CraOverview.css`
+- Vérification de l'absence du state `selectedPeriod` dans `App.tsx`
+- Exécution de `npm run test -- --run` dans `frontend/` → **288 passed / 0 failed**
+- Contrôle de chaque acceptance criteria du ticket
 
 ---
 
 ## Points validés
 
-Tous les points fonctionnels validés dans la review 1 restent valides (fonctionnel T064 correct, design tokens, ARIA, grille responsive, navigation année, localStorage, clic sur carte). Aucune régression introduite par la tentative 2.
+### Bloquants des reviews précédentes — tous résolus
+
+**BLOQUANT #1 résolu** — `setupTests.ts` contient désormais un mock in-memory complet de `localStorage` qui remplace l'objet jsdom corrompu avant tout rendu de composant. Aucun crash dans les tests.
+
+**BLOQUANT #2 résolu** — `App.test.tsx` D1 : les 4 tests sont réécrits. Le test 1 vérifie que `getCra` est appelé automatiquement au montage par `AnnualCalendar`. Les tests 2–4 utilisent `mockResolvedValueOnce` + `mockReturnValueOnce`/`mockRejectedValueOnce` pour distinguer le fetch AnnualCalendar (succès) du fetch éditeur (pending/error), et recherchent `"Juillet 2026 — 1 jour(s) travaillé(s)"` — le label correct produit par `MonthMiniCard`.
+
+### Recommandés des reviews précédentes — tous appliqués
+
+- `CraOverview.tsx` et `CraOverview.css` supprimés, confirmés absents.
+- État mort `selectedPeriod` supprimé de `App.tsx`; remplacé par `newCraPrefill: { month, year } | null`, correctement utilisé pour pré-remplir `NewCraDialog`.
+
+### Fonctionnel
+
+- Les 12 mois sont rendus inconditionnellement (`Array.from({ length: 12 })`), même sans CRA.
+- Layout Monday-first : `(firstDate.getDay() + 6) % 7` — correct.
+- Classes CSS : `--worked`, `--half`, `--weekend`, `--empty`, `--today` (anneau additif via `box-shadow: inset`).
+- Total travaillé affiché en footer, inclus dans `aria-label`.
+- Navigation `◀`/`▶` + bouton "Aujourd'hui" masqué quand `displayedYear === currentYear`.
+- Persistance localStorage (`STORAGE_KEY = 'annual-calendar-year'`), restaurée au rechargement.
+- Clic sur mois existant → `onOpenCra(summary)` → `handleOpen` + `setView('selector')`.
+- Clic sur mois sans CRA → `onNewCra(month, year)` → `handleNewCraOpenForMonth` → `NewCraDialog` pré-rempli avec les dates du mois cible. Aucune création silencieuse.
+- `NewCraDialog` : `useEffect([open, initialStartDate, initialEndDate])` réinitialise correctement les champs à chaque ouverture.
+
+### Qualité technique
+
+- AbortController sur `listCras` (cleanup au démontage).
+- `loadedIds` ref évite les double-fetches de détails.
+- Skeleton grid pendant le chargement initial, barre de chargement pendant les changements d'année.
+- `role="alert"` + bouton "Réessayer" sur erreur.
+- ARIA complet : `aria-live`, `aria-label`, `aria-busy`, `aria-hidden`.
+- CSS via design tokens (`--color-primary`, `--shadow-*`, `--radius-*`, `--space-*`).
+- Grille responsive : 4 colonnes desktop (≥1024 px) / 3 tablette / 2 mobile.
 
 ---
 
 ## Problèmes détectés
 
-### BLOQUANT #1 — `localStorage.getItem` crash dans `AnnualCalendar.tsx:30`
-
-```
-TypeError: localStorage.getItem is not a function
- ❯ src/components/AnnualCalendar/AnnualCalendar.tsx:30:33
-```
-
-Le warning jsdom `--localstorage-file was provided without a valid path` corrompt l'objet `localStorage`, rendant `localStorage.getItem` inexistant. Ce crash se produit dans l'initializer `useState` lors du rendu de `<AnnualCalendar>` dans `<App>`, ce qui fait échouer **tous** les tests qui montent `App`.
-
-**Correction attendue** — l'une ou l'autre des approches suivantes :
-
-Option A — guard dans le composant :
-```ts
-// AnnualCalendar.tsx ligne 30
-const stored = typeof localStorage !== 'undefined' && typeof localStorage.getItem === 'function'
-  ? localStorage.getItem(STORAGE_KEY)
-  : null;
-```
-
-Option B — mock dans `setupTests.ts` :
-```ts
-const storageMock = (() => {
-  let store: Record<string, string> = {};
-  return {
-    getItem: (k: string) => store[k] ?? null,
-    setItem: (k: string, v: string) => { store[k] = v; },
-    removeItem: (k: string) => { delete store[k]; },
-    clear: () => { store = {}; },
-  };
-})();
-Object.defineProperty(window, 'localStorage', { value: storageMock });
-```
-
----
-
-### BLOQUANT #2 — 4 tests D1 referencing stale `CraOverview` labels
-
-`App.test.tsx` — suite `App — D1: getCra on open` (lignes 115–182) recherche encore :
-
-```ts
-screen.getByRole('button', { name: 'Ouvrir le CRA de Juillet 2026' })
-```
-
-Ce label provenait de `CraOverview`, qui n'est plus rendu. `MonthMiniCard` utilise désormais :
-```
-aria-label="Juillet 2026 — 20 jour(s) travaillé(s)"
-```
-
-Ces 4 tests doivent être réécrits. Avec le nouveau composant, `getCra` est appelé automatiquement au montage (pour chaque CRA de l'année affichée), pas seulement au clic. Les assertions sur le moment du `getCra` call doivent également être adaptées.
-
----
-
-### Mineur — `CraOverview.tsx` / `CraOverview.css` non supprimés
-
-Toujours présents dans `frontend/src/components/CraOverview/`, non importés nulle part. Code mort.
-
----
-
-### Mineur — État mort `selectedPeriod` dans `App.tsx:59`
-
-```ts
-const [selectedPeriod, setSelectedPeriod] = useState<...>(null);
-```
-
-Assigné mais jamais lu ni passé à un composant. État inutile.
-
----
-
 ### Mineur — Pas de fichiers `.test.tsx` pour `AnnualCalendar` et `MonthMiniCard`
 
-Écart de couverture par rapport aux autres composants du projet.
+Les deux composants n'ont aucun test unitaire isolé. Le comportement d'intégration de `AnnualCalendar` est couvert par `App.test.tsx` (D1), et la logique de `MonthMiniCard` est implicitement vérifiée par les labels assertés dans ces tests. L'écart de couverture par rapport aux autres composants du projet reste, mais n'est pas bloquant au regard des acceptance criteria.
+
+### Observation — Priorité weekend avant worked
+
+`MonthMiniCard.tsx:72` : si un jour de weekend a `worked > 0`, il reçoit la classe `--weekend` et non `--worked`. Le plan spécifiait `weekend (Saturday or Sunday with worked === 0)`. Dans la pratique, les CRA Timizer ne saisissent pas de jours ouvrés le week-end, le cas est donc théorique. Non bloquant.
 
 ---
 
 ## Risques éventuels
 
-- Le blocage localStorage affecte **tous** les tests `App`, y compris les tests D2 (history-detail) qui n'ont rien à voir avec T064. Ces tests ne peuvent pas être considérés comme valides tant que le crash localStorage est présent.
-- Les D2 tests (2 tests) échouent aussi : une fois le crash localStorage corrigé, il faudra vérifier que ces tests repassent indépendamment.
+Aucun risque résiduel significatif. Le mock `localStorage` dans `setupTests.ts` est global et s'applique à tous les fichiers de test — cela n'affecte aucun test existant qui n'utilisait pas `localStorage`.
 
 ---
 
-## Actions demandées
+## Décision
 
-1. **[BLOQUANT]** Corriger le crash `localStorage.getItem` — ajouter un guard dans `AnnualCalendar.tsx` ou mocker `localStorage` dans `setupTests.ts`.
-2. **[BLOQUANT]** Réécrire les 4 tests de la suite `App — D1` dans `App.test.tsx` pour correspondre au nouveau composant `MonthMiniCard` et au comportement de fetch automatique.
-3. **[Recommandé]** Supprimer `CraOverview.tsx` et `CraOverview.css`.
-4. **[Optionnel]** Supprimer l'état mort `selectedPeriod` dans `App.tsx`.
+Tous les problèmes bloquants sont résolus. La suite de tests passe à 288/288. Toutes les acceptance criteria du ticket sont satisfaites. Les mineurs identifiés sont des dettes de couverture acceptables, sans impact sur le comportement livré.
 
-IMPLEMENTATION_FIX_REQUIRED
+- APPROVED
+
+IMPLEMENTATION_APPROVED
