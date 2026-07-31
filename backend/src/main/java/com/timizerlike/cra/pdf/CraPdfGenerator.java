@@ -27,7 +27,9 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -48,7 +50,7 @@ public class CraPdfGenerator {
     private static final float PAGE2_ROW_HEIGHT = 16f;
     private static final float PAGE2_HEADER_HEIGHT = 20f;
     private static final float PAGE2_MIN_BOTTOM_Y = MARGIN + 25f;
-    private static final float VALIDATION_BLOCK_HEIGHT = 160f;
+    private static final float MONTHLY_SIGNATURE_BLOCK_HEIGHT = 155f;
 
     private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private static final DateTimeFormatter PERIOD_FORMAT = DateTimeFormatter.ofPattern("MM/yyyy");

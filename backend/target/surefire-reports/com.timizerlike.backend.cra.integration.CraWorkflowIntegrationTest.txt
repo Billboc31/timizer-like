@@ -1,8 +1,8 @@
 -------------------------------------------------------------------------------
 Test set: com.timizerlike.backend.cra.integration.CraWorkflowIntegrationTest
 -------------------------------------------------------------------------------
-Tests run: 1, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 1.284 s <<< FAILURE! -- in com.timizerlike.backend.cra.integration.CraWorkflowIntegrationTest
-com.timizerlike.backend.cra.integration.CraWorkflowIntegrationTest.fullCraWorkflow -- Time elapsed: 0.096 s <<< FAILURE!
+Tests run: 1, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 2.633 s <<< FAILURE! -- in com.timizerlike.backend.cra.integration.CraWorkflowIntegrationTest
+com.timizerlike.backend.cra.integration.CraWorkflowIntegrationTest.fullCraWorkflow -- Time elapsed: 0.468 s <<< FAILURE!
 org.opentest4j.AssertionFailedError: 
 
 expected: 201 CREATED
