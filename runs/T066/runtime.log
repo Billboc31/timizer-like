@@ -11,3 +11,24 @@
 [2026-07-31T22:37:42Z] snapshot: runtime-prompt=runs/T066/prompts/planner-attempt-1.md
 [2026-07-31T22:46:41Z] compose: preferring on-disk runs/T066/plan.md over chatty stdout (agent Write beat meta-report)
 [2026-07-31T22:46:41Z] auto-run: step=planner done rc=0
+[2026-07-31T23:40:11Z] auto-run start: state=IMPLEMENTATION_APPROVED
+[2026-07-31T23:40:11Z] auto-run: running step=tester
+[2026-07-31T23:40:11Z] prompt: resolved=prompts/generic/tester.md source=generic
+[2026-07-31T23:40:11Z] prompt: generic fallback — injecting runs/T066/ticket.md
+[2026-07-31T23:40:11Z] compose: global-context=docs/ai/global-context.md
+[2026-07-31T23:40:11Z] compose: role=ai/roles/tester.md
+[2026-07-31T23:40:11Z] compose: skill=ai/skills/workflow-discipline.md
+[2026-07-31T23:40:11Z] compose: skill=ai/skills/testing.md
+[2026-07-31T23:40:11Z] compose: skill=ai/skills/debugging.md
+[2026-07-31T23:40:11Z] compose: task (canonical prompt)
+[2026-07-31T23:40:11Z] snapshot: runtime-prompt=runs/T066/prompts/tester-attempt-1.md
+[2026-07-31T23:47:09Z] auto-run: step=tester done rc=0
+[2026-07-31T23:47:09Z] auto-run: transition IMPLEMENTATION_APPROVED → TEST_COMPLETE
+[2026-07-31T23:47:09Z] auto-run: auto-commit triggered (step=tester, include_code=True)
+[2026-07-31T23:47:09Z] commit-checkpoint: unstaged runtime garbage: ['runs/T066/daemon.lock', 'runs/T066/runtime.log', 'runs/T066/workflow-status.md']
+[2026-07-31T23:47:10Z] commit-checkpoint: sha=eda09353 files=38 title='test(T066/workflow): tester — update 38 file(s)'
+[2026-07-31T23:47:10Z] auto-run: auto-push triggered
+[2026-07-31T23:47:10Z] push: tolerating runtime dirty files (not blocking): ['runs/T066/daemon.lock', 'runs/T066/runtime.log', 'runs/T066/workflow-status.md']
+[2026-07-31T23:47:10Z] push: pushing branch=ticket/T066-redesign-the-client-cra-signature-page
+[2026-07-31T23:47:13Z] push: done branch=ticket/T066-redesign-the-client-cra-signature-page
+[2026-07-31T23:47:14Z] auto-run: TEST_COMPLETE — running PR lifecycle
