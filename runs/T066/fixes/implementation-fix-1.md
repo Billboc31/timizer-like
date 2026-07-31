@@ -1,0 +1,160 @@
+# Fix artifact — IMPLEMENTATION_FIX_REQUIRED
+
+- decision: IMPLEMENTATION_FIX_REQUIRED
+- review source: runs/T066/reviews/implementation-review.md
+- generated at: 2026-07-31T23:15:47Z
+
+---
+
+I have all the information needed. Let me produce the structured review.
+
+---
+
+# PR Review — T066 : Redesign the client CRA signature page
+
+## Résumé
+
+L'implémentation livre une page de signature client visuellement soignée, accessible et responsive. L'architecture composant est propre, les cas d'erreur distincts sont bien gérés, les données-test sont stables. Un problème de sécurité bloquant subsiste sur le nouvel endpoint PDF public, introduisant une énumération non contrôlée de CRAs signés. Trois points mineurs ont également été identifiés.
+
+---
+
+## Vérifications effectuées
+
+- Lecture de l'ensemble des fichiers modifiés : `PublicCraPdfController.java`, `CraSignaturePage.tsx`, `ClientSignatureForm.tsx`, `SignatureCanvas.tsx`, `SigningSuccessScreen.tsx`, `craPublicClient.ts`, `craPublicView.ts`
+- Comparaison avec le ticket T066 et le plan approuvé
+- Vérification de la chaîne de sécurité : token → signing → PDF download
+- Inspection de l'interface TypeScript de `SignatureCanvas` vs les props passées par `ClientSignatureForm`
+- Analyse de la logique `isEmpty()` dans `SignatureCanvas`
+- Analyse du timing de `URL.revokeObjectURL`
+
+---
+
+## Points validés
+
+| Exigence ticket | Statut |
+|---|---|
+| Layout carte responsive centré (desktop + mobile) | ✓ |
+| Identité CRA, période, prestataire, client, totaux visibles | ✓ |
+| Dates localisées en français (non ISO) | ✓ |
+| Tableau des journées filtré (worked > 0), formaté | ✓ |
+| 3 états d'erreur distincts (invalid, consumed, wrong-status) | ✓ |
+| Pointer Events (souris, tactile, stylet) | ✓ |
+| Scaling coordonnées canvas après resize CSS | ✓ |
+| `touch-action: none` — blocage du scroll pendant le dessin | ✓ |
+| `canSubmit` : nom + consentement + pad non vide | ✓ |
+| Anti-double-submit (`submitting` désactive bouton + canvas) | ✓ |
+| Erreur retryable sans effacement de la signature | ✓ |
+| Écran de succès avec date localisée et bouton PDF | ✓ |
+| Labels accessibles et navigation clavier | ✓ (partiel — voir §mineurs) |
+| `data-testid` stables | ✓ |
+| 291 tests passants | ✓ |
+
+---
+
+## Problèmes détectés
+
+### [BLOQUANT] Endpoint PDF public énumérable sans token
+
+**Fichier :** `backend/.../web/PublicCraPdfController.java:33`
+
+```java
+@GetMapping("/{craId}/pdf")
+public ResponseEntity<byte[]> downloadPublicPdf(@PathVariable Long craId) {
+```
+
+L'endpoint `GET /public/cra/{craId}/pdf` n'exige aucun token ni credential. `craId` est un `Long` auto-incrémenté séquentiel. N'importe qui qui connaît un seul `craId` (fourni via `CraPublicView.craId` dans la réponse `GET /public/cra-link/{token}`) peut itérer sur tous les entiers et télécharger l'intégralité des PDFs de CRAs à l'état `FULLY_SIGNED` ou `VALIDATED`.
+
+Les PDFs de CRA contiennent des noms, des montants de facturation et des signatures manuscrites numérisées — données personnelles au sens RGPD.
+
+Tous les autres endpoints publics existants sont protégés par un token aléatoire 256 bits à usage unique. Ce nouvel endpoint rompt cette invariante.
+
+**Le plan lui-même mentionne "no authentication required"** — c'est une dérive de conception introduite à la phase de planification qui aurait dû être interceptée. Le ticket exige explicitement : *"Existing signature-link security remains intact."*
+
+**Correction requise :** Le endpoint `POST /public/cra-link/{token}/sign` doit retourner un `downloadToken` à usage unique et courte durée de vie. L'endpoint PDF valide ce `downloadToken` au lieu du `craId` brut. Le frontend passe ce token à `SigningSuccessScreen` et `SigningSuccessScreen` l'utilise pour l'appel download.
+
+---
+
+### [MINEUR] Props TypeScript non transmises à l'élément `<canvas>`
+
+**Fichier :** `frontend/src/components/ClientSignatureForm/ClientSignatureForm.tsx:124-129`
+
+```tsx
+<SignatureCanvas
+  ref={canvasRef}
+  onDraw={() => setPadNonEmpty(true)}
+  data-testid="signature-canvas"    // ← non déclaré dans Props
+  disabled={submitting}
+  aria-labelledby="signature-pad-label"  // ← non déclaré dans Props
+/>
+```
+
+L'interface `Props` de `SignatureCanvas` (ligne 10-16) ne déclare ni `data-testid` ni `aria-labelledby`, et le composant ne les transmet pas au `<canvas>`. TypeScript devrait refuser ces props (sauf si `strict` est désactivé). L'attribut `aria-labelledby` n'étant pas sur l'élément DOM réel, l'association d'étiquette accessible est cassée.
+
+**Correction :** Étendre `Props` avec `React.CanvasHTMLAttributes<HTMLCanvasElement>` et utiliser le spread `{...rest}` sur le `<canvas>` — ou déclarer et transmettre explicitement les deux attributs.
+
+---
+
+### [MINEUR] `isEmpty()` : faux positif sur tap sans tracé
+
+**Fichier :** `frontend/src/components/SignatureCanvas/SignatureCanvas.tsx:75-82`
+
+```tsx
+function handlePointerUp() {
+  if (isDrawing.current) {
+    isDrawing.current = false;
+    lastPos.current = null;
+    hasDrawn.current = true;  // ← assigné même sans mouvement
+    onDraw?.();
+  }
+}
+```
+
+Un simple tap (pointerdown → pointerup sans déplacement) active `hasDrawn = true` et déclenche `onDraw()`, rendant le bouton de soumission actif alors que le canvas reste visuellement vide. La signature soumise sera une image transparente.
+
+**Correction :** Conditionner `hasDrawn.current = true` à au moins un appel de `handlePointerMove` (ajouter un flag `hasMoved`), ou vérifier les pixels via `ctx.getImageData`.
+
+---
+
+### [MINEUR] `URL.revokeObjectURL` appelé synchroniquement après `a.click()`
+
+**Fichier :** `frontend/src/components/SigningSuccessScreen/SigningSuccessScreen.tsx:29-33`
+
+```tsx
+const url = URL.createObjectURL(blob);
+const a = document.createElement('a');
+a.href = url;
+a.download = `cra-${year}-${String(month).padStart(2, '0')}.pdf`;
+a.click();
+URL.revokeObjectURL(url);  // ← dans la même microtask que click()
+```
+
+Fonctionnel sur les navigateurs courants car le téléchargement est initié avant la révocation, mais non garanti par la spécification. Un navigateur ou runtime inhabituel pourrait annuler la ressource avant de servir le fichier.
+
+**Correction :** `setTimeout(() => URL.revokeObjectURL(url), 100)`.
+
+---
+
+## Risques éventuels
+
+- **RGPD / exposition données** : le point bloquant est un risque réel de fuite de données personnelles de tous les clients ayant un CRA signé, exploitable sans aucune authentification et sans connaissances techniques avancées.
+- **Régression tests** : le fix du point bloquant nécessite une modification du contrat `POST /sign` (ajout d'un `downloadToken` en réponse) et de `downloadPublicCraPdf` en frontend — les tests `SigningSuccessScreen` devront être mis à jour.
+- **Compatibilité PDF tickets** : le fix doit rester compatible avec les tickets de rendu PDF (#117 et suivants). Le service `CraPdfDownloadService` peut rester inchangé ; seul l'endpoint d'accès change.
+
+---
+
+## Décision
+
+`IMPLEMENTATION_FIX_REQUIRED` — le point bloquant de sécurité doit être corrigé avant toute fusion. Les trois points mineurs sont à traiter dans la même passe de correction.
+
+---
+
+## Actions demandées
+
+1. **[BLOQUANT]** Modifier `POST /public/cra-link/{token}/sign` pour retourner `{ downloadToken: string }` (UUID à usage unique, TTL 24 h stocké en base). Créer `GET /public/cra/{downloadToken}/pdf` validant ce token. Supprimer ou sécuriser `GET /public/cra/{craId}/pdf`.
+2. **[MINEUR]** Étendre `Props` de `SignatureCanvas` pour accepter et transmettre `data-testid` et `aria-labelledby` (ou spread `React.CanvasHTMLAttributes`).
+3. **[MINEUR]** Corriger `handlePointerUp` : ne mettre `hasDrawn = true` qu'après au moins un mouvement enregistré.
+4. **[MINEUR]** Envelopper `URL.revokeObjectURL(url)` dans un `setTimeout(..., 100)`.
+
+---
+
+IMPLEMENTATION_FIX_REQUIRED
