@@ -1,6 +1,7 @@
 package com.timizerlike.cra.service;
 
 import java.time.Instant;
+import java.time.LocalDate;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -66,6 +67,9 @@ public class ClientSignatureService {
                 snapshot,
                 Instant.now()));
 
+        cra.setClientRepresentativeName(signerName);
+        cra.setClientSignatureDate(LocalDate.now());
+        cra.setClientSignatureImage(signatureImageBase64);
         cra.setStatus(ValidationStatus.VALIDATED);
         craRepository.save(cra);
 
