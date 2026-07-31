@@ -13,8 +13,10 @@ function toApiErrorCode(raw: unknown): ApiErrorCode {
     'invalid_signature_image',
     'token_invalid',
     'token_already_consumed',
+    'token_expired',
     'cra_not_signed',
     'consent_not_given',
+    'validation_blocked',
   ];
   if (typeof raw === 'string' && (known as string[]).includes(raw)) {
     return raw as ApiErrorCode;

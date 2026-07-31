@@ -18,6 +18,7 @@ import com.timizer.backend.cra.CraSignatureTokenRepository;
 import com.timizer.backend.cra.MonthlyCraReport;
 import com.timizer.backend.cra.MonthlyCraReportRepository;
 import com.timizer.backend.cra.TokenAlreadyConsumedException;
+import com.timizer.backend.cra.TokenExpiredException;
 import com.timizer.backend.cra.TokenNotFoundException;
 import com.timizer.backend.cra.ValidationStatus;
 import com.timizerlike.backend.cra.dto.CraDayEntryDto;
@@ -73,6 +74,10 @@ public class CraSignatureTokenService {
             throw new TokenNotFoundException();
         }
 
+        if (token.isExpired()) {
+            throw new TokenExpiredException();
+        }
+
         MonthlyCraReport cra = craRepository.findById(token.getCraId())
                 .orElseThrow(TokenNotFoundException::new);
 
@@ -92,6 +97,10 @@ public class CraSignatureTokenService {
 
         if (token.isRevoked()) {
             throw new TokenNotFoundException();
+        }
+
+        if (token.isExpired()) {
+            throw new TokenExpiredException();
         }
 
         if (token.isConsumed()) {

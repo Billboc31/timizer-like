@@ -1,6 +1,8 @@
 package com.timizerlike.backend.cra.web;
 
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,10 +14,13 @@ import com.timizer.backend.cra.CraDayNotFoundException;
 import com.timizer.backend.cra.CraNotFoundException;
 import com.timizer.backend.cra.CraNotValidatedException;
 import com.timizer.backend.cra.CraValidatedException;
+import com.timizer.backend.cra.CraValidationBlockedException;
+import com.timizer.backend.cra.CraValidationBlockingReason;
 import com.timizer.backend.cra.InvalidCraTransitionException;
 import com.timizer.backend.cra.InvalidSignatureImageException;
 import com.timizer.backend.cra.InvalidWorkValueException;
 import com.timizer.backend.cra.TokenAlreadyConsumedException;
+import com.timizer.backend.cra.TokenExpiredException;
 import com.timizer.backend.cra.TokenNotFoundException;
 
 @RestControllerAdvice
@@ -79,5 +84,20 @@ public class CraApiExceptionHandler {
     public ResponseEntity<Map<String, String>> handleInvalidSignatureImage() {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(Map.of("error", "invalid_signature_image"));
+    }
+
+    @ExceptionHandler(CraValidationBlockedException.class)
+    public ResponseEntity<Map<String, Object>> handleCraValidationBlocked(CraValidationBlockedException ex) {
+        List<String> reasons = ex.getReasons().stream()
+                .map(CraValidationBlockingReason::name)
+                .collect(Collectors.toList());
+        return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
+                .body(Map.of("error", "validation_blocked", "reasons", reasons));
+    }
+
+    @ExceptionHandler(TokenExpiredException.class)
+    public ResponseEntity<Map<String, String>> handleTokenExpired() {
+        return ResponseEntity.status(HttpStatus.GONE)
+                .body(Map.of("error", "token_expired"));
     }
 }

@@ -45,3 +45,7 @@ export function getProviderSettings(): Promise<ProviderSettingsDto> {
 export function updateProviderSettings(data: ProviderSettingsDto): Promise<ProviderSettingsDto> {
   return apiPut<ProviderSettingsDto>('/api/provider-settings', data);
 }
+
+export function reopenCra(craId: number): Promise<void> {
+  return apiPost<void>(`/api/cras/${craId}/reopen`, undefined);
+}

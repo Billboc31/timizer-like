@@ -39,6 +39,11 @@ public class CraSignatureToken {
     protected CraSignatureToken() {
     }
 
+    public CraSignatureToken(String tokenHash, Long craId) {
+        this.tokenHash = tokenHash;
+        this.craId = craId;
+    }
+
     public CraSignatureToken(String tokenHash, Long craId, Instant expiresAt) {
         this.tokenHash = tokenHash;
         this.craId = craId;
