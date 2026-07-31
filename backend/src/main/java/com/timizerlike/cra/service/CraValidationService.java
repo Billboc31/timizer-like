@@ -14,6 +14,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.timizer.backend.cra.CraDetailsMapper;
 import com.timizer.backend.cra.CraNotFoundException;
+import com.timizer.backend.cra.CraTransitionEvent.ActorType;
+import com.timizer.backend.cra.CraValidatedException;
 import com.timizer.backend.cra.CraValidationBlockedException;
 import com.timizer.backend.cra.CraValidationBlockingReason;
 import com.timizer.backend.cra.MonthlyCraReport;
@@ -26,10 +28,13 @@ public class CraValidationService {
 
     private final MonthlyCraReportRepository craRepository;
     private final ObjectMapper objectMapper;
+    private final CraAuditService auditService;
 
-    public CraValidationService(MonthlyCraReportRepository craRepository, ObjectMapper objectMapper) {
+    public CraValidationService(MonthlyCraReportRepository craRepository, ObjectMapper objectMapper,
+                                CraAuditService auditService) {
         this.craRepository = craRepository;
         this.objectMapper = objectMapper;
+        this.auditService = auditService;
     }
 
     @Transactional
@@ -38,11 +43,11 @@ public class CraValidationService {
         MonthlyCraReport cra = craRepository.findById(craId)
                 .orElseThrow(() -> new CraNotFoundException(craId));
 
-        List<CraValidationBlockingReason> reasons = new ArrayList<>();
-
         if (cra.getStatus() != ValidationStatus.DRAFT) {
-            reasons.add(CraValidationBlockingReason.STATUS_NOT_DRAFT);
+            throw new CraValidatedException(craId);
         }
+
+        List<CraValidationBlockingReason> reasons = new ArrayList<>();
 
         if (providerSignatureImage == null || providerSignatureImage.isBlank()
                 || !providerSignatureImage.startsWith("data:image/")) {
@@ -63,6 +68,9 @@ public class CraValidationService {
         cra.setProviderContentHash(contentHash);
 
         craRepository.save(cra);
+
+        auditService.recordTransition(craId, ValidationStatus.DRAFT, ValidationStatus.AWAITING_CLIENT_SIGNATURE,
+                ActorType.CONSULTANT, providerSignerName);
 
         return CraDetailsMapper.toDto(cra);
     }

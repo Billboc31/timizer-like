@@ -15,9 +15,15 @@ interface Props {
 
 type UIState = 'idle' | 'loading-sig' | 'no-sig' | 'confirming' | 'loading' | 'success';
 
+const BLOCKING_REASON_LABELS: Record<string, string> = {
+  STATUS_NOT_DRAFT: "Le CRA n'est pas en état Brouillon.",
+  INVALID_SIGNATURE_IMAGE: "L'image de signature est invalide ou manquante.",
+};
+
 export function CraValidation({ cra, onValidated, onGoToSettings }: Props) {
   const [uiState, setUiState] = useState<UIState>('idle');
   const [error, setError] = useState<string | null>(null);
+  const [blockingReasons, setBlockingReasons] = useState<string[]>([]);
   const [signature, setSignature] = useState<ProviderSignatureDto | null>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const dialogRef = useRef<HTMLDialogElement>(null);
@@ -64,6 +70,7 @@ export function CraValidation({ cra, onValidated, onGoToSettings }: Props) {
 
   const handleCancel = () => {
     setError(null);
+    setBlockingReasons([]);
     setUiState('idle');
     dialogRef.current?.close();
   };
@@ -85,6 +92,12 @@ export function CraValidation({ cra, onValidated, onGoToSettings }: Props) {
         onValidated(updated);
       }, 2000);
     } catch (e) {
+      if (isApiError(e) && e.code === 'validation_blocked') {
+        const detail = e.detail as Record<string, unknown>;
+        setBlockingReasons(Array.isArray(detail?.reasons) ? (detail.reasons as string[]) : []);
+      } else {
+        setBlockingReasons([]);
+      }
       setError(getErrorMessage(e));
       setUiState('confirming');
     }
@@ -177,9 +190,16 @@ export function CraValidation({ cra, onValidated, onGoToSettings }: Props) {
           </div>
         )}
         {error && (
-          <p role="alert" className="cra-validation__error">
-            {error}
-          </p>
+          <div role="alert" className="cra-validation__error">
+            <p>{error}</p>
+            {blockingReasons.length > 0 && (
+              <ul className="cra-validation__blocking-reasons">
+                {blockingReasons.map(r => (
+                  <li key={r}>{BLOCKING_REASON_LABELS[r] ?? r}</li>
+                ))}
+              </ul>
+            )}
+          </div>
         )}
         <div className="cra-validation__actions">
           <button

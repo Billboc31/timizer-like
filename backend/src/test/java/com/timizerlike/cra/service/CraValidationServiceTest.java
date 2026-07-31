@@ -17,6 +17,7 @@ import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.timizer.backend.cra.CraNotFoundException;
+import com.timizer.backend.cra.CraValidatedException;
 import com.timizer.backend.cra.CraValidationBlockedException;
 import com.timizer.backend.cra.CraValidationBlockingReason;
 import com.timizer.backend.cra.MonthlyCraReport;
@@ -32,12 +33,14 @@ class CraValidationServiceTest {
     private static final String SIGNATURE_IMAGE = "data:image/png;base64,abc123";
 
     private MonthlyCraReportRepository craRepository;
+    private CraAuditService auditService;
     private CraValidationService service;
 
     @BeforeEach
     void setUp() {
         craRepository = mock(MonthlyCraReportRepository.class);
-        service = new CraValidationService(craRepository, new ObjectMapper());
+        auditService = mock(CraAuditService.class);
+        service = new CraValidationService(craRepository, new ObjectMapper(), auditService);
     }
 
     @Test
@@ -66,18 +69,24 @@ class CraValidationServiceTest {
     }
 
     @Test
-    void throwsValidationBlockedWithStatusNotDraftWhenNotInDraftStatus() {
+    void throwsCraValidatedExceptionWhenNotInDraftStatus() {
         MonthlyCraReport cra = mock(MonthlyCraReport.class);
         when(cra.getStatus()).thenReturn(ValidationStatus.VALIDATED);
         when(craRepository.findById(CRA_ID)).thenReturn(Optional.of(cra));
 
         assertThatThrownBy(() -> service.validate(CRA_ID, JUNE_30, SIGNATURE_IMAGE, SIGNER_NAME))
-                .isInstanceOf(CraValidationBlockedException.class)
-                .satisfies(e -> {
-                    List<CraValidationBlockingReason> reasons =
-                            ((CraValidationBlockedException) e).getReasons();
-                    assertThat(reasons).contains(CraValidationBlockingReason.STATUS_NOT_DRAFT);
-                });
+                .isInstanceOf(CraValidatedException.class);
+        verify(craRepository, never()).save(any());
+    }
+
+    @Test
+    void throwsCraValidatedExceptionWhenNotDraftEvenIfImageAlsoInvalid() {
+        MonthlyCraReport cra = mock(MonthlyCraReport.class);
+        when(cra.getStatus()).thenReturn(ValidationStatus.AWAITING_CLIENT_SIGNATURE);
+        when(craRepository.findById(CRA_ID)).thenReturn(Optional.of(cra));
+
+        assertThatThrownBy(() -> service.validate(CRA_ID, JUNE_30, null, SIGNER_NAME))
+                .isInstanceOf(CraValidatedException.class);
         verify(craRepository, never()).save(any());
     }
 
@@ -109,23 +118,6 @@ class CraValidationServiceTest {
                     assertThat(reasons).contains(CraValidationBlockingReason.INVALID_SIGNATURE_IMAGE);
                 });
         verify(craRepository, never()).save(any());
-    }
-
-    @Test
-    void collectsBothBlockingReasonsWhenStatusNotDraftAndImageInvalid() {
-        MonthlyCraReport cra = mock(MonthlyCraReport.class);
-        when(cra.getStatus()).thenReturn(ValidationStatus.AWAITING_CLIENT_SIGNATURE);
-        when(craRepository.findById(CRA_ID)).thenReturn(Optional.of(cra));
-
-        assertThatThrownBy(() -> service.validate(CRA_ID, JUNE_30, null, SIGNER_NAME))
-                .isInstanceOf(CraValidationBlockedException.class)
-                .satisfies(e -> {
-                    List<CraValidationBlockingReason> reasons =
-                            ((CraValidationBlockedException) e).getReasons();
-                    assertThat(reasons).containsExactlyInAnyOrder(
-                            CraValidationBlockingReason.STATUS_NOT_DRAFT,
-                            CraValidationBlockingReason.INVALID_SIGNATURE_IMAGE);
-                });
     }
 
     @Test
