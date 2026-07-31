@@ -1,3 +1,11 @@
+# Fix artifact — IMPLEMENTATION_FIX_REQUIRED
+
+- decision: IMPLEMENTATION_FIX_REQUIRED
+- review source: runs/T064/reviews/implementation-review.md
+- generated at: 2026-07-31T16:51:17Z
+
+---
+
 The test suite still has 6 failures, identical to the first review. The fixes were not applied. I'll write the review.
 
 # PR Review — T064 (tentative 2)
