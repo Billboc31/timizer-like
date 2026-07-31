@@ -1,7 +1,7 @@
 {
   "ticket_id": "T065",
-  "state": "INIT",
+  "state": "PLAN_APPROVED",
   "branch": "ticket/T065-add-consultant-and-client-signature-boxes-to-each",
   "issue_number": 128,
-  "updated_at": "2026-07-31T16:20:32Z"
+  "updated_at": "2026-07-31T16:29:13Z"
 }
