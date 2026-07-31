@@ -68,3 +68,7 @@ export interface ProviderSettingsDto {
   email?: string | null;
   phone?: string | null;
 }
+
+export interface SignatureLinkDto {
+  signatureUrl: string;
+}

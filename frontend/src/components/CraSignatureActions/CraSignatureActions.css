@@ -56,3 +56,10 @@
   margin: 0 0 var(--space-3);
   font-size: var(--font-size-sm);
 }
+
+.cra-signature-actions__link-value {
+  font-size: var(--font-size-sm);
+  word-break: break-all;
+  color: var(--color-text-subtle);
+  margin-bottom: var(--space-2);
+}

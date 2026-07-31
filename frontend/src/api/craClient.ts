@@ -4,6 +4,7 @@ import type {
   CraDayUpdateRequest,
   CraSummaryDto,
   ProviderSettingsDto,
+  SignatureLinkDto,
   ValidateCraRequestDto,
 } from './types';
 
@@ -48,4 +49,8 @@ export function updateProviderSettings(data: ProviderSettingsDto): Promise<Provi
 
 export function reopenCra(craId: number): Promise<void> {
   return apiPost<void>(`/api/cras/${craId}/reopen`, undefined);
+}
+
+export function generateSignatureLink(craId: number): Promise<SignatureLinkDto> {
+  return apiPost<SignatureLinkDto>(`/api/cras/${craId}/signature-link`, undefined);
 }
