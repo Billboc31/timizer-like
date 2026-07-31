@@ -64,45 +64,8 @@ class CraPdfDownloadServiceTest {
     }
 
     @Test
-    void throwsCraNotValidatedWhenCraIsReadyForProviderSignature() {
-        MonthlyCraReport cra = mock(MonthlyCraReport.class);
-        when(cra.getStatus()).thenReturn(ValidationStatus.READY_FOR_PROVIDER_SIGNATURE);
-        when(craRepository.findById(CRA_ID)).thenReturn(Optional.of(cra));
-
-        assertThatThrownBy(() -> service.download(CRA_ID))
-                .isInstanceOf(CraNotValidatedException.class);
-
-        verify(pdfGenerator, never()).generate(any());
-    }
-
-    @Test
-    void returnsPdfBytesForSignedByProviderCra() {
-        MonthlyCraReport cra = signedByProviderCra();
-        when(craRepository.findById(CRA_ID)).thenReturn(Optional.of(cra));
-        byte[] pdfBytes = new byte[]{1, 2, 3};
-        when(pdfGenerator.generate(any(CraPdfDocument.class))).thenReturn(pdfBytes);
-
-        CraPdfDownloadResult result = service.download(CRA_ID);
-
-        assertThat(result.content()).isEqualTo(pdfBytes);
-    }
-
-    @Test
     void returnsPdfBytesForAwaitingClientSignatureCra() {
-        MonthlyCraReport cra = signedByProviderCra();
-        when(cra.getStatus()).thenReturn(ValidationStatus.AWAITING_CLIENT_SIGNATURE);
-        when(craRepository.findById(CRA_ID)).thenReturn(Optional.of(cra));
-        when(pdfGenerator.generate(any(CraPdfDocument.class))).thenReturn(new byte[]{});
-
-        CraPdfDownloadResult result = service.download(CRA_ID);
-
-        assertThat(result).isNotNull();
-    }
-
-    @Test
-    void returnsPdfBytesForFullySignedCra() {
-        MonthlyCraReport cra = signedByProviderCra();
-        when(cra.getStatus()).thenReturn(ValidationStatus.FULLY_SIGNED);
+        MonthlyCraReport cra = awaitingClientSignatureCra();
         when(craRepository.findById(CRA_ID)).thenReturn(Optional.of(cra));
         when(pdfGenerator.generate(any(CraPdfDocument.class))).thenReturn(new byte[]{});
 
@@ -241,12 +204,12 @@ class CraPdfDownloadServiceTest {
         return cra;
     }
 
-    private MonthlyCraReport signedByProviderCra() {
+    private MonthlyCraReport awaitingClientSignatureCra() {
         MonthlyCraReport cra = mock(MonthlyCraReport.class);
         when(cra.getId()).thenReturn(CRA_ID);
         when(cra.getMonth()).thenReturn(6);
         when(cra.getYear()).thenReturn(2026);
-        when(cra.getStatus()).thenReturn(ValidationStatus.SIGNED_BY_PROVIDER);
+        when(cra.getStatus()).thenReturn(ValidationStatus.AWAITING_CLIENT_SIGNATURE);
         when(cra.getProviderFirstName()).thenReturn("John");
         when(cra.getProviderLastName()).thenReturn("Doe");
         when(cra.getProviderCompany()).thenReturn("Acme");

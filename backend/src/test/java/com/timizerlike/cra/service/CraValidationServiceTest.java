@@ -46,7 +46,7 @@ class CraValidationServiceTest {
 
         service.validate(CRA_ID, JUNE_30, SIGNATURE_IMAGE, SIGNER_NAME);
 
-        verify(cra).setStatus(ValidationStatus.VALIDATED);
+        verify(cra).setStatus(ValidationStatus.AWAITING_CLIENT_SIGNATURE);
         verify(cra).setProviderSignatureDate(JUNE_30);
         verify(cra).setProviderSignatureImage(SIGNATURE_IMAGE);
         verify(cra).setProviderSignerName(SIGNER_NAME);

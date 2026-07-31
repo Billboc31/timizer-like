@@ -42,7 +42,7 @@ export function CraValidation({ cra, onValidated, onGoToSettings }: Props) {
     }
   }, [uiState]);
 
-  if (!cra || cra.status === 'VALIDATED') return null;
+  if (!cra || cra.status !== 'DRAFT') return null;
 
   const handleValidateClick = async () => {
     setError(null);
@@ -146,7 +146,7 @@ export function CraValidation({ cra, onValidated, onGoToSettings }: Props) {
         onClick={handleValidateClick}
         disabled={uiState === 'loading-sig'}
       >
-        {uiState === 'loading-sig' ? 'Chargement…' : 'Valider le CRA'}
+        {uiState === 'loading-sig' ? 'Chargement…' : 'Valider et signer le CRA'}
       </button>
 
       {error && uiState === 'idle' && (

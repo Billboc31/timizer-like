@@ -42,8 +42,7 @@ public class CraPdfDownloadService {
         MonthlyCraReport cra = craRepository.findById(craId)
                 .orElseThrow(() -> new CraNotFoundException(craId));
 
-        if (cra.getStatus() == ValidationStatus.DRAFT
-                || cra.getStatus() == ValidationStatus.READY_FOR_PROVIDER_SIGNATURE) {
+        if (cra.getStatus() == ValidationStatus.DRAFT) {
             throw new CraNotValidatedException(craId);
         }
 

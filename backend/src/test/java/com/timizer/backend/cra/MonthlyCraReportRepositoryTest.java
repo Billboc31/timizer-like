@@ -9,11 +9,14 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.TestPropertySource;
 
 @DataJpaTest
+@AutoConfigureTestDatabase(replace = Replace.NONE)
 @TestPropertySource(properties = {
     "spring.jpa.hibernate.ddl-auto=create-drop"
 })
@@ -136,13 +139,13 @@ class MonthlyCraReportRepositoryTest {
         Thread.sleep(10);
 
         MonthlyCraReport loaded = repository.findById(saved.getId()).orElseThrow();
-        loaded.setStatus(ValidationStatus.SIGNED_BY_PROVIDER);
+        loaded.setStatus(ValidationStatus.AWAITING_CLIENT_SIGNATURE);
         repository.save(loaded);
         entityManager.flush();
         entityManager.clear();
 
         MonthlyCraReport reloaded = repository.findById(saved.getId()).orElseThrow();
-        assertThat(reloaded.getStatus()).isEqualTo(ValidationStatus.SIGNED_BY_PROVIDER);
+        assertThat(reloaded.getStatus()).isEqualTo(ValidationStatus.AWAITING_CLIENT_SIGNATURE);
         assertThat(reloaded.getUpdatedAt()).isAfter(originalUpdatedAt);
     }
 

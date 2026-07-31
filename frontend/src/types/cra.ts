@@ -11,7 +11,7 @@ export interface CraDetails {
   month: number;
   year: number;
   totalWorkedDays: number;
-  status: 'DRAFT' | 'READY_FOR_PROVIDER_SIGNATURE' | 'SIGNED_BY_PROVIDER' | 'AWAITING_CLIENT_SIGNATURE' | 'FULLY_SIGNED' | 'VALIDATED';
+  status: 'DRAFT' | 'AWAITING_CLIENT_SIGNATURE' | 'VALIDATED';
   days: CraDayEntry[];
   providerSignatureDate: string | null;
   providerFirstName?: string | null;
@@ -25,6 +25,7 @@ export interface CraDetails {
   clientSignatureDate?: string | null;
   providerSignatureImage?: string | null;
   providerSignerName?: string | null;
+  clientRepresentativeName?: string | null;
 }
 
 export interface CraDetailsDto extends CraSummaryDto {

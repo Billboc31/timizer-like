@@ -90,10 +90,10 @@ describe('CraSummaryPanel', () => {
     expect(screen.getByTestId('summary-provider-company')).toHaveTextContent('—');
   });
 
-  it('shows "Signé" label for VALIDATED status', () => {
+  it('shows "Validé" label for VALIDATED status', () => {
     const cra: CraDetails = { ...BASE_CRA, status: 'VALIDATED' };
     render(<CraSummaryPanel cra={cra} loading={false} error={null} />);
-    expect(screen.getByTestId('summary-status')).toHaveTextContent('Signé');
+    expect(screen.getByTestId('summary-status')).toHaveTextContent('Validé');
   });
 
   it('applies draft badge class for DRAFT status', () => {
@@ -107,9 +107,9 @@ describe('CraSummaryPanel', () => {
     expect(screen.getByTestId('summary-status')).toHaveClass('cra-signature-status--signed');
   });
 
-  it('shows "Soumettre" action button when onSuccess is provided for DRAFT', () => {
+  it('does not show action button for DRAFT (validation is in CraValidation)', () => {
     render(<CraSummaryPanel cra={BASE_CRA} loading={false} error={null} onSuccess={vi.fn()} />);
-    expect(screen.getByRole('button', { name: /soumettre pour signature/i })).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /soumettre/i })).not.toBeInTheDocument();
   });
 
   it('does not show action button when onSuccess is not provided', () => {

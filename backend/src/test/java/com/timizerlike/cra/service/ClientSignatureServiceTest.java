@@ -45,8 +45,8 @@ class ClientSignatureServiceTest {
     }
 
     @Test
-    void happyPathPersistsRecordAndTransitionsCraToFullySigned() {
-        MonthlyCraReport cra = signedByProviderCra();
+    void happyPathPersistsRecordAndTransitionsCraToValidated() {
+        MonthlyCraReport cra = awaitingClientSignatureCra();
         CraSignatureToken token = new CraSignatureToken("hash", 1L);
         when(tokenService.validateAndConsume(VALID_TOKEN)).thenReturn(new ConsumedToken(token, cra));
         when(craRepository.save(cra)).thenReturn(cra);
@@ -54,7 +54,7 @@ class ClientSignatureServiceTest {
         service.sign(VALID_TOKEN, SIGNER_NAME, null, true, VALID_SIGNATURE);
 
         verify(recordRepository).save(any(CraClientSignatureRecord.class));
-        verify(cra).setStatus(ValidationStatus.FULLY_SIGNED);
+        verify(cra).setStatus(ValidationStatus.VALIDATED);
         verify(craRepository).save(cra);
     }
 
@@ -108,12 +108,12 @@ class ClientSignatureServiceTest {
         verify(recordRepository, never()).save(any());
     }
 
-    private MonthlyCraReport signedByProviderCra() {
+    private MonthlyCraReport awaitingClientSignatureCra() {
         MonthlyCraReport cra = mock(MonthlyCraReport.class);
         when(cra.getId()).thenReturn(1L);
         when(cra.getMonth()).thenReturn(7);
         when(cra.getYear()).thenReturn(2026);
-        when(cra.getStatus()).thenReturn(ValidationStatus.SIGNED_BY_PROVIDER);
+        when(cra.getStatus()).thenReturn(ValidationStatus.AWAITING_CLIENT_SIGNATURE);
         when(cra.getDayEntries()).thenReturn(List.of());
         return cra;
     }

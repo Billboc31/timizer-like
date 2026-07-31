@@ -23,8 +23,9 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.timizer.backend.cra.CraNotFoundException;
-import com.timizer.backend.cra.CraNotSignedByProviderException;
+import com.timizer.backend.cra.InvalidCraTransitionException;
 import com.timizer.backend.cra.TokenNotFoundException;
+import com.timizer.backend.cra.ValidationStatus;
 import com.timizerlike.backend.cra.dto.CraDayEntryDto;
 import com.timizerlike.backend.cra.dto.CraPublicViewDto;
 import com.timizerlike.cra.service.CraSignatureTokenService;
@@ -60,12 +61,13 @@ class CraSignatureLinkControllerTest {
     }
 
     @Test
-    void postSignatureLinkReturns409WhenCraNotSignedByProvider() throws Exception {
-        when(tokenService.generateToken(1L)).thenThrow(new CraNotSignedByProviderException(1L));
+    void postSignatureLinkReturns409WhenCraNotAwaitingClientSignature() throws Exception {
+        when(tokenService.generateToken(1L))
+                .thenThrow(new InvalidCraTransitionException(1L, ValidationStatus.DRAFT, "generate-token"));
 
         mockMvc.perform(post("/api/cras/1/signature-link"))
                 .andExpect(status().isConflict())
-                .andExpect(jsonPath("$.error").value("cra_not_signed"));
+                .andExpect(jsonPath("$.error").value("invalid_cra_transition"));
     }
 
     @Test

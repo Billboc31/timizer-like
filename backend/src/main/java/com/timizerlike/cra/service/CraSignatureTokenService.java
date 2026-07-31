@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.timizer.backend.cra.CraNotFoundException;
-import com.timizer.backend.cra.CraNotSignedByProviderException;
+import com.timizer.backend.cra.InvalidCraTransitionException;
 import com.timizer.backend.cra.CraSignatureToken;
 import com.timizer.backend.cra.CraSignatureTokenRepository;
 import com.timizer.backend.cra.MonthlyCraReport;
@@ -46,8 +46,8 @@ public class CraSignatureTokenService {
         MonthlyCraReport cra = craRepository.findById(craId)
                 .orElseThrow(() -> new CraNotFoundException(craId));
 
-        if (cra.getStatus() != ValidationStatus.SIGNED_BY_PROVIDER) {
-            throw new CraNotSignedByProviderException(craId);
+        if (cra.getStatus() != ValidationStatus.AWAITING_CLIENT_SIGNATURE) {
+            throw new InvalidCraTransitionException(craId, cra.getStatus(), "generate-token");
         }
 
         tokenRepository.deleteByCraId(craId);

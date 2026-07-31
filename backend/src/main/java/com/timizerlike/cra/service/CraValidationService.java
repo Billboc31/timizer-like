@@ -32,7 +32,7 @@ public class CraValidationService {
             throw new CraValidatedException(craId);
         }
 
-        cra.setStatus(ValidationStatus.VALIDATED);
+        cra.setStatus(ValidationStatus.AWAITING_CLIENT_SIGNATURE);
         cra.setProviderSignatureDate(providerSignatureDate);
         cra.setProviderSignatureImage(providerSignatureImage);
         cra.setProviderSignerName(providerSignerName);
