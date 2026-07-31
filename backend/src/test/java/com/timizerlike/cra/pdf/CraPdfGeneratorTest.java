@@ -259,9 +259,8 @@ class CraPdfGeneratorTest {
             String allText = extractAllPages(loaded);
             assertThat(allText)
                     .contains("Bon pour validation des temps")
-                    .contains("Nom du client")
-                    .contains("Date de validation")
-                    .contains("Signature");
+                    .contains("Signature du prestataire")
+                    .contains("Signature du client");
         }
     }
 
@@ -297,7 +296,44 @@ class CraPdfGeneratorTest {
             String allText = extractAllPages(loaded);
             assertThat(allText)
                     .contains("Bon pour validation des temps")
-                    .contains("Date de validation");
+                    .contains("Signature du prestataire")
+                    .contains("Signature du client");
+        }
+    }
+
+    @Test
+    void signatureBoxesAppearForEachMonthInMultiMonthCra() throws IOException {
+        CraPdfDocument document = twoMonthFixture();
+
+        byte[] bytes = generator.generate(document);
+
+        try (PDDocument loaded = Loader.loadPDF(bytes)) {
+            String allText = extractAllPages(loaded);
+            assertThat(allText)
+                    .contains("Détail — avril 2026")
+                    .contains("Détail — mai 2026");
+            assertThat(countOccurrences(allText, "Signature du prestataire")).isGreaterThanOrEqualTo(2);
+            assertThat(countOccurrences(allText, "Signature du client")).isGreaterThanOrEqualTo(2);
+        }
+    }
+
+    @Test
+    void signatureBlockDoesNotSplitAcrossPages() throws IOException {
+        YearMonth february = YearMonth.of(2026, 2);
+        CraPdfDocument document = monthFixture(february, 11);
+
+        byte[] bytes = generator.generate(document);
+
+        try (PDDocument loaded = Loader.loadPDF(bytes)) {
+            boolean foundOnSamePage = false;
+            for (int p = 1; p <= loaded.getNumberOfPages(); p++) {
+                String pageText = extractPage(loaded, p);
+                if (pageText.contains("Signature du prestataire") && pageText.contains("Signature du client")) {
+                    foundOnSamePage = true;
+                    break;
+                }
+            }
+            assertThat(foundOnSamePage).isTrue();
         }
     }
 
@@ -471,6 +507,16 @@ class CraPdfGeneratorTest {
                 new CraPdfClientSignature("Bob Client", LocalDate.of(2026, 4, 15), MINIMAL_PNG)
         );
         return new CraPdfDocument(summary, List.of(), signatures);
+    }
+
+    private static int countOccurrences(String text, String substring) {
+        int count = 0;
+        int idx = 0;
+        while ((idx = text.indexOf(substring, idx)) != -1) {
+            count++;
+            idx++;
+        }
+        return count;
     }
 
     private static String extractPage(PDDocument document, int pageNumber) throws IOException {

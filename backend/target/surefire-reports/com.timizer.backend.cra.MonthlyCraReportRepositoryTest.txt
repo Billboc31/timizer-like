@@ -1,7 +1,7 @@
 -------------------------------------------------------------------------------
 Test set: com.timizer.backend.cra.MonthlyCraReportRepositoryTest
 -------------------------------------------------------------------------------
-Tests run: 8, Failures: 0, Errors: 8, Skipped: 0, Time elapsed: 0.030 s <<< FAILURE! -- in com.timizer.backend.cra.MonthlyCraReportRepositoryTest
+Tests run: 8, Failures: 0, Errors: 8, Skipped: 0, Time elapsed: 0.035 s <<< FAILURE! -- in com.timizer.backend.cra.MonthlyCraReportRepositoryTest
 com.timizer.backend.cra.MonthlyCraReportRepositoryTest.findByMonthAndYearReturnsMatchingReport -- Time elapsed: 0.005 s <<< ERROR!
 org.springframework.dao.InvalidDataAccessResourceUsageException: 
 could not prepare statement [Table "monthly_cra_report" non trouvée
@@ -107,7 +107,7 @@ insert into "monthly_cra_report" ("client_address","client_company","client_cont
 	at org.hibernate.engine.jdbc.internal.MutationStatementPreparerImpl$StatementPreparationTemplate.prepareStatement(MutationStatementPreparerImpl.java:106)
 	... 61 more
 
-com.timizer.backend.cra.MonthlyCraReportRepositoryTest.findByIdReturnsReportWithDayEntries -- Time elapsed: 0.003 s <<< ERROR!
+com.timizer.backend.cra.MonthlyCraReportRepositoryTest.findByIdReturnsReportWithDayEntries -- Time elapsed: 0.004 s <<< ERROR!
 org.springframework.dao.InvalidDataAccessResourceUsageException: 
 could not prepare statement [Table "monthly_cra_report" non trouvée
 Table "monthly_cra_report" not found; SQL statement:
@@ -212,7 +212,7 @@ insert into "monthly_cra_report" ("client_address","client_company","client_cont
 	at org.hibernate.engine.jdbc.internal.MutationStatementPreparerImpl$StatementPreparationTemplate.prepareStatement(MutationStatementPreparerImpl.java:106)
 	... 61 more
 
-com.timizer.backend.cra.MonthlyCraReportRepositoryTest.findByMonthAndYearReturnsEmptyWhenNoMatch -- Time elapsed: 0.003 s <<< ERROR!
+com.timizer.backend.cra.MonthlyCraReportRepositoryTest.findByMonthAndYearReturnsEmptyWhenNoMatch -- Time elapsed: 0.004 s <<< ERROR!
 org.springframework.dao.InvalidDataAccessResourceUsageException: 
 could not prepare statement [Table "monthly_cra_report" non trouvée
 Table "monthly_cra_report" not found; SQL statement:
@@ -521,7 +521,7 @@ insert into "monthly_cra_report" ("client_address","client_company","client_cont
 	at org.hibernate.engine.jdbc.internal.MutationStatementPreparerImpl$StatementPreparationTemplate.prepareStatement(MutationStatementPreparerImpl.java:106)
 	... 61 more
 
-com.timizer.backend.cra.MonthlyCraReportRepositoryTest.updatingReportPersistsChangeAndAdvancesUpdatedAt -- Time elapsed: 0.003 s <<< ERROR!
+com.timizer.backend.cra.MonthlyCraReportRepositoryTest.updatingReportPersistsChangeAndAdvancesUpdatedAt -- Time elapsed: 0.002 s <<< ERROR!
 org.springframework.dao.InvalidDataAccessResourceUsageException: 
 could not prepare statement [Table "monthly_cra_report" non trouvée
 Table "monthly_cra_report" not found; SQL statement:
@@ -731,7 +731,7 @@ insert into "monthly_cra_report" ("client_address","client_company","client_cont
 	at org.hibernate.engine.jdbc.internal.MutationStatementPreparerImpl$StatementPreparationTemplate.prepareStatement(MutationStatementPreparerImpl.java:106)
 	... 61 more
 
-com.timizer.backend.cra.MonthlyCraReportRepositoryTest.removingDayEntryFromPersistedReportTriggersOrphanRemoval -- Time elapsed: 0.002 s <<< ERROR!
+com.timizer.backend.cra.MonthlyCraReportRepositoryTest.removingDayEntryFromPersistedReportTriggersOrphanRemoval -- Time elapsed: 0.003 s <<< ERROR!
 org.springframework.dao.InvalidDataAccessResourceUsageException: 
 could not prepare statement [Table "monthly_cra_report" non trouvée
 Table "monthly_cra_report" not found; SQL statement:
