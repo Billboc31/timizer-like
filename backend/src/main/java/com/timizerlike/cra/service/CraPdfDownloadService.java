@@ -80,17 +80,22 @@ public class CraPdfDownloadService {
                 .toList();
 
         byte[] providerImage = decodeSignatureImage(cra.getProviderSignatureImage());
+        String providerName = cra.getProviderSignerName() != null
+                ? cra.getProviderSignerName()
+                : (cra.getProviderFirstName() + " " + cra.getProviderLastName());
         CraPdfProviderSignature providerSignature = new CraPdfProviderSignature(
-                cra.getProviderFirstName() + " " + cra.getProviderLastName(),
-                cra.getProviderSignatureDate(),
+                providerName,
+                null,
+                cra.getProviderSignedAt(),
                 providerImage);
 
         CraPdfClientSignature clientSignature = null;
-        if (cra.getClientSignatureDate() != null || cra.getClientRepresentativeName() != null) {
-            byte[] clientImage = decodeBase64(cra.getClientSignatureImage());
+        if (cra.getClientSignedAt() != null || cra.getClientRepresentativeName() != null) {
+            byte[] clientImage = decodeSignatureImage(cra.getClientSignatureImage());
             clientSignature = new CraPdfClientSignature(
                     cra.getClientRepresentativeName(),
-                    cra.getClientSignatureDate(),
+                    cra.getClientContactRole(),
+                    cra.getClientSignedAt(),
                     clientImage);
         }
 

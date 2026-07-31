@@ -9,6 +9,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -163,8 +164,9 @@ class CraPdfDownloadServiceTest {
 
     @Test
     void populatesClientSignatureWhenSigned() {
+        Instant signedAt = Instant.parse("2026-07-01T10:00:00Z");
         MonthlyCraReport cra = validatedCra();
-        when(cra.getClientSignatureDate()).thenReturn(LocalDate.of(2026, 7, 1));
+        when(cra.getClientSignedAt()).thenReturn(signedAt);
         when(cra.getClientRepresentativeName()).thenReturn("Jane Smith");
         when(cra.getClientSignatureImage()).thenReturn(null);
         when(craRepository.findById(CRA_ID)).thenReturn(Optional.of(cra));
@@ -176,7 +178,7 @@ class CraPdfDownloadServiceTest {
             CraPdfClientSignature client = doc.signatures() == null ? null : doc.signatures().client();
             return client != null
                     && "Jane Smith".equals(client.clientRepresentativeName())
-                    && LocalDate.of(2026, 7, 1).equals(client.signedAt());
+                    && signedAt.equals(client.signedAt());
         }));
     }
 
@@ -194,9 +196,11 @@ class CraPdfDownloadServiceTest {
         when(cra.getClientCompany()).thenReturn("ClientCo");
         when(cra.getClientContactEmail()).thenReturn("jane@clientco.com");
         when(cra.getProviderSignatureDate()).thenReturn(LocalDate.of(2026, 6, 30));
+        when(cra.getProviderSignedAt()).thenReturn(Instant.parse("2026-06-30T10:00:00Z"));
         when(cra.getProviderAddress()).thenReturn("1 rue Provider");
         when(cra.getProviderEmail()).thenReturn("john@example.com");
         when(cra.getProviderSignatureImage()).thenReturn(null);
+        when(cra.getClientSignedAt()).thenReturn(null);
         when(cra.getClientSignatureDate()).thenReturn(null);
         when(cra.getClientRepresentativeName()).thenReturn(null);
         when(cra.getClientSignatureImage()).thenReturn(null);
@@ -218,9 +222,11 @@ class CraPdfDownloadServiceTest {
         when(cra.getClientCompany()).thenReturn("ClientCo");
         when(cra.getClientContactEmail()).thenReturn("jane@clientco.com");
         when(cra.getProviderSignatureDate()).thenReturn(LocalDate.of(2026, 6, 30));
+        when(cra.getProviderSignedAt()).thenReturn(Instant.parse("2026-06-30T10:00:00Z"));
         when(cra.getProviderAddress()).thenReturn("1 rue Provider");
         when(cra.getProviderEmail()).thenReturn("john@example.com");
         when(cra.getProviderSignatureImage()).thenReturn(null);
+        when(cra.getClientSignedAt()).thenReturn(null);
         when(cra.getClientSignatureDate()).thenReturn(null);
         when(cra.getClientRepresentativeName()).thenReturn(null);
         when(cra.getClientSignatureImage()).thenReturn(null);

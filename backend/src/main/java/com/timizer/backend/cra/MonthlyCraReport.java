@@ -130,6 +130,12 @@ public class MonthlyCraReport {
     @Column(name = "provider_content_hash")
     private String providerContentHash;
 
+    @Column(name = "provider_signed_at")
+    private Instant providerSignedAt;
+
+    @Column(name = "client_signed_at")
+    private Instant clientSignedAt;
+
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;
 
@@ -405,11 +411,28 @@ public class MonthlyCraReport {
         this.providerContentHash = providerContentHash;
     }
 
+    public Instant getProviderSignedAt() {
+        return providerSignedAt;
+    }
+
+    public void setProviderSignedAt(Instant providerSignedAt) {
+        this.providerSignedAt = providerSignedAt;
+    }
+
+    public Instant getClientSignedAt() {
+        return clientSignedAt;
+    }
+
+    public void setClientSignedAt(Instant clientSignedAt) {
+        this.clientSignedAt = clientSignedAt;
+    }
+
     public void clearProviderSignature() {
         this.providerSignatureDate = null;
         this.providerSignerName = null;
         this.providerSignatureImage = null;
         this.providerContentHash = null;
+        this.providerSignedAt = null;
         this.validationDate = null;
     }
 
@@ -417,5 +440,6 @@ public class MonthlyCraReport {
         this.clientSignatureDate = null;
         this.clientRepresentativeName = null;
         this.clientSignatureImage = null;
+        this.clientSignedAt = null;
     }
 }

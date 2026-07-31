@@ -1,9 +1,10 @@
 package com.timizerlike.cra.pdf.model;
 
-import java.time.LocalDate;
+import java.time.Instant;
 
 public record CraPdfClientSignature(
         String clientRepresentativeName,
-        LocalDate signedAt,
+        String role,
+        Instant signedAt,
         byte[] signatureImage
 ) {}
