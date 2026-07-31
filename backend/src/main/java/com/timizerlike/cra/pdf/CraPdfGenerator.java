@@ -477,6 +477,8 @@ public class CraPdfGenerator {
                     pdf.addPage(sigPage);
                     cs = new PDPageContentStream(pdf, sigPage);
                     y = PAGE_TOP;
+                    drawText(cs, bold, 11f, MARGIN, y, "Signatures — " + yearMonth.format(PERIOD_FORMAT_LONG));
+                    y -= 18f;
                 }
                 y = drawMonthlySignatureBoxes(cs, y, tableWidth, providerName, clientName);
             }
