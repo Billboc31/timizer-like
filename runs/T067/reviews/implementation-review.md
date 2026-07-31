@@ -1,0 +1,45 @@
+---
+
+# PR Review — T067 Fix CRA validation workflow
+
+## Résumé
+
+L'implémentation corrige le bug racine (export `validateCra()` manquant) et implémente correctement le happy path de la machine à 3 états. Cependant, **6 critères d'acceptance bloquants** ne sont pas implémentés.
+
+---
+
+## Points validés
+
+- `validateCra()` exporté dans `craClient.ts` — bug racine corrigé
+- 3 états corrects : `DRAFT | AWAITING_CLIENT_SIGNATURE | VALIDATED`
+- Transition consultant atomique (image + nom + date persistés en une transaction)
+- Transition client atomique avec snapshot JSON du CRA (`CraClientSignatureRecord`)
+- Guard post-signature : PATCH day sur status ≠ DRAFT → 409
+- Token stocké en SHA-256 uniquement
+- Labels français corrects en frontend
+- 195 tests backend / 269 tests frontend passants
+
+---
+
+## Problèmes bloquants
+
+| # | Problème | Critère ticket |
+|---|---|---|
+| 1 | Aucun `CraAuditService` ni table `cra_transition_event` | "Transition and signature events are auditable" |
+| 2 | Aucun flux de réouverture (`POST /reopen` / `reopenForEdit()`) | "Editing signed content explicitly invalidates signatures and returns the CRA to DRAFT" |
+| 3 | Aucun hash de contenu CRA stocké avec la signature consultant | "signed CRA revision/hash" stocké atomiquement |
+| 4 | Aucune migration Flyway pour les nouvelles colonnes/tables | Déploiement impossible sur base existante |
+| 5 | Aucun `@Version` sur `MonthlyCraReport` | "Prevent simultaneous consultant/client validation races" |
+| 6 | Erreur générique `cra_validated` au lieu de `List<BlockingReason>` | "precise blocking reasons" / "list the exact missing prerequisites" |
+
+## Problèmes modérés
+
+- `CraSignatureToken` sans `expiresAt` : les tokens expirés ne sont pas différenciés des tokens valides
+- Validation data URI absente dans `CraValidationService` (présente dans `ClientSignatureService`)
+- Tests manquants : token expiré, soumissions concurrentes, édition après les deux signatures
+
+---
+
+## Décision
+
+IMPLEMENTATION_FIX_REQUIRED
