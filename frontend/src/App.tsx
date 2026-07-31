@@ -56,7 +56,6 @@ export default function App() {
   const [newCraDialogOpen, setNewCraDialogOpen] = useState(false);
   const [newCraLoading, setNewCraLoading] = useState(false);
   const [newCraError, setNewCraError] = useState<string | null>(null);
-  const [selectedPeriod, setSelectedPeriod] = useState<{ startDate: string; endDate: string } | null>(null);
   const [newCraPrefill, setNewCraPrefill] = useState<{ month: number; year: number } | null>(null);
   const newCraTriggerRef = useRef<HTMLButtonElement>(null);
 
@@ -153,7 +152,6 @@ export default function App() {
       const existing = cras.find(c => c.year === year && c.month === month);
 
       if (existing) {
-        setSelectedPeriod({ startDate, endDate });
         setNewCraDialogOpen(false);
         setNewCraLoading(false);
         handleOpen(existing);
@@ -162,7 +160,6 @@ export default function App() {
       }
 
       const created = await createCra(year, month);
-      setSelectedPeriod({ startDate, endDate });
       setNewCraDialogOpen(false);
       setNewCraLoading(false);
       handleOpen(created);
