@@ -32,3 +32,8 @@
 [2026-07-31T23:47:10Z] push: pushing branch=ticket/T066-redesign-the-client-cra-signature-page
 [2026-07-31T23:47:13Z] push: done branch=ticket/T066-redesign-the-client-cra-signature-page
 [2026-07-31T23:47:14Z] auto-run: TEST_COMPLETE — running PR lifecycle
+[2026-07-31T23:54:45Z] conflict-resolver: [pass 2/3] conflicted=['backend/src/main/java/com/timizerlike/cra/service/ClientSignatureService.java', 'backend/src/test/java/com/timizerlike/backend/cra/integration/CraSignatureWorkflowIntegrationTest.java', 'backend/src/test/java/com/timizerlike/cra/service/ClientSignatureServiceTest.java'] | staged=['backend/src/main/java/com/timizerlike/cra/service/ClientSignatureService.java', 'backend/src/test/java/com/timizerlike/backend/cra/integration/CraSignatureWorkflowIntegrationTest.java', 'backend/src/test/java/com/timizerlike/cra/service/ClientSignatureServiceTest.java'] | unresolved=[] | continue_rc=1 | next_source=[]
+[2026-07-31T23:54:45Z] conflict-resolver: all conflicts resolved after 2 pass(es)
+[2026-07-31T23:54:45Z] conflict-resolver: running tests
+[2026-07-31T23:54:45Z] conflict-resolver: test-report written: runs/T066/conflict/test-report.md
+[2026-07-31T23:54:45Z] conflict-resolver: staging and committing resolution artifacts
