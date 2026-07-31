@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.util.List;
 
 public record CraPublicViewDto(
+        Long craId,
+        String status,
         int month,
         int year,
         String providerFirstName,

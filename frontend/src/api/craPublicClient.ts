@@ -1,4 +1,4 @@
-import { apiGet, apiPost } from './httpClient';
+import { apiGet, apiGetBlob, apiPost } from './httpClient';
 import type { CraPublicView } from '../types/craPublicView';
 
 export function getPublicCra(token: string): Promise<CraPublicView> {
@@ -14,4 +14,8 @@ export interface ClientSignatureBody {
 
 export function submitClientSignature(token: string, body: ClientSignatureBody): Promise<void> {
   return apiPost<void>(`/public/cra-link/${token}/sign`, body);
+}
+
+export function downloadPublicCraPdf(craId: number): Promise<Blob> {
+  return apiGetBlob(`/public/cra/${craId}/pdf`);
 }

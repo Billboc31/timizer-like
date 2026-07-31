@@ -1,0 +1,22 @@
+.signature-canvas {
+  display: block;
+  width: 100%;
+  max-width: 600px;
+  height: auto;
+  touch-action: none;
+  cursor: crosshair;
+  border: 2px solid var(--color-neutral-300);
+  border-radius: var(--radius-md);
+  background-color: var(--color-white);
+}
+
+.signature-canvas:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+.signature-canvas--disabled {
+  cursor: default;
+  pointer-events: none;
+  opacity: 0.6;
+}

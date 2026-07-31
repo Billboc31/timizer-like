@@ -15,6 +15,7 @@ import com.timizer.backend.cra.CraNotFoundException;
 import com.timizer.backend.cra.InvalidCraTransitionException;
 import com.timizer.backend.cra.CraSignatureToken;
 import com.timizer.backend.cra.CraSignatureTokenRepository;
+import com.timizer.backend.cra.CraWrongStatusException;
 import com.timizer.backend.cra.MonthlyCraReport;
 import com.timizer.backend.cra.MonthlyCraReportRepository;
 import com.timizer.backend.cra.TokenAlreadyConsumedException;
@@ -82,7 +83,7 @@ public class CraSignatureTokenService {
                 .orElseThrow(TokenNotFoundException::new);
 
         if (cra.getStatus() != ValidationStatus.AWAITING_CLIENT_SIGNATURE) {
-            throw new TokenNotFoundException();
+            throw new CraWrongStatusException();
         }
 
         return toPublicViewDto(cra);
@@ -140,6 +141,8 @@ public class CraSignatureTokenService {
             total += entry.getWorkValue();
         }
         return new CraPublicViewDto(
+                cra.getId(),
+                cra.getStatus().name(),
                 cra.getMonth(),
                 cra.getYear(),
                 cra.getProviderFirstName(),

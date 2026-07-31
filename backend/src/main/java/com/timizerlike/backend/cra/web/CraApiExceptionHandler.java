@@ -16,6 +16,7 @@ import com.timizer.backend.cra.CraNotValidatedException;
 import com.timizer.backend.cra.CraValidatedException;
 import com.timizer.backend.cra.CraValidationBlockedException;
 import com.timizer.backend.cra.CraValidationBlockingReason;
+import com.timizer.backend.cra.CraWrongStatusException;
 import com.timizer.backend.cra.InvalidCraTransitionException;
 import com.timizer.backend.cra.InvalidSignatureImageException;
 import com.timizer.backend.cra.InvalidWorkValueException;
@@ -99,5 +100,11 @@ public class CraApiExceptionHandler {
     public ResponseEntity<Map<String, String>> handleTokenExpired() {
         return ResponseEntity.status(HttpStatus.GONE)
                 .body(Map.of("error", "token_expired"));
+    }
+
+    @ExceptionHandler(CraWrongStatusException.class)
+    public ResponseEntity<Map<String, String>> handleCraWrongStatus() {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(Map.of("error", "cra_wrong_status"));
     }
 }

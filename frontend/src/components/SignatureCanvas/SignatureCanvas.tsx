@@ -1,4 +1,5 @@
 import { forwardRef, useImperativeHandle, useRef } from 'react';
+import './SignatureCanvas.css';
 
 export interface SignatureCanvasHandle {
   toDataURL(): string;
@@ -11,10 +12,11 @@ interface Props {
   width?: number;
   height?: number;
   className?: string;
+  disabled?: boolean;
 }
 
 export const SignatureCanvas = forwardRef<SignatureCanvasHandle, Props>(
-  ({ onDraw, width = 400, height = 150, className }, ref) => {
+  ({ onDraw, width = 600, height = 200, className, disabled = false }, ref) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const isDrawing = useRef(false);
     const hasDrawn = useRef(false);
@@ -37,18 +39,23 @@ export const SignatureCanvas = forwardRef<SignatureCanvasHandle, Props>(
     }));
 
     function getPos(e: React.PointerEvent<HTMLCanvasElement>) {
-      const rect = e.currentTarget.getBoundingClientRect();
-      return { x: e.clientX - rect.left, y: e.clientY - rect.top };
+      const canvas = e.currentTarget;
+      const rect = canvas.getBoundingClientRect();
+      return {
+        x: (e.clientX - rect.left) * (canvas.width / rect.width),
+        y: (e.clientY - rect.top) * (canvas.height / rect.height),
+      };
     }
 
     function handlePointerDown(e: React.PointerEvent<HTMLCanvasElement>) {
+      if (disabled) return;
       e.currentTarget.setPointerCapture(e.pointerId);
       isDrawing.current = true;
       lastPos.current = getPos(e);
     }
 
     function handlePointerMove(e: React.PointerEvent<HTMLCanvasElement>) {
-      if (!isDrawing.current || !lastPos.current) return;
+      if (disabled || !isDrawing.current || !lastPos.current) return;
       const canvas = canvasRef.current;
       if (!canvas) return;
       const ctx = canvas.getContext('2d');
@@ -79,8 +86,7 @@ export const SignatureCanvas = forwardRef<SignatureCanvasHandle, Props>(
         ref={canvasRef}
         width={width}
         height={height}
-        className={className}
-        style={{ touchAction: 'none', cursor: 'crosshair' }}
+        className={`signature-canvas${disabled ? ' signature-canvas--disabled' : ''}${className ? ' ' + className : ''}`}
         onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}
         onPointerUp={handlePointerUp}

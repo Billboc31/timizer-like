@@ -3,6 +3,7 @@ import { SignatureCanvas } from '../SignatureCanvas/SignatureCanvas';
 import type { SignatureCanvasHandle } from '../SignatureCanvas/SignatureCanvas';
 import { submitClientSignature } from '../../api/craPublicClient';
 import { ApiError } from '../../api/apiError';
+import './ClientSignatureForm.css';
 
 interface ClientSignatureFormProps {
   token: string;
@@ -58,17 +59,24 @@ export function ClientSignatureForm({ token, onSuccess }: ClientSignatureFormPro
   }
 
   return (
-    <form onSubmit={handleSubmit} data-testid="client-signature-form">
-      <h2>Signer le CRA</h2>
+    <form onSubmit={handleSubmit} data-testid="client-signature-form" className="signature-form">
+      <div className="signature-form__explanation">
+        <p>
+          En signant ce document, vous certifiez avoir vérifié les informations ci-dessus
+          et vous approuvez le Compte Rendu d'Activité du prestataire.
+        </p>
+      </div>
 
       {error && (
-        <div role="alert" data-testid="form-error">
+        <div role="alert" data-testid="form-error" className="signature-form__error">
           {error}
         </div>
       )}
 
-      <div>
-        <label htmlFor="signer-name">Nom du signataire *</label>
+      <div className="signature-form__field">
+        <label htmlFor="signer-name" className="signature-form__label">
+          Nom du signataire <span aria-hidden="true">*</span>
+        </label>
         <input
           id="signer-name"
           type="text"
@@ -76,41 +84,63 @@ export function ClientSignatureForm({ token, onSuccess }: ClientSignatureFormPro
           onChange={(e) => setSignerName(e.target.value)}
           required
           data-testid="signer-name-input"
+          className="input"
+          autoComplete="name"
         />
       </div>
 
-      <div>
-        <label htmlFor="signer-role">Fonction (optionnel)</label>
+      <div className="signature-form__field">
+        <label htmlFor="signer-role" className="signature-form__label">
+          Fonction <span className="signature-form__optional">(optionnel)</span>
+        </label>
         <input
           id="signer-role"
           type="text"
           value={signerRole}
           onChange={(e) => setSignerRole(e.target.value)}
           data-testid="signer-role-input"
+          className="input"
+          autoComplete="organization-title"
         />
       </div>
 
-      <div>
-        <label>
+      <div className="signature-form__field">
+        <label className="signature-form__consent">
           <input
             type="checkbox"
             checked={consentApproved}
             onChange={(e) => setConsentApproved(e.target.checked)}
             data-testid="consent-checkbox"
           />
-          {' '}Je confirme avoir examiné ce CRA et l&apos;approuve
+          <span>Je confirme avoir examiné ce CRA et l&apos;approuve</span>
         </label>
       </div>
 
-      <div>
-        <p>Signature *</p>
-        <SignatureCanvas
-          ref={canvasRef}
-          onDraw={() => setPadNonEmpty(true)}
-          data-testid="signature-canvas"
-        />
-        <button type="button" onClick={handleClear} data-testid="clear-button">
-          Effacer la signature
+      <div className="signature-form__field">
+        <label className="signature-form__label" id="signature-pad-label">
+          Votre signature <span aria-hidden="true">*</span>
+        </label>
+        <div className="signature-form__pad-wrapper">
+          <SignatureCanvas
+            ref={canvasRef}
+            onDraw={() => setPadNonEmpty(true)}
+            data-testid="signature-canvas"
+            disabled={submitting}
+            aria-labelledby="signature-pad-label"
+          />
+          {!padNonEmpty && (
+            <span className="signature-form__pad-hint" aria-hidden="true">
+              Dessinez votre signature ici
+            </span>
+          )}
+        </div>
+        <button
+          type="button"
+          onClick={handleClear}
+          data-testid="clear-button"
+          className="btn btn-secondary signature-form__clear"
+        >
+          Effacer
         </button>
       </div>
 
@@ -118,8 +148,9 @@ export function ClientSignatureForm({ token, onSuccess }: ClientSignatureFormPro
         type="submit"
         disabled={!canSubmit}
         data-testid="submit-button"
+        className="btn btn-primary signature-form__submit"
       >
-        {submitting ? 'Envoi en cours...' : 'Soumettre la signature'}
+        {submitting ? 'Signature en cours…' : 'Signer et valider le CRA'}
       </button>
     </form>
   );
