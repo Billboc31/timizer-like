@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { getCra, downloadCraPdf } from '../../api/craClient';
+import { getCra, downloadCraPdf, reopenCra } from '../../api/craClient';
 import { getErrorMessage } from '../../api/errorMessages';
 import { CalendarGrid } from '../CalendarGrid/CalendarGrid';
 import type { CraDetailsDto } from '../../api/types';
@@ -73,6 +73,8 @@ export function CraHistoryDetail({ craId, onBack }: Props) {
   const [error, setError] = useState<string | null>(null);
   const [downloading, setDownloading] = useState(false);
   const [downloadError, setDownloadError] = useState<string | null>(null);
+  const [reopening, setReopening] = useState(false);
+  const [reopenError, setReopenError] = useState<string | null>(null);
 
   const load = (id: number) => {
     setLoading(true);
@@ -92,6 +94,17 @@ export function CraHistoryDetail({ craId, onBack }: Props) {
   useEffect(() => {
     if (craId !== null) load(craId);
   }, [craId]);
+
+  const handleReopen = () => {
+    if (!cra) return;
+    if (!window.confirm('Réouvrir ce CRA invalidera les signatures existantes et le remettra en brouillon. Continuer ?')) return;
+    setReopening(true);
+    setReopenError(null);
+    reopenCra(cra.id)
+      .then(() => load(cra.id))
+      .catch((err: unknown) => { setReopenError(getErrorMessage(err)); })
+      .finally(() => { setReopening(false); });
+  };
 
   const handleDownload = () => {
     if (!cra) return;
@@ -208,6 +221,13 @@ export function CraHistoryDetail({ craId, onBack }: Props) {
         </div>
       )}
 
+      {reopenError && (
+        <div role="alert" className="cra-detail__error cra-detail__error--inline">
+          <span className="cra-detail__error-icon" aria-hidden="true">⚠</span>
+          <span>{reopenError}</span>
+        </div>
+      )}
+
       <div className="cra-detail__actions">
         <button className="cra-detail__btn" onClick={onBack}>
           ← Retour à l'historique
@@ -220,6 +240,16 @@ export function CraHistoryDetail({ craId, onBack }: Props) {
             aria-label="Télécharger le PDF"
           >
             {downloading ? 'Téléchargement…' : 'Télécharger PDF'}
+          </button>
+        )}
+        {cra && cra.status !== 'DRAFT' && (
+          <button
+            className="cra-detail__btn cra-detail__btn--reopen"
+            onClick={handleReopen}
+            disabled={reopening}
+            aria-label="Réouvrir le CRA"
+          >
+            {reopening ? 'Réouverture…' : 'Réouvrir et modifier'}
           </button>
         )}
       </div>

@@ -33,12 +33,21 @@ public class CraSignatureToken {
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;
 
+    @Column(name = "expires_at")
+    private Instant expiresAt;
+
     protected CraSignatureToken() {
     }
 
     public CraSignatureToken(String tokenHash, Long craId) {
         this.tokenHash = tokenHash;
         this.craId = craId;
+    }
+
+    public CraSignatureToken(String tokenHash, Long craId, Instant expiresAt) {
+        this.tokenHash = tokenHash;
+        this.craId = craId;
+        this.expiresAt = expiresAt;
     }
 
     @PrePersist
@@ -66,12 +75,20 @@ public class CraSignatureToken {
         return createdAt;
     }
 
+    public Instant getExpiresAt() {
+        return expiresAt;
+    }
+
     public boolean isRevoked() {
         return this.revokedAt != null;
     }
 
     public boolean isConsumed() {
         return this.consumedAt != null;
+    }
+
+    public boolean isExpired() {
+        return this.expiresAt != null && Instant.now().isAfter(this.expiresAt);
     }
 
     public void consume() {

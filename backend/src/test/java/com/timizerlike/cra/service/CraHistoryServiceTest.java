@@ -73,14 +73,14 @@ class CraHistoryServiceTest {
     }
 
     @Test
-    void mapsSignedByProviderStatus() {
-        MonthlyCraReport cra = mockReport(3L, 5, 2026, ValidationStatus.SIGNED_BY_PROVIDER, null, List.of());
+    void mapsAwaitingClientSignatureStatus() {
+        MonthlyCraReport cra = mockReport(3L, 5, 2026, ValidationStatus.AWAITING_CLIENT_SIGNATURE, null, List.of());
         when(craRepository.findAllByOrderByYearDescMonthDesc()).thenReturn(List.of(cra));
         when(calculationService.calculateTotalWorkedDays(List.of())).thenReturn(10.0);
 
         List<CraSummaryDto> result = service.listHistory();
 
-        assertThat(result.get(0).status()).isEqualTo(CraStatus.SIGNED_BY_PROVIDER);
+        assertThat(result.get(0).status()).isEqualTo(CraStatus.AWAITING_CLIENT_SIGNATURE);
     }
 
     @Test

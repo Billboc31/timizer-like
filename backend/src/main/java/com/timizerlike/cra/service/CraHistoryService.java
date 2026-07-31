@@ -6,9 +6,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.timizer.backend.cra.CraDetailsMapper;
+import com.timizer.backend.cra.CraNotFoundException;
 import com.timizer.backend.cra.CraTotalCalculationService;
 import com.timizer.backend.cra.MonthlyCraReport;
 import com.timizer.backend.cra.MonthlyCraReportRepository;
+import com.timizerlike.backend.cra.dto.CraDetailsDto;
 import com.timizerlike.backend.cra.dto.CraStatus;
 import com.timizerlike.backend.cra.dto.CraSummaryDto;
 
@@ -22,6 +24,13 @@ public class CraHistoryService {
             CraTotalCalculationService calculationService) {
         this.craRepository = craRepository;
         this.calculationService = calculationService;
+    }
+
+    @Transactional(readOnly = true)
+    public CraDetailsDto getCra(Long id) {
+        MonthlyCraReport report = craRepository.findById(id)
+                .orElseThrow(() -> new CraNotFoundException(id));
+        return CraDetailsMapper.toDto(report);
     }
 
     @Transactional(readOnly = true)

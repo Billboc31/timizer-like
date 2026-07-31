@@ -17,10 +17,7 @@ class CraDtoTest {
         assertArrayEquals(
                 new CraStatus[]{
                         CraStatus.DRAFT,
-                        CraStatus.READY_FOR_PROVIDER_SIGNATURE,
-                        CraStatus.SIGNED_BY_PROVIDER,
                         CraStatus.AWAITING_CLIENT_SIGNATURE,
-                        CraStatus.FULLY_SIGNED,
                         CraStatus.VALIDATED,
                 },
                 CraStatus.values()

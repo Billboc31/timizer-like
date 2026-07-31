@@ -40,7 +40,7 @@ class CraValidationControllerTest {
     private CraValidationService validationService;
 
     private static final CraDetailsDto VALIDATED_DTO = new CraDetailsDto(
-            1L, 6, 2026, 20.0, CraStatus.VALIDATED,
+            1L, 6, 2026, 20.0, CraStatus.AWAITING_CLIENT_SIGNATURE,
             List.of(),
             LocalDate.of(2026, 6, 30),
             LocalDate.of(2026, 6, 30),
@@ -59,7 +59,7 @@ class CraValidationControllerTest {
                         .content(VALID_BODY))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1))
-                .andExpect(jsonPath("$.status").value("VALIDATED"))
+                .andExpect(jsonPath("$.status").value("AWAITING_CLIENT_SIGNATURE"))
                 .andExpect(jsonPath("$.validationDate").value("2026-06-30"))
                 .andExpect(jsonPath("$.providerSignatureDate").value("2026-06-30"))
                 .andExpect(jsonPath("$.providerSignerName").value("Jean Dupont"));

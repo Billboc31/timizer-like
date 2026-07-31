@@ -1,6 +1,7 @@
 package com.timizerlike.cra.service;
 
 import java.time.Instant;
+import java.time.LocalDate;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -8,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.timizer.backend.cra.ConsentNotGivenException;
+import com.timizer.backend.cra.CraTransitionEvent.ActorType;
 import com.timizer.backend.cra.InvalidSignatureImageException;
 import com.timizer.backend.cra.CraClientSignatureRecord;
 import com.timizer.backend.cra.CraClientSignatureRecordRepository;
@@ -24,16 +26,19 @@ public class ClientSignatureService {
     private final CraClientSignatureRecordRepository signatureRecordRepository;
     private final MonthlyCraReportRepository craRepository;
     private final ObjectMapper objectMapper;
+    private final CraAuditService auditService;
 
     public ClientSignatureService(
             CraSignatureTokenService tokenService,
             CraClientSignatureRecordRepository signatureRecordRepository,
             MonthlyCraReportRepository craRepository,
-            ObjectMapper objectMapper) {
+            ObjectMapper objectMapper,
+            CraAuditService auditService) {
         this.tokenService = tokenService;
         this.signatureRecordRepository = signatureRecordRepository;
         this.craRepository = craRepository;
         this.objectMapper = objectMapper;
+        this.auditService = auditService;
     }
 
     @Transactional
@@ -62,8 +67,14 @@ public class ClientSignatureService {
                 snapshot,
                 Instant.now()));
 
-        cra.setStatus(ValidationStatus.FULLY_SIGNED);
+        cra.setClientRepresentativeName(signerName);
+        cra.setClientSignatureDate(LocalDate.now());
+        cra.setClientSignatureImage(signatureImageBase64);
+        cra.setStatus(ValidationStatus.VALIDATED);
         craRepository.save(cra);
+
+        auditService.recordTransition(cra.getId(), ValidationStatus.AWAITING_CLIENT_SIGNATURE, ValidationStatus.VALIDATED,
+                ActorType.CLIENT, signerName);
     }
 
     private String buildSnapshot(MonthlyCraReport cra) {

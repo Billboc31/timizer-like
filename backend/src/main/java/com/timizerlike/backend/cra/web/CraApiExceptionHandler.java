@@ -1,6 +1,8 @@
 package com.timizerlike.backend.cra.web;
 
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -8,17 +10,17 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.timizer.backend.cra.ConsentNotGivenException;
-import com.timizer.backend.cra.CraAlreadyClientSignedException;
 import com.timizer.backend.cra.CraDayNotFoundException;
 import com.timizer.backend.cra.CraNotFoundException;
-import com.timizer.backend.cra.CraNotSignedByProviderException;
 import com.timizer.backend.cra.CraNotValidatedException;
 import com.timizer.backend.cra.CraValidatedException;
-import com.timizer.backend.cra.DuplicateCraTransitionException;
+import com.timizer.backend.cra.CraValidationBlockedException;
+import com.timizer.backend.cra.CraValidationBlockingReason;
 import com.timizer.backend.cra.InvalidCraTransitionException;
 import com.timizer.backend.cra.InvalidSignatureImageException;
 import com.timizer.backend.cra.InvalidWorkValueException;
 import com.timizer.backend.cra.TokenAlreadyConsumedException;
+import com.timizer.backend.cra.TokenExpiredException;
 import com.timizer.backend.cra.TokenNotFoundException;
 
 @RestControllerAdvice
@@ -60,22 +62,10 @@ public class CraApiExceptionHandler {
                 .body(Map.of("error", "invalid_cra_transition"));
     }
 
-    @ExceptionHandler(DuplicateCraTransitionException.class)
-    public ResponseEntity<Map<String, String>> handleDuplicateCraTransition() {
-        return ResponseEntity.status(HttpStatus.CONFLICT)
-                .body(Map.of("error", "duplicate_cra_transition"));
-    }
-
     @ExceptionHandler(TokenNotFoundException.class)
     public ResponseEntity<Map<String, String>> handleTokenNotFound() {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(Map.of("error", "token_invalid"));
-    }
-
-    @ExceptionHandler(CraNotSignedByProviderException.class)
-    public ResponseEntity<Map<String, String>> handleCraNotSignedByProvider() {
-        return ResponseEntity.status(HttpStatus.CONFLICT)
-                .body(Map.of("error", "cra_not_signed"));
     }
 
     @ExceptionHandler(TokenAlreadyConsumedException.class)
@@ -96,9 +86,18 @@ public class CraApiExceptionHandler {
                 .body(Map.of("error", "invalid_signature_image"));
     }
 
-    @ExceptionHandler(CraAlreadyClientSignedException.class)
-    public ResponseEntity<Map<String, String>> handleCraAlreadyClientSigned() {
-        return ResponseEntity.status(HttpStatus.CONFLICT)
-                .body(Map.of("error", "cra_already_client_signed"));
+    @ExceptionHandler(CraValidationBlockedException.class)
+    public ResponseEntity<Map<String, Object>> handleCraValidationBlocked(CraValidationBlockedException ex) {
+        List<String> reasons = ex.getReasons().stream()
+                .map(CraValidationBlockingReason::name)
+                .collect(Collectors.toList());
+        return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
+                .body(Map.of("error", "validation_blocked", "reasons", reasons));
+    }
+
+    @ExceptionHandler(TokenExpiredException.class)
+    public ResponseEntity<Map<String, String>> handleTokenExpired() {
+        return ResponseEntity.status(HttpStatus.GONE)
+                .body(Map.of("error", "token_expired"));
     }
 }

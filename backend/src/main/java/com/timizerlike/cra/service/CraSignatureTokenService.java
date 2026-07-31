@@ -12,12 +12,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.timizer.backend.cra.CraNotFoundException;
-import com.timizer.backend.cra.CraNotSignedByProviderException;
+import com.timizer.backend.cra.InvalidCraTransitionException;
 import com.timizer.backend.cra.CraSignatureToken;
 import com.timizer.backend.cra.CraSignatureTokenRepository;
 import com.timizer.backend.cra.MonthlyCraReport;
 import com.timizer.backend.cra.MonthlyCraReportRepository;
 import com.timizer.backend.cra.TokenAlreadyConsumedException;
+import com.timizer.backend.cra.TokenExpiredException;
 import com.timizer.backend.cra.TokenNotFoundException;
 import com.timizer.backend.cra.ValidationStatus;
 import com.timizerlike.backend.cra.dto.CraDayEntryDto;
@@ -46,8 +47,8 @@ public class CraSignatureTokenService {
         MonthlyCraReport cra = craRepository.findById(craId)
                 .orElseThrow(() -> new CraNotFoundException(craId));
 
-        if (cra.getStatus() != ValidationStatus.SIGNED_BY_PROVIDER) {
-            throw new CraNotSignedByProviderException(craId);
+        if (cra.getStatus() != ValidationStatus.AWAITING_CLIENT_SIGNATURE) {
+            throw new InvalidCraTransitionException(craId, cra.getStatus(), "generate-token");
         }
 
         tokenRepository.deleteByCraId(craId);
@@ -73,6 +74,10 @@ public class CraSignatureTokenService {
             throw new TokenNotFoundException();
         }
 
+        if (token.isExpired()) {
+            throw new TokenExpiredException();
+        }
+
         MonthlyCraReport cra = craRepository.findById(token.getCraId())
                 .orElseThrow(TokenNotFoundException::new);
 
@@ -92,6 +97,10 @@ public class CraSignatureTokenService {
 
         if (token.isRevoked()) {
             throw new TokenNotFoundException();
+        }
+
+        if (token.isExpired()) {
+            throw new TokenExpiredException();
         }
 
         if (token.isConsumed()) {

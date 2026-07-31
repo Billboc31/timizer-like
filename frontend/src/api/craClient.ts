@@ -1,11 +1,11 @@
 import { apiGet, apiGetBlob, apiPatch, apiPost, apiPut } from './httpClient';
 import type {
-  ClientSignRequest,
   CraDetailsDto,
   CraDayUpdateRequest,
   CraSummaryDto,
   ProviderSettingsDto,
-  SignProviderRequest,
+  SignatureLinkDto,
+  ValidateCraRequestDto,
 } from './types';
 
 export function createCra(year: number, month: number): Promise<CraDetailsDto> {
@@ -24,16 +24,11 @@ export function updateDay(
   return apiPatch<CraDetailsDto>(`/api/cras/${craId}/days/${date}`, body);
 }
 
-export function submitCra(craId: number): Promise<CraDetailsDto> {
-  return apiPost<CraDetailsDto>(`/api/cras/${craId}/submit`, null);
-}
-
-export function signCraByProvider(craId: number, body: SignProviderRequest): Promise<CraDetailsDto> {
-  return apiPost<CraDetailsDto>(`/api/cras/${craId}/sign-provider`, body);
-}
-
-export function sendCraToClient(craId: number): Promise<CraDetailsDto> {
-  return apiPost<CraDetailsDto>(`/api/cras/${craId}/send-to-client`, null);
+export function validateCra(
+  craId: number,
+  body: ValidateCraRequestDto,
+): Promise<CraDetailsDto> {
+  return apiPost<CraDetailsDto>(`/api/cras/${craId}/validate`, body);
 }
 
 export function listCras(options?: { signal?: AbortSignal }): Promise<CraSummaryDto[]> {
@@ -52,6 +47,10 @@ export function updateProviderSettings(data: ProviderSettingsDto): Promise<Provi
   return apiPut<ProviderSettingsDto>('/api/provider-settings', data);
 }
 
-export function clientSignCra(craId: number, body: ClientSignRequest): Promise<CraDetailsDto> {
-  return apiPost<CraDetailsDto>(`/api/cras/${craId}/client-sign`, body);
+export function reopenCra(craId: number): Promise<void> {
+  return apiPost<void>(`/api/cras/${craId}/reopen`, undefined);
+}
+
+export function generateSignatureLink(craId: number): Promise<SignatureLinkDto> {
+  return apiPost<SignatureLinkDto>(`/api/cras/${craId}/signature-link`, undefined);
 }

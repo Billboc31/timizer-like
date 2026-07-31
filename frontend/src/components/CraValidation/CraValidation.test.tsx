@@ -58,7 +58,7 @@ const noop = vi.fn();
 describe('CraValidation', () => {
   it('renders validate button for DRAFT CRA', () => {
     render(<CraValidation cra={DRAFT_CRA} onValidated={noop} onGoToSettings={noop} />);
-    expect(screen.getByRole('button', { name: /valider le cra/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /valider et signer le cra/i })).toBeInTheDocument();
   });
 
   it('renders nothing for VALIDATED CRA', () => {
@@ -75,7 +75,7 @@ describe('CraValidation', () => {
     mockGetSignature.mockRejectedValueOnce(new ApiError('cra_not_found', 404));
     render(<CraValidation cra={DRAFT_CRA} onValidated={noop} onGoToSettings={noop} />);
 
-    fireEvent.click(screen.getByRole('button', { name: /valider le cra/i }));
+    fireEvent.click(screen.getByRole('button', { name: /valider et signer le cra/i }));
     await waitFor(() => expect(screen.getByRole('alert')).toBeInTheDocument());
     expect(screen.getByRole('alert')).toHaveTextContent(/aucune signature/i);
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
@@ -86,7 +86,7 @@ describe('CraValidation', () => {
     const onGoToSettings = vi.fn();
     render(<CraValidation cra={DRAFT_CRA} onValidated={noop} onGoToSettings={onGoToSettings} />);
 
-    fireEvent.click(screen.getByRole('button', { name: /valider le cra/i }));
+    fireEvent.click(screen.getByRole('button', { name: /valider et signer le cra/i }));
     await waitFor(() => screen.getByText(/paramètres/i));
     fireEvent.click(screen.getByRole('button', { name: /paramètres/i }));
     expect(onGoToSettings).toHaveBeenCalled();
@@ -96,7 +96,7 @@ describe('CraValidation', () => {
     mockGetSignature.mockResolvedValueOnce(SIGNATURE);
     render(<CraValidation cra={DRAFT_CRA} onValidated={noop} onGoToSettings={noop} />);
 
-    fireEvent.click(screen.getByRole('button', { name: /valider le cra/i }));
+    fireEvent.click(screen.getByRole('button', { name: /valider et signer le cra/i }));
     await waitFor(() => expect(screen.getByRole('dialog')).toBeInTheDocument());
     expect(screen.getByAltText('Aperçu de la signature')).toBeInTheDocument();
     expect(screen.getByText(/jean dupont/i)).toBeInTheDocument();
@@ -107,13 +107,13 @@ describe('CraValidation', () => {
     mockGetSignature.mockResolvedValueOnce(SIGNATURE);
     render(<CraValidation cra={DRAFT_CRA} onValidated={noop} onGoToSettings={noop} />);
 
-    fireEvent.click(screen.getByRole('button', { name: /valider le cra/i }));
+    fireEvent.click(screen.getByRole('button', { name: /valider et signer le cra/i }));
     await waitFor(() => expect(screen.getByRole('dialog')).toBeInTheDocument());
 
     const dialog = screen.getByRole('dialog');
     fireEvent(dialog, new Event('cancel', { bubbles: false }));
 
-    expect(screen.getByRole('button', { name: /valider le cra/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /valider et signer le cra/i })).toBeInTheDocument();
     expect(mockValidateCra).not.toHaveBeenCalled();
   });
 
@@ -121,10 +121,10 @@ describe('CraValidation', () => {
     mockGetSignature.mockResolvedValueOnce(SIGNATURE);
     render(<CraValidation cra={DRAFT_CRA} onValidated={noop} onGoToSettings={noop} />);
 
-    fireEvent.click(screen.getByRole('button', { name: /valider le cra/i }));
+    fireEvent.click(screen.getByRole('button', { name: /valider et signer le cra/i }));
     await waitFor(() => screen.getByRole('button', { name: /annuler/i }));
     fireEvent.click(screen.getByRole('button', { name: /annuler/i }));
-    expect(screen.getByRole('button', { name: /valider le cra/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /valider et signer le cra/i })).toBeInTheDocument();
     expect(mockValidateCra).not.toHaveBeenCalled();
   });
 
@@ -134,7 +134,7 @@ describe('CraValidation', () => {
     const onValidated = vi.fn();
     render(<CraValidation cra={DRAFT_CRA} onValidated={onValidated} onGoToSettings={noop} />);
 
-    fireEvent.click(screen.getByRole('button', { name: /valider le cra/i }));
+    fireEvent.click(screen.getByRole('button', { name: /valider et signer le cra/i }));
     await waitFor(() => screen.getByRole('button', { name: /confirmer/i }));
 
     vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
@@ -160,7 +160,7 @@ describe('CraValidation', () => {
     mockValidateCra.mockReturnValueOnce(new Promise(r => { resolve = r; }));
     render(<CraValidation cra={DRAFT_CRA} onValidated={noop} onGoToSettings={noop} />);
 
-    fireEvent.click(screen.getByRole('button', { name: /valider le cra/i }));
+    fireEvent.click(screen.getByRole('button', { name: /valider et signer le cra/i }));
     await waitFor(() => screen.getByRole('button', { name: /confirmer/i }));
     fireEvent.click(screen.getByRole('button', { name: /confirmer/i }));
     await waitFor(() =>
@@ -175,7 +175,7 @@ describe('CraValidation', () => {
     mockValidateCra.mockRejectedValueOnce(new Error('Server error'));
     render(<CraValidation cra={DRAFT_CRA} onValidated={noop} onGoToSettings={noop} />);
 
-    fireEvent.click(screen.getByRole('button', { name: /valider le cra/i }));
+    fireEvent.click(screen.getByRole('button', { name: /valider et signer le cra/i }));
     await waitFor(() => screen.getByRole('button', { name: /confirmer/i }));
     fireEvent.click(screen.getByRole('button', { name: /confirmer/i }));
     await waitFor(() => expect(screen.getByRole('alert')).toBeInTheDocument());

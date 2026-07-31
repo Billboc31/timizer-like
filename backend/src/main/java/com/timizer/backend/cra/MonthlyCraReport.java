@@ -19,6 +19,7 @@ import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
+import jakarta.persistence.Version;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -38,6 +39,10 @@ public class MonthlyCraReport {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Version
+    @Column(name = "version", nullable = false)
+    private Long version;
 
     @Min(1)
     @Max(12)
@@ -121,6 +126,9 @@ public class MonthlyCraReport {
 
     @Column(name = "client_signature_image", columnDefinition = "TEXT")
     private String clientSignatureImage;
+
+    @Column(name = "provider_content_hash")
+    private String providerContentHash;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;
@@ -383,5 +391,31 @@ public class MonthlyCraReport {
 
     public void setClientSignatureImage(String clientSignatureImage) {
         this.clientSignatureImage = clientSignatureImage;
+    }
+
+    public Long getVersion() {
+        return version;
+    }
+
+    public String getProviderContentHash() {
+        return providerContentHash;
+    }
+
+    public void setProviderContentHash(String providerContentHash) {
+        this.providerContentHash = providerContentHash;
+    }
+
+    public void clearProviderSignature() {
+        this.providerSignatureDate = null;
+        this.providerSignerName = null;
+        this.providerSignatureImage = null;
+        this.providerContentHash = null;
+        this.validationDate = null;
+    }
+
+    public void clearClientSignature() {
+        this.clientSignatureDate = null;
+        this.clientRepresentativeName = null;
+        this.clientSignatureImage = null;
     }
 }

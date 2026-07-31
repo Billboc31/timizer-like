@@ -25,6 +25,9 @@ import org.springframework.http.ResponseEntity;
 @SpringBootTest(classes = TimizerLikeApplication.class, webEnvironment = WebEnvironment.RANDOM_PORT)
 class CraWorkflowIntegrationTest {
 
+    private static final String MIN_PNG =
+            "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAAAAAA6fptVAAAACklEQVQI12NgAAAAAgAB4iG8MwAAAABJRU5ErkJggg==";
+
     @Autowired
     private TestRestTemplate restTemplate;
 
@@ -63,11 +66,16 @@ class CraWorkflowIntegrationTest {
         assertThat(updatedCra).isNotNull();
         assertThat(((Number) updatedCra.get("totalWorkedDays")).doubleValue()).isGreaterThan(0.0);
 
-        // Step 3: Validate the CRA — expect 200 VALIDATED
-        String minPng = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAAAAAA6fptVAAAACklEQVQI12NgAAAAAgAB4iG8MwAAAABJRU5ErkJggg==";
+        // PDF rejected while still DRAFT (422)
+        ResponseEntity<Map<String, Object>> pdfDraftResponse = restTemplate.exchange(
+                "/api/cras/" + craId + "/pdf", HttpMethod.GET, null,
+                new ParameterizedTypeReference<>() {});
+        assertThat(pdfDraftResponse.getStatusCode()).isEqualTo(HttpStatus.UNPROCESSABLE_ENTITY);
+
+        // Step 3: Consultant validates and signs — expect 200 AWAITING_CLIENT_SIGNATURE
         Map<String, Object> validateBody = Map.of(
                 "providerSignatureDate", "2026-07-31",
-                "providerSignatureImage", minPng,
+                "providerSignatureImage", MIN_PNG,
                 "providerSignerName", "Test Provider");
         ResponseEntity<Map<String, Object>> validateResponse = restTemplate.exchange(
                 "/api/cras/" + craId + "/validate",
@@ -77,9 +85,52 @@ class CraWorkflowIntegrationTest {
 
         assertThat(validateResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(validateResponse.getBody()).isNotNull();
-        assertThat(validateResponse.getBody().get("status")).isEqualTo("VALIDATED");
+        assertThat(validateResponse.getBody().get("status")).isEqualTo("AWAITING_CLIENT_SIGNATURE");
 
-        // Step 4: List history — expect 200 and list contains the CRA id
+        // Day update rejected after consultant signed (409)
+        ResponseEntity<Map<String, Object>> dayUpdateRejected = restTemplate.exchange(
+                "/api/cras/" + craId + "/days/2026-07-01",
+                HttpMethod.PATCH,
+                new HttpEntity<>(dayBody),
+                new ParameterizedTypeReference<>() {});
+        assertThat(dayUpdateRejected.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
+
+        // PDF allowed for AWAITING_CLIENT_SIGNATURE (200)
+        ResponseEntity<byte[]> pdfSignedResponse = restTemplate.exchange(
+                "/api/cras/" + craId + "/pdf", HttpMethod.GET, null, byte[].class);
+        assertThat(pdfSignedResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(pdfSignedResponse.getHeaders().getContentType()).isEqualTo(MediaType.APPLICATION_PDF);
+        assertThat(pdfSignedResponse.getBody()).isNotEmpty();
+
+        // Step 4: Generate signature link — requires AWAITING_CLIENT_SIGNATURE
+        ResponseEntity<Map<String, Object>> linkResponse = restTemplate.exchange(
+                "/api/cras/" + craId + "/signature-link",
+                HttpMethod.POST,
+                new HttpEntity<>(null),
+                new ParameterizedTypeReference<>() {});
+
+        assertThat(linkResponse.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+        assertThat(linkResponse.getBody()).isNotNull();
+        String signatureUrl = (String) linkResponse.getBody().get("signatureUrl");
+        assertThat(signatureUrl).isNotBlank();
+        String rawToken = signatureUrl.substring(signatureUrl.lastIndexOf('/') + 1);
+
+        // Step 5: Client signs — AWAITING_CLIENT_SIGNATURE → VALIDATED
+        Map<String, Object> clientSignBody = Map.of(
+                "signerName", "Alice Client",
+                "signerRole", "Responsable technique",
+                "consentApproved", true,
+                "signatureImageBase64", MIN_PNG);
+
+        ResponseEntity<Void> clientSignResponse = restTemplate.exchange(
+                "/public/cra-link/" + rawToken + "/sign",
+                HttpMethod.POST,
+                new HttpEntity<>(clientSignBody),
+                Void.class);
+
+        assertThat(clientSignResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        // Step 6: List history — expect CRA now in VALIDATED status
         ResponseEntity<List<Map<String, Object>>> historyResponse = restTemplate.exchange(
                 "/api/cras", HttpMethod.GET, null,
                 new ParameterizedTypeReference<>() {});
@@ -87,11 +138,13 @@ class CraWorkflowIntegrationTest {
         assertThat(historyResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
         List<Map<String, Object>> history = historyResponse.getBody();
         assertThat(history).isNotNull().isNotEmpty();
-        boolean found = history.stream()
-                .anyMatch(item -> craId.equals(((Number) item.get("id")).longValue()));
-        assertThat(found).isTrue();
+        Map<String, Object> validatedCra = history.stream()
+                .filter(item -> craId.equals(((Number) item.get("id")).longValue()))
+                .findFirst()
+                .orElseThrow(() -> new AssertionError("CRA not found in history"));
+        assertThat(validatedCra.get("status")).isEqualTo("VALIDATED");
 
-        // Step 5: Download PDF — expect 200 application/pdf with non-empty body
+        // Step 7: Download PDF for VALIDATED CRA — expect 200 application/pdf
         ResponseEntity<byte[]> pdfResponse = restTemplate.exchange(
                 "/api/cras/" + craId + "/pdf", HttpMethod.GET, null, byte[].class);
 

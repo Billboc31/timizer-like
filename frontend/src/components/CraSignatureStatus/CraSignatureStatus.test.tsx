@@ -12,41 +12,20 @@ describe('CraSignatureStatus', () => {
     expect(screen.getByText('Brouillon')).toHaveClass('cra-signature-status--draft');
   });
 
-  it('renders correct label for READY_FOR_PROVIDER_SIGNATURE', () => {
-    render(<CraSignatureStatus status="READY_FOR_PROVIDER_SIGNATURE" />);
-    expect(screen.getByText('En attente de signature prestataire')).toBeInTheDocument();
-    expect(screen.getByText('En attente de signature prestataire')).toHaveClass('cra-signature-status--ready-for-provider');
-  });
-
-  it('renders correct label for SIGNED_BY_PROVIDER', () => {
-    render(<CraSignatureStatus status="SIGNED_BY_PROVIDER" />);
-    expect(screen.getByText('Signé par le prestataire')).toBeInTheDocument();
-    expect(screen.getByText('Signé par le prestataire')).toHaveClass('cra-signature-status--signed-by-provider');
-  });
-
   it('renders correct label for AWAITING_CLIENT_SIGNATURE', () => {
     render(<CraSignatureStatus status="AWAITING_CLIENT_SIGNATURE" />);
     expect(screen.getByText('En attente de signature client')).toBeInTheDocument();
     expect(screen.getByText('En attente de signature client')).toHaveClass('cra-signature-status--awaiting-client');
   });
 
-  it('renders "Signé" for FULLY_SIGNED', () => {
-    render(<CraSignatureStatus status="FULLY_SIGNED" />);
-    expect(screen.getByText('Signé')).toBeInTheDocument();
-    expect(screen.getByText('Signé')).toHaveClass('cra-signature-status--signed');
-  });
-
-  it('renders "Signé" for VALIDATED (legacy)', () => {
+  it('renders "Validé" for VALIDATED', () => {
     render(<CraSignatureStatus status="VALIDATED" />);
-    expect(screen.getByText('Signé')).toBeInTheDocument();
-    expect(screen.getByText('Signé')).toHaveClass('cra-signature-status--signed');
+    expect(screen.getByText('Validé')).toBeInTheDocument();
+    expect(screen.getByText('Validé')).toHaveClass('cra-signature-status--signed');
   });
 
   it('always applies the base cra-signature-status class', () => {
-    const statuses: CraStatus[] = [
-      'DRAFT', 'READY_FOR_PROVIDER_SIGNATURE', 'SIGNED_BY_PROVIDER',
-      'AWAITING_CLIENT_SIGNATURE', 'FULLY_SIGNED', 'VALIDATED',
-    ];
+    const statuses: CraStatus[] = ['DRAFT', 'AWAITING_CLIENT_SIGNATURE', 'VALIDATED'];
     statuses.forEach(status => {
       const { unmount } = render(<CraSignatureStatus status={status} />);
       const spans = document.querySelectorAll('.cra-signature-status');

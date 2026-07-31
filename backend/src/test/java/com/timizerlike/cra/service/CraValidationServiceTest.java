@@ -15,8 +15,11 @@ import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.timizer.backend.cra.CraNotFoundException;
 import com.timizer.backend.cra.CraValidatedException;
+import com.timizer.backend.cra.CraValidationBlockedException;
+import com.timizer.backend.cra.CraValidationBlockingReason;
 import com.timizer.backend.cra.MonthlyCraReport;
 import com.timizer.backend.cra.MonthlyCraReportRepository;
 import com.timizer.backend.cra.ValidationStatus;
@@ -30,12 +33,14 @@ class CraValidationServiceTest {
     private static final String SIGNATURE_IMAGE = "data:image/png;base64,abc123";
 
     private MonthlyCraReportRepository craRepository;
+    private CraAuditService auditService;
     private CraValidationService service;
 
     @BeforeEach
     void setUp() {
         craRepository = mock(MonthlyCraReportRepository.class);
-        service = new CraValidationService(craRepository);
+        auditService = mock(CraAuditService.class);
+        service = new CraValidationService(craRepository, new ObjectMapper(), auditService);
     }
 
     @Test
@@ -46,11 +51,12 @@ class CraValidationServiceTest {
 
         service.validate(CRA_ID, JUNE_30, SIGNATURE_IMAGE, SIGNER_NAME);
 
-        verify(cra).setStatus(ValidationStatus.VALIDATED);
+        verify(cra).setStatus(ValidationStatus.AWAITING_CLIENT_SIGNATURE);
         verify(cra).setProviderSignatureDate(JUNE_30);
         verify(cra).setProviderSignatureImage(SIGNATURE_IMAGE);
         verify(cra).setProviderSignerName(SIGNER_NAME);
         verify(cra).setValidationDate(any(LocalDate.class));
+        verify(cra).setProviderContentHash(any(String.class));
         verify(craRepository).save(cra);
     }
 
@@ -63,13 +69,54 @@ class CraValidationServiceTest {
     }
 
     @Test
-    void throwsCraValidatedWhenNotInDraftStatus() {
+    void throwsCraValidatedExceptionWhenNotInDraftStatus() {
         MonthlyCraReport cra = mock(MonthlyCraReport.class);
         when(cra.getStatus()).thenReturn(ValidationStatus.VALIDATED);
         when(craRepository.findById(CRA_ID)).thenReturn(Optional.of(cra));
 
         assertThatThrownBy(() -> service.validate(CRA_ID, JUNE_30, SIGNATURE_IMAGE, SIGNER_NAME))
                 .isInstanceOf(CraValidatedException.class);
+        verify(craRepository, never()).save(any());
+    }
+
+    @Test
+    void throwsCraValidatedExceptionWhenNotDraftEvenIfImageAlsoInvalid() {
+        MonthlyCraReport cra = mock(MonthlyCraReport.class);
+        when(cra.getStatus()).thenReturn(ValidationStatus.AWAITING_CLIENT_SIGNATURE);
+        when(craRepository.findById(CRA_ID)).thenReturn(Optional.of(cra));
+
+        assertThatThrownBy(() -> service.validate(CRA_ID, JUNE_30, null, SIGNER_NAME))
+                .isInstanceOf(CraValidatedException.class);
+        verify(craRepository, never()).save(any());
+    }
+
+    @Test
+    void throwsValidationBlockedWithInvalidSignatureImageWhenImageMissing() {
+        MonthlyCraReport cra = draftCra();
+        when(craRepository.findById(CRA_ID)).thenReturn(Optional.of(cra));
+
+        assertThatThrownBy(() -> service.validate(CRA_ID, JUNE_30, null, SIGNER_NAME))
+                .isInstanceOf(CraValidationBlockedException.class)
+                .satisfies(e -> {
+                    List<CraValidationBlockingReason> reasons =
+                            ((CraValidationBlockedException) e).getReasons();
+                    assertThat(reasons).contains(CraValidationBlockingReason.INVALID_SIGNATURE_IMAGE);
+                });
+        verify(craRepository, never()).save(any());
+    }
+
+    @Test
+    void throwsValidationBlockedWithInvalidSignatureImageWhenImageNotDataUri() {
+        MonthlyCraReport cra = draftCra();
+        when(craRepository.findById(CRA_ID)).thenReturn(Optional.of(cra));
+
+        assertThatThrownBy(() -> service.validate(CRA_ID, JUNE_30, "not-a-data-uri", SIGNER_NAME))
+                .isInstanceOf(CraValidationBlockedException.class)
+                .satisfies(e -> {
+                    List<CraValidationBlockingReason> reasons =
+                            ((CraValidationBlockedException) e).getReasons();
+                    assertThat(reasons).contains(CraValidationBlockingReason.INVALID_SIGNATURE_IMAGE);
+                });
         verify(craRepository, never()).save(any());
     }
 

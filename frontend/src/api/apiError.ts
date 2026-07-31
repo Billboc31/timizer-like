@@ -8,8 +8,10 @@ export type ApiErrorCode =
   | 'invalid_signature_image'
   | 'token_invalid'
   | 'token_already_consumed'
+  | 'token_expired'
   | 'cra_not_signed'
   | 'consent_not_given'
+  | 'validation_blocked'
   | 'network_error'
   | 'unknown_error';
 

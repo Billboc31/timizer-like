@@ -15,7 +15,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.timizer.backend.cra.CraNotFoundException;
-import com.timizer.backend.cra.CraNotSignedByProviderException;
+import com.timizer.backend.cra.InvalidCraTransitionException;
 import com.timizer.backend.cra.CraSignatureToken;
 import com.timizer.backend.cra.CraSignatureTokenRepository;
 import com.timizer.backend.cra.MonthlyCraReport;
@@ -43,7 +43,7 @@ class CraSignatureTokenServiceTest {
 
     @Test
     void generateTokenReturnsNonBlankRawToken() {
-        MonthlyCraReport cra = signedByProviderCra();
+        MonthlyCraReport cra = awaitingClientSignatureCra();
         when(craRepository.findById(CRA_ID)).thenReturn(Optional.of(cra));
 
         String rawToken = service.generateToken(CRA_ID);
@@ -53,7 +53,7 @@ class CraSignatureTokenServiceTest {
 
     @Test
     void generateTokenSavesHashNotRawToken() {
-        MonthlyCraReport cra = signedByProviderCra();
+        MonthlyCraReport cra = awaitingClientSignatureCra();
         when(craRepository.findById(CRA_ID)).thenReturn(Optional.of(cra));
 
         String rawToken = service.generateToken(CRA_ID);
@@ -68,7 +68,7 @@ class CraSignatureTokenServiceTest {
 
     @Test
     void generateTokenDeletesExistingTokenBeforeSaving() {
-        MonthlyCraReport cra = signedByProviderCra();
+        MonthlyCraReport cra = awaitingClientSignatureCra();
         when(craRepository.findById(CRA_ID)).thenReturn(Optional.of(cra));
 
         service.generateToken(CRA_ID);
@@ -92,7 +92,7 @@ class CraSignatureTokenServiceTest {
         when(craRepository.findById(CRA_ID)).thenReturn(Optional.of(cra));
 
         assertThatThrownBy(() -> service.generateToken(CRA_ID))
-                .isInstanceOf(CraNotSignedByProviderException.class);
+                .isInstanceOf(InvalidCraTransitionException.class);
         verify(tokenRepository, never()).save(any());
     }
 
@@ -103,7 +103,7 @@ class CraSignatureTokenServiceTest {
         when(craRepository.findById(CRA_ID)).thenReturn(Optional.of(cra));
 
         assertThatThrownBy(() -> service.generateToken(CRA_ID))
-                .isInstanceOf(CraNotSignedByProviderException.class);
+                .isInstanceOf(InvalidCraTransitionException.class);
         verify(tokenRepository, never()).save(any());
     }
 
@@ -175,14 +175,6 @@ class CraSignatureTokenServiceTest {
     }
 
     // ── helpers ──────────────────────────────────────────────────────────────
-
-    private MonthlyCraReport signedByProviderCra() {
-        MonthlyCraReport cra = mock(MonthlyCraReport.class);
-        when(cra.getId()).thenReturn(CRA_ID);
-        when(cra.getStatus()).thenReturn(ValidationStatus.SIGNED_BY_PROVIDER);
-        when(cra.getDayEntries()).thenReturn(List.of());
-        return cra;
-    }
 
     private MonthlyCraReport awaitingClientSignatureCra() {
         MonthlyCraReport cra = mock(MonthlyCraReport.class);

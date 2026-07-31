@@ -1,9 +1,6 @@
 export type CraStatus =
   | 'DRAFT'
-  | 'READY_FOR_PROVIDER_SIGNATURE'
-  | 'SIGNED_BY_PROVIDER'
   | 'AWAITING_CLIENT_SIGNATURE'
-  | 'FULLY_SIGNED'
   | 'VALIDATED';
 
 export interface CraDayEntryDto {
@@ -52,16 +49,10 @@ export interface CraDayUpdateRequest {
   note?: string | null;
 }
 
-export interface SignProviderRequest {
+export interface ValidateCraRequestDto {
   providerSignatureDate: string;
   providerSignatureImage: string;
   providerSignerName: string;
-}
-
-export interface ClientSignRequest {
-  clientRepresentativeName: string;
-  clientSignatureDate: string;
-  signatureImageBase64?: string | null;
 }
 
 export interface ProviderSignatureDto {
@@ -76,4 +67,8 @@ export interface ProviderSettingsDto {
   address?: string | null;
   email?: string | null;
   phone?: string | null;
+}
+
+export interface SignatureLinkDto {
+  signatureUrl: string;
 }

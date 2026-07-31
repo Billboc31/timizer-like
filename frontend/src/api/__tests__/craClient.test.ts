@@ -3,9 +3,7 @@ import {
   createCra,
   getCra,
   updateDay,
-  submitCra,
-  signCraByProvider,
-  sendCraToClient,
+  validateCra,
   listCras,
   downloadCraPdf,
   getProviderSettings,
@@ -26,7 +24,7 @@ const mockCraDetails: CraDetailsDto = {
 };
 
 const mockSummaries: CraSummaryDto[] = [
-  { id: 1, month: 7, year: 2026, totalWorkedDays: 20, status: 'DRAFT', validationDate: null },
+  { id: 1, month: 7, year: 2026, totalWorkedDays: 20, status: 'DRAFT', validationDate: null, clientSignatureDate: null },
 ];
 
 function mockFetchOk(body: unknown): void {
@@ -102,37 +100,18 @@ describe('updateDay', () => {
   });
 });
 
-describe('submitCra', () => {
-  it('calls POST /api/cras/:craId/submit and returns CraDetailsDto', async () => {
-    mockFetchOk({ ...mockCraDetails, status: 'READY_FOR_PROVIDER_SIGNATURE' });
-    const result = await submitCra(1);
-    expect(result.status).toBe('READY_FOR_PROVIDER_SIGNATURE');
-    expect(vi.mocked(fetch)).toHaveBeenCalledWith(
-      '/api/cras/1/submit',
-      expect.objectContaining({ method: 'POST' }),
-    );
-  });
-});
-
-describe('signCraByProvider', () => {
-  it('calls POST /api/cras/:craId/sign-provider and returns CraDetailsDto', async () => {
-    mockFetchOk({ ...mockCraDetails, status: 'SIGNED_BY_PROVIDER' });
-    const result = await signCraByProvider(1, { providerSignatureDate: '2026-07-31' });
-    expect(result.status).toBe('SIGNED_BY_PROVIDER');
-    expect(vi.mocked(fetch)).toHaveBeenCalledWith(
-      '/api/cras/1/sign-provider',
-      expect.objectContaining({ method: 'POST' }),
-    );
-  });
-});
-
-describe('sendCraToClient', () => {
-  it('calls POST /api/cras/:craId/send-to-client and returns CraDetailsDto', async () => {
-    mockFetchOk({ ...mockCraDetails, status: 'AWAITING_CLIENT_SIGNATURE' });
-    const result = await sendCraToClient(1);
+describe('validateCra', () => {
+  it('calls POST /api/cras/:craId/validate and returns CraDetailsDto', async () => {
+    const awaiting = { ...mockCraDetails, status: 'AWAITING_CLIENT_SIGNATURE' };
+    mockFetchOk(awaiting);
+    const result = await validateCra(1, {
+      providerSignatureDate: '2026-07-31',
+      providerSignatureImage: 'data:image/png;base64,abc',
+      providerSignerName: 'Jean Dupont',
+    });
     expect(result.status).toBe('AWAITING_CLIENT_SIGNATURE');
     expect(vi.mocked(fetch)).toHaveBeenCalledWith(
-      '/api/cras/1/send-to-client',
+      '/api/cras/1/validate',
       expect.objectContaining({ method: 'POST' }),
     );
   });
@@ -217,15 +196,12 @@ describe('error mapping', () => {
 
   it('maps 409 invalid_cra_transition to ApiError with correct code', async () => {
     mockFetchError(409, 'invalid_cra_transition');
-    await expect(submitCra(1)).rejects.toSatisfy(
+    await expect(validateCra(1, {
+      providerSignatureDate: '2026-07-31',
+      providerSignatureImage: 'data:image/png;base64,abc',
+      providerSignerName: 'Jean',
+    })).rejects.toSatisfy(
       (e: unknown) => isApiError(e) && e.code === 'invalid_cra_transition' && e.httpStatus === 409,
-    );
-  });
-
-  it('maps 409 duplicate_cra_transition to ApiError with correct code', async () => {
-    mockFetchError(409, 'duplicate_cra_transition');
-    await expect(submitCra(1)).rejects.toSatisfy(
-      (e: unknown) => isApiError(e) && e.code === 'duplicate_cra_transition' && e.httpStatus === 409,
     );
   });
 

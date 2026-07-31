@@ -42,7 +42,7 @@ describe('CraValidation accessibility', () => {
     const { container, getByRole } = render(
       <CraValidation cra={DRAFT_CRA} onValidated={vi.fn()} onGoToSettings={vi.fn()} />,
     );
-    fireEvent.click(getByRole('button', { name: /valider le cra/i }));
+    fireEvent.click(getByRole('button', { name: /valider et signer le cra/i }));
     await waitFor(() => getByRole('dialog'));
     const results = await axe(container);
     expect(results).toHaveNoViolations();
