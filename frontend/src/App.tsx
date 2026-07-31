@@ -12,7 +12,7 @@ import { SignatureSettings } from './components/SignatureSettings/SignatureSetti
 import { AppShell } from './components/AppShell/AppShell';
 import type { AppView } from './components/AppShell/AppShell';
 import { NewCraDialog } from './components/NewCraDialog/NewCraDialog';
-import { CraOverview } from './components/CraOverview/CraOverview';
+import { AnnualCalendar } from './components/AnnualCalendar/AnnualCalendar';
 import { getCra, updateDay, listCras, createCra } from './api/craClient';
 import { getClientSettings } from './api/settingsClient';
 import { getErrorMessage } from './api/errorMessages';
@@ -56,7 +56,7 @@ export default function App() {
   const [newCraDialogOpen, setNewCraDialogOpen] = useState(false);
   const [newCraLoading, setNewCraLoading] = useState(false);
   const [newCraError, setNewCraError] = useState<string | null>(null);
-  const [selectedPeriod, setSelectedPeriod] = useState<{ startDate: string; endDate: string } | null>(null);
+  const [newCraPrefill, setNewCraPrefill] = useState<{ month: number; year: number } | null>(null);
   const newCraTriggerRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
@@ -123,6 +123,13 @@ export default function App() {
   }, [newCraDialogOpen]);
 
   const handleNewCraOpen = () => {
+    setNewCraPrefill(null);
+    setNewCraError(null);
+    setNewCraDialogOpen(true);
+  };
+
+  const handleNewCraOpenForMonth = (month: number, year: number) => {
+    setNewCraPrefill({ month, year });
     setNewCraError(null);
     setNewCraDialogOpen(true);
   };
@@ -145,7 +152,6 @@ export default function App() {
       const existing = cras.find(c => c.year === year && c.month === month);
 
       if (existing) {
-        setSelectedPeriod({ startDate, endDate });
         setNewCraDialogOpen(false);
         setNewCraLoading(false);
         handleOpen(existing);
@@ -154,7 +160,6 @@ export default function App() {
       }
 
       const created = await createCra(year, month);
-      setSelectedPeriod({ startDate, endDate });
       setNewCraDialogOpen(false);
       setNewCraLoading(false);
       handleOpen(created);
@@ -190,9 +195,9 @@ export default function App() {
           onBack={() => setView('history')}
         />
       ) : view === 'overview' ? (
-        <CraOverview
-          onOpen={(cra) => { handleOpen(cra); setView('selector'); }}
-          onNewCra={handleNewCraOpen}
+        <AnnualCalendar
+          onOpenCra={(cra) => { handleOpen(cra); setView('selector'); }}
+          onNewCra={handleNewCraOpenForMonth}
         />
       ) : (
         <>
@@ -223,6 +228,15 @@ export default function App() {
         onCancel={handleNewCraCancel}
         loading={newCraLoading}
         error={newCraError}
+        initialStartDate={newCraPrefill
+          ? `${newCraPrefill.year}-${String(newCraPrefill.month).padStart(2, '0')}-01`
+          : undefined}
+        initialEndDate={newCraPrefill
+          ? (() => {
+              const last = new Date(newCraPrefill.year, newCraPrefill.month, 0).getDate();
+              return `${newCraPrefill.year}-${String(newCraPrefill.month).padStart(2, '0')}-${String(last).padStart(2, '0')}`;
+            })()
+          : undefined}
       />
     </AppShell>
   );

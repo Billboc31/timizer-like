@@ -1,0 +1,33 @@
+[2026-07-31T16:25:54Z] auto-run start: state=INIT
+[2026-07-31T16:25:55Z] auto-run: running step=planner
+[2026-07-31T16:25:55Z] prompt: resolved=prompts/generic/planner.md source=generic
+[2026-07-31T16:25:55Z] prompt: generic fallback — injecting runs/T064/ticket.md
+[2026-07-31T16:25:55Z] compose: global-context=docs/ai/global-context.md
+[2026-07-31T16:25:55Z] compose: role=ai/roles/planner.md
+[2026-07-31T16:25:55Z] compose: skill=ai/skills/workflow-discipline.md
+[2026-07-31T16:25:55Z] compose: skill=ai/skills/architecture-discipline.md
+[2026-07-31T16:25:55Z] compose: skill=ai/skills/documentation.md
+[2026-07-31T16:25:55Z] compose: task (canonical prompt)
+[2026-07-31T16:25:55Z] snapshot: runtime-prompt=runs/T064/prompts/planner-attempt-1.md
+[2026-07-31T16:30:03Z] auto-run: step=planner done rc=0
+[2026-07-31T17:03:59Z] auto-run start: state=IMPLEMENTATION_APPROVED
+[2026-07-31T17:03:59Z] auto-run: running step=tester
+[2026-07-31T17:03:59Z] prompt: resolved=prompts/generic/tester.md source=generic
+[2026-07-31T17:03:59Z] prompt: generic fallback — injecting runs/T064/ticket.md
+[2026-07-31T17:03:59Z] compose: global-context=docs/ai/global-context.md
+[2026-07-31T17:03:59Z] compose: role=ai/roles/tester.md
+[2026-07-31T17:03:59Z] compose: skill=ai/skills/workflow-discipline.md
+[2026-07-31T17:03:59Z] compose: skill=ai/skills/testing.md
+[2026-07-31T17:03:59Z] compose: skill=ai/skills/debugging.md
+[2026-07-31T17:03:59Z] compose: task (canonical prompt)
+[2026-07-31T17:03:59Z] snapshot: runtime-prompt=runs/T064/prompts/tester-attempt-1.md
+[2026-07-31T17:07:50Z] auto-run: step=tester done rc=0
+[2026-07-31T17:07:50Z] auto-run: transition IMPLEMENTATION_APPROVED → TEST_COMPLETE
+[2026-07-31T17:07:50Z] auto-run: auto-commit triggered (step=tester, include_code=True)
+[2026-07-31T17:07:50Z] commit-checkpoint: unstaged runtime garbage: ['runs/T064/daemon.lock', 'runs/T064/runtime.log', 'runs/T064/workflow-status.md']
+[2026-07-31T17:07:50Z] commit-checkpoint: sha=ba9e8080 files=5 title='test(T064/workflow): tester — update 5 file(s)'
+[2026-07-31T17:07:50Z] auto-run: auto-push triggered
+[2026-07-31T17:07:50Z] push: tolerating runtime dirty files (not blocking): ['runs/T064/daemon.lock', 'runs/T064/runtime.log', 'runs/T064/workflow-status.md']
+[2026-07-31T17:07:50Z] push: pushing branch=ticket/T064-add-12-month-annual-calendar-dashboard-to-the-home
+[2026-07-31T17:07:52Z] push: done branch=ticket/T064-add-12-month-annual-calendar-dashboard-to-the-home
+[2026-07-31T17:07:53Z] auto-run: TEST_COMPLETE — running PR lifecycle

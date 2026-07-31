@@ -7,6 +7,8 @@ interface Props {
   onCancel: () => void;
   loading?: boolean;
   error?: string | null;
+  initialStartDate?: string;
+  initialEndDate?: string;
 }
 
 function getDefaultStart(): string {
@@ -20,7 +22,7 @@ function getDefaultEnd(): string {
   return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(lastDay).padStart(2, '0')}`;
 }
 
-export function NewCraDialog({ open, onConfirm, onCancel, loading = false, error = null }: Props) {
+export function NewCraDialog({ open, onConfirm, onCancel, loading = false, error = null, initialStartDate, initialEndDate }: Props) {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [startDate, setStartDate] = useState(getDefaultStart);
   const [endDate, setEndDate] = useState(getDefaultEnd);
@@ -29,13 +31,15 @@ export function NewCraDialog({ open, onConfirm, onCancel, loading = false, error
   useEffect(() => {
     if (open) {
       setValidationError(null);
+      setStartDate(initialStartDate ?? getDefaultStart());
+      setEndDate(initialEndDate ?? getDefaultEnd());
       dialogRef.current?.showModal();
       const input = dialogRef.current?.querySelector<HTMLElement>('input');
       input?.focus();
     } else {
       dialogRef.current?.close();
     }
-  }, [open]);
+  }, [open, initialStartDate, initialEndDate]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
