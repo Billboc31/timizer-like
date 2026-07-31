@@ -1,0 +1,143 @@
+.annual-calendar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+/* Year navigation bar */
+.annual-calendar-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+.annual-calendar-header__year {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  min-width: 4.5rem;
+  text-align: center;
+  color: var(--color-text);
+}
+
+.annual-calendar-header__btn {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-1) var(--space-3);
+  cursor: pointer;
+  font-size: var(--font-size-base);
+  color: var(--color-text);
+  transition: background 0.12s;
+  font-family: inherit;
+}
+
+.annual-calendar-header__btn:hover {
+  background: var(--color-neutral-100);
+}
+
+.annual-calendar-header__btn:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.annual-calendar-header__today {
+  background: var(--color-primary-light);
+  color: var(--color-primary);
+  border: 1px solid var(--color-primary-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-1) var(--space-3);
+  cursor: pointer;
+  font-size: var(--font-size-sm);
+  font-family: inherit;
+  transition: background 0.12s;
+}
+
+.annual-calendar-header__today:hover {
+  background: var(--color-primary-border);
+}
+
+.annual-calendar-header__today:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Thin loading indicator while year details are fetching */
+.annual-calendar__loading-bar {
+  height: 3px;
+  background: linear-gradient(90deg, var(--color-primary) 0%, var(--color-primary-border) 100%);
+  border-radius: var(--radius-full);
+  animation: loading-slide 1.2s ease-in-out infinite;
+}
+
+@keyframes loading-slide {
+  0% { opacity: 0.6; }
+  50% { opacity: 1; }
+  100% { opacity: 0.6; }
+}
+
+/* 12-month grid */
+.annual-calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-4);
+}
+
+@media (max-width: 1023px) {
+  .annual-calendar-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 767px) {
+  .annual-calendar-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Skeleton cards */
+.annual-calendar-skeleton-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-3);
+  box-shadow: var(--shadow-sm);
+  min-height: 160px;
+  animation: skeleton-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes skeleton-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.45; }
+}
+
+/* Error state */
+.annual-calendar__error {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-4);
+  background: var(--color-error-light);
+  border: 1px solid var(--color-error-border);
+  border-radius: var(--radius-md);
+  color: var(--color-error);
+  margin-bottom: var(--space-4);
+}
+
+.annual-calendar__retry {
+  display: block;
+  margin: 0 auto;
+  padding: var(--space-2) var(--space-5);
+  background: var(--color-primary);
+  color: var(--color-white);
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  font-size: var(--font-size-sm);
+  font-family: inherit;
+}
+
+.annual-calendar__retry:hover {
+  background: var(--color-primary-hover);
+}
