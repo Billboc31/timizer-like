@@ -1066,3 +1066,8 @@
 [2026-08-01T05:07:20Z] conflict-resolver: running tests
 [2026-08-01T05:07:20Z] conflict-resolver: test-report written: runs/T066/conflict/test-report.md
 [2026-08-01T05:07:20Z] conflict-resolver: staging and committing resolution artifacts
+[2026-08-01T05:08:51Z] conflict-resolver: git rebase origin/main exit=0
+[2026-08-01T05:08:51Z] conflict-resolver: rebase clean — no conflicts
+[2026-08-01T05:08:51Z] conflict-resolver: running tests
+[2026-08-01T05:08:51Z] conflict-resolver: test-report written: runs/T066/conflict/test-report.md
+[2026-08-01T05:08:51Z] conflict-resolver: staging and committing resolution artifacts
