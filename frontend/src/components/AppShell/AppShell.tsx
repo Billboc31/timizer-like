@@ -52,7 +52,13 @@ export function AppShell({ activeView, onNavigate, onNewCra, children }: AppShel
         >
           ☰
         </button>
-        <span className="app-shell__brand">Timizer Like</span>
+        <button
+          className="app-shell__brand"
+          aria-label="Retour à l'accueil"
+          onClick={() => { onNavigate('overview'); setSidebarOpen(false); }}
+        >
+          Timizer Like
+        </button>
       </div>
       <main className="app-shell__main">
         <PageHeader title={PAGE_TITLES[activeView]} />

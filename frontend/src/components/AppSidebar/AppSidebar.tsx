@@ -83,8 +83,21 @@ export function AppSidebar({ activeView, onNavigate, isOpen, onClose }: AppSideb
         aria-modal={isDialog || undefined}
         aria-label={isDialog ? 'Navigation menu' : undefined}
       >
-        <div className="app-sidebar__brand">Timizer Like</div>
+        <button
+          className="app-sidebar__brand"
+          aria-label="Retour à l'accueil"
+          onClick={() => handleNavClick('overview')}
+        >
+          Timizer Like
+        </button>
         <nav aria-label="Main navigation">
+          <button
+            className="app-sidebar__nav-item"
+            aria-current={activeView === 'overview' ? 'page' : undefined}
+            onClick={() => handleNavClick('overview')}
+          >
+            🏠 Accueil
+          </button>
           <button
             className="app-sidebar__new-cra"
             aria-current={activeView === 'selector' ? 'page' : undefined}
