@@ -9,18 +9,20 @@
   cursor: pointer;
   text-align: left;
   width: 100%;
-  transition: box-shadow 0.15s ease, transform 0.15s ease;
+  transition: box-shadow 0.15s ease;
   font-family: inherit;
+  position: relative;
 }
 
 .month-mini-card:hover {
   box-shadow: var(--shadow-md);
-  transform: translateY(-2px);
+  z-index: 1;
 }
 
 .month-mini-card:focus-visible {
   outline: 2px solid var(--color-primary);
   outline-offset: 2px;
+  z-index: 1;
 }
 
 .month-mini-card__header {

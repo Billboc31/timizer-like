@@ -71,3 +71,33 @@ test('Error state', async ({ page }, testInfo) => {
   await page.addStyleTag({ content: DISABLE_ANIMATIONS });
   await expect(page).toHaveScreenshot('error-state.png', { fullPage: true });
 });
+
+test('Annual calendar – desktop', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'desktop', 'desktop only');
+  await mockCrasEndpoint(page, mockCraList);
+  await page.goto('/');
+  await page.waitForLoadState('networkidle');
+  await page.waitForSelector('.annual-calendar-grid');
+  await page.addStyleTag({ content: DISABLE_ANIMATIONS });
+  await expect(page).toHaveScreenshot('annual-calendar-desktop.png', { fullPage: true });
+});
+
+test('Annual calendar – tablet', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'tablet', 'tablet only');
+  await mockCrasEndpoint(page, mockCraList);
+  await page.goto('/');
+  await page.waitForLoadState('networkidle');
+  await page.waitForSelector('.annual-calendar-grid');
+  await page.addStyleTag({ content: DISABLE_ANIMATIONS });
+  await expect(page).toHaveScreenshot('annual-calendar-tablet.png', { fullPage: true });
+});
+
+test('Annual calendar – mobile', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'mobile', 'mobile only');
+  await mockCrasEndpoint(page, mockCraList);
+  await page.goto('/');
+  await page.waitForLoadState('networkidle');
+  await page.waitForSelector('.annual-calendar-grid');
+  await page.addStyleTag({ content: DISABLE_ANIMATIONS });
+  await expect(page).toHaveScreenshot('annual-calendar-mobile.png', { fullPage: true });
+});
