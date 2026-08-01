@@ -3,6 +3,14 @@ backend/var/*.db-journal
 
 backend/.env
 
+# Maven build output — must never be committed (causes artificial merge conflicts).
+backend/target/
+
+# Frontend dependencies and build output — already listed in frontend/.gitignore
+# but previously tracked files must stay ignored at the root too.
+frontend/node_modules/
+frontend/dist/
+
 # Production environment — contains secrets, never committed.
 .env.production
 
