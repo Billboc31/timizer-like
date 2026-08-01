@@ -29,7 +29,8 @@ import com.timizer.backend.cra.CraSignatureToken;
 import com.timizer.backend.cra.CraSignatureTokenRepository;
 import com.timizerlike.cra.TimizerLikeApplication;
 
-@SpringBootTest(classes = TimizerLikeApplication.class, webEnvironment = WebEnvironment.RANDOM_PORT)
+@SpringBootTest(classes = TimizerLikeApplication.class, webEnvironment = WebEnvironment.RANDOM_PORT,
+        properties = "timizer.public-frontend-base-url=https://timizer.example.com")
 class CraSignatureWorkflowIntegrationTest {
 
     private static final String MIN_PNG =
@@ -112,6 +113,32 @@ class CraSignatureWorkflowIntegrationTest {
         } catch (NoSuchAlgorithmException e) {
             throw new IllegalStateException(e);
         }
+    }
+
+    @Test
+    void generatedLinkUrlHasConfiguredBasePrefix() {
+        Long craId = createDraftCra(12);
+        consultantValidate(craId);
+
+        ResponseEntity<Map<String, Object>> linkResponse = restTemplate.exchange(
+                "/api/cras/" + craId + "/signature-link",
+                HttpMethod.POST,
+                new HttpEntity<>(null),
+                new ParameterizedTypeReference<>() {});
+        assertThat(linkResponse.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+        assertThat(linkResponse.getBody()).isNotNull();
+        String signatureUrl = (String) linkResponse.getBody().get("signatureUrl");
+        assertThat(signatureUrl).startsWith("https://timizer.example.com/sign/");
+
+        String rawToken = signatureUrl.substring(signatureUrl.lastIndexOf('/') + 1);
+        ResponseEntity<Map<String, Object>> publicView = restTemplate.exchange(
+                "/public/cra-link/" + rawToken,
+                HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<>() {});
+        assertThat(publicView.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(publicView.getBody()).isNotNull();
+        assertThat(publicView.getBody().get("status")).isEqualTo("AWAITING_CLIENT_SIGNATURE");
     }
 
     @Test
