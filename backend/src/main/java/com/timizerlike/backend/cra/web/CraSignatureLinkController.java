@@ -2,8 +2,6 @@ package com.timizerlike.backend.cra.web;
 
 import java.util.Map;
 
-import jakarta.servlet.http.HttpServletRequest;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.timizerlike.cra.config.TimizerProperties;
 import com.timizerlike.cra.service.CraSignatureTokenService;
 
 @RestController
@@ -19,18 +18,18 @@ import com.timizerlike.cra.service.CraSignatureTokenService;
 public class CraSignatureLinkController {
 
     private final CraSignatureTokenService tokenService;
+    private final TimizerProperties properties;
 
-    public CraSignatureLinkController(CraSignatureTokenService tokenService) {
+    public CraSignatureLinkController(CraSignatureTokenService tokenService, TimizerProperties properties) {
         this.tokenService = tokenService;
+        this.properties = properties;
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Map<String, String> generateLink(
-            @PathVariable Long craId,
-            HttpServletRequest request) {
+    public Map<String, String> generateLink(@PathVariable Long craId) {
         String rawToken = tokenService.generateToken(craId);
-        String signatureUrl = buildSignatureUrl(request, rawToken);
+        String signatureUrl = properties.publicFrontendBaseUrl() + "/sign/" + rawToken;
         return Map.of("signatureUrl", signatureUrl);
     }
 
@@ -38,17 +37,5 @@ public class CraSignatureLinkController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void revokeLink(@PathVariable Long craId) {
         tokenService.revokeToken(craId);
-    }
-
-    private static String buildSignatureUrl(HttpServletRequest request, String rawToken) {
-        String scheme = request.getScheme();
-        String host = request.getServerName();
-        int port = request.getServerPort();
-        boolean isDefaultPort = ("http".equals(scheme) && port == 80)
-                || ("https".equals(scheme) && port == 443);
-        String base = isDefaultPort
-                ? scheme + "://" + host
-                : scheme + "://" + host + ":" + port;
-        return base + "/sign/" + rawToken;
     }
 }

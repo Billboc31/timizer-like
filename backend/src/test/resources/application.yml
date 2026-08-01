@@ -9,6 +9,9 @@ spring:
     properties:
       hibernate:
         globally_quoted_identifiers: true
+timizer:
+  public-frontend-base-url: http://localhost
+
 cra:
   defaults:
     provider:

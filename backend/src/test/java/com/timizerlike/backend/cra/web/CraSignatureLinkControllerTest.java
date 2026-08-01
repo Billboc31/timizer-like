@@ -2,6 +2,7 @@ package com.timizerlike.backend.cra.web;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.startsWith;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
@@ -20,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.timizer.backend.cra.CraNotFoundException;
@@ -32,6 +34,7 @@ import com.timizerlike.cra.service.CraSignatureTokenService;
 
 @WebMvcTest(controllers = {CraSignatureLinkController.class, PublicCraViewController.class})
 @Import({CraSignatureLinkController.class, PublicCraViewController.class, CraApiExceptionHandler.class})
+@TestPropertySource(properties = "timizer.public-frontend-base-url=https://timizer.example.com")
 class CraSignatureLinkControllerTest {
 
     @Autowired
@@ -58,7 +61,19 @@ class CraSignatureLinkControllerTest {
 
         mockMvc.perform(post("/api/cras/1/signature-link"))
                 .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.signatureUrl").value(startsWith("https://timizer.example.com/sign/")))
                 .andExpect(jsonPath("$.signatureUrl").value(containsString("/sign/raw-token-abc")));
+    }
+
+    @Test
+    void signatureUrlDoesNotContainContainerInternalHost() throws Exception {
+        when(tokenService.generateToken(1L)).thenReturn("raw-token-abc");
+
+        mockMvc.perform(post("/api/cras/1/signature-link"))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.signatureUrl").value(not(containsString("localhost:8080"))))
+                .andExpect(jsonPath("$.signatureUrl").value(not(containsString("backend:"))))
+                .andExpect(jsonPath("$.signatureUrl").value(not(containsString(":8000"))));
     }
 
     @Test
