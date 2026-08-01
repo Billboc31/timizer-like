@@ -1,0 +1,7 @@
+{
+  "ticket_id": "T071",
+  "state": "INIT",
+  "branch": "ticket/T071-fix-broken-client-cra-signature-links-end-to-end",
+  "issue_number": 142,
+  "updated_at": "2026-08-01T23:04:57Z"
+}
