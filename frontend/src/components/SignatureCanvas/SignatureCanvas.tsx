@@ -1,4 +1,5 @@
 import { forwardRef, useImperativeHandle, useRef } from 'react';
+import './SignatureCanvas.css';
 
 export interface SignatureCanvasHandle {
   toDataURL(): string;
@@ -6,17 +7,18 @@ export interface SignatureCanvasHandle {
   isEmpty(): boolean;
 }
 
-interface Props {
+interface Props extends React.CanvasHTMLAttributes<HTMLCanvasElement> {
   onDraw?: () => void;
   width?: number;
   height?: number;
-  className?: string;
+  disabled?: boolean;
 }
 
 export const SignatureCanvas = forwardRef<SignatureCanvasHandle, Props>(
-  ({ onDraw, width = 400, height = 150, className }, ref) => {
+  ({ onDraw, width = 600, height = 200, className, disabled = false, ...rest }, ref) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const isDrawing = useRef(false);
+    const hasMoved = useRef(false);
     const hasDrawn = useRef(false);
     const lastPos = useRef<{ x: number; y: number } | null>(null);
 
@@ -37,18 +39,24 @@ export const SignatureCanvas = forwardRef<SignatureCanvasHandle, Props>(
     }));
 
     function getPos(e: React.PointerEvent<HTMLCanvasElement>) {
-      const rect = e.currentTarget.getBoundingClientRect();
-      return { x: e.clientX - rect.left, y: e.clientY - rect.top };
+      const canvas = e.currentTarget;
+      const rect = canvas.getBoundingClientRect();
+      return {
+        x: (e.clientX - rect.left) * (canvas.width / rect.width),
+        y: (e.clientY - rect.top) * (canvas.height / rect.height),
+      };
     }
 
     function handlePointerDown(e: React.PointerEvent<HTMLCanvasElement>) {
+      if (disabled) return;
       e.currentTarget.setPointerCapture(e.pointerId);
       isDrawing.current = true;
+      hasMoved.current = false;
       lastPos.current = getPos(e);
     }
 
     function handlePointerMove(e: React.PointerEvent<HTMLCanvasElement>) {
-      if (!isDrawing.current || !lastPos.current) return;
+      if (disabled || !isDrawing.current || !lastPos.current) return;
       const canvas = canvasRef.current;
       if (!canvas) return;
       const ctx = canvas.getContext('2d');
@@ -63,14 +71,18 @@ export const SignatureCanvas = forwardRef<SignatureCanvasHandle, Props>(
       ctx.lineCap = 'round';
       ctx.stroke();
       lastPos.current = pos;
+      hasMoved.current = true;
     }
 
     function handlePointerUp() {
       if (isDrawing.current) {
         isDrawing.current = false;
         lastPos.current = null;
-        hasDrawn.current = true;
-        onDraw?.();
+        if (hasMoved.current) {
+          hasDrawn.current = true;
+          onDraw?.();
+        }
+        hasMoved.current = false;
       }
     }
 
@@ -79,14 +91,14 @@ export const SignatureCanvas = forwardRef<SignatureCanvasHandle, Props>(
         ref={canvasRef}
         width={width}
         height={height}
-        className={className}
-        style={{ touchAction: 'none', cursor: 'crosshair' }}
+        className={`signature-canvas${disabled ? ' signature-canvas--disabled' : ''}${className ? ' ' + className : ''}`}
         onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}
         onPointerUp={handlePointerUp}
         onPointerLeave={handlePointerUp}
         aria-label="Zone de dessin de la signature"
         role="img"
+        {...rest}
       />
     );
   },

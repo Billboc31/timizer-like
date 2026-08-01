@@ -12,9 +12,11 @@ function toApiErrorCode(raw: unknown): ApiErrorCode {
     'duplicate_cra_transition',
     'invalid_signature_image',
     'token_invalid',
+    'token_not_found',
     'token_already_consumed',
     'token_expired',
     'cra_not_signed',
+    'cra_wrong_status',
     'consent_not_given',
     'validation_blocked',
   ];

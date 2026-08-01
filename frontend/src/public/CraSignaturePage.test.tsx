@@ -2,6 +2,7 @@ import { render, screen, cleanup, waitFor } from '@testing-library/react';
 import { describe, it, expect, vi, afterEach } from 'vitest';
 import { CraSignaturePage } from './CraSignaturePage';
 import { getPublicCra } from '../api/craPublicClient';
+import { ApiError } from '../api/apiError';
 import type { CraPublicView } from '../types/craPublicView';
 
 vi.mock('../api/craPublicClient', () => ({
@@ -16,6 +17,8 @@ afterEach(() => {
 });
 
 const MOCK_CRA: CraPublicView = {
+  craId: 42,
+  status: 'AWAITING_CLIENT_SIGNATURE',
   month: 7,
   year: 2026,
   providerFirstName: 'Alice',
@@ -51,7 +54,7 @@ describe('CraSignaturePage', () => {
     expect(screen.getByText(/Provider SARL/)).toBeInTheDocument();
     expect(screen.getByText(/Bob Martin/)).toBeInTheDocument();
     expect(screen.getByText(/Client SA/)).toBeInTheDocument();
-    expect(screen.getByText(/2026-07-31/)).toBeInTheDocument();
+    expect(screen.getByText(/31 juillet 2026/)).toBeInTheDocument();
     expect(screen.getByTestId('total-worked-days')).toHaveTextContent('20.5');
   });
 
@@ -92,5 +95,29 @@ describe('CraSignaturePage', () => {
 
     await waitFor(() => expect(screen.getByTestId('cra-public-view')).toBeInTheDocument());
     expect(mockGetPublicCra).toHaveBeenCalledWith('my-secret-token');
+  });
+
+  it('shows already-consumed message for token_already_consumed error', async () => {
+    mockGetPublicCra.mockRejectedValue(new ApiError('token_already_consumed', 410));
+    render(<CraSignaturePage token="used-token" />);
+
+    await waitFor(() => expect(screen.getByRole('alert')).toBeInTheDocument());
+    expect(screen.getByRole('alert')).toHaveTextContent('déjà été utilisé');
+  });
+
+  it('shows wrong-status message for cra_wrong_status error', async () => {
+    mockGetPublicCra.mockRejectedValue(new ApiError('cra_wrong_status', 409));
+    render(<CraSignaturePage token="some-token" />);
+
+    await waitFor(() => expect(screen.getByRole('alert')).toBeInTheDocument());
+    expect(screen.getByRole('alert')).toHaveTextContent('déjà été signé ou n');
+  });
+
+  it('shows invalid-link message for token_invalid error', async () => {
+    mockGetPublicCra.mockRejectedValue(new ApiError('token_invalid', 404));
+    render(<CraSignaturePage token="bad-token" />);
+
+    await waitFor(() => expect(screen.getByRole('alert')).toBeInTheDocument());
+    expect(screen.getByRole('alert')).toHaveTextContent('invalide ou expiré');
   });
 });

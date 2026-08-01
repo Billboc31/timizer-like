@@ -100,6 +100,28 @@ describe('SignatureCanvas', () => {
     expect(onDraw).not.toHaveBeenCalled();
   });
 
+  it('does not call onDraw on tap without movement', () => {
+    const onDraw = vi.fn();
+    render(<SignatureCanvas onDraw={onDraw} />);
+    const canvas = screen.getByRole('img');
+
+    fireEvent.pointerDown(canvas, { clientX: 10, clientY: 10 });
+    fireEvent.pointerUp(canvas);
+
+    expect(onDraw).not.toHaveBeenCalled();
+  });
+
+  it('isEmpty() returns true after tap without movement', () => {
+    const ref = createRef<SignatureCanvasHandle>();
+    render(<SignatureCanvas ref={ref} />);
+    const canvas = screen.getByRole('img');
+
+    fireEvent.pointerDown(canvas, { clientX: 10, clientY: 10 });
+    fireEvent.pointerUp(canvas);
+
+    expect(ref.current?.isEmpty()).toBe(true);
+  });
+
   it('isEmpty() returns true initially', () => {
     const ref = createRef<SignatureCanvasHandle>();
     render(<SignatureCanvas ref={ref} />);

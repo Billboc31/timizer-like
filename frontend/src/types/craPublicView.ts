@@ -1,4 +1,6 @@
 export interface CraPublicView {
+  craId: number;
+  status: string;
   month: number;
   year: number;
   providerFirstName: string;

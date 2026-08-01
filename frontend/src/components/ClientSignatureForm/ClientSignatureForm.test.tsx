@@ -88,7 +88,7 @@ describe('ClientSignatureForm', () => {
   });
 
   it('calls submitClientSignature with correct payload on submit', async () => {
-    mockSubmit.mockResolvedValueOnce(undefined as unknown as void);
+    mockSubmit.mockResolvedValueOnce({ downloadToken: 'dl-token-abc' });
     const onSuccess = vi.fn();
 
     render(<ClientSignatureForm token="my-token" onSuccess={onSuccess} />);
@@ -107,8 +107,8 @@ describe('ClientSignatureForm', () => {
     });
   });
 
-  it('calls onSuccess with signer name and date', async () => {
-    mockSubmit.mockResolvedValueOnce(undefined as unknown as void);
+  it('calls onSuccess with signer name, date, and downloadToken', async () => {
+    mockSubmit.mockResolvedValueOnce({ downloadToken: 'dl-token-xyz' });
     const onSuccess = vi.fn();
 
     render(<ClientSignatureForm token="tok" onSuccess={onSuccess} />);
@@ -118,9 +118,10 @@ describe('ClientSignatureForm', () => {
     fireEvent.click(screen.getByTestId('submit-button'));
 
     await waitFor(() => expect(onSuccess).toHaveBeenCalledOnce());
-    const [name, date] = onSuccess.mock.calls[0];
+    const [name, date, downloadToken] = onSuccess.mock.calls[0];
     expect(name).toBe('Alice');
     expect(date).toBeInstanceOf(Date);
+    expect(downloadToken).toBe('dl-token-xyz');
   });
 
   it('shows error message on API failure', async () => {
@@ -163,7 +164,7 @@ describe('ClientSignatureForm', () => {
   });
 
   it('omits signerRole when blank', async () => {
-    mockSubmit.mockResolvedValueOnce(undefined as unknown as void);
+    mockSubmit.mockResolvedValueOnce({ downloadToken: 'dl-token-blank' });
     const onSuccess = vi.fn();
 
     render(<ClientSignatureForm token="tok" onSuccess={onSuccess} />);
