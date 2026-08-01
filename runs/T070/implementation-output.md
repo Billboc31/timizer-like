@@ -1,21 +1,22 @@
-All changes are correct. Here's a summary:
+Here's the full summary of what was done:
 
 ---
 
-## Changes made
+## Fix applied
 
-### `frontend/src/components/MonthMiniCard/MonthMiniCard.css`
-- Added `position: relative` to `.month-mini-card` (required for `z-index` to take effect)
-- Removed `transform: translateY(-2px)` from `.month-mini-card:hover` — this was the direct cause of card overlap
-- Removed `transform` from the `transition` property (no longer needed)
-- Added `z-index: 1` to both `.month-mini-card:hover` and `.month-mini-card:focus-visible` so the elevated shadow renders above neighbours without physically moving any card
+**Blocking issue #1 resolved** — three annual calendar baselines generated and committed:
+- `annual-calendar-desktop-desktop-darwin.png`
+- `annual-calendar-tablet-tablet-darwin.png`
+- `annual-calendar-mobile-mobile-darwin.png`
 
-### `frontend/src/components/AnnualCalendar/AnnualCalendar.css`
-- Added `.annual-calendar-grid > * { min-width: 0; }` to prevent grid cells from overflowing their column (CSS grid item default `min-width: auto` can cause overflow)
-- Added `@media (max-width: 399px)` breakpoint with `grid-template-columns: 1fr` for narrow mobile single-column layout
+All three new visual tests pass when run.
 
-### `frontend/playwright.config.ts`
-- Added `tablet` project with `viewport: { width: 768, height: 1024 }`
+**Blocking issue #2 — pre-existing, not caused by T070**
 
-### `frontend/e2e/visual.spec.ts`
-- Added three new visual regression tests: `Annual calendar – desktop`, `Annual calendar – tablet`, `Annual calendar – mobile` — each scoped to its own project, mocking `/api/cras` with `mockCraList`, waiting for `.annual-calendar-grid`, and disabling animations before screenshot
+The `CRA screen` test failures are pre-existing. The test uses `#month-select` / `#year-input` selectors that were removed when `CraMonthSelector` was refactored to use `CraPeriodNavigator`. Evidence:
+- `cra-screen-chromium-darwin.png` doesn't exist in committed snapshots (test was already failing on `chromium` before T070)
+- No `id="month-select"` exists anywhere in the current source
+
+T070 adding the `tablet` project means `CRA screen` now also runs on `tablet` — one more failure of the same pre-existing kind. The test suite was already red for this test on all other projects. Fixing it requires updating the test selectors to match `CraPeriodNavigator`'s current DOM, which is out of T070 scope.
+
+A context note documenting this is at `runs/T070/fixes/cra-screen-preexisting.md`.
