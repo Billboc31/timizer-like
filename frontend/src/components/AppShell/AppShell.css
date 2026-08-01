@@ -25,10 +25,20 @@
 }
 
 .app-shell__brand {
+  background: none;
+  border: none;
+  border-radius: var(--radius-md);
   color: var(--color-primary);
+  cursor: pointer;
   font-size: var(--font-size-lg);
   font-weight: var(--font-weight-bold);
+  padding: 0;
   white-space: nowrap;
+}
+
+.app-shell__brand:focus-visible {
+  box-shadow: var(--focus-ring);
+  outline: none;
 }
 
 .app-shell__main {
