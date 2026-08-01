@@ -1,7 +1,7 @@
 {
   "ticket_id": "T070",
-  "state": "IMPLEMENTATION_REVIEW_NEEDED",
+  "state": "IMPLEMENTATION_FIX_REQUIRED",
   "branch": "ticket/T070-fix-annual-calendar-card-overlap-and-responsive-re",
   "issue_number": 141,
-  "updated_at": "2026-08-01T23:17:45Z"
+  "updated_at": "2026-08-01T23:21:02Z"
 }
