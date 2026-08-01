@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 import java.time.DayOfWeek;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.List;
@@ -66,13 +67,15 @@ class CraPdfDocumentTest {
                 sampleClient(),
                 new BigDecimal("1.5")
         );
+        Instant providerSignedAt = Instant.parse("2026-04-01T10:00:00Z");
         CraPdfSignatures signatures = new CraPdfSignatures(
                 new CraPdfProviderSignature(
                         "Alice Provider",
-                        LocalDate.of(2026, 4, 1),
+                        null,
+                        providerSignedAt,
                         null
                 ),
-                new CraPdfClientSignature(null, null, null)
+                new CraPdfClientSignature(null, null, null, null)
         );
 
         CraPdfDocument document = new CraPdfDocument(summary, sampleDays(), signatures);
@@ -119,9 +122,10 @@ class CraPdfDocumentTest {
 
     @Test
     void signaturesAcceptNullClientFieldsForEmptyBlock() {
-        CraPdfClientSignature emptyClient = new CraPdfClientSignature(null, null, null);
+        Instant providerSignedAt = Instant.parse("2026-04-01T10:00:00Z");
+        CraPdfClientSignature emptyClient = new CraPdfClientSignature(null, null, null, null);
         CraPdfSignatures signatures = new CraPdfSignatures(
-                new CraPdfProviderSignature("Alice Provider", LocalDate.of(2026, 4, 1), null),
+                new CraPdfProviderSignature("Alice Provider", null, providerSignedAt, null),
                 emptyClient
         );
 
@@ -129,7 +133,7 @@ class CraPdfDocumentTest {
         assertThat(signatures.client().signedAt()).isNull();
         assertThat(signatures.client().signatureImage()).isNull();
         assertThat(signatures.provider().name()).isEqualTo("Alice Provider");
-        assertThat(signatures.provider().signedAt()).isEqualTo(LocalDate.of(2026, 4, 1));
+        assertThat(signatures.provider().signedAt()).isEqualTo(providerSignedAt);
         assertThat(signatures.provider().signatureImage()).isNull();
     }
 }

@@ -1,5 +1,6 @@
 package com.timizerlike.cra.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
@@ -7,10 +8,12 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.time.Instant;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.timizer.backend.cra.ConsentNotGivenException;
@@ -58,6 +61,24 @@ class ClientSignatureServiceTest {
         verify(recordRepository).save(any(CraClientSignatureRecord.class));
         verify(cra).setStatus(ValidationStatus.VALIDATED);
         verify(craRepository).save(cra);
+    }
+
+    // F4: sign() propagates clientRepresentativeName, clientSignedAt, and clientSignatureImage to entity
+    @Test
+    void signPropagatesClientDataToEntity() {
+        MonthlyCraReport cra = signedByProviderCra();
+        CraSignatureToken token = new CraSignatureToken("hash", 1L);
+        when(tokenService.validateAndConsume(VALID_TOKEN)).thenReturn(new ConsumedToken(token, cra));
+        when(craRepository.save(cra)).thenReturn(cra);
+        Instant before = Instant.now();
+
+        service.sign(VALID_TOKEN, SIGNER_NAME, "Responsable Achats", true, VALID_SIGNATURE);
+
+        verify(cra).setClientRepresentativeName(SIGNER_NAME);
+        verify(cra).setClientSignatureImage(VALID_SIGNATURE);
+        ArgumentCaptor<Instant> captor = ArgumentCaptor.forClass(Instant.class);
+        verify(cra).setClientSignedAt(captor.capture());
+        assertThat(captor.getValue()).isAfterOrEqualTo(before);
     }
 
     @Test

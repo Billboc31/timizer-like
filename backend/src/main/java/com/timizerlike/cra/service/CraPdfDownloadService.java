@@ -80,17 +80,22 @@ public class CraPdfDownloadService {
                 .toList();
 
         byte[] providerImage = decodeSignatureImage(cra.getProviderSignatureImage());
+        String providerName = cra.getProviderSignerName() != null
+                ? cra.getProviderSignerName()
+                : (cra.getProviderFirstName() + " " + cra.getProviderLastName());
         CraPdfProviderSignature providerSignature = new CraPdfProviderSignature(
-                cra.getProviderFirstName() + " " + cra.getProviderLastName(),
-                cra.getProviderSignatureDate(),
+                providerName,
+                null,
+                cra.getProviderSignedAt(),
                 providerImage);
 
         CraPdfClientSignature clientSignature = null;
-        if (cra.getClientSignatureDate() != null || cra.getClientRepresentativeName() != null) {
-            byte[] clientImage = decodeBase64(cra.getClientSignatureImage());
+        if (cra.getClientSignedAt() != null || cra.getClientRepresentativeName() != null) {
+            byte[] clientImage = decodeSignatureImage(cra.getClientSignatureImage());
             clientSignature = new CraPdfClientSignature(
                     cra.getClientRepresentativeName(),
-                    cra.getClientSignatureDate(),
+                    cra.getClientContactRole(),
+                    cra.getClientSignedAt(),
                     clientImage);
         }
 
@@ -126,17 +131,6 @@ public class CraPdfDownloadService {
         return "CRA-" + provider + "-" + client + "-" + period + ".pdf";
     }
 
-    private byte[] decodeBase64(String base64) {
-        if (base64 == null || base64.isBlank()) {
-            return null;
-        }
-        try {
-            return Base64.getDecoder().decode(base64);
-        } catch (IllegalArgumentException e) {
-            return null;
-        }
-    }
-
     private String sanitize(String value) {
         if (value == null) {
             return "";
@@ -149,6 +143,10 @@ public class CraPdfDownloadService {
             return null;
         }
         String data = base64Image.contains(",") ? base64Image.substring(base64Image.indexOf(',') + 1) : base64Image;
-        return Base64.getDecoder().decode(data);
+        try {
+            return Base64.getDecoder().decode(data);
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
     }
 }
