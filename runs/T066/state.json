@@ -1,7 +1,11 @@
 {
   "ticket_id": "T066",
-  "state": "PLAN_APPROVED",
+  "state": "TEST_COMPLETE",
   "branch": "ticket/T066-redesign-the-client-cra-signature-page",
   "issue_number": 129,
-  "updated_at": "2026-07-31T22:46:43Z"
+  "updated_at": "2026-08-01T17:25:02Z",
+  "pr_number": 137,
+  "pr_synced": true,
+  "pre_conflict_state": "TEST_COMPLETE",
+  "conflict_resolution_note": "Manual fix 2026-08-01: removed remaining tracked backend/target files from branch; PR #137 is MERGEABLE/CLEAN against main after #139."
 }
