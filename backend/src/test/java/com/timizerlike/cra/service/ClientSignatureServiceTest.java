@@ -147,4 +147,14 @@ class ClientSignatureServiceTest {
         when(cra.getDayEntries()).thenReturn(List.of());
         return cra;
     }
+
+    private MonthlyCraReport signedByProviderCra() {
+        MonthlyCraReport cra = mock(MonthlyCraReport.class);
+        when(cra.getId()).thenReturn(1L);
+        when(cra.getMonth()).thenReturn(7);
+        when(cra.getYear()).thenReturn(2026);
+        when(cra.getStatus()).thenReturn(ValidationStatus.SIGNED_BY_PROVIDER);
+        when(cra.getDayEntries()).thenReturn(List.of());
+        return cra;
+    }
 }

@@ -1,0 +1,102 @@
+-------------------------------------------------------------------------------
+Test set: com.timizerlike.cra.service.ClientSignatureServiceTest
+-------------------------------------------------------------------------------
+Tests run: 7, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 0.083 s <<< FAILURE! -- in com.timizerlike.cra.service.ClientSignatureServiceTest
+com.timizerlike.cra.service.ClientSignatureServiceTest.happyPathPersistsRecordAndTransitionsCraToValidated -- Time elapsed: 0.078 s <<< FAILURE!
+Argument(s) are different! Wanted:
+monthlyCraReport.setStatus(
+    VALIDATED
+);
+-> at com.timizer.backend.cra.MonthlyCraReport.setStatus(MonthlyCraReport.java:315)
+Actual invocations have different arguments:
+monthlyCraReport.getDayEntries(
+    
+);
+-> at com.timizerlike.cra.service.CraSignatureTokenService.toPublicViewDto(CraSignatureTokenService.java:136)
+monthlyCraReport.getId(
+    
+);
+-> at com.timizerlike.cra.service.CraSignatureTokenService.toPublicViewDto(CraSignatureTokenService.java:144)
+monthlyCraReport.getStatus(
+    
+);
+-> at com.timizerlike.cra.service.CraSignatureTokenService.toPublicViewDto(CraSignatureTokenService.java:145)
+monthlyCraReport.getMonth(
+    
+);
+-> at com.timizerlike.cra.service.CraSignatureTokenService.toPublicViewDto(CraSignatureTokenService.java:146)
+monthlyCraReport.getYear(
+    
+);
+-> at com.timizerlike.cra.service.CraSignatureTokenService.toPublicViewDto(CraSignatureTokenService.java:147)
+monthlyCraReport.getProviderFirstName(
+    
+);
+-> at com.timizerlike.cra.service.CraSignatureTokenService.toPublicViewDto(CraSignatureTokenService.java:148)
+monthlyCraReport.getProviderLastName(
+    
+);
+-> at com.timizerlike.cra.service.CraSignatureTokenService.toPublicViewDto(CraSignatureTokenService.java:149)
+monthlyCraReport.getProviderCompany(
+    
+);
+-> at com.timizerlike.cra.service.CraSignatureTokenService.toPublicViewDto(CraSignatureTokenService.java:150)
+monthlyCraReport.getClientFirstName(
+    
+);
+-> at com.timizerlike.cra.service.CraSignatureTokenService.toPublicViewDto(CraSignatureTokenService.java:151)
+monthlyCraReport.getClientLastName(
+    
+);
+-> at com.timizerlike.cra.service.CraSignatureTokenService.toPublicViewDto(CraSignatureTokenService.java:152)
+monthlyCraReport.getClientCompany(
+    
+);
+-> at com.timizerlike.cra.service.CraSignatureTokenService.toPublicViewDto(CraSignatureTokenService.java:153)
+monthlyCraReport.getClientContactEmail(
+    
+);
+-> at com.timizerlike.cra.service.CraSignatureTokenService.toPublicViewDto(CraSignatureTokenService.java:154)
+monthlyCraReport.getProviderSignatureDate(
+    
+);
+-> at com.timizerlike.cra.service.CraSignatureTokenService.toPublicViewDto(CraSignatureTokenService.java:155)
+monthlyCraReport.getId(
+    
+);
+-> at com.timizerlike.cra.service.ClientSignatureService.sign(ClientSignatureService.java:70)
+monthlyCraReport.setClientRepresentativeName(
+    "Bob Martin"
+);
+-> at com.timizerlike.cra.service.ClientSignatureService.sign(ClientSignatureService.java:79)
+monthlyCraReport.setClientSignatureDate(
+    2026-08-02
+);
+-> at com.timizerlike.cra.service.ClientSignatureService.sign(ClientSignatureService.java:80)
+monthlyCraReport.setClientSignedAt(
+    2026-08-02T11:13:31.553248Z
+);
+-> at com.timizerlike.cra.service.ClientSignatureService.sign(ClientSignatureService.java:81)
+monthlyCraReport.setClientSignatureImage(
+    "data:image/png;base64,abc123"
+);
+-> at com.timizerlike.cra.service.ClientSignatureService.sign(ClientSignatureService.java:82)
+monthlyCraReport.setStatus(
+    FULLY_SIGNED
+);
+-> at com.timizerlike.cra.service.ClientSignatureService.sign(ClientSignatureService.java:83)
+monthlyCraReport.getId(
+    
+);
+-> at com.timizerlike.cra.service.ClientSignatureService.sign(ClientSignatureService.java:86)
+monthlyCraReport.getId(
+    
+);
+-> at com.timizerlike.cra.service.ClientSignatureService.sign(ClientSignatureService.java:90)
+
+	at com.timizer.backend.cra.MonthlyCraReport.setStatus(MonthlyCraReport.java:315)
+	at com.timizerlike.cra.service.ClientSignatureServiceTest.happyPathPersistsRecordAndTransitionsCraToValidated(ClientSignatureServiceTest.java:68)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1612)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1612)
+

@@ -73,84 +73,91 @@ public class CraPdfGenerator {
     private final PDType1Font bold = new PDType1Font(Standard14Fonts.FontName.HELVETICA_BOLD);
     private final PDType1Font italic = new PDType1Font(Standard14Fonts.FontName.HELVETICA_OBLIQUE);
 
+    private record PageState(PDPage page, PDPageContentStream cs, float y) {}
+
     public byte[] generate(CraPdfDocument document) {
-        try (PDDocument pdf = new PDDocument();
-             ByteArrayOutputStream out = new ByteArrayOutputStream()) {
-            renderCoverPage(pdf, document);
-            renderPage1(pdf, document);
-            renderPage2(pdf, document);
+        PDDocument pdf = new PDDocument();
+        try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+            PageState state = renderCoverPage(pdf, document);
+            try {
+                state = renderDetailSections(pdf, document, state);
+            } finally {
+                state.cs().close();
+            }
             pdf.save(out);
             return out.toByteArray();
         } catch (IOException e) {
             throw new IllegalStateException("Failed to generate CRA PDF", e);
+        } finally {
+            try { pdf.close(); } catch (IOException ignored) {}
         }
     }
 
-    private void renderCoverPage(PDDocument pdf, CraPdfDocument document) throws IOException {
+    private PageState renderCoverPage(PDDocument pdf, CraPdfDocument document) throws IOException {
         PDPage page = new PDPage(PDRectangle.A4);
         pdf.addPage(page);
-        try (PDPageContentStream cs = new PDPageContentStream(pdf, page)) {
-            float y = PAGE_TOP;
+        PDPageContentStream cs = new PDPageContentStream(pdf, page);
+        float y = PAGE_TOP;
 
-            CraPdfSummary summary = document.page1();
-            drawText(cs, bold, 14f, MARGIN, y, "Compte-Rendu d'Activité");
-            y -= 20f;
+        CraPdfSummary summary = document.page1();
+        drawText(cs, bold, 14f, MARGIN, y, "Compte-Rendu d'Activité");
+        y -= 20f;
 
-            YearMonth period = summary != null ? summary.period() : null;
-            if (period != null) {
-                drawText(cs, regular, 10f, MARGIN, y, "Période : " + period.format(PERIOD_FORMAT_LONG));
-            }
-            y -= 16f;
-
-            BigDecimal total = summary != null ? summary.totalWorkedDays() : null;
-            drawText(cs, regular, 10f, MARGIN, y, "Total jours travaillés : " + formatFraction(total));
-            y -= 24f;
-
-            List<CraPdfDayEntry> days = document.page2Days();
-            Map<LocalDate, CraPdfDayType> dayTypes = new HashMap<>();
-            if (days != null) {
-                for (CraPdfDayEntry entry : days) {
-                    if (entry.date() != null) {
-                        dayTypes.put(entry.date(), entry.type());
-                    }
-                }
-            }
-
-            TreeSet<YearMonth> months = new TreeSet<>();
-            if (days != null) {
-                for (CraPdfDayEntry entry : days) {
-                    if (entry.date() != null) {
-                        months.add(YearMonth.from(entry.date()));
-                    }
-                }
-            }
-            if (months.isEmpty() && period != null) {
-                months.add(period);
-            }
-
-            float cardWidth = 160f;
-            float cardHeight = 115f;
-            float usableWidth = PDRectangle.A4.getWidth() - 2 * MARGIN;
-            float colGap = (usableWidth - 3 * cardWidth) / 2f;
-            float rowGap = 10f;
-
-            int col = 0;
-            int row = 0;
-            for (YearMonth month : months) {
-                float cx = MARGIN + col * (cardWidth + colGap);
-                float cy = y - row * (cardHeight + rowGap);
-                drawCalendarCard(cs, month, dayTypes, cx, cy, cardWidth, cardHeight);
-                col++;
-                if (col >= 3) {
-                    col = 0;
-                    row++;
-                }
-            }
-
-            int totalRows = (months.size() + 2) / 3;
-            float legendY = y - (totalRows - 1) * (cardHeight + rowGap) - cardHeight - 12f;
-            drawCalendarLegend(cs, legendY);
+        YearMonth period = summary != null ? summary.period() : null;
+        if (period != null) {
+            drawText(cs, regular, 10f, MARGIN, y, "Période : " + period.format(PERIOD_FORMAT_LONG));
         }
+        y -= 16f;
+
+        BigDecimal total = summary != null ? summary.totalWorkedDays() : null;
+        drawText(cs, regular, 10f, MARGIN, y, "Total jours travaillés : " + formatFraction(total));
+        y -= 24f;
+
+        List<CraPdfDayEntry> days = document.page2Days();
+        Map<LocalDate, CraPdfDayType> dayTypes = new HashMap<>();
+        if (days != null) {
+            for (CraPdfDayEntry entry : days) {
+                if (entry.date() != null) {
+                    dayTypes.put(entry.date(), entry.type());
+                }
+            }
+        }
+
+        TreeSet<YearMonth> months = new TreeSet<>();
+        if (days != null) {
+            for (CraPdfDayEntry entry : days) {
+                if (entry.date() != null) {
+                    months.add(YearMonth.from(entry.date()));
+                }
+            }
+        }
+        if (months.isEmpty() && period != null) {
+            months.add(period);
+        }
+
+        float cardWidth = 160f;
+        float cardHeight = 115f;
+        float usableWidth = PDRectangle.A4.getWidth() - 2 * MARGIN;
+        float colGap = (usableWidth - 3 * cardWidth) / 2f;
+        float rowGap = 10f;
+
+        int col = 0;
+        int row = 0;
+        for (YearMonth month : months) {
+            float cx = MARGIN + col * (cardWidth + colGap);
+            float cy = y - row * (cardHeight + rowGap);
+            drawCalendarCard(cs, month, dayTypes, cx, cy, cardWidth, cardHeight);
+            col++;
+            if (col >= 3) {
+                col = 0;
+                row++;
+            }
+        }
+
+        int totalRows = (months.size() + 2) / 3;
+        float legendY = y - (totalRows - 1) * (cardHeight + rowGap) - cardHeight - 12f;
+        drawCalendarLegend(cs, legendY);
+        return new PageState(page, cs, legendY - 20f);
     }
 
     private void drawCalendarCard(PDPageContentStream cs, YearMonth month, Map<LocalDate, CraPdfDayType> dayTypes,
@@ -239,43 +246,6 @@ public class CraPdfGenerator {
         drawColoredText(cs, regular, 7f, x + swatchSize + 3f, y - 7f, "Non travaillé", new Color(45, 55, 72));
     }
 
-    private void renderPage1(PDDocument pdf, CraPdfDocument document) throws IOException {
-        PDPage page = new PDPage(PDRectangle.A4);
-        pdf.addPage(page);
-        try (PDPageContentStream cs = new PDPageContentStream(pdf, page)) {
-            float y = PAGE_TOP;
-
-            CraPdfSummary summary = document.page1();
-            drawText(cs, bold, 16f, MARGIN, y, "Compte-Rendu d'Activité");
-            y -= 22f;
-            drawText(cs, regular, 12f, MARGIN, y, "Période : " + formatPeriod(summary.period()));
-            y -= 30f;
-
-            y = drawPartyBlock(cs, y, "Prestataire", summary.provider());
-            y -= 15f;
-            y = drawPartyBlock(cs, y, "Client", summary.client());
-            y -= 15f;
-
-            drawText(cs, bold, 12f, MARGIN, y, "Total jours travaillés");
-            y -= 15f;
-            drawText(cs, regular, 11f, MARGIN, y, formatFraction(summary.totalWorkedDays()));
-            y -= 25f;
-
-            drawText(cs, bold, 12f, MARGIN, y, "Frais");
-            y -= 15f;
-            drawText(cs, regular, 11f, MARGIN, y, "Frais : -");
-            y -= 25f;
-
-            CraPdfSignatures signatures = document.signatures();
-            CraPdfProviderSignature provider = signatures == null ? null : signatures.provider();
-            CraPdfClientSignature client = signatures == null ? null : signatures.client();
-
-            y = drawProviderSignatureBlock(pdf, cs, y, provider);
-            y -= 15f;
-            drawClientSignatureBlock(pdf, cs, y, client);
-        }
-    }
-
     private float drawPartyBlock(PDPageContentStream cs, float startY, String label, CraPdfParty party) throws IOException {
         float y = startY;
         drawText(cs, bold, 12f, MARGIN, y, label);
@@ -302,7 +272,6 @@ public class CraPdfGenerator {
         return y - 14f;
     }
 
-    // E1: adds else branch for pending provider; E2: adds role label
     private float drawProviderSignatureBlock(PDDocument pdf, PDPageContentStream cs, float startY, CraPdfProviderSignature provider) throws IOException {
         float y = startY;
         drawText(cs, bold, 12f, MARGIN, y, "Signature prestataire");
@@ -332,7 +301,6 @@ public class CraPdfGenerator {
         return y;
     }
 
-    // E2: adds role label; E3: adds validation wording; returns y for multi-month use in renderPage2
     private float drawClientSignatureBlock(PDDocument pdf, PDPageContentStream cs, float startY, CraPdfClientSignature client) throws IOException {
         float y = startY;
         drawText(cs, bold, 12f, MARGIN, y, "Signature client");
@@ -362,7 +330,6 @@ public class CraPdfGenerator {
         return y;
     }
 
-    // E4: draw "Signature illisible" on corrupt image instead of silently skipping
     private void embedSignatureImage(PDDocument pdf, PDPageContentStream cs, byte[] imageBytes, float x, float y, float w, float h) {
         if (imageBytes == null || imageBytes.length == 0) {
             return;
@@ -385,138 +352,132 @@ public class CraPdfGenerator {
         }
     }
 
-    // E5: group by YearMonth, draw per-month section with signature blocks; E6: removed drawClientValidationBlock
-    private void renderPage2(PDDocument pdf, CraPdfDocument document) throws IOException {
-        PDPage page = new PDPage(PDRectangle.A4);
-        pdf.addPage(page);
+    private PageState renderDetailSections(PDDocument pdf, CraPdfDocument document, PageState state) throws IOException {
         float tableWidth = PDRectangle.A4.getWidth() - 2 * MARGIN;
-        PDPageContentStream cs = new PDPageContentStream(pdf, page);
-        try {
-            float y = PAGE_TOP;
+        PDPage currentPage = state.page();
+        PDPageContentStream cs = state.cs();
+        float y = state.y();
 
-            drawText(cs, bold, 14f, MARGIN, y, "Détail journalier");
-            y -= 30f;
+        drawText(cs, bold, 14f, MARGIN, y, "Détail journalier");
+        y -= 30f;
 
-            List<CraPdfDayEntry> days = document.page2Days();
+        List<CraPdfDayEntry> days = document.page2Days();
 
-            LinkedHashMap<YearMonth, List<CraPdfDayEntry>> monthGroups = new LinkedHashMap<>();
-            if (days != null) {
-                for (CraPdfDayEntry entry : days) {
-                    if (entry.date() != null) {
-                        YearMonth ym = YearMonth.from(entry.date());
-                        monthGroups.computeIfAbsent(ym, k -> new ArrayList<>()).add(entry);
-                    }
+        LinkedHashMap<YearMonth, List<CraPdfDayEntry>> monthGroups = new LinkedHashMap<>();
+        if (days != null) {
+            for (CraPdfDayEntry entry : days) {
+                if (entry.date() != null) {
+                    YearMonth ym = YearMonth.from(entry.date());
+                    monthGroups.computeIfAbsent(ym, k -> new ArrayList<>()).add(entry);
                 }
-            }
-
-            if (monthGroups.isEmpty()) {
-                drawTableHeader(cs, tableWidth, y);
-                return;
-            }
-
-            List<YearMonth> sortedMonths = new ArrayList<>(monthGroups.keySet());
-            sortedMonths.sort(Comparator.naturalOrder());
-
-            CraPdfSignatures signatures = document.signatures();
-            CraPdfProviderSignature provider = signatures == null ? null : signatures.provider();
-            CraPdfClientSignature client = signatures == null ? null : signatures.client();
-
-            for (YearMonth ym : sortedMonths) {
-                List<CraPdfDayEntry> monthDays = monthGroups.get(ym);
-
-                // Month section header
-                if (y < MARGIN + 40f) {
-                    cs.close();
-                    cs = null;
-                    PDPage next = new PDPage(PDRectangle.A4);
-                    pdf.addPage(next);
-                    cs = new PDPageContentStream(pdf, next);
-                    y = PAGE_TOP;
-                }
-                drawText(cs, bold, 12f, MARGIN, y, ym.format(PERIOD_FORMAT_LONG));
-                y -= 20f;
-
-                y = drawTableHeader(cs, tableWidth, y);
-
-                BigDecimal monthTotal = BigDecimal.ZERO;
-                int workedFullIndex = 0;
-                for (CraPdfDayEntry entry : monthDays) {
-                    if (y < PAGE2_MIN_BOTTOM_Y + PAGE2_ROW_HEIGHT) {
-                        cs.close();
-                        cs = null;
-                        PDPage next = new PDPage(PDRectangle.A4);
-                        pdf.addPage(next);
-                        cs = new PDPageContentStream(pdf, next);
-                        y = PAGE_TOP;
-                        y = drawTableHeader(cs, tableWidth, y);
-                    }
-
-                    float rowBottom = y - PAGE2_ROW_HEIGHT;
-                    drawFilledRect(cs, MARGIN, rowBottom, tableWidth, PAGE2_ROW_HEIGHT, rowBackground(entry, workedFullIndex));
-
-                    boolean secondary = isSecondary(entry.type());
-                    PDType1Font rowFont = secondary ? italic : regular;
-                    Color textColor = secondary ? new Color(113, 128, 150) : Color.BLACK;
-
-                    drawColoredText(cs, rowFont, 9f, PAGE2_COL_DATE_X + 3f, y - 12f, buildDateCell(entry), textColor);
-                    drawColoredText(cs, rowFont, 9f, PAGE2_COL_VALEUR_X + 3f, y - 12f, workedValue(entry), textColor);
-                    if (entry.comment() != null && !entry.comment().isEmpty()) {
-                        drawColoredText(cs, rowFont, 9f, PAGE2_COL_NOTE_X + 3f, y - 12f, entry.comment(), textColor);
-                    }
-                    drawHorizontalLine(cs, MARGIN, MARGIN + tableWidth, rowBottom, new Color(203, 213, 224));
-
-                    if (entry.type() == CraPdfDayType.WORKED_FULL) {
-                        workedFullIndex++;
-                    }
-                    monthTotal = monthTotal.add(entry.workedFraction());
-                    y = rowBottom;
-                }
-
-                // Total row for this month
-                if (y < PAGE2_MIN_BOTTOM_Y + PAGE2_ROW_HEIGHT) {
-                    cs.close();
-                    cs = null;
-                    PDPage next = new PDPage(PDRectangle.A4);
-                    pdf.addPage(next);
-                    cs = new PDPageContentStream(pdf, next);
-                    y = PAGE_TOP;
-                }
-                float totalBottom = y - PAGE2_ROW_HEIGHT;
-                drawFilledRect(cs, MARGIN, totalBottom, tableWidth, PAGE2_ROW_HEIGHT, new Color(219, 234, 254));
-                drawColoredText(cs, bold, 9f, PAGE2_COL_DATE_X + 3f, y - 12f, "Total", Color.BLACK);
-                drawColoredText(cs, bold, 9f, PAGE2_COL_VALEUR_X + 3f, y - 12f, formatFraction(monthTotal), Color.BLACK);
-                drawHorizontalLine(cs, MARGIN, MARGIN + tableWidth, totalBottom, new Color(203, 213, 224));
-                y = totalBottom - 10f;
-
-                // Provider signature block with page-overflow guard
-                if (y < MARGIN + SIGNATURE_BOX_HEIGHT + 50f) {
-                    cs.close();
-                    cs = null;
-                    PDPage next = new PDPage(PDRectangle.A4);
-                    pdf.addPage(next);
-                    cs = new PDPageContentStream(pdf, next);
-                    y = PAGE_TOP;
-                }
-                y = drawProviderSignatureBlock(pdf, cs, y, provider);
-                y -= 15f;
-
-                // Client signature block with page-overflow guard
-                if (y < MARGIN + SIGNATURE_BOX_HEIGHT + 50f) {
-                    cs.close();
-                    cs = null;
-                    PDPage next = new PDPage(PDRectangle.A4);
-                    pdf.addPage(next);
-                    cs = new PDPageContentStream(pdf, next);
-                    y = PAGE_TOP;
-                }
-                y = drawClientSignatureBlock(pdf, cs, y, client);
-                y -= 20f;
-            }
-        } finally {
-            if (cs != null) {
-                cs.close();
             }
         }
+
+        if (monthGroups.isEmpty()) {
+            float newY = drawTableHeader(cs, tableWidth, y);
+            return new PageState(currentPage, cs, newY);
+        }
+
+        List<YearMonth> sortedMonths = new ArrayList<>(monthGroups.keySet());
+        sortedMonths.sort(Comparator.naturalOrder());
+
+        CraPdfSignatures signatures = document.signatures();
+        CraPdfProviderSignature provider = signatures == null ? null : signatures.provider();
+        CraPdfClientSignature client = signatures == null ? null : signatures.client();
+
+        for (YearMonth ym : sortedMonths) {
+            List<CraPdfDayEntry> monthDays = monthGroups.get(ym);
+
+            // Month section header
+            if (y < MARGIN + 40f) {
+                cs.close();
+                PDPage next = new PDPage(PDRectangle.A4);
+                pdf.addPage(next);
+                currentPage = next;
+                cs = new PDPageContentStream(pdf, next);
+                y = PAGE_TOP;
+            }
+            drawText(cs, bold, 12f, MARGIN, y, ym.format(PERIOD_FORMAT_LONG));
+            y -= 20f;
+
+            y = drawTableHeader(cs, tableWidth, y);
+
+            BigDecimal monthTotal = BigDecimal.ZERO;
+            int workedFullIndex = 0;
+            for (CraPdfDayEntry entry : monthDays) {
+                if (y < PAGE2_MIN_BOTTOM_Y + PAGE2_ROW_HEIGHT) {
+                    cs.close();
+                    PDPage next = new PDPage(PDRectangle.A4);
+                    pdf.addPage(next);
+                    currentPage = next;
+                    cs = new PDPageContentStream(pdf, next);
+                    y = PAGE_TOP;
+                    y = drawTableHeader(cs, tableWidth, y);
+                }
+
+                float rowBottom = y - PAGE2_ROW_HEIGHT;
+                drawFilledRect(cs, MARGIN, rowBottom, tableWidth, PAGE2_ROW_HEIGHT, rowBackground(entry, workedFullIndex));
+
+                boolean secondary = isSecondary(entry.type());
+                PDType1Font rowFont = secondary ? italic : regular;
+                Color textColor = secondary ? new Color(113, 128, 150) : Color.BLACK;
+
+                drawColoredText(cs, rowFont, 9f, PAGE2_COL_DATE_X + 3f, y - 12f, buildDateCell(entry), textColor);
+                drawColoredText(cs, rowFont, 9f, PAGE2_COL_VALEUR_X + 3f, y - 12f, workedValue(entry), textColor);
+                if (entry.comment() != null && !entry.comment().isEmpty()) {
+                    drawColoredText(cs, rowFont, 9f, PAGE2_COL_NOTE_X + 3f, y - 12f, entry.comment(), textColor);
+                }
+                drawHorizontalLine(cs, MARGIN, MARGIN + tableWidth, rowBottom, new Color(203, 213, 224));
+
+                if (entry.type() == CraPdfDayType.WORKED_FULL) {
+                    workedFullIndex++;
+                }
+                monthTotal = monthTotal.add(entry.workedFraction());
+                y = rowBottom;
+            }
+
+            // Total row for this month
+            if (y < PAGE2_MIN_BOTTOM_Y + PAGE2_ROW_HEIGHT) {
+                cs.close();
+                PDPage next = new PDPage(PDRectangle.A4);
+                pdf.addPage(next);
+                currentPage = next;
+                cs = new PDPageContentStream(pdf, next);
+                y = PAGE_TOP;
+            }
+            float totalBottom = y - PAGE2_ROW_HEIGHT;
+            drawFilledRect(cs, MARGIN, totalBottom, tableWidth, PAGE2_ROW_HEIGHT, new Color(219, 234, 254));
+            drawColoredText(cs, bold, 9f, PAGE2_COL_DATE_X + 3f, y - 12f, "Total", Color.BLACK);
+            drawColoredText(cs, bold, 9f, PAGE2_COL_VALEUR_X + 3f, y - 12f, formatFraction(monthTotal), Color.BLACK);
+            drawHorizontalLine(cs, MARGIN, MARGIN + tableWidth, totalBottom, new Color(203, 213, 224));
+            y = totalBottom - 10f;
+
+            // Provider signature block with page-overflow guard
+            if (y < MARGIN + SIGNATURE_BOX_HEIGHT + 50f) {
+                cs.close();
+                PDPage next = new PDPage(PDRectangle.A4);
+                pdf.addPage(next);
+                currentPage = next;
+                cs = new PDPageContentStream(pdf, next);
+                y = PAGE_TOP;
+            }
+            y = drawProviderSignatureBlock(pdf, cs, y, provider);
+            y -= 15f;
+
+            // Client signature block with page-overflow guard
+            if (y < MARGIN + SIGNATURE_BOX_HEIGHT + 50f) {
+                cs.close();
+                PDPage next = new PDPage(PDRectangle.A4);
+                pdf.addPage(next);
+                currentPage = next;
+                cs = new PDPageContentStream(pdf, next);
+                y = PAGE_TOP;
+            }
+            y = drawClientSignatureBlock(pdf, cs, y, client);
+            y -= 20f;
+        }
+
+        return new PageState(currentPage, cs, y);
     }
 
     private float drawTableHeader(PDPageContentStream cs, float tableWidth, float y) throws IOException {
@@ -589,10 +550,6 @@ public class CraPdfGenerator {
     private void drawRectangle(PDPageContentStream cs, float x, float y, float width, float height) throws IOException {
         cs.addRect(x, y, width, height);
         cs.stroke();
-    }
-
-    private String formatPeriod(YearMonth period) {
-        return period.format(PERIOD_FORMAT);
     }
 
     private String formatFraction(BigDecimal value) {
