@@ -44,3 +44,4 @@
 [2026-08-02T11:07:37Z] auto-finalize-conflict: gate disabled for project='timizer-like'
 [2026-08-02T11:07:37Z] conflict-resolver: transition CONFLICT_RESOLVED_REVIEW_NEEDED → TEST_COMPLETE (auto, PROJECT_SETTING)
 [2026-08-02T11:07:37Z] auto-run: TEST_COMPLETE — running PR lifecycle
+[2026-08-02T11:07:42Z] conflict-resolver: done → TEST_COMPLETE (auto-finalize)
