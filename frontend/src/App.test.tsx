@@ -1,4 +1,4 @@
-import { render, screen, waitFor, fireEvent, cleanup } from '@testing-library/react';
+import { render, screen, within, waitFor, fireEvent, cleanup } from '@testing-library/react';
 import { describe, it, expect, vi, afterEach } from 'vitest';
 import App from './App';
 import * as craClient from './api/craClient';
@@ -90,7 +90,8 @@ describe('App — D2: history-detail navigation', () => {
     await waitFor(() =>
       expect(screen.getByRole('button', { name: 'Fermer' })).toBeInTheDocument(),
     );
-    expect(screen.queryByRole('button', { name: /retour/i })).not.toBeInTheDocument();
+    const openDialog = document.querySelector('dialog[open]')!;
+    expect(within(openDialog).queryByRole('button', { name: /retour/i })).not.toBeInTheDocument();
   });
 
   it('closing the CRA detail modal returns to the history list', async () => {

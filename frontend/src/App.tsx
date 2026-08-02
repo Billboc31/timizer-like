@@ -51,6 +51,8 @@ export default function App() {
   });
   const modalTriggerRef = useRef<HTMLElement | null>(null);
   const modalPushedState = useRef(false);
+  const modalActionInFlightRef = useRef(false);
+  const modalCraIdRef = useRef<number | null>(null);
   const [cra, setCra] = useState<CraDetails | null>(null);
   const [craLoading, setCraLoading] = useState(false);
   const [craError, setCraError] = useState<string | null>(null);
@@ -64,6 +66,12 @@ export default function App() {
   const [newCraError, setNewCraError] = useState<string | null>(null);
   const [newCraPrefill, setNewCraPrefill] = useState<{ month: number; year: number } | null>(null);
   const newCraTriggerRef = useRef<HTMLButtonElement>(null);
+  const [annualCalendarRefreshKey, setAnnualCalendarRefreshKey] = useState(0);
+  const [historyRefreshKey, setHistoryRefreshKey] = useState(0);
+
+  useEffect(() => {
+    modalCraIdRef.current = modalCraId;
+  }, [modalCraId]);
 
   useEffect(() => {
     if (view === 'settings' && clientSettings === null) {
@@ -116,6 +124,15 @@ export default function App() {
   useEffect(() => {
     const onPopstate = () => {
       if (!window.history.state?.modalCraId) {
+        if (modalActionInFlightRef.current) {
+          if (!window.confirm('Une action est en cours dans le CRA. Fermer quand même ?')) {
+            const id = modalCraIdRef.current;
+            if (id !== null) {
+              window.history.pushState({ modalCraId: id }, '', `?cra=${id}`);
+            }
+            return;
+          }
+        }
         modalPushedState.current = false;
         setModalCraId(null);
         modalTriggerRef.current?.focus();
@@ -128,6 +145,11 @@ export default function App() {
 
   const handleSignatureSuccess = (updated: CraDetailsDto) => {
     setCra(dtoToDetails(updated));
+  };
+
+  const handleModalMutated = (_: CraDetailsDto) => {
+    setAnnualCalendarRefreshKey(k => k + 1);
+    setHistoryRefreshKey(k => k + 1);
   };
 
   const handleDayClick = (day: number, newValue: 0 | 0.5 | 1) => {
@@ -224,6 +246,7 @@ export default function App() {
         <AnnualCalendar
           onOpenCra={handleOpenModal}
           onNewCra={handleNewCraOpenForMonth}
+          refreshKey={annualCalendarRefreshKey}
         />
       ) : view === 'selector' ? (
         <>
@@ -244,7 +267,7 @@ export default function App() {
           <CraValidation cra={cra} onValidated={handleSignatureSuccess} onGoToSettings={() => setView('settings')} />
         </>
       ) : (
-        <CraHistory onOpenDetail={handleOpenModal} />
+        <CraHistory onOpenDetail={handleOpenModal} refreshKey={historyRefreshKey} />
       )}
       <NewCraDialog
         open={newCraDialogOpen}
@@ -262,7 +285,12 @@ export default function App() {
             })()
           : undefined}
       />
-      <CraDetailModal craId={modalCraId} onClose={handleModalClose} />
+      <CraDetailModal
+        craId={modalCraId}
+        onClose={handleModalClose}
+        onMutated={handleModalMutated}
+        onActionInFlightChange={inFlight => { modalActionInFlightRef.current = inFlight; }}
+      />
     </AppShell>
   );
 }

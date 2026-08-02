@@ -10,6 +10,7 @@ const STORAGE_KEY = 'annual-calendar-year';
 interface Props {
   onOpenCra: (cra: CraSummaryDto) => void;
   onNewCra: (month: number, year: number) => void;
+  refreshKey?: number;
 }
 
 function SkeletonGrid() {
@@ -22,7 +23,7 @@ function SkeletonGrid() {
   );
 }
 
-export function AnnualCalendar({ onOpenCra, onNewCra }: Props) {
+export function AnnualCalendar({ onOpenCra, onNewCra, refreshKey }: Props) {
   const today = useRef(new Date()).current;
   const currentYear = today.getFullYear();
 
@@ -66,7 +67,7 @@ export function AnnualCalendar({ onOpenCra, onNewCra }: Props) {
       });
 
     return () => { controller.abort(); };
-  }, [loadKey]);
+  }, [loadKey, refreshKey]);
 
   // Fetch day-level details for any CRAs in the displayed year not yet loaded
   useEffect(() => {

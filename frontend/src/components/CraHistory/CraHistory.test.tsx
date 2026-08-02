@@ -1,5 +1,5 @@
 import { render, screen, waitFor, fireEvent, cleanup } from '@testing-library/react';
-import { describe, it, expect, vi, afterEach } from 'vitest';
+import { describe, it, expect, vi, afterEach, beforeEach } from 'vitest';
 import { CraHistory } from './CraHistory';
 import * as craApi from '../../api/craClient';
 import type { CraSummaryDto } from '../../api/types';
@@ -229,5 +229,23 @@ describe('CraHistory', () => {
     fireEvent.click(screen.getByText('Download PDF'));
 
     await waitFor(() => expect(craApi.downloadCraPdf).toHaveBeenCalledWith(VALIDATED_CRA.id));
+  });
+});
+
+describe('CraHistory — refreshKey', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it('re-fetches CRA list when refreshKey increments', async () => {
+    vi.mocked(craApi.listCras).mockResolvedValue([]);
+
+    const { rerender } = render(<CraHistory refreshKey={0} onOpenDetail={vi.fn()} />);
+
+    await waitFor(() => expect(craApi.listCras).toHaveBeenCalledTimes(1));
+
+    rerender(<CraHistory refreshKey={1} onOpenDetail={vi.fn()} />);
+
+    await waitFor(() => expect(craApi.listCras).toHaveBeenCalledTimes(2));
   });
 });

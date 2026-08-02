@@ -81,9 +81,11 @@
   gap: var(--space-6);
 }
 
-/* Actions bar */
+/* Actions bar — sticky so buttons stay visible when body scrolls */
 .cra-detail-modal__content .cra-detail__actions {
   flex-shrink: 0;
+  position: sticky;
+  bottom: 0;
   padding: var(--space-4) var(--space-6);
   border-top: var(--border-width) solid var(--color-border);
   background: var(--color-surface);

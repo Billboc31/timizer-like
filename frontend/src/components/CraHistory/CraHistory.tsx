@@ -35,6 +35,7 @@ function isPdfAvailable(status: CraStatus): boolean {
 
 interface Props {
   onOpenDetail: (cra: CraSummaryDto) => void;
+  refreshKey?: number;
 }
 
 function LoadingSkeleton() {
@@ -57,7 +58,7 @@ function LoadingSkeleton() {
   );
 }
 
-export function CraHistory({ onOpenDetail }: Props) {
+export function CraHistory({ onOpenDetail, refreshKey }: Props) {
   const [cras, setCras] = useState<CraSummaryDto[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -85,7 +86,7 @@ export function CraHistory({ onOpenDetail }: Props) {
     const controller = new AbortController();
     loadCras(controller.signal);
     return () => { controller.abort(); };
-  }, []);
+  }, [refreshKey]);
 
   const handleDownloadPdf = (cra: CraSummaryDto) => {
     setDownloading(cra.id);
