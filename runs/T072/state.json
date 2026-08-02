@@ -1,7 +1,7 @@
 {
   "ticket_id": "T072",
-  "state": "IMPLEMENTATION_REVIEW_NEEDED",
+  "state": "IMPLEMENTATION_FIX_REQUIRED",
   "branch": "ticket/T072-open-cra-details-in-a-shared-modal-from-calendar-a",
   "issue_number": 143,
-  "updated_at": "2026-08-01T23:56:29Z"
+  "updated_at": "2026-08-02T00:00:16Z"
 }
