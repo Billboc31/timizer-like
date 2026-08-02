@@ -6,7 +6,10 @@ import type { CraDetailsDto, CraSummaryDto } from './api/types';
 
 vi.mock('./api/craClient');
 
-afterEach(cleanup);
+afterEach(() => {
+  cleanup();
+  window.history.replaceState(null, '', '/');
+});
 
 const SUMMARY: CraSummaryDto = {
   id: 1,
@@ -69,7 +72,7 @@ const HISTORY_DETAILS: CraDetailsDto = {
 };
 
 describe('App — D2: history-detail navigation', () => {
-  it('clicking Open on a history entry transitions to detail view', async () => {
+  it('clicking Open on a history entry opens the CRA detail modal', async () => {
     vi.mocked(craClient.listCras).mockResolvedValue([HISTORY_SUMMARY]);
     vi.mocked(craClient.getCra).mockResolvedValue(HISTORY_DETAILS);
 
@@ -83,12 +86,14 @@ describe('App — D2: history-detail navigation', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Open CRA for June 2026' }));
 
     await waitFor(() => expect(craClient.getCra).toHaveBeenCalledWith(HISTORY_SUMMARY.id));
+    expect(document.querySelector('dialog[open]')).toBeInTheDocument();
     await waitFor(() =>
-      expect(screen.getByRole('button', { name: /retour/i })).toBeInTheDocument(),
+      expect(screen.getByRole('button', { name: 'Fermer' })).toBeInTheDocument(),
     );
+    expect(screen.queryByRole('button', { name: /retour/i })).not.toBeInTheDocument();
   });
 
-  it('clicking back from detail returns to the history list', async () => {
+  it('closing the CRA detail modal returns to the history list', async () => {
     vi.mocked(craClient.listCras).mockResolvedValue([HISTORY_SUMMARY]);
     vi.mocked(craClient.getCra).mockResolvedValue(HISTORY_DETAILS);
 
@@ -100,14 +105,71 @@ describe('App — D2: history-detail navigation', () => {
     );
     fireEvent.click(screen.getByRole('button', { name: 'Open CRA for June 2026' }));
     await waitFor(() =>
-      expect(screen.getByRole('button', { name: /retour/i })).toBeInTheDocument(),
+      expect(screen.getByRole('button', { name: 'Fermer' })).toBeInTheDocument(),
     );
 
-    fireEvent.click(screen.getByRole('button', { name: /retour/i }));
+    fireEvent.click(screen.getByRole('button', { name: 'Fermer' }));
 
+    await waitFor(() =>
+      expect(document.querySelector('dialog[open]')).not.toBeInTheDocument(),
+    );
+    expect(screen.getByRole('button', { name: 'Open CRA for June 2026' })).toBeInTheDocument();
+  });
+});
+
+describe('App — browser navigation and focus restoration', () => {
+  it('browser back (popstate) closes the modal without leaving the originating view', async () => {
+    vi.mocked(craClient.listCras).mockResolvedValue([HISTORY_SUMMARY]);
+    vi.mocked(craClient.getCra).mockResolvedValue(HISTORY_DETAILS);
+
+    render(<App />);
+
+    fireEvent.click(screen.getByRole('button', { name: 'History' }));
     await waitFor(() =>
       expect(screen.getByRole('button', { name: 'Open CRA for June 2026' })).toBeInTheDocument(),
     );
+    fireEvent.click(screen.getByRole('button', { name: 'Open CRA for June 2026' }));
+    await waitFor(() =>
+      expect(screen.getByRole('button', { name: 'Fermer' })).toBeInTheDocument(),
+    );
+    expect(document.querySelector('dialog[open]')).toBeInTheDocument();
+
+    // Simulate browser back: replace history state so window.history.state no longer has modalCraId
+    window.history.replaceState(null, '', '/');
+    window.dispatchEvent(new PopStateEvent('popstate', { state: null }));
+
+    await waitFor(() =>
+      expect(document.querySelector('dialog[open]')).not.toBeInTheDocument(),
+    );
+    // History list remains mounted
+    expect(screen.getByRole('button', { name: 'Open CRA for June 2026' })).toBeInTheDocument();
+  });
+
+  it('focus returns to the trigger element after closing the modal', async () => {
+    vi.mocked(craClient.listCras).mockResolvedValue([HISTORY_SUMMARY]);
+    vi.mocked(craClient.getCra).mockResolvedValue(HISTORY_DETAILS);
+
+    render(<App />);
+
+    fireEvent.click(screen.getByRole('button', { name: 'History' }));
+    await waitFor(() =>
+      expect(screen.getByRole('button', { name: 'Open CRA for June 2026' })).toBeInTheDocument(),
+    );
+
+    const triggerButton = screen.getByRole('button', { name: 'Open CRA for June 2026' });
+    triggerButton.focus();
+    fireEvent.click(triggerButton);
+
+    await waitFor(() =>
+      expect(screen.getByRole('button', { name: 'Fermer' })).toBeInTheDocument(),
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: 'Fermer' }));
+
+    await waitFor(() =>
+      expect(document.querySelector('dialog[open]')).not.toBeInTheDocument(),
+    );
+    expect(document.activeElement).toBe(triggerButton);
   });
 });
 
@@ -122,28 +184,28 @@ describe('App — D1: getCra on open', () => {
     await waitFor(() => expect(craClient.getCra).toHaveBeenCalledWith(1));
   });
 
-  it('CalendarGrid renders real day data after clicking a month card', async () => {
+  it('clicking a month card opens the CRA detail modal with calendar data', async () => {
     vi.mocked(craClient.listCras).mockResolvedValue([SUMMARY]);
     vi.mocked(craClient.getCra).mockResolvedValue(DETAILS);
 
     render(<App />);
 
-    // Wait for AnnualCalendar to load details (card label shows worked-day count)
     await waitFor(() =>
       expect(screen.getByRole('button', { name: 'Juillet 2026 — 1 jour(s) travaillé(s)' })).toBeInTheDocument(),
     );
     fireEvent.click(screen.getByRole('button', { name: 'Juillet 2026 — 1 jour(s) travaillé(s)' }));
 
+    expect(document.querySelector('dialog[open]')).toBeInTheDocument();
     await waitFor(() =>
       expect(screen.getAllByTestId('day-cell').length).toBeGreaterThan(0),
     );
   });
 
-  it('shows loading state while CRA details are being fetched for the editor', async () => {
+  it('shows loading state in modal while CRA details are being fetched', async () => {
     vi.mocked(craClient.listCras).mockResolvedValue([SUMMARY]);
     let resolveGetCra!: (v: CraDetailsDto) => void;
     // First call: AnnualCalendar auto-fetch resolves immediately so the card renders
-    // Second call: App-level editor fetch stays pending to test the loading state
+    // Second call: modal fetch stays pending to test the loading state
     vi.mocked(craClient.getCra)
       .mockResolvedValueOnce(DETAILS)
       .mockReturnValueOnce(new Promise(r => { resolveGetCra = r; }));
@@ -155,18 +217,18 @@ describe('App — D1: getCra on open', () => {
     );
     fireEvent.click(screen.getByRole('button', { name: 'Juillet 2026 — 1 jour(s) travaillé(s)' }));
 
-    expect(screen.getByTestId('summary-loading')).toBeInTheDocument();
+    expect(screen.getByLabelText(/chargement du cra/i)).toBeInTheDocument();
 
     resolveGetCra(DETAILS);
     await waitFor(() =>
-      expect(screen.queryByTestId('summary-loading')).not.toBeInTheDocument(),
+      expect(screen.queryByLabelText(/chargement du cra/i)).not.toBeInTheDocument(),
     );
   });
 
-  it('shows error state when getCra fails for the editor', async () => {
+  it('shows error state in modal when getCra fails', async () => {
     vi.mocked(craClient.listCras).mockResolvedValue([SUMMARY]);
-    // First call: AnnualCalendar auto-fetch resolves so the grid stays up
-    // Second call: App-level editor fetch fails to test the error state
+    // First call: AnnualCalendar auto-fetch resolves so the card renders
+    // Second call: modal fetch fails to test the error state
     vi.mocked(craClient.getCra)
       .mockResolvedValueOnce(DETAILS)
       .mockRejectedValueOnce(new Error('Not found'));
@@ -179,7 +241,8 @@ describe('App — D1: getCra on open', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Juillet 2026 — 1 jour(s) travaillé(s)' }));
 
     await waitFor(() =>
-      expect(screen.getByTestId('summary-error')).toBeInTheDocument(),
+      expect(screen.getByRole('alert')).toBeInTheDocument(),
     );
+    expect(document.querySelector('dialog[open]')).toBeInTheDocument();
   });
 });

@@ -6,12 +6,12 @@ import { CraHistory } from './components/CraHistory/CraHistory';
 import { ClientSettingsForm } from './components/ClientSettingsForm/ClientSettingsForm';
 import { ProviderSettingsForm } from './components/ProviderSettingsForm/ProviderSettingsForm';
 import { ProviderSignatureBox } from './components/ProviderSignatureBox/ProviderSignatureBox';
-import { CraHistoryDetail } from './components/CraHistoryDetail/CraHistoryDetail';
 import { CraValidation } from './components/CraValidation/CraValidation';
 import { SignatureSettings } from './components/SignatureSettings/SignatureSettings';
 import { AppShell } from './components/AppShell/AppShell';
 import type { AppView } from './components/AppShell/AppShell';
 import { NewCraDialog } from './components/NewCraDialog/NewCraDialog';
+import { CraDetailModal } from './components/CraDetailModal/CraDetailModal';
 import { AnnualCalendar } from './components/AnnualCalendar/AnnualCalendar';
 import { getCra, updateDay, listCras, createCra } from './api/craClient';
 import { getClientSettings } from './api/settingsClient';
@@ -40,11 +40,17 @@ function dtoToDetails(dto: CraDetailsDto): CraDetails {
   };
 }
 
-type View = AppView | 'history-detail';
-
 export default function App() {
-  const [view, setView] = useState<View>('overview');
-  const [historyDetailId, setHistoryDetailId] = useState<number | null>(null);
+  const [view, setView] = useState<AppView>('overview');
+  const [modalCraId, setModalCraId] = useState<number | null>(() => {
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get('cra');
+    if (!id) return null;
+    const n = parseInt(id, 10);
+    return isNaN(n) ? null : n;
+  });
+  const modalTriggerRef = useRef<HTMLElement | null>(null);
+  const modalPushedState = useRef(false);
   const [cra, setCra] = useState<CraDetails | null>(null);
   const [craLoading, setCraLoading] = useState(false);
   const [craError, setCraError] = useState<string | null>(null);
@@ -88,10 +94,37 @@ export default function App() {
     loadCra(summary.id);
   };
 
-  const handleOpenDetail = (summary: CraSummaryDto) => {
-    setHistoryDetailId(summary.id);
-    setView('history-detail');
+  const handleOpenModal = (summary: CraSummaryDto) => {
+    modalTriggerRef.current = document.activeElement as HTMLElement;
+    setModalCraId(summary.id);
+    window.history.pushState({ modalCraId: summary.id }, '', `?cra=${summary.id}`);
+    modalPushedState.current = true;
   };
+
+  const handleModalClose = () => {
+    setModalCraId(null);
+    if (modalPushedState.current) {
+      modalPushedState.current = false;
+      window.history.back();
+    } else {
+      window.history.replaceState(null, '', window.location.pathname);
+    }
+    modalTriggerRef.current?.focus();
+    modalTriggerRef.current = null;
+  };
+
+  useEffect(() => {
+    const onPopstate = () => {
+      if (!window.history.state?.modalCraId) {
+        modalPushedState.current = false;
+        setModalCraId(null);
+        modalTriggerRef.current?.focus();
+        modalTriggerRef.current = null;
+      }
+    };
+    window.addEventListener('popstate', onPopstate);
+    return () => window.removeEventListener('popstate', onPopstate);
+  }, []);
 
   const handleSignatureSuccess = (updated: CraDetailsDto) => {
     setCra(dtoToDetails(updated));
@@ -170,11 +203,9 @@ export default function App() {
     }
   };
 
-  const shellView: AppView = view === 'history-detail' ? 'history' : view;
-
   return (
     <AppShell
-      activeView={shellView}
+      activeView={view}
       onNavigate={setView}
       onNewCra={handleNewCraOpen}
       newCraTriggerRef={newCraTriggerRef}
@@ -189,14 +220,9 @@ export default function App() {
             <ClientSettingsForm initialValues={clientSettings} />
           ) : null}
         </>
-      ) : view === 'history-detail' ? (
-        <CraHistoryDetail
-          craId={historyDetailId}
-          onBack={() => setView('history')}
-        />
       ) : view === 'overview' ? (
         <AnnualCalendar
-          onOpenCra={(cra) => { handleOpen(cra); setView('selector'); }}
+          onOpenCra={handleOpenModal}
           onNewCra={handleNewCraOpenForMonth}
         />
       ) : (
@@ -204,7 +230,7 @@ export default function App() {
           {view === 'selector' ? (
             <CraMonthSelector onOpen={handleOpen} />
           ) : (
-            <CraHistory onOpenDetail={handleOpenDetail} />
+            <CraHistory onOpenDetail={handleOpenModal} />
           )}
           <CraSummaryPanel cra={cra} loading={craLoading} error={craError} onSuccess={handleSignatureSuccess} />
           <CalendarGrid
@@ -238,6 +264,7 @@ export default function App() {
             })()
           : undefined}
       />
+      <CraDetailModal craId={modalCraId} onClose={handleModalClose} />
     </AppShell>
   );
 }

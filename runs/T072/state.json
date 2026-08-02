@@ -1,0 +1,13 @@
+{
+  "ticket_id": "T072",
+  "state": "TEST_COMPLETE",
+  "branch": "ticket/T072-open-cra-details-in-a-shared-modal-from-calendar-a",
+  "issue_number": 143,
+  "updated_at": "2026-08-02T00:10:45Z",
+  "pr_number": 147,
+  "pr_synced": true,
+  "pre_conflict_state": "TEST_COMPLETE",
+  "conflict_detected_at": "2026-08-02T00:09:16Z",
+  "conflict_pr_number": 147,
+  "conflicted_files": []
+}
