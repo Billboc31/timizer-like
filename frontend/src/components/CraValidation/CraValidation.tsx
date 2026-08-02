@@ -10,7 +10,7 @@ import type { CraDetailsDto, ProviderSignatureDto } from '../../api/types';
 interface Props {
   cra: CraDetails | null;
   onValidated: (updated: CraDetailsDto) => void;
-  onGoToSettings: () => void;
+  onGoToSettings?: () => void;
 }
 
 type UIState = 'idle' | 'loading-sig' | 'no-sig' | 'confirming' | 'loading' | 'success';
@@ -135,11 +135,17 @@ export function CraValidation({ cra, onValidated, onGoToSettings }: Props) {
     return (
       <div className="cra-validation">
         <p role="alert" className="cra-validation__no-sig">
-          Aucune signature configurée. Rendez-vous dans les{' '}
-          <button className="cra-validation__settings-link" onClick={onGoToSettings}>
-            Paramètres
-          </button>{' '}
-          pour créer votre signature avant de valider ce CRA.
+          {onGoToSettings ? (
+            <>
+              Aucune signature configurée. Rendez-vous dans les{' '}
+              <button className="cra-validation__settings-link" onClick={onGoToSettings}>
+                Paramètres
+              </button>{' '}
+              pour créer votre signature avant de valider ce CRA.
+            </>
+          ) : (
+            'Aucune signature configurée. Configurez votre signature dans les Paramètres de l\'application avant de valider ce CRA.'
+          )}
         </p>
         <button
           className="cra-validation__cancel cra-validation__back-btn"

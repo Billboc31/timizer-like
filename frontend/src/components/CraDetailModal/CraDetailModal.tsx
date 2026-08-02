@@ -66,9 +66,10 @@ interface Props {
   craId: number | null;
   onClose: () => void;
   onMutated?: (updated: CraDetailsDto) => void;
+  onActionInFlightChange?: (inFlight: boolean) => void;
 }
 
-export function CraDetailModal({ craId, onClose, onMutated }: Props) {
+export function CraDetailModal({ craId, onClose, onMutated, onActionInFlightChange }: Props) {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const fetchCancelledRef = useRef(false);
@@ -84,6 +85,10 @@ export function CraDetailModal({ craId, onClose, onMutated }: Props) {
   const [dayUpdateError, setDayUpdateError] = useState<string | null>(null);
 
   const anyActionInFlight = downloading || reopening || updatingDay !== null;
+
+  useEffect(() => {
+    onActionInFlightChange?.(anyActionInFlight);
+  }, [anyActionInFlight, onActionInFlightChange]);
 
   const handleClose = () => {
     if (anyActionInFlight) {
@@ -299,7 +304,6 @@ export function CraDetailModal({ craId, onClose, onMutated }: Props) {
               <CraValidation
                 cra={dtoToCraDetails(cra)}
                 onValidated={handleValidated}
-                onGoToSettings={() => undefined}
               />
             </>
           )}

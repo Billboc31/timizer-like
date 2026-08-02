@@ -257,6 +257,27 @@ describe('CraDetailModal — close triggers', () => {
 
     confirmSpy.mockRestore();
   });
+
+  it('shows confirm dialog and aborts close via Escape (cancel event) when action is in-flight', async () => {
+    vi.mocked(craApi.getCra).mockResolvedValue(VALIDATED_DETAIL);
+    vi.mocked(craApi.downloadCraPdf).mockReturnValue(new Promise(() => {}));
+    const confirmSpy = vi.spyOn(window, 'confirm').mockReturnValue(false);
+
+    const onClose = vi.fn();
+    render(<CraDetailModal craId={1} onClose={onClose} />);
+    await waitFor(() =>
+      expect(screen.getByRole('button', { name: /télécharger le pdf/i })).toBeInTheDocument(),
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: /télécharger le pdf/i }));
+    const dialog = document.querySelector('dialog')!;
+    fireEvent(dialog, new Event('cancel', { bubbles: false }));
+
+    expect(confirmSpy).toHaveBeenCalledWith(expect.stringContaining('action est en cours'));
+    expect(onClose).not.toHaveBeenCalled();
+
+    confirmSpy.mockRestore();
+  });
 });
 
 describe('CraDetailModal — accessibility', () => {
