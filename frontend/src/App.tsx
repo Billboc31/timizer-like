@@ -225,13 +225,9 @@ export default function App() {
           onOpenCra={handleOpenModal}
           onNewCra={handleNewCraOpenForMonth}
         />
-      ) : (
+      ) : view === 'selector' ? (
         <>
-          {view === 'selector' ? (
-            <CraMonthSelector onOpen={handleOpen} />
-          ) : (
-            <CraHistory onOpenDetail={handleOpenModal} />
-          )}
+          <CraMonthSelector onOpen={handleOpen} />
           <CraSummaryPanel cra={cra} loading={craLoading} error={craError} onSuccess={handleSignatureSuccess} />
           <CalendarGrid
             cra={cra}
@@ -247,6 +243,8 @@ export default function App() {
           )}
           <CraValidation cra={cra} onValidated={handleSignatureSuccess} onGoToSettings={() => setView('settings')} />
         </>
+      ) : (
+        <CraHistory onOpenDetail={handleOpenModal} />
       )}
       <NewCraDialog
         open={newCraDialogOpen}

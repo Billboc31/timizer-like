@@ -1,7 +1,7 @@
 {
   "ticket_id": "T074",
-  "state": "PLAN_APPROVED",
+  "state": "IMPLEMENTATION_REVIEW_NEEDED",
   "branch": "ticket/T074-remove-the-obsolete-inline-cra-detail-panel-from-h",
   "issue_number": 149,
-  "updated_at": "2026-08-02T10:21:20Z"
+  "updated_at": "2026-08-02T10:24:19Z"
 }
