@@ -1,7 +1,7 @@
 {
   "ticket_id": "T075",
-  "state": "INIT",
+  "state": "PLAN_APPROVED",
   "branch": "ticket/T075-optimize-cra-pdf-pagination-and-remove-the-redunda",
   "issue_number": 150,
-  "updated_at": "2026-08-02T10:11:53Z"
+  "updated_at": "2026-08-02T10:22:31Z"
 }
