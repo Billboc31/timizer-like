@@ -1,7 +1,24 @@
 {
   "ticket_id": "T073",
-  "state": "PLAN_APPROVED",
+  "state": "TEST_COMPLETE",
   "branch": "ticket/T073-enable-all-cra-editing-and-workflow-actions-inside",
   "issue_number": 148,
-  "updated_at": "2026-08-02T10:23:44Z"
+  "updated_at": "2026-08-02T11:07:37Z",
+  "pr_number": 152,
+  "pr_synced": true,
+  "pre_conflict_state": "TEST_COMPLETE",
+  "conflict_detected_at": "2026-08-02T11:02:11Z",
+  "conflict_pr_number": 152,
+  "conflicted_files": [
+    "frontend/src/App.test.tsx",
+    "frontend/src/App.tsx",
+    "frontend/src/components/AnnualCalendar/AnnualCalendar.test.tsx",
+    "frontend/src/components/AnnualCalendar/AnnualCalendar.tsx",
+    "frontend/src/components/CraDetailModal/CraDetailModal.css",
+    "frontend/src/components/CraDetailModal/CraDetailModal.test.tsx",
+    "frontend/src/components/CraDetailModal/CraDetailModal.tsx",
+    "frontend/src/components/CraHistory/CraHistory.test.tsx",
+    "frontend/src/components/CraHistory/CraHistory.tsx",
+    "frontend/src/components/CraValidation/CraValidation.tsx"
+  ]
 }
