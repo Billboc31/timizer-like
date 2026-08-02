@@ -45,7 +45,9 @@ export default function App() {
   const [modalCraId, setModalCraId] = useState<number | null>(() => {
     const params = new URLSearchParams(window.location.search);
     const id = params.get('cra');
-    return id ? Number(id) : null;
+    if (!id) return null;
+    const n = parseInt(id, 10);
+    return isNaN(n) ? null : n;
   });
   const modalTriggerRef = useRef<HTMLElement | null>(null);
   const modalPushedState = useRef(false);

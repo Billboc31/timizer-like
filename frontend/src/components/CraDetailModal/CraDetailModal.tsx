@@ -70,6 +70,7 @@ interface Props {
 export function CraDetailModal({ craId, onClose }: Props) {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const fetchCancelledRef = useRef(false);
 
   const [cra, setCra] = useState<CraDetailsDto | null>(null);
   const [loading, setLoading] = useState(false);
@@ -106,6 +107,7 @@ export function CraDetailModal({ craId, onClose }: Props) {
       setReopenError(null);
       return;
     }
+    fetchCancelledRef.current = false;
     let cancelled = false;
     setLoading(true);
     setError(null);
@@ -117,16 +119,17 @@ export function CraDetailModal({ craId, onClose }: Props) {
       .catch((err: unknown) => {
         if (!cancelled) { setError(getErrorMessage(err)); setLoading(false); }
       });
-    return () => { cancelled = true; };
+    return () => { cancelled = true; fetchCancelledRef.current = true; };
   }, [craId]);
 
   const handleRetry = () => {
     if (craId === null) return;
+    fetchCancelledRef.current = false;
     setLoading(true);
     setError(null);
     getCra(craId)
-      .then(dto => { setCra(dto); setLoading(false); })
-      .catch((err: unknown) => { setError(getErrorMessage(err)); setLoading(false); });
+      .then(dto => { if (!fetchCancelledRef.current) { setCra(dto); setLoading(false); } })
+      .catch((err: unknown) => { if (!fetchCancelledRef.current) { setError(getErrorMessage(err)); setLoading(false); } });
   };
 
   const handleBackdropClick = (e: React.MouseEvent<HTMLDialogElement>) => {

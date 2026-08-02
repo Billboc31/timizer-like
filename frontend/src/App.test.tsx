@@ -117,6 +117,62 @@ describe('App — D2: history-detail navigation', () => {
   });
 });
 
+describe('App — browser navigation and focus restoration', () => {
+  it('browser back (popstate) closes the modal without leaving the originating view', async () => {
+    vi.mocked(craClient.listCras).mockResolvedValue([HISTORY_SUMMARY]);
+    vi.mocked(craClient.getCra).mockResolvedValue(HISTORY_DETAILS);
+
+    render(<App />);
+
+    fireEvent.click(screen.getByRole('button', { name: 'History' }));
+    await waitFor(() =>
+      expect(screen.getByRole('button', { name: 'Open CRA for June 2026' })).toBeInTheDocument(),
+    );
+    fireEvent.click(screen.getByRole('button', { name: 'Open CRA for June 2026' }));
+    await waitFor(() =>
+      expect(screen.getByRole('button', { name: 'Fermer' })).toBeInTheDocument(),
+    );
+    expect(document.querySelector('dialog[open]')).toBeInTheDocument();
+
+    // Simulate browser back: replace history state so window.history.state no longer has modalCraId
+    window.history.replaceState(null, '', '/');
+    window.dispatchEvent(new PopStateEvent('popstate', { state: null }));
+
+    await waitFor(() =>
+      expect(document.querySelector('dialog[open]')).not.toBeInTheDocument(),
+    );
+    // History list remains mounted
+    expect(screen.getByRole('button', { name: 'Open CRA for June 2026' })).toBeInTheDocument();
+  });
+
+  it('focus returns to the trigger element after closing the modal', async () => {
+    vi.mocked(craClient.listCras).mockResolvedValue([HISTORY_SUMMARY]);
+    vi.mocked(craClient.getCra).mockResolvedValue(HISTORY_DETAILS);
+
+    render(<App />);
+
+    fireEvent.click(screen.getByRole('button', { name: 'History' }));
+    await waitFor(() =>
+      expect(screen.getByRole('button', { name: 'Open CRA for June 2026' })).toBeInTheDocument(),
+    );
+
+    const triggerButton = screen.getByRole('button', { name: 'Open CRA for June 2026' });
+    triggerButton.focus();
+    fireEvent.click(triggerButton);
+
+    await waitFor(() =>
+      expect(screen.getByRole('button', { name: 'Fermer' })).toBeInTheDocument(),
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: 'Fermer' }));
+
+    await waitFor(() =>
+      expect(document.querySelector('dialog[open]')).not.toBeInTheDocument(),
+    );
+    expect(document.activeElement).toBe(triggerButton);
+  });
+});
+
 describe('App — D1: getCra on open', () => {
   it('calls getCra automatically for CRAs in the displayed year', async () => {
     vi.mocked(craClient.listCras).mockResolvedValue([SUMMARY]);
