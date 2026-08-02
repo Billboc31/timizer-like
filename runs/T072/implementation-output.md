@@ -1,17 +1,9 @@
-All 298 tests pass. Here's a summary of what was implemented:
+All 300 tests pass. Here's a summary of what changed:
 
----
+**`App.test.tsx`** — Added `describe('App — browser navigation and focus restoration')` with two new tests:
+- `browser back (popstate) closes the modal without leaving the originating view` — simulates browser back via `replaceState(null) + dispatchEvent(new PopStateEvent('popstate'))`, asserts dialog closes and history list stays mounted.
+- `focus returns to the trigger element after closing the modal` — focuses the trigger button before clicking it, then asserts `document.activeElement === triggerButton` after closing the modal with ×.
 
-## Files changed
+**`App.tsx`** — Fixed deep-link parsing: `Number(id)` → `parseInt(id, 10)` with `isNaN` guard, preventing `getCra(NaN)` on malformed URLs.
 
-### Created
-- **`frontend/src/components/CraDetailModal/CraDetailModal.tsx`** — Reusable modal using native `<dialog>`. Accepts `craId: number | null` and `onClose: () => void`. Fetches the CRA internally, renders the detail content (period, metadata grid, calendar), and exposes Download PDF + Reopen actions. Close triggers: × button, Escape key (`onCancel`), backdrop click. Focus moves to the close button on open. Focus trap via `onKeyDown`. Prevents body scroll while open.
-
-- **`frontend/src/components/CraDetailModal/CraDetailModal.css`** — Max-width 720px, max-height 90vh, sticky header, scrollable body, actions bar. Full-screen drawer on `≤640px`.
-
-- **`frontend/src/components/CraDetailModal/CraDetailModal.test.tsx`** — 20 tests covering: visibility (null/non-null), content rendering, actions (download, reopen), all close triggers (× button, Escape, backdrop, no close on content click), accessibility attributes, and both entry point simulations.
-
-### Modified
-- **`frontend/src/App.tsx`** — Removed `type View = AppView | 'history-detail'` extension and the `historyDetailId` state. Added `modalCraId`, `modalTriggerRef`, `modalPushedState`. Added `handleOpenModal` (used for both calendar and history entry points), `handleModalClose` (sets `null`, calls `history.back()` if we pushed, restores focus), and a `popstate` listener for browser-back close. `onOpenCra` (calendar) and `onOpenDetail` (history) both now route to `handleOpenModal`. Renders `<CraDetailModal>` unconditionally at the bottom of the shell. Deep-link restore: reads `?cra=` from `window.location.search` on initial render.
-
-- **`frontend/src/App.test.tsx`** — Updated D2 tests to expect a modal (Fermer button) instead of a full-page detail view (Retour button). Updated D1 tests to expect the modal's loading skeleton and error alert instead of `CraSummaryPanel`'s `data-testid` elements. Added `window.history.replaceState(null, '', '/')` in `afterEach` to prevent URL state leaking across tests.
+**`CraDetailModal.tsx`** — Added `fetchCancelledRef` ref; set to `false` at the start of both the main `useEffect` fetch and `handleRetry`, set to `true` in the effect cleanup. Both callbacks now check the ref before updating state.
