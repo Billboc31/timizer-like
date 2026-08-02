@@ -157,7 +157,6 @@ public class CraPdfGenerator {
         int totalRows = (months.size() + 2) / 3;
         float legendY = y - (totalRows - 1) * (cardHeight + rowGap) - cardHeight - 12f;
         drawCalendarLegend(cs, legendY);
-
         return new PageState(page, cs, legendY - 20f);
     }
 
@@ -273,7 +272,6 @@ public class CraPdfGenerator {
         return y - 14f;
     }
 
-    // E1: adds else branch for pending provider; E2: adds role label
     private float drawProviderSignatureBlock(PDDocument pdf, PDPageContentStream cs, float startY, CraPdfProviderSignature provider) throws IOException {
         float y = startY;
         drawText(cs, bold, 12f, MARGIN, y, "Signature prestataire");
@@ -303,7 +301,6 @@ public class CraPdfGenerator {
         return y;
     }
 
-    // E2: adds role label; E3: adds validation wording; returns y for multi-month use in renderDetailSections
     private float drawClientSignatureBlock(PDDocument pdf, PDPageContentStream cs, float startY, CraPdfClientSignature client) throws IOException {
         float y = startY;
         drawText(cs, bold, 12f, MARGIN, y, "Signature client");
@@ -333,7 +330,6 @@ public class CraPdfGenerator {
         return y;
     }
 
-    // E4: draw "Signature illisible" on corrupt image instead of silently skipping
     private void embedSignatureImage(PDDocument pdf, PDPageContentStream cs, byte[] imageBytes, float x, float y, float w, float h) {
         if (imageBytes == null || imageBytes.length == 0) {
             return;
@@ -356,9 +352,9 @@ public class CraPdfGenerator {
         }
     }
 
-    // E5: group by YearMonth, draw per-month section with signature blocks; E6: removed drawClientValidationBlock
     private PageState renderDetailSections(PDDocument pdf, CraPdfDocument document, PageState state) throws IOException {
         float tableWidth = PDRectangle.A4.getWidth() - 2 * MARGIN;
+        PDPage currentPage = state.page();
         PDPageContentStream cs = state.cs();
         float y = state.y();
 
@@ -377,36 +373,17 @@ public class CraPdfGenerator {
             }
         }
 
-        CraPdfSignatures signatures = document.signatures();
-        CraPdfProviderSignature provider = signatures == null ? null : signatures.provider();
-        CraPdfClientSignature client = signatures == null ? null : signatures.client();
-
         if (monthGroups.isEmpty()) {
-            y = drawTableHeader(cs, tableWidth, y);
-            if (y < MARGIN + SIGNATURE_BOX_HEIGHT + 50f) {
-                cs.close();
-                cs = null;
-                PDPage next = new PDPage(PDRectangle.A4);
-                pdf.addPage(next);
-                cs = new PDPageContentStream(pdf, next);
-                y = PAGE_TOP;
-            }
-            y = drawProviderSignatureBlock(pdf, cs, y, provider);
-            y -= 15f;
-            if (y < MARGIN + SIGNATURE_BOX_HEIGHT + 50f) {
-                cs.close();
-                cs = null;
-                PDPage next = new PDPage(PDRectangle.A4);
-                pdf.addPage(next);
-                cs = new PDPageContentStream(pdf, next);
-                y = PAGE_TOP;
-            }
-            y = drawClientSignatureBlock(pdf, cs, y, client);
-            return new PageState(state.page(), cs, y);
+            float newY = drawTableHeader(cs, tableWidth, y);
+            return new PageState(currentPage, cs, newY);
         }
 
         List<YearMonth> sortedMonths = new ArrayList<>(monthGroups.keySet());
         sortedMonths.sort(Comparator.naturalOrder());
+
+        CraPdfSignatures signatures = document.signatures();
+        CraPdfProviderSignature provider = signatures == null ? null : signatures.provider();
+        CraPdfClientSignature client = signatures == null ? null : signatures.client();
 
         for (YearMonth ym : sortedMonths) {
             List<CraPdfDayEntry> monthDays = monthGroups.get(ym);
@@ -414,9 +391,9 @@ public class CraPdfGenerator {
             // Month section header
             if (y < MARGIN + 40f) {
                 cs.close();
-                cs = null;
                 PDPage next = new PDPage(PDRectangle.A4);
                 pdf.addPage(next);
+                currentPage = next;
                 cs = new PDPageContentStream(pdf, next);
                 y = PAGE_TOP;
             }
@@ -430,9 +407,9 @@ public class CraPdfGenerator {
             for (CraPdfDayEntry entry : monthDays) {
                 if (y < PAGE2_MIN_BOTTOM_Y + PAGE2_ROW_HEIGHT) {
                     cs.close();
-                    cs = null;
                     PDPage next = new PDPage(PDRectangle.A4);
                     pdf.addPage(next);
+                    currentPage = next;
                     cs = new PDPageContentStream(pdf, next);
                     y = PAGE_TOP;
                     y = drawTableHeader(cs, tableWidth, y);
@@ -462,9 +439,9 @@ public class CraPdfGenerator {
             // Total row for this month
             if (y < PAGE2_MIN_BOTTOM_Y + PAGE2_ROW_HEIGHT) {
                 cs.close();
-                cs = null;
                 PDPage next = new PDPage(PDRectangle.A4);
                 pdf.addPage(next);
+                currentPage = next;
                 cs = new PDPageContentStream(pdf, next);
                 y = PAGE_TOP;
             }
@@ -478,9 +455,9 @@ public class CraPdfGenerator {
             // Provider signature block with page-overflow guard
             if (y < MARGIN + SIGNATURE_BOX_HEIGHT + 50f) {
                 cs.close();
-                cs = null;
                 PDPage next = new PDPage(PDRectangle.A4);
                 pdf.addPage(next);
+                currentPage = next;
                 cs = new PDPageContentStream(pdf, next);
                 y = PAGE_TOP;
             }
@@ -490,9 +467,9 @@ public class CraPdfGenerator {
             // Client signature block with page-overflow guard
             if (y < MARGIN + SIGNATURE_BOX_HEIGHT + 50f) {
                 cs.close();
-                cs = null;
                 PDPage next = new PDPage(PDRectangle.A4);
                 pdf.addPage(next);
+                currentPage = next;
                 cs = new PDPageContentStream(pdf, next);
                 y = PAGE_TOP;
             }
@@ -500,7 +477,7 @@ public class CraPdfGenerator {
             y -= 20f;
         }
 
-        return new PageState(state.page(), cs, y);
+        return new PageState(currentPage, cs, y);
     }
 
     private float drawTableHeader(PDPageContentStream cs, float tableWidth, float y) throws IOException {
@@ -573,10 +550,6 @@ public class CraPdfGenerator {
     private void drawRectangle(PDPageContentStream cs, float x, float y, float width, float height) throws IOException {
         cs.addRect(x, y, width, height);
         cs.stroke();
-    }
-
-    private String formatPeriod(YearMonth period) {
-        return period.format(PERIOD_FORMAT);
     }
 
     private String formatFraction(BigDecimal value) {

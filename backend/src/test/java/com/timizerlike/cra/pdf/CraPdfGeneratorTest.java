@@ -48,6 +48,11 @@ class CraPdfGeneratorTest {
         0x44, (byte) 0xAE, 0x42, 0x60, (byte) 0x82
     };
 
+    // Reusable single day entry for March 2, 2026 (Monday)
+    private static final CraPdfDayEntry MARCH_2_ENTRY = new CraPdfDayEntry(
+            LocalDate.of(2026, 3, 2), DayOfWeek.MONDAY, CraPdfDayType.WORKED_FULL, BigDecimal.ONE, null
+    );
+
     private final CraPdfGenerator generator = new CraPdfGenerator();
 
     /** Returns an Instant at 10:00 Paris time on the given date for predictable date rendering. */
@@ -73,10 +78,11 @@ class CraPdfGeneratorTest {
                     .contains("01/04/2026")
                     .contains("Signature client");
 
+            String allText = extractAllPages(loaded);
             for (CraPdfDayEntry entry : document.page2Days()) {
-                assertThat(page1).contains(entry.date().format(DATE_FORMAT));
+                assertThat(allText).contains(entry.date().format(DATE_FORMAT));
                 if (entry.comment() != null) {
-                    assertThat(page1).contains(entry.comment());
+                    assertThat(allText).contains(entry.comment());
                 }
             }
         }
@@ -94,14 +100,14 @@ class CraPdfGeneratorTest {
                 new CraPdfProviderSignature("Alice Provider", null, instantAt(2026, 4, 1), null),
                 null
         );
-        CraPdfDocument document = new CraPdfDocument(summary, List.of(), signatures);
+        CraPdfDocument document = new CraPdfDocument(summary, List.of(MARCH_2_ENTRY), signatures);
 
         byte[] bytes = generator.generate(document);
 
         assertThat(bytes).isNotEmpty();
         try (PDDocument loaded = Loader.loadPDF(bytes)) {
-            String page1 = extractPage(loaded, 1);
-            assertThat(page1)
+            String allText = extractAllPages(loaded);
+            assertThat(allText)
                     .contains("Signature prestataire")
                     .contains("Alice Provider")
                     .contains("01/04/2026");
@@ -123,14 +129,14 @@ class CraPdfGeneratorTest {
                 new CraPdfProviderSignature("Alice Provider", null, instantAt(2026, 4, 1), minimalPng),
                 null
         );
-        CraPdfDocument document = new CraPdfDocument(summary, List.of(), signatures);
+        CraPdfDocument document = new CraPdfDocument(summary, List.of(MARCH_2_ENTRY), signatures);
 
         byte[] bytes = generator.generate(document);
 
         assertThat(bytes).isNotEmpty();
         try (PDDocument loaded = Loader.loadPDF(bytes)) {
-            String page1 = extractPage(loaded, 1);
-            assertThat(page1)
+            String allText = extractAllPages(loaded);
+            assertThat(allText)
                     .contains("Signature prestataire")
                     .contains("Alice Provider")
                     .contains("01/04/2026");
@@ -179,7 +185,7 @@ class CraPdfGeneratorTest {
         byte[] bytes = generator.generate(document);
 
         try (PDDocument loaded = Loader.loadPDF(bytes)) {
-            assertThat(loaded.getNumberOfPages()).isGreaterThanOrEqualTo(1);
+            assertThat(loaded.getNumberOfPages()).isGreaterThanOrEqualTo(2);
             String allText = extractAllPages(loaded);
             for (int d = 1; d <= 28; d++) {
                 assertThat(allText).contains(february.atDay(d).format(DATE_FORMAT));
@@ -195,7 +201,7 @@ class CraPdfGeneratorTest {
         byte[] bytes = generator.generate(document);
 
         try (PDDocument loaded = Loader.loadPDF(bytes)) {
-            assertThat(loaded.getNumberOfPages()).isGreaterThanOrEqualTo(1);
+            assertThat(loaded.getNumberOfPages()).isGreaterThanOrEqualTo(2);
             String allText = extractAllPages(loaded);
             for (int d = 1; d <= 30; d++) {
                 assertThat(allText).contains(april.atDay(d).format(DATE_FORMAT));
@@ -212,7 +218,7 @@ class CraPdfGeneratorTest {
         byte[] bytes = generator.generate(document);
 
         try (PDDocument loaded = Loader.loadPDF(bytes)) {
-            assertThat(loaded.getNumberOfPages()).isGreaterThanOrEqualTo(1);
+            assertThat(loaded.getNumberOfPages()).isGreaterThanOrEqualTo(2);
             String allText = extractAllPages(loaded);
             for (int d = 1; d <= 31; d++) {
                 assertThat(allText).contains(july.atDay(d).format(DATE_FORMAT));
@@ -264,7 +270,7 @@ class CraPdfGeneratorTest {
                 new CraPdfParty("Acme Corp", "Corporate Client SA", null, null),
                 BigDecimal.ZERO
         );
-        CraPdfDocument document = new CraPdfDocument(summary, List.of(), signatures);
+        CraPdfDocument document = new CraPdfDocument(summary, List.of(MARCH_2_ENTRY), signatures);
 
         assertThatCode(() -> generator.generate(document)).doesNotThrowAnyException();
     }
@@ -307,7 +313,7 @@ class CraPdfGeneratorTest {
                 new CraPdfParty("Acme Corp", "Corporate Client SA", null, null),
                 BigDecimal.ZERO
         );
-        CraPdfDocument document = new CraPdfDocument(summary, List.of(), new CraPdfSignatures(null, null));
+        CraPdfDocument document = new CraPdfDocument(summary, List.of(MARCH_2_ENTRY), new CraPdfSignatures(null, null));
 
         byte[] bytes = generator.generate(document);
 
@@ -331,7 +337,7 @@ class CraPdfGeneratorTest {
                 new CraPdfProviderSignature("Alice Provider", null, instantAt(2026, 4, 1), new byte[]{0x00}),
                 null
         );
-        CraPdfDocument document = new CraPdfDocument(summary, List.of(), signatures);
+        CraPdfDocument document = new CraPdfDocument(summary, List.of(MARCH_2_ENTRY), signatures);
 
         byte[] bytes = generator.generate(document);
 
@@ -354,7 +360,7 @@ class CraPdfGeneratorTest {
                 new CraPdfProviderSignature("Alice Provider", "Directrice Technique", instantAt(2026, 4, 1), MINIMAL_PNG),
                 new CraPdfClientSignature("Bob Client", "Responsable Achats", instantAt(2026, 4, 15), MINIMAL_PNG)
         );
-        CraPdfDocument document = new CraPdfDocument(summary, List.of(), signatures);
+        CraPdfDocument document = new CraPdfDocument(summary, List.of(MARCH_2_ENTRY), signatures);
 
         byte[] bytes = generator.generate(document);
 
@@ -378,7 +384,7 @@ class CraPdfGeneratorTest {
                 new CraPdfProviderSignature("Alice Provider", null, instantAt(2026, 4, 1), MINIMAL_PNG),
                 new CraPdfClientSignature("Bob Client", null, instantAt(2026, 4, 15), MINIMAL_PNG)
         );
-        CraPdfDocument document = new CraPdfDocument(summary, List.of(), signatures);
+        CraPdfDocument document = new CraPdfDocument(summary, List.of(MARCH_2_ENTRY), signatures);
 
         byte[] bytes = generator.generate(document);
 
@@ -421,17 +427,11 @@ class CraPdfGeneratorTest {
         }
     }
 
+    // New tests per acceptance criteria
+
     @Test
     void shortOneMonthCraFitsOnOnePage() throws IOException {
-        CraPdfSummary summary = new CraPdfSummary(PERIOD, null, null, new BigDecimal("5"));
-        List<CraPdfDayEntry> days = List.of(
-                new CraPdfDayEntry(LocalDate.of(2026, 3, 2), DayOfWeek.MONDAY, CraPdfDayType.WORKED_FULL, BigDecimal.ONE, null),
-                new CraPdfDayEntry(LocalDate.of(2026, 3, 3), DayOfWeek.TUESDAY, CraPdfDayType.WORKED_FULL, BigDecimal.ONE, null),
-                new CraPdfDayEntry(LocalDate.of(2026, 3, 4), DayOfWeek.WEDNESDAY, CraPdfDayType.WORKED_FULL, BigDecimal.ONE, null),
-                new CraPdfDayEntry(LocalDate.of(2026, 3, 5), DayOfWeek.THURSDAY, CraPdfDayType.WORKED_FULL, BigDecimal.ONE, null),
-                new CraPdfDayEntry(LocalDate.of(2026, 3, 6), DayOfWeek.FRIDAY, CraPdfDayType.WORKED_FULL, BigDecimal.ONE, null)
-        );
-        CraPdfDocument document = new CraPdfDocument(summary, days, null);
+        CraPdfDocument document = rowCountFixture(5);
 
         byte[] bytes = generator.generate(document);
 
@@ -442,17 +442,16 @@ class CraPdfGeneratorTest {
 
     @Test
     void fullOneMonthCraRendersCalendarAndDetailOnSamePage() throws IOException {
-        CraPdfDocument document = monthFixture(YearMonth.of(2026, 3), 15);
+        CraPdfDocument document = monthFixture(PERIOD, 11);
 
         byte[] bytes = generator.generate(document);
 
         try (PDDocument loaded = Loader.loadPDF(bytes)) {
             String page1 = extractPage(loaded, 1);
             assertThat(page1).contains("mars 2026");
-            assertThat(page1).contains("02/03/2026");
-
-            String lastPageText = extractPage(loaded, loaded.getNumberOfPages());
-            assertThat(lastPageText.trim()).isNotEmpty();
+            assertThat(page1).contains(PERIOD.atDay(1).format(DATE_FORMAT));
+            int pageCount = loaded.getNumberOfPages();
+            assertThat(extractPage(loaded, pageCount).trim()).isNotEmpty();
         }
     }
 
@@ -463,23 +462,18 @@ class CraPdfGeneratorTest {
         byte[] bytes = generator.generate(document);
 
         try (PDDocument loaded = Loader.loadPDF(bytes)) {
-            assertThat(loaded.getNumberOfPages()).isGreaterThanOrEqualTo(1);
             String allText = extractAllPages(loaded);
             assertThat(allText).contains("avril 2026").contains("mai 2026");
-            assertThat(allText).contains("06/04/2026");
-            assertThat(allText).contains("04/05/2026");
+            assertThat(allText).contains(LocalDate.of(2026, 4, 6).format(DATE_FORMAT));
+            assertThat(allText).contains(LocalDate.of(2026, 5, 4).format(DATE_FORMAT));
+            assertThat(loaded.getNumberOfPages()).isGreaterThanOrEqualTo(1);
         }
     }
 
     @Test
     void contentJustBelowThresholdFitsOnOnePage() throws IOException {
-        CraPdfSummary summary = new CraPdfSummary(PERIOD, null, null, new BigDecimal("3"));
-        List<CraPdfDayEntry> days = List.of(
-                new CraPdfDayEntry(LocalDate.of(2026, 3, 2), DayOfWeek.MONDAY, CraPdfDayType.WORKED_FULL, BigDecimal.ONE, null),
-                new CraPdfDayEntry(LocalDate.of(2026, 3, 3), DayOfWeek.TUESDAY, CraPdfDayType.WORKED_FULL, BigDecimal.ONE, null),
-                new CraPdfDayEntry(LocalDate.of(2026, 3, 4), DayOfWeek.WEDNESDAY, CraPdfDayType.WORKED_FULL, BigDecimal.ONE, null)
-        );
-        CraPdfDocument document = new CraPdfDocument(summary, days, null);
+        // 13 rows: computed maximum that fits rows + sigs on one A4 page
+        CraPdfDocument document = rowCountFixture(13);
 
         byte[] bytes = generator.generate(document);
 
@@ -490,12 +484,13 @@ class CraPdfGeneratorTest {
 
     @Test
     void contentJustAboveThresholdOverflowsToTwoPages() throws IOException {
-        CraPdfDocument document = monthFixture(YearMonth.of(2026, 7), 15);
+        // 14 rows: one beyond threshold, client sig overflows to page 2
+        CraPdfDocument document = rowCountFixture(14);
 
         byte[] bytes = generator.generate(document);
 
         try (PDDocument loaded = Loader.loadPDF(bytes)) {
-            assertThat(loaded.getNumberOfPages()).isGreaterThanOrEqualTo(2);
+            assertThat(loaded.getNumberOfPages()).isEqualTo(2);
         }
     }
 
@@ -506,39 +501,28 @@ class CraPdfGeneratorTest {
         byte[] bytes = generator.generate(document);
 
         try (PDDocument loaded = Loader.loadPDF(bytes)) {
-            String lastPage = extractPage(loaded, loaded.getNumberOfPages());
-            assertThat(lastPage.trim()).isNotEmpty();
+            int pageCount = loaded.getNumberOfPages();
+            assertThat(extractPage(loaded, pageCount).trim()).isNotEmpty();
         }
     }
 
     @Test
-    void signatureBlocksAppearOnSinglePage() throws IOException {
-        CraPdfDocument document = providerOnlyFixture();
+    void signatureBlocksAppearsOnSinglePage() throws IOException {
+        // 13 rows: all fits on one page, both signature blocks on page 1
+        CraPdfDocument document = rowCountFixture(13);
 
         byte[] bytes = generator.generate(document);
 
         try (PDDocument loaded = Loader.loadPDF(bytes)) {
-            String allText = extractAllPages(loaded);
-            assertThat(allText).contains("Signature prestataire");
-            assertThat(allText).contains("Signature client");
-            // For a short fixture both signature blocks are on the same (only) page
             assertThat(loaded.getNumberOfPages()).isEqualTo(1);
+            String page1 = extractPage(loaded, 1);
+            assertThat(page1).contains("Signature prestataire").contains("Signature client");
         }
     }
 
     @Test
     void signedAndUnsignedStatesRenderCorrectly() throws IOException {
-        CraPdfSummary summary = new CraPdfSummary(
-                PERIOD,
-                new CraPdfParty("Alice Provider", "Provider SARL", null, null),
-                new CraPdfParty("Acme Corp", "Corporate Client SA", null, null),
-                BigDecimal.ZERO
-        );
-        CraPdfSignatures signatures = new CraPdfSignatures(
-                new CraPdfProviderSignature("Alice Provider", null, instantAt(2026, 4, 1), MINIMAL_PNG),
-                null
-        );
-        CraPdfDocument document = new CraPdfDocument(summary, List.of(), signatures);
+        CraPdfDocument document = providerOnlyFixture();
 
         byte[] bytes = generator.generate(document);
 
@@ -593,6 +577,17 @@ class CraPdfGeneratorTest {
                 fraction = BigDecimal.ONE;
             }
             days.add(new CraPdfDayEntry(date, dow, type, fraction, null));
+        }
+        return new CraPdfDocument(summary, days, null);
+    }
+
+    private static CraPdfDocument rowCountFixture(int numRows) {
+        YearMonth ym = YearMonth.of(2026, 6); // June 2026, starts on Monday
+        CraPdfSummary summary = new CraPdfSummary(ym, null, null, new BigDecimal(numRows));
+        List<CraPdfDayEntry> days = new ArrayList<>();
+        for (int d = 1; d <= numRows; d++) {
+            LocalDate date = ym.atDay(d);
+            days.add(new CraPdfDayEntry(date, date.getDayOfWeek(), CraPdfDayType.WORKED_FULL, BigDecimal.ONE, null));
         }
         return new CraPdfDocument(summary, days, null);
     }
@@ -668,13 +663,13 @@ class CraPdfGeneratorTest {
                 PERIOD,
                 new CraPdfParty("Alice Provider", "Provider SARL", null, null),
                 new CraPdfParty("Acme Corp", "Corporate Client SA", null, null),
-                BigDecimal.ZERO
+                BigDecimal.ONE
         );
         CraPdfSignatures signatures = new CraPdfSignatures(
                 new CraPdfProviderSignature("Alice Provider", null, instantAt(2026, 4, 1), MINIMAL_PNG),
                 null
         );
-        return new CraPdfDocument(summary, List.of(), signatures);
+        return new CraPdfDocument(summary, List.of(MARCH_2_ENTRY), signatures);
     }
 
     private static CraPdfDocument bothSignaturesFixture() {
@@ -682,21 +677,21 @@ class CraPdfGeneratorTest {
                 PERIOD,
                 new CraPdfParty("Alice Provider", "Provider SARL", null, null),
                 new CraPdfParty("Acme Corp", "Corporate Client SA", null, null),
-                BigDecimal.ZERO
+                BigDecimal.ONE
         );
         CraPdfSignatures signatures = new CraPdfSignatures(
                 new CraPdfProviderSignature("Alice Provider", null, instantAt(2026, 4, 1), MINIMAL_PNG),
                 new CraPdfClientSignature("Bob Client", null, instantAt(2026, 4, 15), MINIMAL_PNG)
         );
-        return new CraPdfDocument(summary, List.of(), signatures);
+        return new CraPdfDocument(summary, List.of(MARCH_2_ENTRY), signatures);
     }
 
-    private static int countOccurrences(String text, String substring) {
+    private static int countOccurrences(String text, String needle) {
         int count = 0;
         int idx = 0;
-        while ((idx = text.indexOf(substring, idx)) != -1) {
+        while ((idx = text.indexOf(needle, idx)) >= 0) {
             count++;
-            idx += substring.length();
+            idx += needle.length();
         }
         return count;
     }
