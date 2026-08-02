@@ -2,9 +2,11 @@ import { render, screen, waitFor, fireEvent, cleanup } from '@testing-library/re
 import { describe, it, expect, vi, afterEach, beforeEach } from 'vitest';
 import { CraDetailModal } from './CraDetailModal';
 import * as craApi from '../../api/craClient';
+import * as signatureClient from '../../api/signatureClient';
 import type { CraDetailsDto } from '../../api/types';
 
 vi.mock('../../api/craClient');
+vi.mock('../../api/signatureClient');
 
 afterEach(() => {
   cleanup();
@@ -98,14 +100,13 @@ describe('CraDetailModal — content', () => {
     );
   });
 
-  it('renders metadata section', async () => {
+  it('renders metadata section with provider and client names', async () => {
     render(<CraDetailModal craId={1} onClose={vi.fn()} />);
     await waitFor(() =>
       expect(screen.getByRole('region', { name: /informations/i })).toBeInTheDocument(),
     );
     expect(screen.getByText('Jean Dupont')).toBeInTheDocument();
     expect(screen.getByText('Marie Martin')).toBeInTheDocument();
-    expect(screen.getByText('Client SA')).toBeInTheDocument();
   });
 
   it('does not render previous/next navigation controls', async () => {
@@ -152,6 +153,14 @@ describe('CraDetailModal — actions', () => {
       expect(screen.getByRole('heading', { name: 'Juillet 2026' })).toBeInTheDocument(),
     );
     expect(screen.queryByRole('button', { name: /télécharger le pdf/i })).not.toBeInTheDocument();
+  });
+
+  it('shows download PDF button for AWAITING_CLIENT_SIGNATURE CRA', async () => {
+    vi.mocked(craApi.getCra).mockResolvedValue(AWAITING_DETAIL);
+    render(<CraDetailModal craId={3} onClose={vi.fn()} />);
+    await waitFor(() =>
+      expect(screen.getByRole('button', { name: /télécharger le pdf/i })).toBeInTheDocument(),
+    );
   });
 
   it('shows reopen button for AWAITING_CLIENT_SIGNATURE CRA', async () => {
@@ -228,6 +237,26 @@ describe('CraDetailModal — close triggers', () => {
     fireEvent.click(screen.getByRole('heading', { name: 'Juillet 2026' }));
     expect(onClose).not.toHaveBeenCalled();
   });
+
+  it('shows confirm dialog and aborts close when action is in-flight and user cancels', async () => {
+    vi.mocked(craApi.getCra).mockResolvedValue(VALIDATED_DETAIL);
+    vi.mocked(craApi.downloadCraPdf).mockReturnValue(new Promise(() => {}));
+    const confirmSpy = vi.spyOn(window, 'confirm').mockReturnValue(false);
+
+    const onClose = vi.fn();
+    render(<CraDetailModal craId={1} onClose={onClose} />);
+    await waitFor(() =>
+      expect(screen.getByRole('button', { name: /télécharger le pdf/i })).toBeInTheDocument(),
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: /télécharger le pdf/i }));
+    fireEvent.click(screen.getByRole('button', { name: 'Fermer' }));
+
+    expect(confirmSpy).toHaveBeenCalledWith(expect.stringContaining('action est en cours'));
+    expect(onClose).not.toHaveBeenCalled();
+
+    confirmSpy.mockRestore();
+  });
 });
 
 describe('CraDetailModal — accessibility', () => {
@@ -280,5 +309,103 @@ describe('CraDetailModal — entry points simulation', () => {
     await waitFor(() =>
       expect(screen.getByRole('heading', { name: 'Juin 2026' })).toBeInTheDocument(),
     );
+  });
+});
+
+describe('CraDetailModal — new interactions', () => {
+  it('DRAFT CRA: renders CraValidation button', async () => {
+    vi.mocked(craApi.getCra).mockResolvedValue(DRAFT_DETAIL);
+    render(<CraDetailModal craId={2} onClose={vi.fn()} />);
+    await waitFor(() =>
+      expect(screen.getByRole('button', { name: /valider et signer/i })).toBeInTheDocument(),
+    );
+  });
+
+  it('DRAFT CRA: clicking a day calls updateDay', async () => {
+    const updatedDto: CraDetailsDto = { ...DRAFT_DETAIL, totalWorkedDays: 0 };
+    vi.mocked(craApi.getCra).mockResolvedValue(DRAFT_DETAIL);
+    vi.mocked(craApi.updateDay).mockResolvedValue(updatedDto);
+
+    render(<CraDetailModal craId={2} onClose={vi.fn()} />);
+    await waitFor(() =>
+      expect(screen.getByRole('heading', { name: 'Juillet 2026' })).toBeInTheDocument(),
+    );
+
+    // Day 1 of July 2026 is a Wednesday; DRAFT_DETAIL has worked=1 for day 1
+    const dayCell = screen.getByRole('button', { name: 'Wednesday 1 — worked' });
+    fireEvent.click(dayCell);
+
+    await waitFor(() => expect(craApi.updateDay).toHaveBeenCalled());
+  });
+
+  it('DRAFT CRA: successful day update calls onMutated', async () => {
+    const updatedDto: CraDetailsDto = { ...DRAFT_DETAIL, totalWorkedDays: 0 };
+    vi.mocked(craApi.getCra).mockResolvedValue(DRAFT_DETAIL);
+    vi.mocked(craApi.updateDay).mockResolvedValue(updatedDto);
+
+    const onMutated = vi.fn();
+    render(<CraDetailModal craId={2} onClose={vi.fn()} onMutated={onMutated} />);
+    await waitFor(() =>
+      expect(screen.getByRole('heading', { name: 'Juillet 2026' })).toBeInTheDocument(),
+    );
+
+    const dayCell = screen.getByRole('button', { name: 'Wednesday 1 — worked' });
+    fireEvent.click(dayCell);
+
+    await waitFor(() => expect(onMutated).toHaveBeenCalledWith(updatedDto));
+  });
+
+  it('AWAITING_CLIENT_SIGNATURE CRA: shows generate signature link button', async () => {
+    vi.mocked(craApi.getCra).mockResolvedValue(AWAITING_DETAIL);
+    render(<CraDetailModal craId={3} onClose={vi.fn()} />);
+    await waitFor(() =>
+      expect(
+        screen.getByRole('button', { name: /générer le lien de signature/i }),
+      ).toBeInTheDocument(),
+    );
+  });
+
+  it('DRAFT CRA: successful validation calls onMutated', async () => {
+    const sig = { signerName: 'Test Signer', signatureImage: 'data:image/png;base64,abc' };
+    const validated: CraDetailsDto = { ...DRAFT_DETAIL, status: 'AWAITING_CLIENT_SIGNATURE' };
+
+    vi.mocked(craApi.getCra).mockResolvedValue(DRAFT_DETAIL);
+    vi.mocked(signatureClient.getSignature).mockResolvedValue(sig);
+    vi.mocked(craApi.validateCra).mockResolvedValue(validated);
+
+    const onMutated = vi.fn();
+    render(<CraDetailModal craId={2} onClose={vi.fn()} onMutated={onMutated} />);
+
+    await waitFor(() =>
+      expect(screen.getByRole('button', { name: /valider et signer/i })).toBeInTheDocument(),
+    );
+    fireEvent.click(screen.getByRole('button', { name: /valider et signer/i }));
+
+    await waitFor(() =>
+      expect(screen.getByRole('button', { name: 'Confirmer' })).toBeInTheDocument(),
+    );
+    fireEvent.click(screen.getByRole('button', { name: 'Confirmer' }));
+
+    // CraValidation calls onValidated after a 2s success animation
+    await waitFor(() => expect(onMutated).toHaveBeenCalledWith(validated), { timeout: 3000 });
+  }, 5000);
+
+  it('after reopen success, calls onMutated with refreshed DTO', async () => {
+    const reopened: CraDetailsDto = { ...AWAITING_DETAIL, status: 'DRAFT' };
+    vi.mocked(craApi.getCra)
+      .mockResolvedValueOnce(AWAITING_DETAIL)
+      .mockResolvedValueOnce(reopened);
+    vi.mocked(craApi.reopenCra).mockResolvedValue(undefined);
+    vi.spyOn(window, 'confirm').mockReturnValue(true);
+
+    const onMutated = vi.fn();
+    render(<CraDetailModal craId={3} onClose={vi.fn()} onMutated={onMutated} />);
+
+    await waitFor(() =>
+      expect(screen.getByRole('button', { name: /réouvrir le cra/i })).toBeInTheDocument(),
+    );
+    fireEvent.click(screen.getByRole('button', { name: /réouvrir le cra/i }));
+
+    await waitFor(() => expect(onMutated).toHaveBeenCalledWith(reopened));
   });
 });

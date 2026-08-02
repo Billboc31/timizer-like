@@ -1,7 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
-import { getCra, downloadCraPdf, reopenCra } from '../../api/craClient';
+import { getCra, downloadCraPdf, reopenCra, updateDay } from '../../api/craClient';
 import { getErrorMessage } from '../../api/errorMessages';
 import { CalendarGrid } from '../CalendarGrid/CalendarGrid';
+import { CraSummaryPanel } from '../CraSummaryPanel/CraSummaryPanel';
+import { CraValidation } from '../CraValidation/CraValidation';
 import type { CraDetailsDto } from '../../api/types';
 import type { CraDetails } from '../../types/cra';
 import './CraDetailModal.css';
@@ -25,11 +27,6 @@ function coveredPeriod(month: number, year: number): string {
   return `${fmt.format(first)} – ${fmt.format(last)}`;
 }
 
-function nameOr(first?: string | null, last?: string | null): string {
-  const parts = [first, last].filter(Boolean);
-  return parts.length > 0 ? parts.join(' ') : '—';
-}
-
 function dtoToCraDetails(dto: CraDetailsDto): CraDetails {
   return {
     id: dto.id,
@@ -48,6 +45,9 @@ function dtoToCraDetails(dto: CraDetailsDto): CraDetails {
     clientContactFirstName: dto.clientContactFirstName,
     clientContactLastName: dto.clientContactLastName,
     clientSignatureDate: dto.clientSignatureDate,
+    providerSignatureImage: dto.providerSignatureImage ?? null,
+    providerSignerName: dto.providerSignerName ?? null,
+    clientRepresentativeName: dto.clientRepresentativeName,
   };
 }
 
@@ -65,9 +65,10 @@ function LoadingSkeleton() {
 interface Props {
   craId: number | null;
   onClose: () => void;
+  onMutated?: (updated: CraDetailsDto) => void;
 }
 
-export function CraDetailModal({ craId, onClose }: Props) {
+export function CraDetailModal({ craId, onClose, onMutated }: Props) {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const fetchCancelledRef = useRef(false);
@@ -79,6 +80,17 @@ export function CraDetailModal({ craId, onClose }: Props) {
   const [downloadError, setDownloadError] = useState<string | null>(null);
   const [reopening, setReopening] = useState(false);
   const [reopenError, setReopenError] = useState<string | null>(null);
+  const [updatingDay, setUpdatingDay] = useState<number | null>(null);
+  const [dayUpdateError, setDayUpdateError] = useState<string | null>(null);
+
+  const anyActionInFlight = downloading || reopening || updatingDay !== null;
+
+  const handleClose = () => {
+    if (anyActionInFlight) {
+      if (!window.confirm('Une action est en cours. Fermer quand même ?')) return;
+    }
+    onClose();
+  };
 
   useEffect(() => {
     if (craId !== null) {
@@ -105,6 +117,7 @@ export function CraDetailModal({ craId, onClose }: Props) {
       setError(null);
       setDownloadError(null);
       setReopenError(null);
+      setDayUpdateError(null);
       return;
     }
     fetchCancelledRef.current = false;
@@ -133,12 +146,12 @@ export function CraDetailModal({ craId, onClose }: Props) {
   };
 
   const handleBackdropClick = (e: React.MouseEvent<HTMLDialogElement>) => {
-    if (e.target === dialogRef.current) onClose();
+    if (e.target === dialogRef.current) handleClose();
   };
 
   const handleCancel = (e: React.SyntheticEvent) => {
     e.preventDefault();
-    onClose();
+    handleClose();
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLDialogElement>) => {
@@ -168,7 +181,10 @@ export function CraDetailModal({ craId, onClose }: Props) {
     setReopenError(null);
     reopenCra(id)
       .then(() => getCra(id))
-      .then(dto => setCra(dto))
+      .then(dto => {
+        setCra(dto);
+        onMutated?.(dto);
+      })
       .catch((err: unknown) => setReopenError(getErrorMessage(err)))
       .finally(() => setReopening(false));
   };
@@ -190,6 +206,33 @@ export function CraDetailModal({ craId, onClose }: Props) {
       .finally(() => setDownloading(false));
   };
 
+  const handleDayClick = (day: number, newValue: 0 | 0.5 | 1) => {
+    if (!cra) return;
+    setUpdatingDay(day);
+    setDayUpdateError(null);
+    const isoDate = `${cra.year}-${String(cra.month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+    updateDay(cra.id, isoDate, { workValue: newValue })
+      .then(dto => {
+        setCra(dto);
+        setUpdatingDay(null);
+        onMutated?.(dto);
+      })
+      .catch((err: unknown) => {
+        setDayUpdateError(getErrorMessage(err));
+        setUpdatingDay(null);
+      });
+  };
+
+  const handleValidated = (dto: CraDetailsDto) => {
+    setCra(dto);
+    onMutated?.(dto);
+  };
+
+  const handleSummarySuccess = (dto: CraDetailsDto) => {
+    setCra(dto);
+    onMutated?.(dto);
+  };
+
   return (
     <dialog
       ref={dialogRef}
@@ -209,7 +252,7 @@ export function CraDetailModal({ craId, onClose }: Props) {
             ref={closeButtonRef}
             type="button"
             className="cra-detail-modal__close"
-            onClick={onClose}
+            onClick={handleClose}
             aria-label="Fermer"
           >
             ×
@@ -236,59 +279,27 @@ export function CraDetailModal({ craId, onClose }: Props) {
               <p className="cra-detail__period">{coveredPeriod(cra.month, cra.year)}</p>
 
               <section className="cra-detail__meta" aria-label="Informations du CRA">
-                <dl className="cra-detail__meta-grid">
-                  <div className="cra-detail__meta-item">
-                    <dt>Prestataire</dt>
-                    <dd>{nameOr(cra.providerFirstName, cra.providerLastName)}</dd>
-                  </div>
-                  <div className="cra-detail__meta-item">
-                    <dt>Société prestataire</dt>
-                    <dd>{cra.providerCompany ?? '—'}</dd>
-                  </div>
-                  <div className="cra-detail__meta-item">
-                    <dt>Client</dt>
-                    <dd>{nameOr(cra.clientFirstName, cra.clientLastName)}</dd>
-                  </div>
-                  <div className="cra-detail__meta-item">
-                    <dt>Société client</dt>
-                    <dd>{cra.clientCompany ?? '—'}</dd>
-                  </div>
-                  <div className="cra-detail__meta-item">
-                    <dt>Contact client</dt>
-                    <dd>{nameOr(cra.clientContactFirstName, cra.clientContactLastName)}</dd>
-                  </div>
-                  <div className="cra-detail__meta-item">
-                    <dt>Jours travaillés</dt>
-                    <dd>{cra.totalWorkedDays}</dd>
-                  </div>
-                  <div className="cra-detail__meta-item">
-                    <dt>Statut</dt>
-                    <dd>
-                      <span className={`cra-detail__badge cra-detail__badge--${cra.status.toLowerCase()}`}>
-                        {cra.status}
-                      </span>
-                    </dd>
-                  </div>
-                  <div className="cra-detail__meta-item">
-                    <dt>Date de validation</dt>
-                    <dd>{cra.validationDate ?? '—'}</dd>
-                  </div>
-                  <div className="cra-detail__meta-item">
-                    <dt>Signature prestataire</dt>
-                    <dd>{cra.providerSignatureDate ?? '—'}</dd>
-                  </div>
-                  <div className="cra-detail__meta-item">
-                    <dt>Signature client</dt>
-                    <dd>{cra.clientSignatureDate ?? '—'}</dd>
-                  </div>
-                </dl>
+                <CraSummaryPanel
+                  cra={dtoToCraDetails(cra)}
+                  loading={false}
+                  error={null}
+                  onSuccess={handleSummarySuccess}
+                />
               </section>
 
               <CalendarGrid
                 cra={dtoToCraDetails(cra)}
                 loading={false}
                 error={null}
-                onDayClick={() => undefined}
+                onDayClick={cra.status === 'DRAFT' ? handleDayClick : undefined}
+                updatingDay={updatingDay}
+                dayUpdateError={dayUpdateError}
+              />
+
+              <CraValidation
+                cra={dtoToCraDetails(cra)}
+                onValidated={handleValidated}
+                onGoToSettings={() => undefined}
               />
             </>
           )}
@@ -310,7 +321,7 @@ export function CraDetailModal({ craId, onClose }: Props) {
 
         {cra && (
           <div className="cra-detail__actions">
-            {cra.status === 'VALIDATED' && (
+            {(cra.status === 'VALIDATED' || cra.status === 'AWAITING_CLIENT_SIGNATURE') && (
               <button
                 className="cra-detail__btn cra-detail__btn--download"
                 onClick={handleDownload}
