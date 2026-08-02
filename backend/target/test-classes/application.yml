@@ -1,0 +1,26 @@
+spring:
+  datasource:
+    url: "jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;MODE=MySQL;NON_KEYWORDS=VALUE,MONTH,YEAR;INIT=CREATE DOMAIN IF NOT EXISTS TEXT AS CLOB\\;"
+    driver-class-name: org.h2.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    database-platform: org.hibernate.dialect.H2Dialect
+    properties:
+      hibernate:
+        globally_quoted_identifiers: true
+timizer:
+  public-frontend-base-url: http://localhost
+
+cra:
+  defaults:
+    provider:
+      name: "Alice Provider"
+      company: "Provider Company"
+      address: "Provider Address"
+    client:
+      name: "Lyra Network"
+      address: "Client Address"
+      contact:
+        name: "Bob Client"
+        email: "bob@example.com"
