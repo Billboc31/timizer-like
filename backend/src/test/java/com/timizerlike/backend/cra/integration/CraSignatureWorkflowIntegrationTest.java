@@ -253,6 +253,23 @@ class CraSignatureWorkflowIntegrationTest {
     }
 
     @Test
+    void dayUpdateRejectedAfterClientSignature() {
+        Long craId = createDraftCra(5);
+        consultantValidate(craId);
+        clientSign(craId);
+
+        Map<String, Object> dayBody = Map.of("workValue", 1.0);
+        ResponseEntity<Map<String, Object>> dayRejected = restTemplate.exchange(
+                "/api/cras/" + craId + "/days/2026-05-05",
+                HttpMethod.PATCH,
+                new HttpEntity<>(dayBody),
+                new ParameterizedTypeReference<>() {});
+        assertThat(dayRejected.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
+        assertThat(dayRejected.getBody()).isNotNull();
+        assertThat(dayRejected.getBody().get("error")).isEqualTo("cra_validated");
+    }
+
+    @Test
     void clientCannotSignWithoutValidToken() {
         Map<String, Object> clientSignBody = Map.of(
                 "signerName", "Bob Client",
@@ -292,17 +309,17 @@ class CraSignatureWorkflowIntegrationTest {
     }
 
     @Test
-    void reopenAfterBothSignaturesReturnsToDraft() {
+    void reopenAfterClientSignatureReturns409() {
         Long craId = createDraftCra(2);
         consultantValidate(craId);
         clientSign(craId);
 
-        ResponseEntity<Void> reopen = restTemplate.exchange(
+        ResponseEntity<Map<String, Object>> reopen = restTemplate.exchange(
                 "/api/cras/" + craId + "/reopen",
                 HttpMethod.POST,
                 new HttpEntity<>(null),
-                Void.class);
-        assertThat(reopen.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+                new ParameterizedTypeReference<>() {});
+        assertThat(reopen.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
 
         ResponseEntity<Map<String, Object>> cra = restTemplate.exchange(
                 "/api/cras/" + craId,
@@ -310,7 +327,7 @@ class CraSignatureWorkflowIntegrationTest {
                 null,
                 new ParameterizedTypeReference<>() {});
         assertThat(cra.getBody()).isNotNull();
-        assertThat(cra.getBody().get("status")).isEqualTo("DRAFT");
+        assertThat(cra.getBody().get("status")).isEqualTo("VALIDATED");
     }
 
     @Test

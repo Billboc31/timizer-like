@@ -9,6 +9,7 @@ com/timizerlike/cra/pdf/model/CraPdfDocumentTest.class
 com/timizerlike/backend/settings/ClientSettingsControllerTest.class
 com/timizer/backend/cra/MonthlyCraReportRepositoryTest.class
 com/timizerlike/backend/cra/integration/CraSignatureWorkflowIntegrationTest$11.class
+com/timizerlike/backend/cra/integration/CraSignatureWorkflowIntegrationTest$21.class
 com/timizerlike/backend/cra/integration/CraSignatureWorkflowIntegrationTest$17.class
 com/timizerlike/backend/cra/integration/CraSignatureWorkflowIntegrationTest$3.class
 com/timizerlike/cra/service/CraSignatureTokenServiceTest.class
@@ -26,6 +27,7 @@ com/timizerlike/backend/cra/dto/CraDtoTest.class
 com/timizerlike/backend/cra/integration/CraWorkflowIntegrationTest.class
 com/timizerlike/backend/cra/integration/CraSignatureWorkflowIntegrationTest.class
 com/timizerlike/cra/pdf/CraPdfGeneratorTest.class
+com/timizerlike/backend/cra/integration/CraSignatureWorkflowIntegrationTest$20.class
 com/timizer/backend/cra/CraTotalCalculationServiceTest.class
 com/timizerlike/backend/cra/integration/CraSignatureWorkflowIntegrationTest$18.class
 com/timizerlike/backend/cra/integration/CraSignatureWorkflowIntegrationTest$7.class

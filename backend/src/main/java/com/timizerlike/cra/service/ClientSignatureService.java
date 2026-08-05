@@ -80,7 +80,7 @@ public class ClientSignatureService {
         cra.setClientSignatureDate(LocalDate.now());
         cra.setClientSignedAt(Instant.now());
         cra.setClientSignatureImage(signatureImageBase64);
-        cra.setStatus(ValidationStatus.FULLY_SIGNED);
+        cra.setStatus(ValidationStatus.VALIDATED);
         craRepository.save(cra);
 
         auditService.recordTransition(cra.getId(), ValidationStatus.AWAITING_CLIENT_SIGNATURE, ValidationStatus.VALIDATED,
