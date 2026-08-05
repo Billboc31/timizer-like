@@ -12,6 +12,11 @@ export default defineConfig({
         target: 'http://localhost:8081',
         changeOrigin: true,
       },
+      // Public client-signature endpoints are outside /api
+      '/public': {
+        target: 'http://localhost:8081',
+        changeOrigin: true,
+      },
     },
   },
   test: {

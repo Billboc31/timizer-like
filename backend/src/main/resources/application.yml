@@ -11,7 +11,9 @@ spring:
         globally_quoted_identifiers: true
     open-in-view: false
 timizer:
-  public-frontend-base-url: http://localhost
+  # Local Vite default (docs/local-development.md). Override in prod via
+  # TIMIZER_PUBLIC_FRONTEND_BASE_URL / env-specific application-*.yml.
+  public-frontend-base-url: http://localhost:5173
 
 cra:
   defaults:
