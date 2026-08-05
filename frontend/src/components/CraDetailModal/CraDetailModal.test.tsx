@@ -180,6 +180,34 @@ describe('CraDetailModal — actions', () => {
     expect(screen.queryByRole('button', { name: /réouvrir le cra/i })).not.toBeInTheDocument();
   });
 
+  it('does not show reopen button for VALIDATED CRA', async () => {
+    vi.mocked(craApi.getCra).mockResolvedValue(VALIDATED_DETAIL);
+    render(<CraDetailModal craId={1} onClose={vi.fn()} />);
+    await waitFor(() =>
+      expect(screen.getByRole('heading', { name: 'Juillet 2026' })).toBeInTheDocument(),
+    );
+    expect(screen.queryByRole('button', { name: /réouvrir le cra/i })).not.toBeInTheDocument();
+  });
+
+  it('shows signed banner for VALIDATED CRA', async () => {
+    vi.mocked(craApi.getCra).mockResolvedValue(VALIDATED_DETAIL);
+    render(<CraDetailModal craId={1} onClose={vi.fn()} />);
+    await waitFor(() =>
+      expect(
+        screen.getByText(/définitivement validée par le client/i),
+      ).toBeInTheDocument(),
+    );
+  });
+
+  it('does not show signed banner for AWAITING_CLIENT_SIGNATURE CRA', async () => {
+    vi.mocked(craApi.getCra).mockResolvedValue(AWAITING_DETAIL);
+    render(<CraDetailModal craId={3} onClose={vi.fn()} />);
+    await waitFor(() =>
+      expect(screen.getByRole('heading', { name: 'Juillet 2026' })).toBeInTheDocument(),
+    );
+    expect(screen.queryByText(/définitivement validée par le client/i)).not.toBeInTheDocument();
+  });
+
   it('triggers PDF download when download button is clicked', async () => {
     const mockBlob = new Blob(['pdf'], { type: 'application/pdf' });
     vi.mocked(craApi.getCra).mockResolvedValue(VALIDATED_DETAIL);

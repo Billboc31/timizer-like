@@ -292,17 +292,17 @@ class CraSignatureWorkflowIntegrationTest {
     }
 
     @Test
-    void reopenAfterBothSignaturesReturnsToDraft() {
+    void reopenAfterClientSignatureReturns409() {
         Long craId = createDraftCra(2);
         consultantValidate(craId);
         clientSign(craId);
 
-        ResponseEntity<Void> reopen = restTemplate.exchange(
+        ResponseEntity<Map<String, Object>> reopen = restTemplate.exchange(
                 "/api/cras/" + craId + "/reopen",
                 HttpMethod.POST,
                 new HttpEntity<>(null),
-                Void.class);
-        assertThat(reopen.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+                new ParameterizedTypeReference<>() {});
+        assertThat(reopen.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
 
         ResponseEntity<Map<String, Object>> cra = restTemplate.exchange(
                 "/api/cras/" + craId,
@@ -310,7 +310,7 @@ class CraSignatureWorkflowIntegrationTest {
                 null,
                 new ParameterizedTypeReference<>() {});
         assertThat(cra.getBody()).isNotNull();
-        assertThat(cra.getBody().get("status")).isEqualTo("DRAFT");
+        assertThat(cra.getBody().get("status")).isEqualTo("VALIDATED");
     }
 
     @Test

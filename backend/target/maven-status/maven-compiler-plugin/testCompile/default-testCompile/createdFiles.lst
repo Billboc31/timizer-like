@@ -26,6 +26,7 @@ com/timizerlike/backend/cra/dto/CraDtoTest.class
 com/timizerlike/backend/cra/integration/CraWorkflowIntegrationTest.class
 com/timizerlike/backend/cra/integration/CraSignatureWorkflowIntegrationTest.class
 com/timizerlike/cra/pdf/CraPdfGeneratorTest.class
+com/timizerlike/backend/cra/integration/CraSignatureWorkflowIntegrationTest$20.class
 com/timizer/backend/cra/CraTotalCalculationServiceTest.class
 com/timizerlike/backend/cra/integration/CraSignatureWorkflowIntegrationTest$18.class
 com/timizerlike/backend/cra/integration/CraSignatureWorkflowIntegrationTest$7.class

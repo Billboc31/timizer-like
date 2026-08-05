@@ -283,6 +283,12 @@ export function CraDetailModal({ craId, onClose, onMutated, onActionInFlightChan
             <>
               <p className="cra-detail__period">{coveredPeriod(cra.month, cra.year)}</p>
 
+              {cra.status === 'VALIDATED' && (
+                <div className="cra-detail__signed-banner" role="status">
+                  Cette CRA a été définitivement validée par le client.
+                </div>
+              )}
+
               <section className="cra-detail__meta" aria-label="Informations du CRA">
                 <CraSummaryPanel
                   cra={dtoToCraDetails(cra)}
@@ -335,7 +341,7 @@ export function CraDetailModal({ craId, onClose, onMutated, onActionInFlightChan
                 {downloading ? 'Téléchargement…' : 'Télécharger PDF'}
               </button>
             )}
-            {cra.status !== 'DRAFT' && (
+            {cra.status !== 'DRAFT' && cra.status !== 'VALIDATED' && (
               <button
                 className="cra-detail__btn cra-detail__btn--reopen"
                 onClick={handleReopen}
