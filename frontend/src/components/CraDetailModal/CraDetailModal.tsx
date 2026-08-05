@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { getCra, downloadCraPdf, reopenCra, updateDay } from '../../api/craClient';
+import { getCra, downloadCraPdf, reopenCra, updateDay, deleteCra } from '../../api/craClient';
 import { getErrorMessage } from '../../api/errorMessages';
 import { CalendarGrid } from '../CalendarGrid/CalendarGrid';
 import { CraSummaryPanel } from '../CraSummaryPanel/CraSummaryPanel';
@@ -65,14 +65,19 @@ function LoadingSkeleton() {
   );
 }
 
+function isCraDeletable(status: string): boolean {
+  return status === 'DRAFT' || status === 'READY_FOR_PROVIDER_SIGNATURE' || status === 'SIGNED_BY_PROVIDER';
+}
+
 interface Props {
   craId: number | null;
   onClose: () => void;
   onMutated?: (updated: CraDetailsDto) => void;
+  onDeleted?: () => void;
   onActionInFlightChange?: (inFlight: boolean) => void;
 }
 
-export function CraDetailModal({ craId, onClose, onMutated, onActionInFlightChange }: Props) {
+export function CraDetailModal({ craId, onClose, onMutated, onDeleted, onActionInFlightChange }: Props) {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const fetchCancelledRef = useRef(false);
@@ -86,8 +91,10 @@ export function CraDetailModal({ craId, onClose, onMutated, onActionInFlightChan
   const [reopenError, setReopenError] = useState<string | null>(null);
   const [updatingDay, setUpdatingDay] = useState<number | null>(null);
   const [dayUpdateError, setDayUpdateError] = useState<string | null>(null);
+  const [deleting, setDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
 
-  const anyActionInFlight = downloading || reopening || updatingDay !== null;
+  const anyActionInFlight = downloading || reopening || updatingDay !== null || deleting;
 
   useEffect(() => {
     onActionInFlightChange?.(anyActionInFlight);
@@ -126,6 +133,7 @@ export function CraDetailModal({ craId, onClose, onMutated, onActionInFlightChan
       setDownloadError(null);
       setReopenError(null);
       setDayUpdateError(null);
+      setDeleteError(null);
       return;
     }
     fetchCancelledRef.current = false;
@@ -231,6 +239,25 @@ export function CraDetailModal({ craId, onClose, onMutated, onActionInFlightChan
       });
   };
 
+  const handleDelete = () => {
+    if (!cra) return;
+    const period = new Intl.DateTimeFormat('fr-FR', { month: 'long', year: 'numeric' })
+      .format(new Date(cra.year, cra.month - 1, 1));
+    if (!window.confirm(
+      `Supprimer définitivement le CRA de ${period} ?\n\nCette action est irréversible et supprimera toutes les données associées.`
+    )) return;
+    const id = cra.id;
+    setDeleting(true);
+    setDeleteError(null);
+    deleteCra(id)
+      .then(() => {
+        onClose();
+        onDeleted?.();
+      })
+      .catch((err: unknown) => setDeleteError(getErrorMessage(err)))
+      .finally(() => setDeleting(false));
+  };
+
   const handleValidated = (dto: CraDetailsDto) => {
     setCra(dto);
     onMutated?.(dto);
@@ -330,6 +357,13 @@ export function CraDetailModal({ craId, onClose, onMutated, onActionInFlightChan
               <span>{reopenError}</span>
             </div>
           )}
+
+          {deleteError && (
+            <div role="alert" className="cra-detail__error cra-detail__error--inline">
+              <span className="cra-detail__error-icon" aria-hidden="true">⚠</span>
+              <span>{deleteError}</span>
+            </div>
+          )}
         </div>
 
         {cra && (
@@ -352,6 +386,16 @@ export function CraDetailModal({ craId, onClose, onMutated, onActionInFlightChan
                 aria-label="Réouvrir le CRA"
               >
                 {reopening ? 'Réouverture…' : 'Réouvrir et modifier'}
+              </button>
+            )}
+            {isCraDeletable(cra.status) && (
+              <button
+                className="cra-detail__btn cra-detail__btn--delete"
+                onClick={handleDelete}
+                disabled={deleting || anyActionInFlight}
+                aria-label="Supprimer définitivement le CRA"
+              >
+                {deleting ? 'Suppression…' : 'Supprimer'}
               </button>
             )}
           </div>

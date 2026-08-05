@@ -1,4 +1,5 @@
 export type { CraSummaryDto } from '../api/types';
+import type { CraStatus } from '../api/types';
 
 export interface CraDayEntry {
   day: number;
@@ -11,7 +12,7 @@ export interface CraDetails {
   month: number;
   year: number;
   totalWorkedDays: number;
-  status: 'DRAFT' | 'AWAITING_CLIENT_SIGNATURE' | 'VALIDATED';
+  status: CraStatus;
   days: CraDayEntry[];
   providerSignatureDate: string | null;
   providerRaisonSociale?: string | null;

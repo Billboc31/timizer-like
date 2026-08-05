@@ -19,6 +19,7 @@ function toApiErrorCode(raw: unknown): ApiErrorCode {
     'cra_wrong_status',
     'consent_not_given',
     'validation_blocked',
+    'cra_not_deletable',
   ];
   if (typeof raw === 'string' && (known as string[]).includes(raw)) {
     return raw as ApiErrorCode;

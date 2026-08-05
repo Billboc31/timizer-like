@@ -12,6 +12,7 @@ export type ApiErrorCode =
   | 'token_expired'
   | 'cra_not_signed'
   | 'cra_wrong_status'
+  | 'cra_not_deletable'
   | 'consent_not_given'
   | 'validation_blocked'
   | 'network_error'
