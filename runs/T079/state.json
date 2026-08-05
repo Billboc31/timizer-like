@@ -1,7 +1,7 @@
 {
   "ticket_id": "T079",
-  "state": "IMPLEMENTATION_REVIEW_NEEDED",
+  "state": "IMPLEMENTATION_APPROVED",
   "branch": "ticket/T079-allow-permanent-deletion-of-unsigned-and-unvalidat",
   "issue_number": 157,
-  "updated_at": "2026-08-05T22:06:09Z"
+  "updated_at": "2026-08-05T22:10:59Z"
 }
