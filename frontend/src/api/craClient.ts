@@ -1,4 +1,4 @@
-import { apiGet, apiGetBlob, apiPatch, apiPost, apiPut } from './httpClient';
+import { apiDelete, apiGet, apiGetBlob, apiPatch, apiPost, apiPut } from './httpClient';
 import type {
   CraDetailsDto,
   CraDayUpdateRequest,
@@ -53,4 +53,8 @@ export function reopenCra(craId: number): Promise<void> {
 
 export function generateSignatureLink(craId: number): Promise<SignatureLinkDto> {
   return apiPost<SignatureLinkDto>(`/api/cras/${craId}/signature-link`, undefined);
+}
+
+export function deleteCra(craId: number): Promise<void> {
+  return apiDelete(`/api/cras/${craId}`);
 }

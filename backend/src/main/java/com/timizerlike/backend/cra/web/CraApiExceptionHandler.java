@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.timizer.backend.cra.ConsentNotGivenException;
 import com.timizer.backend.cra.CraDayNotFoundException;
+import com.timizer.backend.cra.CraNotDeletableException;
 import com.timizer.backend.cra.CraNotFoundException;
 import com.timizer.backend.cra.CraNotValidatedException;
 import com.timizer.backend.cra.CraValidatedException;
@@ -106,5 +107,11 @@ public class CraApiExceptionHandler {
     public ResponseEntity<Map<String, String>> handleCraWrongStatus() {
         return ResponseEntity.status(HttpStatus.CONFLICT)
                 .body(Map.of("error", "cra_wrong_status"));
+    }
+
+    @ExceptionHandler(CraNotDeletableException.class)
+    public ResponseEntity<Map<String, String>> handleCraNotDeletable() {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(Map.of("error", "cra_not_deletable"));
     }
 }

@@ -155,6 +155,11 @@ export default function App() {
     setHistoryRefreshKey(k => k + 1);
   };
 
+  const handleModalDeleted = () => {
+    setAnnualCalendarRefreshKey(k => k + 1);
+    setHistoryRefreshKey(k => k + 1);
+  };
+
   const handleDayClick = (day: number, newValue: 0 | 0.5 | 1) => {
     if (!cra) return;
     setUpdatingDay(day);
@@ -292,6 +297,7 @@ export default function App() {
         craId={modalCraId}
         onClose={handleModalClose}
         onMutated={handleModalMutated}
+        onDeleted={handleModalDeleted}
         onActionInFlightChange={inFlight => { modalActionInFlightRef.current = inFlight; }}
       />
     </AppShell>

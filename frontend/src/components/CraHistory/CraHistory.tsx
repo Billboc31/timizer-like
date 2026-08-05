@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { listCras, downloadCraPdf } from '../../api/craClient';
+import { listCras, downloadCraPdf, deleteCra } from '../../api/craClient';
 import { getErrorMessage } from '../../api/errorMessages';
 import type { CraStatus, CraSummaryDto } from '../../api/types';
 import './CraHistory.css';
@@ -16,6 +16,8 @@ function periodLabel(cra: CraSummaryDto): string {
 function statusLabel(status: CraStatus): string {
   switch (status) {
     case 'DRAFT': return 'Brouillon';
+    case 'READY_FOR_PROVIDER_SIGNATURE': return 'Prêt à signer';
+    case 'SIGNED_BY_PROVIDER': return 'Signé prestataire';
     case 'AWAITING_CLIENT_SIGNATURE': return 'En attente client';
     case 'VALIDATED': return 'Validé';
   }
@@ -24,9 +26,15 @@ function statusLabel(status: CraStatus): string {
 function statusBadgeModifier(status: CraStatus): string {
   switch (status) {
     case 'DRAFT': return 'draft';
+    case 'READY_FOR_PROVIDER_SIGNATURE': return 'ready';
+    case 'SIGNED_BY_PROVIDER': return 'signed-provider';
     case 'AWAITING_CLIENT_SIGNATURE': return 'awaiting-client';
     case 'VALIDATED': return 'signed';
   }
+}
+
+function isCraDeletable(status: CraStatus): boolean {
+  return status === 'DRAFT' || status === 'READY_FOR_PROVIDER_SIGNATURE' || status === 'SIGNED_BY_PROVIDER';
 }
 
 function isPdfAvailable(status: CraStatus): boolean {
@@ -64,6 +72,8 @@ export function CraHistory({ onOpenDetail, refreshKey }: Props) {
   const [error, setError] = useState<string | null>(null);
   const [downloading, setDownloading] = useState<number | null>(null);
   const [downloadError, setDownloadError] = useState<string | null>(null);
+  const [deleting, setDeleting] = useState<number | null>(null);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
   const loadCras = (signal?: AbortSignal) => {
     setLoading(true);
     setError(null);
@@ -106,6 +116,23 @@ export function CraHistory({ onOpenDetail, refreshKey }: Props) {
       .finally(() => { setDownloading(null); });
   };
 
+  const handleDelete = (cra: CraSummaryDto) => {
+    const period = periodLabel(cra);
+    if (!window.confirm(
+      `Supprimer définitivement le CRA de ${period} ?\n\nCette action est irréversible et supprimera toutes les données associées.`
+    )) return;
+    setDeleting(cra.id);
+    setDeleteError(null);
+    deleteCra(cra.id)
+      .then(() => {
+        setCras(prev => prev.filter(c => c.id !== cra.id));
+      })
+      .catch((err: unknown) => {
+        setDeleteError(getErrorMessage(err));
+      })
+      .finally(() => { setDeleting(null); });
+  };
+
   if (loading) return <LoadingSkeleton />;
 
   if (error) {
@@ -138,10 +165,18 @@ export function CraHistory({ onOpenDetail, refreshKey }: Props) {
           <span>{downloadError}</span>
         </div>
       )}
+      {deleteError && (
+        <div role="alert" className="cra-history__error cra-history__error--inline">
+          <span className="cra-history__error-icon" aria-hidden="true">⚠</span>
+          <span>{deleteError}</span>
+        </div>
+      )}
       <ul role="list" className="cra-history__list">
         {cras.map(cra => {
           const period = periodLabel(cra);
           const isDownloading = downloading === cra.id;
+          const isDeleting = deleting === cra.id;
+          const anyActionOnCard = isDownloading || isDeleting;
           return (
             <li key={cra.id} className="cra-history__card">
               <div className="cra-history__card-period">{period}</div>
@@ -166,7 +201,7 @@ export function CraHistory({ onOpenDetail, refreshKey }: Props) {
                 <button
                   className="cra-history__btn"
                   onClick={() => { onOpenDetail(cra); }}
-                  disabled={isDownloading}
+                  disabled={anyActionOnCard}
                   aria-label={`Open CRA for ${period}`}
                 >
                   Open
@@ -175,10 +210,20 @@ export function CraHistory({ onOpenDetail, refreshKey }: Props) {
                   <button
                     className="cra-history__btn cra-history__btn--download"
                     onClick={() => { handleDownloadPdf(cra); }}
-                    disabled={isDownloading}
+                    disabled={anyActionOnCard}
                     aria-label={`Download PDF for ${period}`}
                   >
                     {isDownloading ? 'Downloading…' : 'Download PDF'}
+                  </button>
+                )}
+                {isCraDeletable(cra.status) && (
+                  <button
+                    className="cra-history__btn cra-history__btn--delete"
+                    onClick={() => { handleDelete(cra); }}
+                    disabled={anyActionOnCard}
+                    aria-label={`Supprimer le CRA de ${period}`}
+                  >
+                    {isDeleting ? 'Suppression…' : 'Supprimer'}
                   </button>
                 )}
               </div>

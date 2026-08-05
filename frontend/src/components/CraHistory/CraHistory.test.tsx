@@ -232,6 +232,73 @@ describe('CraHistory', () => {
   });
 });
 
+describe('CraHistory — delete', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    vi.spyOn(window, 'confirm').mockImplementation(() => true);
+  });
+
+  it('shows delete button for DRAFT CRA', async () => {
+    vi.mocked(craApi.listCras).mockResolvedValue([DRAFT_CRA]);
+    render(<CraHistory onOpenDetail={vi.fn()} />);
+    await waitFor(() =>
+      expect(screen.getByRole('button', { name: /supprimer le cra de july 2026/i })).toBeInTheDocument(),
+    );
+  });
+
+  it('does not show delete button for VALIDATED CRA', async () => {
+    vi.mocked(craApi.listCras).mockResolvedValue([VALIDATED_CRA]);
+    render(<CraHistory onOpenDetail={vi.fn()} />);
+    await waitFor(() => expect(screen.getByText('June 2026')).toBeInTheDocument());
+    expect(screen.queryByRole('button', { name: /supprimer/i })).not.toBeInTheDocument();
+  });
+
+  it('does not show delete button for AWAITING_CLIENT_SIGNATURE CRA', async () => {
+    vi.mocked(craApi.listCras).mockResolvedValue([AWAITING_CLIENT_CRA]);
+    render(<CraHistory onOpenDetail={vi.fn()} />);
+    await waitFor(() => expect(screen.getByText('May 2026')).toBeInTheDocument());
+    expect(screen.queryByRole('button', { name: /supprimer/i })).not.toBeInTheDocument();
+  });
+
+  it('removes CRA row after confirmed deletion', async () => {
+    vi.mocked(craApi.listCras).mockResolvedValue([DRAFT_CRA]);
+    vi.mocked(craApi.deleteCra).mockResolvedValue(undefined);
+    render(<CraHistory onOpenDetail={vi.fn()} />);
+    await waitFor(() =>
+      expect(screen.getByRole('button', { name: /supprimer le cra de july 2026/i })).toBeInTheDocument(),
+    );
+    fireEvent.click(screen.getByRole('button', { name: /supprimer le cra de july 2026/i }));
+    await waitFor(() => expect(screen.queryByText('July 2026')).not.toBeInTheDocument());
+    expect(craApi.deleteCra).toHaveBeenCalledWith(DRAFT_CRA.id);
+  });
+
+  it('does not delete when user cancels confirm dialog', async () => {
+    vi.spyOn(window, 'confirm').mockReturnValue(false);
+    vi.mocked(craApi.listCras).mockResolvedValue([DRAFT_CRA]);
+    render(<CraHistory onOpenDetail={vi.fn()} />);
+    await waitFor(() =>
+      expect(screen.getByRole('button', { name: /supprimer le cra de july 2026/i })).toBeInTheDocument(),
+    );
+    fireEvent.click(screen.getByRole('button', { name: /supprimer le cra de july 2026/i }));
+    expect(craApi.deleteCra).not.toHaveBeenCalled();
+    expect(screen.getByText('July 2026')).toBeInTheDocument();
+  });
+
+  it('shows error banner when deletion fails', async () => {
+    vi.mocked(craApi.listCras).mockResolvedValue([DRAFT_CRA]);
+    vi.mocked(craApi.deleteCra).mockRejectedValue(new Error('Server error'));
+    render(<CraHistory onOpenDetail={vi.fn()} />);
+    await waitFor(() =>
+      expect(screen.getByRole('button', { name: /supprimer le cra de july 2026/i })).toBeInTheDocument(),
+    );
+    fireEvent.click(screen.getByRole('button', { name: /supprimer le cra de july 2026/i }));
+    await waitFor(() =>
+      expect(screen.getByRole('alert')).toHaveTextContent('Une erreur est survenue. Veuillez réessayer.'),
+    );
+    expect(screen.getByText('July 2026')).toBeInTheDocument();
+  });
+});
+
 describe('CraHistory — refreshKey', () => {
   beforeEach(() => {
     vi.clearAllMocks();

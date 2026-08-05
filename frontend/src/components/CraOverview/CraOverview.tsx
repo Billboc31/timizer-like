@@ -16,6 +16,8 @@ function periodLabel(cra: CraSummaryDto): string {
 function statusLabel(status: CraStatus): string {
   switch (status) {
     case 'DRAFT': return 'Brouillon';
+    case 'READY_FOR_PROVIDER_SIGNATURE': return 'Prêt à signer';
+    case 'SIGNED_BY_PROVIDER': return 'Signé prestataire';
     case 'AWAITING_CLIENT_SIGNATURE': return 'En attente client';
     case 'VALIDATED': return 'Validé';
   }
@@ -24,6 +26,8 @@ function statusLabel(status: CraStatus): string {
 function statusBadgeModifier(status: CraStatus): string {
   switch (status) {
     case 'DRAFT': return 'draft';
+    case 'READY_FOR_PROVIDER_SIGNATURE': return 'ready';
+    case 'SIGNED_BY_PROVIDER': return 'signed-provider';
     case 'AWAITING_CLIENT_SIGNATURE': return 'awaiting-client';
     case 'VALIDATED': return 'signed';
   }
