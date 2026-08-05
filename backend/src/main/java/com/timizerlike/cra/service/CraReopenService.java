@@ -5,6 +5,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.timizer.backend.cra.CraNotFoundException;
 import com.timizer.backend.cra.CraTransitionEvent.ActorType;
+import com.timizer.backend.cra.CraValidatedException;
 import com.timizer.backend.cra.MonthlyCraReport;
 import com.timizer.backend.cra.MonthlyCraReportRepository;
 import com.timizer.backend.cra.ValidationStatus;
@@ -29,6 +30,11 @@ public class CraReopenService {
     public void reopen(Long craId) {
         MonthlyCraReport cra = craRepository.findById(craId)
                 .orElseThrow(() -> new CraNotFoundException(craId));
+
+        if (cra.getStatus() == ValidationStatus.VALIDATED
+                || cra.getStatus() == ValidationStatus.FULLY_SIGNED) {
+            throw new CraValidatedException(craId);
+        }
 
         if (cra.getStatus() == ValidationStatus.DRAFT) {
             return;
