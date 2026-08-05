@@ -253,6 +253,23 @@ class CraSignatureWorkflowIntegrationTest {
     }
 
     @Test
+    void dayUpdateRejectedAfterClientSignature() {
+        Long craId = createDraftCra(5);
+        consultantValidate(craId);
+        clientSign(craId);
+
+        Map<String, Object> dayBody = Map.of("workValue", 1.0);
+        ResponseEntity<Map<String, Object>> dayRejected = restTemplate.exchange(
+                "/api/cras/" + craId + "/days/2026-05-05",
+                HttpMethod.PATCH,
+                new HttpEntity<>(dayBody),
+                new ParameterizedTypeReference<>() {});
+        assertThat(dayRejected.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
+        assertThat(dayRejected.getBody()).isNotNull();
+        assertThat(dayRejected.getBody().get("error")).isEqualTo("cra_validated");
+    }
+
+    @Test
     void clientCannotSignWithoutValidToken() {
         Map<String, Object> clientSignBody = Map.of(
                 "signerName", "Bob Client",
