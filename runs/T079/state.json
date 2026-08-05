@@ -3,5 +3,32 @@
   "state": "TEST_COMPLETE",
   "branch": "ticket/T079-allow-permanent-deletion-of-unsigned-and-unvalidat",
   "issue_number": 157,
-  "updated_at": "2026-08-05T22:20:18Z"
+  "updated_at": "2026-08-05T22:34:32Z",
+  "pr_number": 161,
+  "pr_synced": true,
+  "pre_conflict_state": "TEST_COMPLETE",
+  "conflict_detected_at": "2026-08-05T22:33:45Z",
+  "conflict_pr_number": 161,
+  "conflicted_files": [
+    "backend/src/main/java/com/timizer/backend/cra/CraClientSignatureRecordRepository.java",
+    "backend/src/main/java/com/timizer/backend/cra/CraDetailsMapper.java",
+    "backend/src/main/java/com/timizer/backend/cra/CraDownloadTokenRepository.java",
+    "backend/src/main/java/com/timizer/backend/cra/CraNotDeletableException.java",
+    "backend/src/main/java/com/timizer/backend/cra/CraTransitionEventRepository.java",
+    "backend/src/main/java/com/timizerlike/backend/cra/web/CraApiExceptionHandler.java",
+    "backend/src/main/java/com/timizerlike/backend/cra/web/CraDeleteController.java",
+    "backend/src/main/java/com/timizerlike/cra/service/CraDeleteService.java",
+    "frontend/src/App.tsx",
+    "frontend/src/api/apiError.ts",
+    "frontend/src/api/craClient.ts",
+    "frontend/src/api/errorMessages.ts",
+    "frontend/src/api/httpClient.ts",
+    "frontend/src/api/types.ts",
+    "frontend/src/components/CraDetailModal/CraDetailModal.tsx",
+    "frontend/src/components/CraHistory/CraHistory.test.tsx",
+    "frontend/src/components/CraHistory/CraHistory.tsx",
+    "frontend/src/components/CraOverview/CraOverview.tsx",
+    "frontend/src/components/CraSignatureStatus/CraSignatureStatus.tsx",
+    "frontend/src/types/cra.ts"
+  ]
 }

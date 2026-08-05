@@ -17,3 +17,9 @@
 [2026-08-05T22:34:30Z] conflict-resolver: staging and committing resolution artifacts
 [2026-08-05T22:34:30Z] conflict-resolver: commit: sha=c233cf9a
 [2026-08-05T22:34:30Z] conflict-resolver: git push --force-with-lease origin ticket/T079-allow-permanent-deletion-of-unsigned-and-unvalidat
+[2026-08-05T22:34:32Z] conflict-resolver: push succeeded
+[2026-08-05T22:34:32Z] conflict-resolver: state → CONFLICT_RESOLVED_REVIEW_NEEDED
+[2026-08-05T22:34:32Z] auto-finalize-conflict: gate disabled for project='timizer-like'
+[2026-08-05T22:34:32Z] conflict-resolver: transition CONFLICT_RESOLVED_REVIEW_NEEDED → TEST_COMPLETE (auto, PROJECT_SETTING)
+[2026-08-05T22:34:32Z] auto-run: TEST_COMPLETE — running PR lifecycle
+[2026-08-05T22:34:32Z] conflict-resolver: done → TEST_COMPLETE (auto-finalize)
