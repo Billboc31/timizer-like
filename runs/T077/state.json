@@ -1,7 +1,7 @@
 {
   "ticket_id": "T077",
-  "state": "INIT",
+  "state": "PLAN_APPROVED",
   "branch": "ticket/T077-make-client-signed-cra-status-final-and-immutable",
   "issue_number": 155,
-  "updated_at": "2026-08-05T20:22:52Z"
+  "updated_at": "2026-08-05T20:36:24Z"
 }
