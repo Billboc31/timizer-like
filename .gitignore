@@ -18,3 +18,8 @@ frontend/dist/
 assets/provider-signature.png
 assets/provider-signature.jpg
 assets/provider-signature.jpeg
+
+# Vite cache (vitest results etc.)
+**/.vite/
+
+node_modules/
