@@ -31,3 +31,7 @@
 [2026-08-05T21:14:21Z] push: pushing branch=ticket/T077-make-client-signed-cra-status-final-and-immutable
 [2026-08-05T21:14:25Z] push: done branch=ticket/T077-make-client-signed-cra-status-final-and-immutable
 [2026-08-05T21:14:25Z] auto-run: TEST_COMPLETE — running PR lifecycle
+[2026-08-05T21:15:21Z] conflict-resolver: rebase clean — no conflicts
+[2026-08-05T21:15:21Z] conflict-resolver: running tests
+[2026-08-05T21:15:21Z] conflict-resolver: test-report written: runs/T077/conflict/test-report.md
+[2026-08-05T21:15:21Z] conflict-resolver: staging and committing resolution artifacts
