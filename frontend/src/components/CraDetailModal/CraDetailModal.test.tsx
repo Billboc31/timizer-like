@@ -23,9 +23,7 @@ const VALIDATED_DETAIL: CraDetailsDto = {
   providerSignatureDate: '2026-07-31',
   clientSignatureDate: '2026-08-01',
   clientRepresentativeName: null,
-  providerFirstName: 'Jean',
-  providerLastName: 'Dupont',
-  providerCompany: 'Prestataire SARL',
+  providerRaisonSociale: 'Prestataire SARL',
   clientFirstName: 'Marie',
   clientLastName: 'Martin',
   clientCompany: 'Client SA',
@@ -105,7 +103,7 @@ describe('CraDetailModal — content', () => {
     await waitFor(() =>
       expect(screen.getByRole('region', { name: /informations/i })).toBeInTheDocument(),
     );
-    expect(screen.getByText('Jean Dupont')).toBeInTheDocument();
+    expect(screen.getByText('Prestataire SARL')).toBeInTheDocument();
     expect(screen.getByText('Marie Martin')).toBeInTheDocument();
   });
 

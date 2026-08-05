@@ -21,9 +21,7 @@ const MOCK_CRA: CraPublicView = {
   status: 'AWAITING_CLIENT_SIGNATURE',
   month: 7,
   year: 2026,
-  providerFirstName: 'Alice',
-  providerLastName: 'Durand',
-  providerCompany: 'Provider SARL',
+  providerRaisonSociale: 'Provider SARL',
   clientFirstName: 'Bob',
   clientLastName: 'Martin',
   clientCompany: 'Client SA',
@@ -50,7 +48,6 @@ describe('CraSignaturePage', () => {
     await waitFor(() => expect(screen.getByTestId('cra-public-view')).toBeInTheDocument());
 
     expect(screen.getByText(/Juillet 2026/)).toBeInTheDocument();
-    expect(screen.getByText(/Alice Durand/)).toBeInTheDocument();
     expect(screen.getByText(/Provider SARL/)).toBeInTheDocument();
     expect(screen.getByText(/Bob Martin/)).toBeInTheDocument();
     expect(screen.getByText(/Client SA/)).toBeInTheDocument();

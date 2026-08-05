@@ -17,6 +17,8 @@ class CraDtoTest {
         assertArrayEquals(
                 new CraStatus[]{
                         CraStatus.DRAFT,
+                        CraStatus.READY_FOR_PROVIDER_SIGNATURE,
+                        CraStatus.SIGNED_BY_PROVIDER,
                         CraStatus.AWAITING_CLIENT_SIGNATURE,
                         CraStatus.VALIDATED,
                 },
@@ -63,7 +65,8 @@ class CraDtoTest {
 
         CraDetailsDto details = new CraDetailsDto(
                 7L, 6, 2026, 1.5, CraStatus.VALIDATED, days, null, null,
-                "Jean", "Dupont", "Acme Corp", "Alice", "Martin", "Lyra Network",
+                "Acme Corp", null, null, null, null, null,
+                "Alice", "Martin", "Lyra Network",
                 null, null, null, null, null, null);
 
         assertEquals(7L, details.id());
@@ -72,9 +75,7 @@ class CraDtoTest {
         assertEquals(1.5, details.totalWorkedDays());
         assertEquals(CraStatus.VALIDATED, details.status());
         assertSame(days, details.days());
-        assertEquals("Jean", details.providerFirstName());
-        assertEquals("Dupont", details.providerLastName());
-        assertEquals("Acme Corp", details.providerCompany());
+        assertEquals("Acme Corp", details.providerRaisonSociale());
         assertEquals("Alice", details.clientFirstName());
         assertEquals("Martin", details.clientLastName());
         assertEquals("Lyra Network", details.clientCompany());

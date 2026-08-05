@@ -18,6 +18,7 @@ class CraPdfDocumentTest {
     private static CraPdfParty sampleProvider() {
         return new CraPdfParty(
                 "Alice Provider",
+                null,
                 "Provider SARL",
                 "1 rue du Prestataire, 75001 Paris",
                 null
@@ -27,6 +28,7 @@ class CraPdfDocumentTest {
     private static CraPdfParty sampleClient() {
         return new CraPdfParty(
                 "Acme Corp",
+                null,
                 null,
                 "10 avenue du Client, 92100 Boulogne",
                 new CraPdfContact("Bob Buyer", "bob@acme.example")

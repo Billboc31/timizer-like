@@ -1,0 +1,26 @@
+spring:
+  datasource:
+    url: jdbc:sqlite:./var/timizer.db
+    driver-class-name: org.sqlite.JDBC
+  jpa:
+    hibernate:
+      ddl-auto: update
+    database-platform: org.hibernate.community.dialect.SQLiteDialect
+    properties:
+      hibernate:
+        globally_quoted_identifiers: true
+    open-in-view: false
+timizer:
+  public-frontend-base-url: http://localhost
+
+cra:
+  defaults:
+    provider:
+      raison-sociale: "Provider Company"
+      adresse: "Provider Address"
+    client:
+      name: "Lyra Network"
+      address: "109 rue de l'Ancienne Poste, 69100 Villeurbanne, France"
+      contact:
+        name: "Client Contact"
+        email: "contact@example.com"

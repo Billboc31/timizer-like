@@ -14,9 +14,7 @@ const SAMPLE_CRA: CraDetails = {
   status: 'DRAFT',
   days: [],
   providerSignatureDate: null,
-  providerFirstName: 'Jean',
-  providerLastName: 'Dupont',
-  providerCompany: 'Acme Corp',
+  providerRaisonSociale: 'Acme Corp',
   clientFirstName: 'Alice',
   clientLastName: 'Martin',
 };

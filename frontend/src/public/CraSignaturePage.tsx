@@ -152,9 +152,8 @@ export function CraSignaturePage({ token }: CraSignaturePageProps) {
               <div className="cra-info-item">
                 <div className="cra-info-item__label">Prestataire</div>
                 <div className="cra-info-item__value">
-                  {cra.providerFirstName} {cra.providerLastName}
+                  {cra.providerRaisonSociale}
                 </div>
-                <div className="cra-info-item__sub">{cra.providerCompany}</div>
               </div>
 
               <div className="cra-info-item">

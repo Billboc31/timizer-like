@@ -53,27 +53,23 @@ public class MonthlyCraReport {
     @Column(name = "year", nullable = false)
     private int year;
 
-    @NotBlank
-    @Column(name = "provider_first_name", nullable = false)
-    private String providerFirstName;
+    @Column(name = "provider_raison_sociale")
+    private String providerRaisonSociale;
 
-    @NotBlank
-    @Column(name = "provider_last_name", nullable = false)
-    private String providerLastName;
+    @Column(name = "provider_siret")
+    private String providerSiret;
 
-    @NotBlank
-    @Column(name = "provider_company", nullable = false)
-    private String providerCompany;
+    @Column(name = "provider_adresse")
+    private String providerAdresse;
 
-    @Column(name = "provider_address")
-    private String providerAddress;
+    @Column(name = "provider_code_postal")
+    private String providerCodePostal;
 
-    @Email
-    @Column(name = "provider_email")
-    private String providerEmail;
+    @Column(name = "provider_ville")
+    private String providerVille;
 
-    @Column(name = "provider_phone")
-    private String providerPhone;
+    @Column(name = "provider_pays")
+    private String providerPays;
 
     @NotBlank
     @Column(name = "client_first_name", nullable = false)
@@ -156,33 +152,33 @@ public class MonthlyCraReport {
     MonthlyCraReport(
         int month,
         int year,
-        String providerFirstName,
-        String providerLastName,
-        String providerCompany,
+        String providerRaisonSociale,
+        String providerSiret,
+        String providerAdresse,
+        String providerCodePostal,
+        String providerVille,
+        String providerPays,
         String clientFirstName,
         String clientLastName,
         String clientCompany,
         String clientContactEmail,
         String clientContactPhone,
-        String providerAddress,
-        String providerEmail,
-        String providerPhone,
         String clientAddress,
         String clientContactRole
     ) {
         this.month = month;
         this.year = year;
-        this.providerFirstName = providerFirstName;
-        this.providerLastName = providerLastName;
-        this.providerCompany = providerCompany;
+        this.providerRaisonSociale = providerRaisonSociale;
+        this.providerSiret = providerSiret;
+        this.providerAdresse = providerAdresse;
+        this.providerCodePostal = providerCodePostal;
+        this.providerVille = providerVille;
+        this.providerPays = providerPays;
         this.clientFirstName = clientFirstName;
         this.clientLastName = clientLastName;
         this.clientCompany = clientCompany;
         this.clientContactEmail = clientContactEmail;
         this.clientContactPhone = clientContactPhone;
-        this.providerAddress = providerAddress;
-        this.providerEmail = providerEmail;
-        this.providerPhone = providerPhone;
         this.clientAddress = clientAddress;
         this.clientContactRole = clientContactRole;
         this.status = ValidationStatus.DRAFT;
@@ -203,117 +199,47 @@ public class MonthlyCraReport {
         this.updatedAt = Instant.now();
     }
 
-    public Long getId() {
-        return id;
-    }
+    public Long getId() { return id; }
+    public int getMonth() { return month; }
+    public int getYear() { return year; }
 
-    public int getMonth() {
-        return month;
-    }
+    public String getProviderRaisonSociale() { return providerRaisonSociale; }
+    public String getProviderSiret() { return providerSiret; }
+    public String getProviderAdresse() { return providerAdresse; }
+    public String getProviderCodePostal() { return providerCodePostal; }
+    public String getProviderVille() { return providerVille; }
+    public String getProviderPays() { return providerPays; }
 
-    public int getYear() {
-        return year;
-    }
+    public String getClientFirstName() { return clientFirstName; }
+    public String getClientLastName() { return clientLastName; }
+    public String getClientCompany() { return clientCompany; }
+    public String getClientContactEmail() { return clientContactEmail; }
+    public String getClientContactPhone() { return clientContactPhone; }
+    public String getClientAddress() { return clientAddress; }
+    public String getClientContactRole() { return clientContactRole; }
 
-    public String getProviderFirstName() {
-        return providerFirstName;
-    }
+    public ValidationStatus getStatus() { return status; }
+    public LocalDate getProviderSignatureDate() { return providerSignatureDate; }
+    public String getProviderSignerName() { return providerSignerName; }
+    public LocalDate getValidationDate() { return validationDate; }
+    public Instant getCreatedAt() { return createdAt; }
+    public Instant getUpdatedAt() { return updatedAt; }
 
-    public String getProviderLastName() {
-        return providerLastName;
-    }
-
-    public String getProviderCompany() {
-        return providerCompany;
-    }
-
-    public String getProviderAddress() {
-        return providerAddress;
-    }
-
-    public String getProviderEmail() {
-        return providerEmail;
-    }
-
-    public String getProviderPhone() {
-        return providerPhone;
-    }
-
-    public String getClientFirstName() {
-        return clientFirstName;
-    }
-
-    public String getClientLastName() {
-        return clientLastName;
-    }
-
-    public String getClientCompany() {
-        return clientCompany;
-    }
-
-    public String getClientContactEmail() {
-        return clientContactEmail;
-    }
-
-    public String getClientContactPhone() {
-        return clientContactPhone;
-    }
-
-    public String getClientAddress() {
-        return clientAddress;
-    }
-
-    public String getClientContactRole() {
-        return clientContactRole;
-    }
-
-    public ValidationStatus getStatus() {
-        return status;
-    }
-
-    public LocalDate getProviderSignatureDate() {
-        return providerSignatureDate;
-    }
-
-    public String getProviderSignerName() {
-        return providerSignerName;
-    }
-
-    public LocalDate getValidationDate() {
-        return validationDate;
-    }
-
-    public Instant getCreatedAt() {
-        return createdAt;
-    }
-
-    public Instant getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public List<CraDayEntry> getDayEntries() {
-        return dayEntries;
-    }
+    public List<CraDayEntry> getDayEntries() { return dayEntries; }
 
     public void addDayEntry(CraDayEntry entry) {
-        if (entry == null) {
-            return;
-        }
+        if (entry == null) return;
         dayEntries.add(entry);
         entry.setMonthlyCraReport(this);
     }
 
     public void removeDayEntry(CraDayEntry entry) {
-        if (entry == null) {
-            return;
-        }
+        if (entry == null) return;
         dayEntries.remove(entry);
         entry.setMonthlyCraReport(null);
     }
 
-    public void setStatus(ValidationStatus status) {
-        this.status = status;
-    }
+    public void setStatus(ValidationStatus status) { this.status = status; }
 
     public void setProviderSignatureDate(LocalDate providerSignatureDate) {
         this.providerSignatureDate = providerSignatureDate;
@@ -323,109 +249,55 @@ public class MonthlyCraReport {
         this.providerSignerName = providerSignerName;
     }
 
-    public void setValidationDate(LocalDate validationDate) {
-        this.validationDate = validationDate;
-    }
+    public void setValidationDate(LocalDate validationDate) { this.validationDate = validationDate; }
 
-    public void setClientFirstName(String clientFirstName) {
-        this.clientFirstName = clientFirstName;
-    }
+    public void setClientFirstName(String clientFirstName) { this.clientFirstName = clientFirstName; }
+    public void setClientLastName(String clientLastName) { this.clientLastName = clientLastName; }
+    public void setClientCompany(String clientCompany) { this.clientCompany = clientCompany; }
+    public void setClientContactEmail(String clientContactEmail) { this.clientContactEmail = clientContactEmail; }
+    public void setClientContactPhone(String clientContactPhone) { this.clientContactPhone = clientContactPhone; }
+    public void setClientAddress(String clientAddress) { this.clientAddress = clientAddress; }
+    public void setClientContactRole(String clientContactRole) { this.clientContactRole = clientContactRole; }
 
-    public void setClientLastName(String clientLastName) {
-        this.clientLastName = clientLastName;
-    }
-
-    public void setClientCompany(String clientCompany) {
-        this.clientCompany = clientCompany;
-    }
-
-    public void setClientContactEmail(String clientContactEmail) {
-        this.clientContactEmail = clientContactEmail;
-    }
-
-    public void setClientContactPhone(String clientContactPhone) {
-        this.clientContactPhone = clientContactPhone;
-    }
-
-    public void setClientAddress(String clientAddress) {
-        this.clientAddress = clientAddress;
-    }
-
-    public void setClientContactRole(String clientContactRole) {
-        this.clientContactRole = clientContactRole;
-    }
-
-    public void setProviderFirstName(String providerFirstName) {
-        this.providerFirstName = providerFirstName;
-    }
-
-    public void setProviderLastName(String providerLastName) {
-        this.providerLastName = providerLastName;
-    }
-
-    public void setProviderCompany(String providerCompany) {
-        this.providerCompany = providerCompany;
-    }
-
-    public LocalDate getClientSignatureDate() {
-        return clientSignatureDate;
-    }
+    public LocalDate getClientSignatureDate() { return clientSignatureDate; }
 
     public void setClientSignatureDate(LocalDate clientSignatureDate) {
         this.clientSignatureDate = clientSignatureDate;
     }
 
-    public String getClientRepresentativeName() {
-        return clientRepresentativeName;
-    }
+    public String getClientRepresentativeName() { return clientRepresentativeName; }
 
     public void setClientRepresentativeName(String clientRepresentativeName) {
         this.clientRepresentativeName = clientRepresentativeName;
     }
 
-    public String getProviderSignatureImage() {
-        return providerSignatureImage;
-    }
+    public String getProviderSignatureImage() { return providerSignatureImage; }
 
     public void setProviderSignatureImage(String providerSignatureImage) {
         this.providerSignatureImage = providerSignatureImage;
     }
 
-    public String getClientSignatureImage() {
-        return clientSignatureImage;
-    }
+    public String getClientSignatureImage() { return clientSignatureImage; }
 
     public void setClientSignatureImage(String clientSignatureImage) {
         this.clientSignatureImage = clientSignatureImage;
     }
 
-    public Long getVersion() {
-        return version;
-    }
+    public Long getVersion() { return version; }
 
-    public String getProviderContentHash() {
-        return providerContentHash;
-    }
+    public String getProviderContentHash() { return providerContentHash; }
 
     public void setProviderContentHash(String providerContentHash) {
         this.providerContentHash = providerContentHash;
     }
 
-    public Instant getProviderSignedAt() {
-        return providerSignedAt;
-    }
+    public Instant getProviderSignedAt() { return providerSignedAt; }
 
-    public void setProviderSignedAt(Instant providerSignedAt) {
-        this.providerSignedAt = providerSignedAt;
-    }
+    public void setProviderSignedAt(Instant providerSignedAt) { this.providerSignedAt = providerSignedAt; }
 
-    public Instant getClientSignedAt() {
-        return clientSignedAt;
-    }
+    public Instant getClientSignedAt() { return clientSignedAt; }
 
-    public void setClientSignedAt(Instant clientSignedAt) {
-        this.clientSignedAt = clientSignedAt;
-    }
+    public void setClientSignedAt(Instant clientSignedAt) { this.clientSignedAt = clientSignedAt; }
 
     public void clearProviderSignature() {
         this.providerSignatureDate = null;

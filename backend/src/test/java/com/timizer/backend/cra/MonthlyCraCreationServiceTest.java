@@ -30,7 +30,7 @@ import com.timizerlike.cra.config.CraDefaultsProperties;
 class MonthlyCraCreationServiceTest {
 
     private static final CraDefaultsProperties DEFAULTS = new CraDefaultsProperties(
-            new CraDefaultsProperties.Provider("Alice Provider", "Provider Co.", "1 rue Test"),
+            new CraDefaultsProperties.Provider("Provider Co.", "1 rue Test"),
             new CraDefaultsProperties.Client(
                     "Lyra Network",
                     "Client Address",
@@ -47,7 +47,7 @@ class MonthlyCraCreationServiceTest {
     );
 
     private static final ProviderSettingsDto PROVIDER_SETTINGS = new ProviderSettingsDto(
-            "Alice", "Provider", "Provider Co.", "1 rue Test", null, null);
+            "Provider Co.", null, "1 rue Test", null, null, null);
 
     private static MonthlyCraCreationService buildService(MonthlyCraReportRepository repository) {
         ClientSettingsService clientSettingsService = mock(ClientSettingsService.class);
@@ -157,7 +157,7 @@ class MonthlyCraCreationServiceTest {
         when(repository.save(any(MonthlyCraReport.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
         ProviderSettingsDto settings = new ProviderSettingsDto(
-                "Jean", "Dupont", "Acme Corp", "42 rue de la Paix", "jean@acme.com", "0600000000");
+                "Acme Corp", "12345678901234", "42 rue de la Paix", "75001", "Paris", "France");
         ProviderSettingsService providerSettingsService = mock(ProviderSettingsService.class);
         when(providerSettingsService.getSettings()).thenReturn(settings);
 
@@ -169,32 +169,32 @@ class MonthlyCraCreationServiceTest {
         CraCreationResult result = service.createForMonth(2025, 6);
 
         CraDetailsDto cra = result.cra();
-        assertThat(cra.providerFirstName()).isEqualTo("Jean");
-        assertThat(cra.providerLastName()).isEqualTo("Dupont");
-        assertThat(cra.providerCompany()).isEqualTo("Acme Corp");
+        assertThat(cra.providerRaisonSociale()).isEqualTo("Acme Corp");
+        assertThat(cra.providerSiret()).isEqualTo("12345678901234");
+        assertThat(cra.providerAdresse()).isEqualTo("42 rue de la Paix");
 
         ArgumentCaptor<MonthlyCraReport> captor = ArgumentCaptor.forClass(MonthlyCraReport.class);
         verify(repository).save(captor.capture());
         MonthlyCraReport saved = captor.getValue();
-        assertThat(saved.getProviderAddress()).isEqualTo("42 rue de la Paix");
-        assertThat(saved.getProviderEmail()).isEqualTo("jean@acme.com");
-        assertThat(saved.getProviderPhone()).isEqualTo("0600000000");
+        assertThat(saved.getProviderCodePostal()).isEqualTo("75001");
+        assertThat(saved.getProviderVille()).isEqualTo("Paris");
+        assertThat(saved.getProviderPays()).isEqualTo("France");
     }
 
     private static MonthlyCraReport buildExisting(int year, int month) {
         MonthlyCraReport report = new MonthlyCraReport(
                 month,
                 year,
-                "Alice",
-                "Provider",
                 "Provider Co.",
+                null,
+                null,
+                null,
+                null,
+                null,
                 "Bob",
                 "Client",
                 "Lyra Network",
                 "bob@example.com",
-                null,
-                null,
-                null,
                 null,
                 null,
                 null

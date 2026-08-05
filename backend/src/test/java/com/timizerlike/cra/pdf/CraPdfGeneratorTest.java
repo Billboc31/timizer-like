@@ -92,8 +92,8 @@ class CraPdfGeneratorTest {
     void signedProviderBlockRendersNameAndDateInsideBox() throws IOException {
         CraPdfSummary summary = new CraPdfSummary(
                 PERIOD,
-                new CraPdfParty("Alice Provider", "Provider SARL", "1 rue A", null),
-                new CraPdfParty("Acme Corp", "Corporate Client SA", "10 rue B", null),
+                new CraPdfParty("Alice Provider", null, "Provider SARL", "1 rue A", null),
+                new CraPdfParty("Acme Corp", null, "Corporate Client SA", "10 rue B", null),
                 new java.math.BigDecimal("10")
         );
         CraPdfSignatures signatures = new CraPdfSignatures(
@@ -121,8 +121,8 @@ class CraPdfGeneratorTest {
         );
         CraPdfSummary summary = new CraPdfSummary(
                 PERIOD,
-                new CraPdfParty("Alice Provider", "Provider SARL", "1 rue A", null),
-                new CraPdfParty("Acme Corp", "Corporate Client SA", "10 rue B", null),
+                new CraPdfParty("Alice Provider", null, "Provider SARL", "1 rue A", null),
+                new CraPdfParty("Acme Corp", null, "Corporate Client SA", "10 rue B", null),
                 new java.math.BigDecimal("10")
         );
         CraPdfSignatures signatures = new CraPdfSignatures(
@@ -147,8 +147,8 @@ class CraPdfGeneratorTest {
     void tolerantToNullProviderContactAndEmptyDayList() throws IOException {
         CraPdfSummary summary = new CraPdfSummary(
                 PERIOD,
-                new CraPdfParty("Alice Provider", "Provider SARL", "1 rue A", null),
-                new CraPdfParty("Acme Corp", "Corporate Client SA", "10 rue B", null),
+                new CraPdfParty("Alice Provider", null, "Provider SARL", "1 rue A", null),
+                new CraPdfParty("Acme Corp", null, "Corporate Client SA", "10 rue B", null),
                 new BigDecimal("0")
         );
         CraPdfSignatures signatures = new CraPdfSignatures(
@@ -266,8 +266,8 @@ class CraPdfGeneratorTest {
         );
         CraPdfSummary summary = new CraPdfSummary(
                 PERIOD,
-                new CraPdfParty("Alice Provider", "Provider SARL", null, null),
-                new CraPdfParty("Acme Corp", "Corporate Client SA", null, null),
+                new CraPdfParty("Alice Provider", null, "Provider SARL", null, null),
+                new CraPdfParty("Acme Corp", null, "Corporate Client SA", null, null),
                 BigDecimal.ZERO
         );
         CraPdfDocument document = new CraPdfDocument(summary, List.of(MARCH_2_ENTRY), signatures);
@@ -309,8 +309,8 @@ class CraPdfGeneratorTest {
     void providerNotSignedShowsPendingInProviderBlock() throws IOException {
         CraPdfSummary summary = new CraPdfSummary(
                 PERIOD,
-                new CraPdfParty("Alice Provider", "Provider SARL", null, null),
-                new CraPdfParty("Acme Corp", "Corporate Client SA", null, null),
+                new CraPdfParty("Alice Provider", null, "Provider SARL", null, null),
+                new CraPdfParty("Acme Corp", null, "Corporate Client SA", null, null),
                 BigDecimal.ZERO
         );
         CraPdfDocument document = new CraPdfDocument(summary, List.of(MARCH_2_ENTRY), new CraPdfSignatures(null, null));
@@ -329,8 +329,8 @@ class CraPdfGeneratorTest {
     void corruptProviderSignatureImageRendersIllisible() throws IOException {
         CraPdfSummary summary = new CraPdfSummary(
                 PERIOD,
-                new CraPdfParty("Alice Provider", "Provider SARL", null, null),
-                new CraPdfParty("Acme Corp", "Corporate Client SA", null, null),
+                new CraPdfParty("Alice Provider", null, "Provider SARL", null, null),
+                new CraPdfParty("Acme Corp", null, "Corporate Client SA", null, null),
                 BigDecimal.ZERO
         );
         CraPdfSignatures signatures = new CraPdfSignatures(
@@ -352,8 +352,8 @@ class CraPdfGeneratorTest {
     void roleLabelAppearsInBothSignatureBlocksWhenProvided() throws IOException {
         CraPdfSummary summary = new CraPdfSummary(
                 PERIOD,
-                new CraPdfParty("Alice Provider", "Provider SARL", null, null),
-                new CraPdfParty("Acme Corp", "Corporate Client SA", null, null),
+                new CraPdfParty("Alice Provider", null, "Provider SARL", null, null),
+                new CraPdfParty("Acme Corp", null, "Corporate Client SA", null, null),
                 BigDecimal.ZERO
         );
         CraPdfSignatures signatures = new CraPdfSignatures(
@@ -376,8 +376,8 @@ class CraPdfGeneratorTest {
     void bothSignedWithMinimalPngProducesValidPdf() throws IOException {
         CraPdfSummary summary = new CraPdfSummary(
                 PERIOD,
-                new CraPdfParty("Alice Provider", "Provider SARL", null, null),
-                new CraPdfParty("Acme Corp", "Corporate Client SA", null, null),
+                new CraPdfParty("Alice Provider", null, "Provider SARL", null, null),
+                new CraPdfParty("Acme Corp", null, "Corporate Client SA", null, null),
                 BigDecimal.ZERO
         );
         CraPdfSignatures signatures = new CraPdfSignatures(
@@ -597,12 +597,14 @@ class CraPdfGeneratorTest {
                 PERIOD,
                 new CraPdfParty(
                         "Alice Provider",
+                        null,
                         "Provider SARL",
                         "1 rue du Prestataire, 75001 Paris",
                         new CraPdfContact("Alice Provider", "alice@provider.example")
                 ),
                 new CraPdfParty(
                         "Acme Corp",
+                        null,
                         "Corporate Client SA",
                         "10 avenue du Client, 92100 Boulogne",
                         new CraPdfContact("Bob Buyer", "bob@acme.example")
@@ -661,8 +663,8 @@ class CraPdfGeneratorTest {
     private static CraPdfDocument providerOnlyFixture() {
         CraPdfSummary summary = new CraPdfSummary(
                 PERIOD,
-                new CraPdfParty("Alice Provider", "Provider SARL", null, null),
-                new CraPdfParty("Acme Corp", "Corporate Client SA", null, null),
+                new CraPdfParty("Alice Provider", null, "Provider SARL", null, null),
+                new CraPdfParty("Acme Corp", null, "Corporate Client SA", null, null),
                 BigDecimal.ONE
         );
         CraPdfSignatures signatures = new CraPdfSignatures(
@@ -675,8 +677,8 @@ class CraPdfGeneratorTest {
     private static CraPdfDocument bothSignaturesFixture() {
         CraPdfSummary summary = new CraPdfSummary(
                 PERIOD,
-                new CraPdfParty("Alice Provider", "Provider SARL", null, null),
-                new CraPdfParty("Acme Corp", "Corporate Client SA", null, null),
+                new CraPdfParty("Alice Provider", null, "Provider SARL", null, null),
+                new CraPdfParty("Acme Corp", null, "Corporate Client SA", null, null),
                 BigDecimal.ONE
         );
         CraPdfSignatures signatures = new CraPdfSignatures(

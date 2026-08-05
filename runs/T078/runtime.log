@@ -1,0 +1,25 @@
+[2026-08-05T20:35:29Z] auto-run start: state=INIT
+[2026-08-05T20:35:29Z] auto-run: running step=planner
+[2026-08-05T20:35:29Z] prompt: resolved=prompts/generic/planner.md source=generic
+[2026-08-05T20:35:29Z] prompt: generic fallback — injecting runs/T078/ticket.md
+[2026-08-05T20:35:29Z] compose: global-context=docs/ai/global-context.md
+[2026-08-05T20:35:29Z] compose: role=ai/roles/planner.md
+[2026-08-05T20:35:29Z] compose: skill=ai/skills/workflow-discipline.md
+[2026-08-05T20:35:29Z] compose: skill=ai/skills/architecture-discipline.md
+[2026-08-05T20:35:29Z] compose: skill=ai/skills/documentation.md
+[2026-08-05T20:35:29Z] compose: task (canonical prompt)
+[2026-08-05T20:35:29Z] snapshot: runtime-prompt=runs/T078/prompts/planner-attempt-1.md
+[2026-08-05T20:41:23Z] compose: preferring on-disk runs/T078/plan.md over chatty stdout (agent Write beat meta-report)
+[2026-08-05T20:41:23Z] auto-run: step=planner done rc=0
+[2026-08-05T21:39:09Z] conflict-resolver: rebase clean — no conflicts
+[2026-08-05T21:39:09Z] conflict-resolver: running tests
+[2026-08-05T21:39:09Z] conflict-resolver: test-report written: runs/T078/conflict/test-report.md
+[2026-08-05T21:39:09Z] conflict-resolver: staging and committing resolution artifacts
+[2026-08-05T21:39:09Z] conflict-resolver: commit: sha=c5f59167
+[2026-08-05T21:39:09Z] conflict-resolver: git push --force-with-lease origin ticket/T078-replace-provider-profile-fields-and-include-them-i
+[2026-08-05T21:39:11Z] conflict-resolver: push succeeded
+[2026-08-05T21:39:11Z] conflict-resolver: state → CONFLICT_RESOLVED_REVIEW_NEEDED
+[2026-08-05T21:39:11Z] auto-finalize-conflict: gate disabled for project='timizer-like'
+[2026-08-05T21:39:11Z] conflict-resolver: transition CONFLICT_RESOLVED_REVIEW_NEEDED → TEST_COMPLETE (auto, PROJECT_SETTING)
+[2026-08-05T21:39:12Z] auto-run: TEST_COMPLETE — running PR lifecycle
+[2026-08-05T21:39:17Z] conflict-resolver: done → TEST_COMPLETE (auto-finalize)

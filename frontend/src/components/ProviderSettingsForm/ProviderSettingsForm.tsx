@@ -5,50 +5,49 @@ import type { ProviderSettingsDto } from '../../api/types';
 import './ProviderSettingsForm.css';
 
 interface FormValues {
-  firstName: string;
-  lastName: string;
-  company: string;
-  address: string;
-  email: string;
-  phone: string;
+  raisonSociale: string;
+  siret: string;
+  adresse: string;
+  codePostal: string;
+  ville: string;
+  pays: string;
 }
 
 interface FieldErrors {
-  firstName?: string;
-  lastName?: string;
-  company?: string;
+  raisonSociale?: string;
+  siret?: string;
 }
 
 function dtoToValues(dto: ProviderSettingsDto): FormValues {
   return {
-    firstName: dto.firstName,
-    lastName: dto.lastName,
-    company: dto.company,
-    address: dto.address ?? '',
-    email: dto.email ?? '',
-    phone: dto.phone ?? '',
+    raisonSociale: dto.raisonSociale,
+    siret: dto.siret ?? '',
+    adresse: dto.adresse ?? '',
+    codePostal: dto.codePostal ?? '',
+    ville: dto.ville ?? '',
+    pays: dto.pays ?? '',
   };
 }
 
 function valuesToDto(values: FormValues): ProviderSettingsDto {
   return {
-    firstName: values.firstName,
-    lastName: values.lastName,
-    company: values.company,
-    address: values.address || null,
-    email: values.email || null,
-    phone: values.phone || null,
+    raisonSociale: values.raisonSociale,
+    siret: values.siret || null,
+    adresse: values.adresse || null,
+    codePostal: values.codePostal || null,
+    ville: values.ville || null,
+    pays: values.pays || null,
   };
 }
 
 export function ProviderSettingsForm() {
   const [values, setValues] = useState<FormValues>({
-    firstName: '',
-    lastName: '',
-    company: '',
-    address: '',
-    email: '',
-    phone: '',
+    raisonSociale: '',
+    siret: '',
+    adresse: '',
+    codePostal: '',
+    ville: '',
+    pays: '',
   });
   const [savedValues, setSavedValues] = useState<FormValues | null>(null);
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
@@ -83,9 +82,10 @@ export function ProviderSettingsForm() {
 
   const validate = (): FieldErrors => {
     const errors: FieldErrors = {};
-    if (!values.firstName.trim()) errors.firstName = 'First name is required';
-    if (!values.lastName.trim()) errors.lastName = 'Last name is required';
-    if (!values.company.trim()) errors.company = 'Company is required';
+    if (!values.raisonSociale.trim()) errors.raisonSociale = 'La raison sociale est obligatoire';
+    if (values.siret && !/^\d{14}$/.test(values.siret)) {
+      errors.siret = 'Le SIRET doit contenir exactement 14 chiffres';
+    }
     return errors;
   };
 
@@ -105,7 +105,7 @@ export function ProviderSettingsForm() {
         setValues(updated);
         setSavedValues(updated);
         setSaving(false);
-        setSuccessMessage('Settings saved successfully.');
+        setSuccessMessage('Paramètres enregistrés.');
       })
       .catch((err: unknown) => {
         setSaveError(getErrorMessage(err));
@@ -123,7 +123,7 @@ export function ProviderSettingsForm() {
   };
 
   if (loading) {
-    return <p aria-busy="true">Loading provider settings...</p>;
+    return <p aria-busy="true">Chargement des paramètres prestataire...</p>;
   }
 
   if (fetchError) {
@@ -133,83 +133,76 @@ export function ProviderSettingsForm() {
   return (
     <form className="provider-settings-form" onSubmit={handleSubmit} noValidate>
       <div className="provider-settings-form__field">
-        <label htmlFor="ps-first-name">First name *</label>
+        <label htmlFor="ps-raison-sociale">Raison sociale *</label>
         <input
-          id="ps-first-name"
+          id="ps-raison-sociale"
           type="text"
-          value={values.firstName}
-          onChange={handleChange('firstName')}
-          aria-describedby={fieldErrors.firstName ? 'ps-first-name-error' : undefined}
-          aria-invalid={!!fieldErrors.firstName}
+          value={values.raisonSociale}
+          onChange={handleChange('raisonSociale')}
+          aria-describedby={fieldErrors.raisonSociale ? 'ps-raison-sociale-error' : undefined}
+          aria-invalid={!!fieldErrors.raisonSociale}
         />
-        {fieldErrors.firstName && (
-          <span id="ps-first-name-error" className="provider-settings-form__error" role="alert">
-            {fieldErrors.firstName}
+        {fieldErrors.raisonSociale && (
+          <span id="ps-raison-sociale-error" className="provider-settings-form__error" role="alert">
+            {fieldErrors.raisonSociale}
           </span>
         )}
       </div>
 
       <div className="provider-settings-form__field">
-        <label htmlFor="ps-last-name">Last name *</label>
+        <label htmlFor="ps-siret">SIRET</label>
         <input
-          id="ps-last-name"
+          id="ps-siret"
           type="text"
-          value={values.lastName}
-          onChange={handleChange('lastName')}
-          aria-describedby={fieldErrors.lastName ? 'ps-last-name-error' : undefined}
-          aria-invalid={!!fieldErrors.lastName}
+          value={values.siret}
+          onChange={handleChange('siret')}
+          aria-describedby={fieldErrors.siret ? 'ps-siret-error' : undefined}
+          aria-invalid={!!fieldErrors.siret}
         />
-        {fieldErrors.lastName && (
-          <span id="ps-last-name-error" className="provider-settings-form__error" role="alert">
-            {fieldErrors.lastName}
+        {fieldErrors.siret && (
+          <span id="ps-siret-error" className="provider-settings-form__error" role="alert">
+            {fieldErrors.siret}
           </span>
         )}
       </div>
 
       <div className="provider-settings-form__field">
-        <label htmlFor="ps-company">Company *</label>
+        <label htmlFor="ps-adresse">Adresse</label>
         <input
-          id="ps-company"
+          id="ps-adresse"
           type="text"
-          value={values.company}
-          onChange={handleChange('company')}
-          aria-describedby={fieldErrors.company ? 'ps-company-error' : undefined}
-          aria-invalid={!!fieldErrors.company}
+          value={values.adresse}
+          onChange={handleChange('adresse')}
         />
-        {fieldErrors.company && (
-          <span id="ps-company-error" className="provider-settings-form__error" role="alert">
-            {fieldErrors.company}
-          </span>
-        )}
       </div>
 
       <div className="provider-settings-form__field">
-        <label htmlFor="ps-address">Address</label>
+        <label htmlFor="ps-code-postal">Code postal</label>
         <input
-          id="ps-address"
+          id="ps-code-postal"
           type="text"
-          value={values.address}
-          onChange={handleChange('address')}
+          value={values.codePostal}
+          onChange={handleChange('codePostal')}
         />
       </div>
 
       <div className="provider-settings-form__field">
-        <label htmlFor="ps-email">Email</label>
+        <label htmlFor="ps-ville">Ville</label>
         <input
-          id="ps-email"
-          type="email"
-          value={values.email}
-          onChange={handleChange('email')}
+          id="ps-ville"
+          type="text"
+          value={values.ville}
+          onChange={handleChange('ville')}
         />
       </div>
 
       <div className="provider-settings-form__field">
-        <label htmlFor="ps-phone">Phone</label>
+        <label htmlFor="ps-pays">Pays</label>
         <input
-          id="ps-phone"
-          type="tel"
-          value={values.phone}
-          onChange={handleChange('phone')}
+          id="ps-pays"
+          type="text"
+          value={values.pays}
+          onChange={handleChange('pays')}
         />
       </div>
 
@@ -223,10 +216,10 @@ export function ProviderSettingsForm() {
 
       <div className="provider-settings-form__actions">
         <button type="submit" disabled={saving}>
-          {saving ? 'Saving...' : 'Save'}
+          {saving ? 'Enregistrement...' : 'Enregistrer'}
         </button>
         <button type="button" onClick={handleCancel} disabled={saving}>
-          Cancel
+          Annuler
         </button>
       </div>
     </form>

@@ -65,17 +65,17 @@ public class MonthlyCraCreationService {
         return new MonthlyCraReport(
                 month,
                 year,
-                provider.firstName(),
-                provider.lastName(),
-                provider.company(),
+                provider.raisonSociale(),
+                provider.siret(),
+                provider.adresse(),
+                provider.codePostal(),
+                provider.ville(),
+                provider.pays(),
                 contactName[0],
                 contactName[1],
                 client.clientCompany(),
                 client.contactEmail(),
                 null,
-                provider.address(),
-                provider.email(),
-                provider.phone(),
                 client.clientAddress(),
                 client.contactRole()
         );

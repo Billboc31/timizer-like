@@ -27,46 +27,27 @@ public class ProviderSettingsService {
     public ProviderSettingsDto updateSettings(ProviderSettingsDto dto) {
         ProviderSettings settings = repository.findById(1L).orElseGet(ProviderSettings::new);
         settings.setId(1L);
-        settings.setFirstName(dto.firstName());
-        settings.setLastName(dto.lastName());
-        settings.setCompany(dto.company());
-        settings.setAddress(dto.address());
-        settings.setEmail(dto.email());
-        settings.setPhone(dto.phone());
+        settings.setRaisonSociale(dto.raisonSociale());
+        settings.setSiret(dto.siret());
+        settings.setAdresse(dto.adresse());
+        settings.setCodePostal(dto.codePostal());
+        settings.setVille(dto.ville());
+        settings.setPays(dto.pays());
         return toDto(repository.save(settings));
     }
 
     private ProviderSettingsDto seedDefaults() {
         CraDefaultsProperties.Provider provider = defaults.provider();
-        String[] parts = splitName(provider.name());
         ProviderSettings settings = new ProviderSettings();
         settings.setId(1L);
-        settings.setFirstName(parts[0]);
-        settings.setLastName(parts[1]);
-        settings.setCompany(provider.company() != null ? provider.company() : "");
-        settings.setAddress(provider.address());
+        settings.setRaisonSociale(provider.raisonSociale() != null ? provider.raisonSociale() : "");
+        settings.setAdresse(provider.adresse());
         return toDto(repository.save(settings));
     }
 
     private ProviderSettingsDto toDto(ProviderSettings s) {
         return new ProviderSettingsDto(
-                s.getFirstName(), s.getLastName(), s.getCompany(),
-                s.getAddress(), s.getEmail(), s.getPhone());
-    }
-
-    private static String[] splitName(String fullName) {
-        if (fullName == null || fullName.isBlank()) {
-            return new String[]{"Unknown", "Unknown"};
-        }
-        String trimmed = fullName.trim();
-        int idx = trimmed.indexOf(' ');
-        if (idx < 0) {
-            return new String[]{trimmed, trimmed};
-        }
-        String first = trimmed.substring(0, idx).trim();
-        String last = trimmed.substring(idx + 1).trim();
-        if (first.isEmpty()) first = trimmed;
-        if (last.isEmpty()) last = trimmed;
-        return new String[]{first, last};
+                s.getRaisonSociale(), s.getSiret(), s.getAdresse(),
+                s.getCodePostal(), s.getVille(), s.getPays());
     }
 }
