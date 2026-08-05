@@ -3,8 +3,11 @@ package com.timizerlike.cra.service;
 import java.math.BigDecimal;
 import java.time.DayOfWeek;
 import java.time.YearMonth;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -56,14 +59,20 @@ public class CraPdfDownloadService {
     private CraPdfDocument toDocument(MonthlyCraReport cra) {
         YearMonth period = YearMonth.of(cra.getYear(), cra.getMonth());
 
+        String providerAddress = formatProviderAddress(
+                cra.getProviderAdresse(), cra.getProviderCodePostal(),
+                cra.getProviderVille(), cra.getProviderPays());
+
         CraPdfParty provider = new CraPdfParty(
-                cra.getProviderFirstName() + " " + cra.getProviderLastName(),
-                cra.getProviderCompany(),
-                cra.getProviderAddress(),
-                new CraPdfContact(null, cra.getProviderEmail()));
+                cra.getProviderRaisonSociale(),
+                cra.getProviderSiret(),
+                null,
+                providerAddress,
+                null);
 
         CraPdfParty client = new CraPdfParty(
                 cra.getClientFirstName() + " " + cra.getClientLastName(),
+                null,
                 cra.getClientCompany(),
                 null,
                 new CraPdfContact(null, cra.getClientContactEmail()));
@@ -82,7 +91,7 @@ public class CraPdfDownloadService {
         byte[] providerImage = decodeSignatureImage(cra.getProviderSignatureImage());
         String providerName = cra.getProviderSignerName() != null
                 ? cra.getProviderSignerName()
-                : (cra.getProviderFirstName() + " " + cra.getProviderLastName());
+                : cra.getProviderRaisonSociale();
         CraPdfProviderSignature providerSignature = new CraPdfProviderSignature(
                 providerName,
                 null,
@@ -102,6 +111,17 @@ public class CraPdfDownloadService {
         CraPdfSignatures signatures = new CraPdfSignatures(providerSignature, clientSignature);
 
         return new CraPdfDocument(summary, days, signatures);
+    }
+
+    private static String formatProviderAddress(String adresse, String codePostal, String ville, String pays) {
+        List<String> parts = new ArrayList<>();
+        if (adresse != null && !adresse.isBlank()) parts.add(adresse);
+        String localePart = Stream.of(codePostal, ville)
+                .filter(s -> s != null && !s.isBlank())
+                .collect(Collectors.joining(" "));
+        if (!localePart.isBlank()) parts.add(localePart);
+        if (pays != null && !pays.isBlank()) parts.add(pays);
+        return parts.isEmpty() ? null : String.join(", ", parts);
     }
 
     private CraPdfDayEntry toPdfDayEntry(CraDayEntry entry) {
@@ -125,7 +145,7 @@ public class CraPdfDownloadService {
     }
 
     private String buildFilename(MonthlyCraReport cra) {
-        String provider = sanitize(cra.getProviderCompany());
+        String provider = sanitize(cra.getProviderRaisonSociale());
         String client = sanitize(cra.getClientCompany());
         String period = String.format("%04d-%02d", cra.getYear(), cra.getMonth());
         return "CRA-" + provider + "-" + client + "-" + period + ".pdf";

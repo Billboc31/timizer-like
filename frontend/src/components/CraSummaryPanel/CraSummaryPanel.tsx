@@ -35,7 +35,6 @@ export function CraSummaryPanel({ cra, loading, error, onSuccess }: Props) {
   if (!cra) return null;
 
   const period = `${MONTH_NAMES[cra.month - 1]} ${cra.year}`;
-  const providerName = [cra.providerFirstName, cra.providerLastName].filter(Boolean).join(' ') || '—';
   const clientName = [cra.clientFirstName, cra.clientLastName].filter(Boolean).join(' ') || '—';
 
   return (
@@ -55,12 +54,8 @@ export function CraSummaryPanel({ cra, loading, error, onSuccess }: Props) {
       </div>
       <dl className="cra-summary-panel__meta">
         <div className="cra-summary-panel__meta-item">
-          <dt>Provider</dt>
-          <dd data-testid="summary-provider">{providerName}</dd>
-        </div>
-        <div className="cra-summary-panel__meta-item">
-          <dt>Provider company</dt>
-          <dd data-testid="summary-provider-company">{cra.providerCompany ?? '—'}</dd>
+          <dt>Prestataire</dt>
+          <dd data-testid="summary-provider">{cra.providerRaisonSociale ?? '—'}</dd>
         </div>
         <div className="cra-summary-panel__meta-item">
           <dt>Client</dt>

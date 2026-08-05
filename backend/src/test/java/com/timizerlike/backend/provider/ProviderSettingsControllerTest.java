@@ -28,7 +28,7 @@ class ProviderSettingsControllerTest {
     private ProviderSettingsService service;
 
     private static final ProviderSettingsDto SETTINGS = new ProviderSettingsDto(
-            "Jean", "Dupont", "Acme", "1 rue Paix", "jean@acme.com", "0600000000");
+            "Acme SARL", "12345678901234", "1 rue Paix", "75001", "Paris", "France");
 
     @Test
     void getSettings_returns200WithAllFields() throws Exception {
@@ -36,12 +36,12 @@ class ProviderSettingsControllerTest {
 
         mockMvc.perform(get("/api/provider-settings"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.firstName").value("Jean"))
-                .andExpect(jsonPath("$.lastName").value("Dupont"))
-                .andExpect(jsonPath("$.company").value("Acme"))
-                .andExpect(jsonPath("$.address").value("1 rue Paix"))
-                .andExpect(jsonPath("$.email").value("jean@acme.com"))
-                .andExpect(jsonPath("$.phone").value("0600000000"));
+                .andExpect(jsonPath("$.raisonSociale").value("Acme SARL"))
+                .andExpect(jsonPath("$.siret").value("12345678901234"))
+                .andExpect(jsonPath("$.adresse").value("1 rue Paix"))
+                .andExpect(jsonPath("$.codePostal").value("75001"))
+                .andExpect(jsonPath("$.ville").value("Paris"))
+                .andExpect(jsonPath("$.pays").value("France"));
     }
 
     @Test
@@ -52,27 +52,25 @@ class ProviderSettingsControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
-                                  "firstName": "Jean",
-                                  "lastName": "Dupont",
-                                  "company": "Acme",
-                                  "address": "1 rue Paix",
-                                  "email": "jean@acme.com",
-                                  "phone": "0600000000"
+                                  "raisonSociale": "Acme SARL",
+                                  "siret": "12345678901234",
+                                  "adresse": "1 rue Paix",
+                                  "codePostal": "75001",
+                                  "ville": "Paris",
+                                  "pays": "France"
                                 }
                                 """))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.firstName").value("Jean"));
+                .andExpect(jsonPath("$.raisonSociale").value("Acme SARL"));
     }
 
     @Test
-    void putSettings_blankFirstName_returns400() throws Exception {
+    void putSettings_blankRaisonSociale_returns400() throws Exception {
         mockMvc.perform(put("/api/provider-settings")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
-                                  "firstName": "",
-                                  "lastName": "Dupont",
-                                  "company": "Acme"
+                                  "raisonSociale": ""
                                 }
                                 """))
                 .andExpect(status().isBadRequest());

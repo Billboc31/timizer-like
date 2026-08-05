@@ -21,10 +21,9 @@ const SIGNED_CRA: CraDetails = {
   ...BASE_CRA,
   status: 'VALIDATED',
   providerSignatureDate: '2026-07-20',
-  providerFirstName: 'Alice',
-  providerLastName: 'Provider',
+  providerSignerName: 'Alice Provider',
   providerSignatureImageUrl: 'https://example.com/sig.png',
-};
+} as CraDetails & { providerSignatureImageUrl?: string };
 
 describe('ProviderSignatureBox — empty state', () => {
   it('renders invitation text when unsigned', () => {
@@ -87,7 +86,7 @@ describe('ProviderSignatureBox — signed state', () => {
     expect(screen.queryByText(/cliquez pour signer/i)).not.toBeInTheDocument();
   });
 
-  it('does not render provider name element when name fields are absent', () => {
+  it('does not render provider name element when providerSignerName is absent', () => {
     const cra: CraDetails = { ...BASE_CRA, status: 'VALIDATED', providerSignatureDate: '2026-07-20' };
     render(<ProviderSignatureBox cra={cra} onSignClick={vi.fn()} />);
     expect(screen.queryByText(/alice/i)).not.toBeInTheDocument();
@@ -106,8 +105,7 @@ describe('ProviderSignatureBox — signed state', () => {
       ...BASE_CRA,
       status: 'VALIDATED',
       providerSignatureDate: '2026-07-20',
-      providerFirstName: 'Alice',
-      providerLastName: 'Provider',
+      providerSignerName: 'Alice Provider',
     };
     render(<ProviderSignatureBox cra={cra} onSignClick={vi.fn()} />);
     expect(screen.queryByRole('img')).not.toBeInTheDocument();

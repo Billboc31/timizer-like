@@ -4,8 +4,8 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 
 @Entity
 @Table(name = "provider_settings")
@@ -15,41 +15,39 @@ public class ProviderSettings {
     private Long id;
 
     @NotBlank
-    @Column(name = "first_name", nullable = false)
-    private String firstName;
+    @Column(name = "raison_sociale")
+    private String raisonSociale;
 
-    @NotBlank
-    @Column(name = "last_name", nullable = false)
-    private String lastName;
+    @Pattern(regexp = "^\\d{14}$")
+    @Column(name = "siret")
+    private String siret;
 
-    @NotBlank
-    @Column(name = "company", nullable = false)
-    private String company;
+    @Column(name = "adresse")
+    private String adresse;
 
-    @Column(name = "address")
-    private String address;
+    @Column(name = "code_postal")
+    private String codePostal;
 
-    @Email
-    @Column(name = "email")
-    private String email;
+    @Column(name = "ville")
+    private String ville;
 
-    @Column(name = "phone")
-    private String phone;
+    @Column(name = "pays")
+    private String pays;
 
     protected ProviderSettings() {}
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
-    public String getFirstName() { return firstName; }
-    public void setFirstName(String firstName) { this.firstName = firstName; }
-    public String getLastName() { return lastName; }
-    public void setLastName(String lastName) { this.lastName = lastName; }
-    public String getCompany() { return company; }
-    public void setCompany(String company) { this.company = company; }
-    public String getAddress() { return address; }
-    public void setAddress(String address) { this.address = address; }
-    public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
-    public String getPhone() { return phone; }
-    public void setPhone(String phone) { this.phone = phone; }
+    public String getRaisonSociale() { return raisonSociale; }
+    public void setRaisonSociale(String raisonSociale) { this.raisonSociale = raisonSociale; }
+    public String getSiret() { return siret; }
+    public void setSiret(String siret) { this.siret = siret; }
+    public String getAdresse() { return adresse; }
+    public void setAdresse(String adresse) { this.adresse = adresse; }
+    public String getCodePostal() { return codePostal; }
+    public void setCodePostal(String codePostal) { this.codePostal = codePostal; }
+    public String getVille() { return ville; }
+    public void setVille(String ville) { this.ville = ville; }
+    public String getPays() { return pays; }
+    public void setPays(String pays) { this.pays = pays; }
 }

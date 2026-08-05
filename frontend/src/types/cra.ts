@@ -14,9 +14,12 @@ export interface CraDetails {
   status: 'DRAFT' | 'AWAITING_CLIENT_SIGNATURE' | 'VALIDATED';
   days: CraDayEntry[];
   providerSignatureDate: string | null;
-  providerFirstName?: string | null;
-  providerLastName?: string | null;
-  providerCompany?: string | null;
+  providerRaisonSociale?: string | null;
+  providerSiret?: string | null;
+  providerAdresse?: string | null;
+  providerCodePostal?: string | null;
+  providerVille?: string | null;
+  providerPays?: string | null;
   clientFirstName?: string | null;
   clientLastName?: string | null;
   clientCompany?: string | null;
@@ -33,13 +36,15 @@ export interface CraDetailsDto extends CraSummaryDto {
   providerSignatureDate: string | null;
   clientSignatureDate: string | null;
   clientRepresentativeName?: string | null;
-  providerFirstName?: string | null;
-  providerLastName?: string | null;
-  providerCompany?: string | null;
+  providerRaisonSociale?: string | null;
+  providerSiret?: string | null;
+  providerAdresse?: string | null;
+  providerCodePostal?: string | null;
+  providerVille?: string | null;
+  providerPays?: string | null;
   clientFirstName?: string | null;
   clientLastName?: string | null;
   clientCompany?: string | null;
   clientContactFirstName?: string | null;
   clientContactLastName?: string | null;
-  clientSignatureDate?: string | null;
 }

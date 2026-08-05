@@ -20,7 +20,7 @@ import com.timizerlike.cra.config.CraDefaultsProperties;
 class MonthlyCraCreationServiceClientSettingsTest {
 
     private static final CraDefaultsProperties DEFAULTS = new CraDefaultsProperties(
-            new CraDefaultsProperties.Provider("Alice Provider", "Provider Co.", "1 rue Test"),
+            new CraDefaultsProperties.Provider("Provider Co.", "1 rue Test"),
             new CraDefaultsProperties.Client(
                     "Lyra Network",
                     "Client Address",
@@ -29,7 +29,7 @@ class MonthlyCraCreationServiceClientSettingsTest {
     );
 
     private static final ProviderSettingsDto DEFAULT_PROVIDER = new ProviderSettingsDto(
-            "Alice", "Provider", "Provider Co.", "1 rue Test", null, null);
+            "Provider Co.", null, "1 rue Test", null, null, null);
 
     @Test
     void newCraUsesCurrentClientSettings() {

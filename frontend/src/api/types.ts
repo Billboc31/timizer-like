@@ -18,9 +18,12 @@ export interface CraDetailsDto {
   days: CraDayEntryDto[];
   validationDate: string | null;
   providerSignatureDate: string | null;
-  providerFirstName?: string | null;
-  providerLastName?: string | null;
-  providerCompany?: string | null;
+  providerRaisonSociale?: string | null;
+  providerSiret?: string | null;
+  providerAdresse?: string | null;
+  providerCodePostal?: string | null;
+  providerVille?: string | null;
+  providerPays?: string | null;
   clientFirstName?: string | null;
   clientLastName?: string | null;
   clientCompany?: string | null;
@@ -61,12 +64,12 @@ export interface ProviderSignatureDto {
 }
 
 export interface ProviderSettingsDto {
-  firstName: string;
-  lastName: string;
-  company: string;
-  address?: string | null;
-  email?: string | null;
-  phone?: string | null;
+  raisonSociale: string;
+  siret?: string | null;
+  adresse?: string | null;
+  codePostal?: string | null;
+  ville?: string | null;
+  pays?: string | null;
 }
 
 export interface SignatureLinkDto {

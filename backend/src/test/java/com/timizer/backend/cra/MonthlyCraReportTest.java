@@ -17,17 +17,17 @@ class MonthlyCraReportTest {
         return new MonthlyCraReport(
             6,
             2026,
-            "Alice",
-            "Provider",
             "Provider Co.",
+            null,
+            null,
+            null,
+            null,
+            null,
             "Bob",
             "Client",
             "Client Co.",
             "bob.client@example.com",
             "+33123456789",
-            null,
-            null,
-            null,
             null,
             null
         );
@@ -39,9 +39,7 @@ class MonthlyCraReportTest {
 
         assertThat(report.getMonth()).isEqualTo(6);
         assertThat(report.getYear()).isEqualTo(2026);
-        assertThat(report.getProviderFirstName()).isEqualTo("Alice");
-        assertThat(report.getProviderLastName()).isEqualTo("Provider");
-        assertThat(report.getProviderCompany()).isEqualTo("Provider Co.");
+        assertThat(report.getProviderRaisonSociale()).isEqualTo("Provider Co.");
         assertThat(report.getClientFirstName()).isEqualTo("Bob");
         assertThat(report.getClientLastName()).isEqualTo("Client");
         assertThat(report.getClientCompany()).isEqualTo("Client Co.");

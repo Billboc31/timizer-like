@@ -121,7 +121,7 @@ class CraPdfDownloadServiceTest {
     }
 
     @Test
-    void snapshotAddressAndEmailPassedToPdfDocument() {
+    void snapshotAddressAndClientEmailPassedToPdfDocument() {
         MonthlyCraReport cra = validatedCra();
         when(craRepository.findById(CRA_ID)).thenReturn(Optional.of(cra));
         when(pdfGenerator.generate(any(CraPdfDocument.class))).thenReturn(new byte[]{});
@@ -131,8 +131,9 @@ class CraPdfDownloadServiceTest {
         ArgumentCaptor<CraPdfDocument> captor = ArgumentCaptor.forClass(CraPdfDocument.class);
         verify(pdfGenerator).generate(captor.capture());
         CraPdfDocument doc = captor.getValue();
-        assertThat(doc.page1().provider().address()).isEqualTo("1 rue Provider");
-        assertThat(doc.page1().provider().contact().email()).isEqualTo("john@example.com");
+        assertThat(doc.page1().provider().address()).isEqualTo("1 rue Provider, 75001 Paris, France");
+        assertThat(doc.page1().provider().contact()).isNull();
+        assertThat(doc.page1().client().contact().email()).isEqualTo("jane@clientco.com");
     }
 
     @Test
@@ -200,18 +201,20 @@ class CraPdfDownloadServiceTest {
         when(cra.getMonth()).thenReturn(6);
         when(cra.getYear()).thenReturn(2026);
         when(cra.getStatus()).thenReturn(ValidationStatus.VALIDATED);
-        when(cra.getProviderFirstName()).thenReturn("John");
-        when(cra.getProviderLastName()).thenReturn("Doe");
-        when(cra.getProviderCompany()).thenReturn("Acme");
+        when(cra.getProviderRaisonSociale()).thenReturn("Acme SARL");
+        when(cra.getProviderSiret()).thenReturn("12345678901234");
+        when(cra.getProviderAdresse()).thenReturn("1 rue Provider");
+        when(cra.getProviderCodePostal()).thenReturn("75001");
+        when(cra.getProviderVille()).thenReturn("Paris");
+        when(cra.getProviderPays()).thenReturn("France");
         when(cra.getClientFirstName()).thenReturn("Jane");
         when(cra.getClientLastName()).thenReturn("Smith");
         when(cra.getClientCompany()).thenReturn("ClientCo");
         when(cra.getClientContactEmail()).thenReturn("jane@clientco.com");
         when(cra.getProviderSignatureDate()).thenReturn(LocalDate.of(2026, 6, 30));
         when(cra.getProviderSignedAt()).thenReturn(Instant.parse("2026-06-30T10:00:00Z"));
-        when(cra.getProviderAddress()).thenReturn("1 rue Provider");
-        when(cra.getProviderEmail()).thenReturn("john@example.com");
         when(cra.getProviderSignatureImage()).thenReturn(null);
+        when(cra.getProviderSignerName()).thenReturn(null);
         when(cra.getClientSignedAt()).thenReturn(null);
         when(cra.getClientSignatureDate()).thenReturn(null);
         when(cra.getClientRepresentativeName()).thenReturn(null);
@@ -226,18 +229,20 @@ class CraPdfDownloadServiceTest {
         when(cra.getMonth()).thenReturn(6);
         when(cra.getYear()).thenReturn(2026);
         when(cra.getStatus()).thenReturn(ValidationStatus.AWAITING_CLIENT_SIGNATURE);
-        when(cra.getProviderFirstName()).thenReturn("John");
-        when(cra.getProviderLastName()).thenReturn("Doe");
-        when(cra.getProviderCompany()).thenReturn("Acme");
+        when(cra.getProviderRaisonSociale()).thenReturn("Acme SARL");
+        when(cra.getProviderSiret()).thenReturn("12345678901234");
+        when(cra.getProviderAdresse()).thenReturn("1 rue Provider");
+        when(cra.getProviderCodePostal()).thenReturn("75001");
+        when(cra.getProviderVille()).thenReturn("Paris");
+        when(cra.getProviderPays()).thenReturn("France");
         when(cra.getClientFirstName()).thenReturn("Jane");
         when(cra.getClientLastName()).thenReturn("Smith");
         when(cra.getClientCompany()).thenReturn("ClientCo");
         when(cra.getClientContactEmail()).thenReturn("jane@clientco.com");
         when(cra.getProviderSignatureDate()).thenReturn(LocalDate.of(2026, 6, 30));
         when(cra.getProviderSignedAt()).thenReturn(Instant.parse("2026-06-30T10:00:00Z"));
-        when(cra.getProviderAddress()).thenReturn("1 rue Provider");
-        when(cra.getProviderEmail()).thenReturn("john@example.com");
         when(cra.getProviderSignatureImage()).thenReturn(null);
+        when(cra.getProviderSignerName()).thenReturn(null);
         when(cra.getClientSignedAt()).thenReturn(null);
         when(cra.getClientSignatureDate()).thenReturn(null);
         when(cra.getClientRepresentativeName()).thenReturn(null);

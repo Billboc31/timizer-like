@@ -32,17 +32,17 @@ class MonthlyCraReportRepositoryTest {
         return new MonthlyCraReport(
             month,
             year,
-            "Alice",
-            "Provider",
             "Provider Co.",
+            null,
+            null,
+            null,
+            null,
+            null,
             "Bob",
             "Client",
             "Client Co.",
             "bob.client@example.com",
             "+33123456789",
-            null,
-            null,
-            null,
             null,
             null
         );

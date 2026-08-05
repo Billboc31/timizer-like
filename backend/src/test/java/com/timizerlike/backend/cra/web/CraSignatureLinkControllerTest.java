@@ -18,6 +18,7 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
@@ -30,10 +31,12 @@ import com.timizer.backend.cra.TokenNotFoundException;
 import com.timizer.backend.cra.ValidationStatus;
 import com.timizerlike.backend.cra.dto.CraDayEntryDto;
 import com.timizerlike.backend.cra.dto.CraPublicViewDto;
+import com.timizerlike.cra.config.TimizerProperties;
 import com.timizerlike.cra.service.CraSignatureTokenService;
 
 @WebMvcTest(controllers = {CraSignatureLinkController.class, PublicCraViewController.class})
 @Import({CraSignatureLinkController.class, PublicCraViewController.class, CraApiExceptionHandler.class})
+@EnableConfigurationProperties(TimizerProperties.class)
 @TestPropertySource(properties = "timizer.public-frontend-base-url=https://timizer.example.com")
 class CraSignatureLinkControllerTest {
 
@@ -46,7 +49,7 @@ class CraSignatureLinkControllerTest {
     private static final CraPublicViewDto PUBLIC_VIEW = new CraPublicViewDto(
             42L, "AWAITING_CLIENT_SIGNATURE",
             7, 2026,
-            "Alice", "Provider", "Provider Co",
+            "Provider Co",
             "Bob", "Client", "Client Co",
             "bob@client.example",
             LocalDate.of(2026, 7, 31),
@@ -117,7 +120,7 @@ class CraSignatureLinkControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.month").value(7))
                 .andExpect(jsonPath("$.year").value(2026))
-                .andExpect(jsonPath("$.providerFirstName").value("Alice"))
+                .andExpect(jsonPath("$.providerRaisonSociale").value("Provider Co"))
                 .andExpect(jsonPath("$.clientFirstName").value("Bob"))
                 .andExpect(jsonPath("$.totalWorkedDays").value(10.5))
                 .andExpect(jsonPath("$.dayEntries").isArray())

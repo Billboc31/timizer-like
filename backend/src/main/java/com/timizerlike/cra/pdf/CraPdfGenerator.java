@@ -111,7 +111,13 @@ public class CraPdfGenerator {
 
         BigDecimal total = summary != null ? summary.totalWorkedDays() : null;
         drawText(cs, regular, 10f, MARGIN, y, "Total jours travaillés : " + formatFraction(total));
-        y -= 24f;
+        y -= 20f;
+
+        CraPdfParty provider = summary != null ? summary.provider() : null;
+        if (provider != null) {
+            y = drawPartyBlock(cs, y, "Prestataire", provider);
+            y -= 10f;
+        }
 
         List<CraPdfDayEntry> days = document.page2Days();
         Map<LocalDate, CraPdfDayType> dayTypes = new HashMap<>();
@@ -253,9 +259,12 @@ public class CraPdfGenerator {
         if (party == null) {
             return y;
         }
-        y = drawOptionalLine(cs, y, party.name());
+        y = drawWrappedOptionalLine(cs, y, party.name());
+        if (party.siret() != null && !party.siret().isBlank()) {
+            y = drawOptionalLine(cs, y, "SIRET : " + party.siret());
+        }
         y = drawOptionalLine(cs, y, party.company());
-        y = drawOptionalLine(cs, y, party.address());
+        y = drawWrappedOptionalLine(cs, y, party.address());
         CraPdfContact contact = party.contact();
         if (contact != null) {
             y = drawOptionalLine(cs, y, contact.name());
@@ -270,6 +279,38 @@ public class CraPdfGenerator {
         }
         drawText(cs, regular, 11f, MARGIN, y, value);
         return y - 14f;
+    }
+
+    private float drawWrappedOptionalLine(PDPageContentStream cs, float y, String value) throws IOException {
+        if (value == null || value.isEmpty()) {
+            return y;
+        }
+        float maxWidth = PDRectangle.A4.getWidth() - 2 * MARGIN;
+        List<String> lines = wrapText(regular, 11f, maxWidth, value);
+        for (String line : lines) {
+            drawText(cs, regular, 11f, MARGIN, y, line);
+            y -= 14f;
+        }
+        return y;
+    }
+
+    private List<String> wrapText(PDType1Font font, float fontSize, float maxWidth, String text) throws IOException {
+        List<String> lines = new ArrayList<>();
+        if (text == null || text.isEmpty()) return lines;
+        String[] words = text.split("\\s+");
+        StringBuilder line = new StringBuilder();
+        for (String word : words) {
+            String test = line.isEmpty() ? word : line + " " + word;
+            float width = font.getStringWidth(test) / 1000f * fontSize;
+            if (width > maxWidth && !line.isEmpty()) {
+                lines.add(line.toString());
+                line = new StringBuilder(word);
+            } else {
+                line = new StringBuilder(test);
+            }
+        }
+        if (!line.isEmpty()) lines.add(line.toString());
+        return lines;
     }
 
     private float drawProviderSignatureBlock(PDDocument pdf, PDPageContentStream cs, float startY, CraPdfProviderSignature provider) throws IOException {

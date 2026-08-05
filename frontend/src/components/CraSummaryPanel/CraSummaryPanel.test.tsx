@@ -15,9 +15,7 @@ const BASE_CRA: CraDetails = {
   status: 'DRAFT',
   days: [],
   providerSignatureDate: null,
-  providerFirstName: 'Jean',
-  providerLastName: 'Dupont',
-  providerCompany: 'Acme Corp',
+  providerRaisonSociale: 'Acme Corp',
   clientFirstName: 'Alice',
   clientLastName: 'Martin',
   clientCompany: 'Lyra Network',
@@ -39,14 +37,9 @@ describe('CraSummaryPanel', () => {
     expect(screen.getByTestId('summary-total')).toHaveTextContent('12.5');
   });
 
-  it('displays provider full name', () => {
+  it('displays provider raison sociale', () => {
     render(<CraSummaryPanel cra={BASE_CRA} loading={false} error={null} />);
-    expect(screen.getByTestId('summary-provider')).toHaveTextContent('Jean Dupont');
-  });
-
-  it('displays provider company', () => {
-    render(<CraSummaryPanel cra={BASE_CRA} loading={false} error={null} />);
-    expect(screen.getByTestId('summary-provider-company')).toHaveTextContent('Acme Corp');
+    expect(screen.getByTestId('summary-provider')).toHaveTextContent('Acme Corp');
   });
 
   it('displays client full name', () => {
@@ -78,16 +71,10 @@ describe('CraSummaryPanel', () => {
     expect(container).toBeEmptyDOMElement();
   });
 
-  it('shows dash when provider names are null', () => {
-    const cra: CraDetails = { ...BASE_CRA, providerFirstName: null, providerLastName: null };
+  it('shows dash when providerRaisonSociale is null', () => {
+    const cra: CraDetails = { ...BASE_CRA, providerRaisonSociale: null };
     render(<CraSummaryPanel cra={cra} loading={false} error={null} />);
     expect(screen.getByTestId('summary-provider')).toHaveTextContent('—');
-  });
-
-  it('shows dash when provider company is null', () => {
-    const cra: CraDetails = { ...BASE_CRA, providerCompany: null };
-    render(<CraSummaryPanel cra={cra} loading={false} error={null} />);
-    expect(screen.getByTestId('summary-provider-company')).toHaveTextContent('—');
   });
 
   it('shows "Validé" label for VALIDATED status', () => {

@@ -22,8 +22,7 @@ const SIGNED_CRA: CraDetails = {
   ...DRAFT_CRA,
   status: 'VALIDATED',
   providerSignatureDate: '2026-07-20',
-  providerFirstName: 'Alice',
-  providerLastName: 'Provider',
+  providerSignerName: 'Alice Provider',
 };
 
 describe('ProviderSignatureBox accessibility', () => {

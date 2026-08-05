@@ -18,9 +18,8 @@ timizer:
 cra:
   defaults:
     provider:
-      name: "Provider Name"
-      company: "Provider Company"
-      address: "Provider Address"
+      raison-sociale: "Provider Company"
+      adresse: "Provider Address"
     client:
       name: "Lyra Network"
       address: "109 rue de l'Ancienne Poste, 69100 Villeurbanne, France"

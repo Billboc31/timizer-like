@@ -34,8 +34,7 @@ export function ProviderSignatureBox({ cra, onSignClick }: Props) {
     );
   }
 
-  const nameParts = [cra.providerFirstName, cra.providerLastName].filter(Boolean);
-  const providerName = nameParts.length > 0 ? nameParts.join(' ') : null;
+  const providerName = cra.providerSignerName ?? null;
 
   return (
     <div className="provider-signature-box provider-signature-box--signed">

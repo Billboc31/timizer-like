@@ -1,13 +1,13 @@
 package com.timizerlike.backend.provider;
 
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 
 public record ProviderSettingsDto(
-        @NotBlank String firstName,
-        @NotBlank String lastName,
-        @NotBlank String company,
-        String address,
-        @Email String email,
-        String phone
+        @NotBlank String raisonSociale,
+        @Pattern(regexp = "^\\d{14}$") String siret,
+        String adresse,
+        String codePostal,
+        String ville,
+        String pays
 ) {}

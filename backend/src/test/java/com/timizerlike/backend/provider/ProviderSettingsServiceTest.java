@@ -15,7 +15,7 @@ import com.timizerlike.cra.config.CraDefaultsProperties;
 class ProviderSettingsServiceTest {
 
     private static final CraDefaultsProperties DEFAULTS = new CraDefaultsProperties(
-            new CraDefaultsProperties.Provider("Alice Provider", "Provider Co.", "1 rue Test"),
+            new CraDefaultsProperties.Provider("Provider Co.", "1 rue Test"),
             new CraDefaultsProperties.Client(
                     "Lyra Network",
                     "Client Address",
@@ -39,49 +39,47 @@ class ProviderSettingsServiceTest {
 
         ProviderSettingsDto dto = service.getSettings();
 
-        assertThat(dto.firstName()).isEqualTo("Alice");
-        assertThat(dto.lastName()).isEqualTo("Provider");
-        assertThat(dto.company()).isEqualTo("Provider Co.");
-        assertThat(dto.address()).isEqualTo("1 rue Test");
-        assertThat(dto.email()).isNull();
-        assertThat(dto.phone()).isNull();
+        assertThat(dto.raisonSociale()).isEqualTo("Provider Co.");
+        assertThat(dto.adresse()).isEqualTo("1 rue Test");
+        assertThat(dto.siret()).isNull();
+        assertThat(dto.codePostal()).isNull();
+        assertThat(dto.ville()).isNull();
+        assertThat(dto.pays()).isNull();
     }
 
     @Test
     void getSettings_returnsExistingRow() {
         ProviderSettings existing = new ProviderSettings();
         existing.setId(1L);
-        existing.setFirstName("Jean");
-        existing.setLastName("Dupont");
-        existing.setCompany("Acme");
-        existing.setAddress("42 bd Haussmann");
-        existing.setEmail("jean@acme.com");
+        existing.setRaisonSociale("Acme SARL");
+        existing.setSiret("12345678901234");
+        existing.setAdresse("42 bd Haussmann");
+        existing.setVille("Paris");
         when(repository.findById(1L)).thenReturn(Optional.of(existing));
 
         ProviderSettingsDto dto = service.getSettings();
 
-        assertThat(dto.firstName()).isEqualTo("Jean");
-        assertThat(dto.lastName()).isEqualTo("Dupont");
-        assertThat(dto.company()).isEqualTo("Acme");
-        assertThat(dto.address()).isEqualTo("42 bd Haussmann");
-        assertThat(dto.email()).isEqualTo("jean@acme.com");
+        assertThat(dto.raisonSociale()).isEqualTo("Acme SARL");
+        assertThat(dto.siret()).isEqualTo("12345678901234");
+        assertThat(dto.adresse()).isEqualTo("42 bd Haussmann");
+        assertThat(dto.ville()).isEqualTo("Paris");
     }
 
     @Test
     void updateSettings_persistsAndReturnsDto() {
         ProviderSettingsDto dto = new ProviderSettingsDto(
-                "Jean", "Dupont", "Acme", "1 rue Paix", "jean@acme.com", "0600000000");
+                "Acme SARL", "12345678901234", "1 rue Paix", "75001", "Paris", "France");
         when(repository.findById(1L)).thenReturn(Optional.empty());
         when(repository.save(any(ProviderSettings.class))).thenAnswer(inv -> inv.getArgument(0));
 
         ProviderSettingsDto result = service.updateSettings(dto);
 
-        assertThat(result.firstName()).isEqualTo("Jean");
-        assertThat(result.lastName()).isEqualTo("Dupont");
-        assertThat(result.company()).isEqualTo("Acme");
-        assertThat(result.address()).isEqualTo("1 rue Paix");
-        assertThat(result.email()).isEqualTo("jean@acme.com");
-        assertThat(result.phone()).isEqualTo("0600000000");
+        assertThat(result.raisonSociale()).isEqualTo("Acme SARL");
+        assertThat(result.siret()).isEqualTo("12345678901234");
+        assertThat(result.adresse()).isEqualTo("1 rue Paix");
+        assertThat(result.codePostal()).isEqualTo("75001");
+        assertThat(result.ville()).isEqualTo("Paris");
+        assertThat(result.pays()).isEqualTo("France");
     }
 
 }

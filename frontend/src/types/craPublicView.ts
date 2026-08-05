@@ -3,9 +3,7 @@ export interface CraPublicView {
   status: string;
   month: number;
   year: number;
-  providerFirstName: string;
-  providerLastName: string;
-  providerCompany: string;
+  providerRaisonSociale: string;
   clientFirstName: string;
   clientLastName: string;
   clientCompany: string;
